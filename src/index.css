@@ -14,7 +14,7 @@
 }
 
 body {
-  @apply min-h-screen bg-green-0;
+  @apply min-h-screen bg-portal-bg;
 }
 
 #root {
