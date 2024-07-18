@@ -15,7 +15,7 @@
 }
 
 .zsm-button--outline {
-  @apply bg-transparent hover:bg-green-1 border border-dark-green-1 text-dark-green-1 py-3.5 px-5 justify-center rounded-lg disabled:border-dark-green-1/15 disabled:text-dark-green-1/15 disabled:hover:ring-0 !important;
+  @apply bg-transparent font-bold hover:bg-green-1 border border-dark-green-1 hover:border-green-1 text-dark-green-1 hover:text-white py-3.5 px-5 justify-center rounded-lg disabled:border-dark-green-1/15 disabled:text-dark-green-1/15 disabled:hover:ring-0 !important;
 }
 
 .zsm-button--white {

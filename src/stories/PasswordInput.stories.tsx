@@ -1,8 +1,8 @@
 import { ChangeEvent } from "react";
 import { fn } from "@storybook/test";
 import { PasswordInput } from "@/components/core";
-import { useArgs } from "@storybook/preview-api";
 import type { Meta, StoryObj } from "@storybook/react";
+import React from "react";
 
 const meta = {
   title: "Forms/Password Input",
@@ -24,12 +24,11 @@ type Story = StoryObj<typeof meta>;
 
 export const WithLabel: Story = {
   render: (args) => {
-    const [, setArgs] = useArgs();
-    const onValueChange = (value: ChangeEvent<HTMLInputElement>) => {
-      args.onChange?.(value);
-      setArgs({ value });
+    const [value, setValue] = React.useState(args.value);
+    const onValueChange = (e: ChangeEvent<HTMLInputElement>) => {
+      setValue(e?.target?.value);
     };
-    return <div className="w-[50dvw] flex justify-center"><PasswordInput {...args} onChange={() => onValueChange} /></div>;
+    return <div className="w-[50dvw] flex justify-center"><PasswordInput {...args} value={value} onChange={(e: ChangeEvent<HTMLInputElement>) => onValueChange(e)} /></div>;
   },
   args: {
     name: "password",
@@ -41,12 +40,11 @@ export const WithLabel: Story = {
 
 export const WithoutLabel: Story = {
   render: (args) => {
-    const [, setArgs] = useArgs();
-    const onValueChange = (value: ChangeEvent<HTMLInputElement>) => {
-      args.onChange?.(value);
-      setArgs({ value });
+    const [value, setValue] = React.useState(args.value);
+    const onValueChange = (e: ChangeEvent<HTMLInputElement>) => {
+      setValue(e?.target?.value);
     };
-    return <div className="w-[50dvw] flex justify-center"><PasswordInput {...args} onChange={() => onValueChange} /></div>;
+    return <div className="w-[50dvw] flex justify-center"><PasswordInput {...args} value={value} onChange={(e: ChangeEvent<HTMLInputElement>) => onValueChange(e)} /></div>;
   },
   args: {
     name: "password",
@@ -56,12 +54,11 @@ export const WithoutLabel: Story = {
 
 export const WithError: Story = {
   render: (args) => {
-    const [, setArgs] = useArgs();
-    const onValueChange = (value: ChangeEvent<HTMLInputElement>) => {
-      args.onChange?.(value);
-      setArgs({ value });
+    const [value, setValue] = React.useState(args.value);
+    const onValueChange = (e: ChangeEvent<HTMLInputElement>) => {
+      setValue(e?.target?.value);
     };
-    return <div className="w-[50dvw] flex justify-center"><PasswordInput {...args} onChange={() => onValueChange} /></div>;
+    return <div className="w-[50dvw] flex justify-center"><PasswordInput {...args} value={value} onChange={(e: ChangeEvent<HTMLInputElement>) => onValueChange(e)} /></div>;
   },
   args: {
     name: "password",

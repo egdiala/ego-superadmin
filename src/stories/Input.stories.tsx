@@ -1,8 +1,8 @@
 import { ChangeEvent } from "react";
 import { fn } from "@storybook/test";
 import { Input } from "./../components/core/Input";
-import { useArgs } from "@storybook/preview-api";
 import type { Meta, StoryObj } from "@storybook/react";
+import React from "react";
 
 const meta = {
   title: "Forms/Input",
@@ -19,30 +19,28 @@ type Story = StoryObj<typeof meta>;
 
 export const WithLabel: Story = {
   render: (args) => {
-    const [, setArgs] = useArgs();
-    const onValueChange = (value: ChangeEvent<HTMLInputElement>) => {
-      args.onChange?.(value);
-      setArgs({ value });
+    const [value, setValue] = React.useState(args.value);
+    const onValueChange = (e: ChangeEvent<HTMLInputElement>) => {
+      setValue(e?.target?.value);
     };
-    return <div className="w-[50dvw] flex justify-center"><Input {...args} onChange={() => onValueChange} /></div>;
+    return <div className="w-[50dvw] flex justify-center"><Input {...args} value={value} onChange={(e: ChangeEvent<HTMLInputElement>) => onValueChange(e)} /></div>;
   },
   args: {
     type: "text",
     name: "first_name",
     label: "First Name",
     placeholder: "Enter your first name",
-    help: "First name only",
+    help: "First name only"
   },
 };
 
 export const WithoutLabel: Story = {
   render: (args) => {
-    const [, setArgs] = useArgs();
-    const onValueChange = (value: ChangeEvent<HTMLInputElement>) => {
-      args.onChange?.(value);
-      setArgs({ value });
+    const [value, setValue] = React.useState(args.value);
+    const onValueChange = (e: ChangeEvent<HTMLInputElement>) => {
+      setValue(e?.target?.value);
     };
-    return <div className="w-[50dvw] flex justify-center"><Input {...args} onChange={() => onValueChange} /></div>;
+    return <div className="w-[50dvw] flex justify-center"><Input {...args} value={value} onChange={(e: ChangeEvent<HTMLInputElement>) => onValueChange(e)} /></div>;
   },
   args: {
     type: "text",
@@ -53,12 +51,11 @@ export const WithoutLabel: Story = {
 
 export const WithError: Story = {
   render: (args) => {
-    const [, setArgs] = useArgs();
+    const [value, setValue] = React.useState(args.value);
     const onValueChange = (e: ChangeEvent<HTMLInputElement>) => {
-      args.onChange?.(e.target.value as any);
-      setArgs({ value: e.target.value });
+      setValue(e?.target?.value);
     };
-    return <div className="w-[50dvw] flex justify-center"><Input {...args} onChange={() => onValueChange} /></div>;
+    return <div className="w-[50dvw] flex justify-center"><Input {...args} value={value} onChange={(e: ChangeEvent<HTMLInputElement>) => onValueChange(e)} /></div>;
   },
   args: {
     type: "email",
@@ -72,12 +69,11 @@ export const WithError: Story = {
 
 export const ErrorWithoutLabel: Story = {
   render: (args) => {
-    const [, setArgs] = useArgs();
-    const onValueChange = (value: ChangeEvent<HTMLInputElement>) => {
-      args.onChange?.(value);
-      setArgs({ value });
+    const [value, setValue] = React.useState(args.value);
+    const onValueChange = (e: ChangeEvent<HTMLInputElement>) => {
+      setValue(e?.target?.value);
     };
-    return <div className="w-[50dvw] flex justify-center"><Input {...args} onChange={() => onValueChange} /></div>;
+    return <div className="w-[50dvw] flex justify-center"><Input {...args} value={value} onChange={(e: ChangeEvent<HTMLInputElement>) => onValueChange(e)} /></div>;
   },
   args: {
     type: "email",
@@ -90,12 +86,11 @@ export const ErrorWithoutLabel: Story = {
 
 export const WithLeftIcon: Story = {
   render: (args) => {
-    const [, setArgs] = useArgs();
-    const onValueChange = (value: ChangeEvent<HTMLInputElement>) => {
-      args.onChange?.(value);
-      setArgs({ value });
+    const [value, setValue] = React.useState(args.value);
+    const onValueChange = (e: ChangeEvent<HTMLInputElement>) => {
+      setValue(e?.target?.value);
     };
-    return <div className="w-[50dvw] flex justify-center"><Input {...args} onChange={() => onValueChange} /></div>;
+    return <div className="w-[50dvw] flex justify-center"><Input {...args} value={value} onChange={(e: ChangeEvent<HTMLInputElement>) => onValueChange(e)} /></div>;
   },
   args: {
     type: "text",
@@ -108,12 +103,11 @@ export const WithLeftIcon: Story = {
 
 export const WithRightIcon: Story = {
   render: (args) => {
-    const [, setArgs] = useArgs();
-    const onValueChange = (value: ChangeEvent<HTMLInputElement>) => {
-      args.onChange?.(value);
-      setArgs({ value });
+    const [value, setValue] = React.useState(args.value);
+    const onValueChange = (e: ChangeEvent<HTMLInputElement>) => {
+      setValue(e?.target?.value);
     };
-    return <div className="w-[50dvw] flex justify-center"><Input {...args} onChange={() => onValueChange} /></div>;
+    return <div className="w-[50dvw] flex justify-center"><Input {...args} value={value} onChange={(e: ChangeEvent<HTMLInputElement>) => onValueChange(e)} /></div>;
   },
   args: {
     type: "text",
