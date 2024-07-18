@@ -8,6 +8,7 @@ export const ChangePasswordPage: React.FC = () => {
     const navigate = useNavigate()
     return (
         <motion.div initial={routeVariants.initial} animate={routeVariants.final} exit={routeVariants.initial} className="grid gap-7 p-7 lg:p-8 bg-white max-w-md w-full h-fit place-self-center rounded-xl">
+            <img src="/eGO_logo_green.svg" className="w-32 mx-auto" alt="eGO_green_logo" />
             <div className="grid gap-1 justify-items-center">
                 <h1 className="font-bold text-2xl md:text-[2rem] text-grey-dark-1 text-center">Change your password</h1>
                 <p className="font-normal text-sm text-grey-dark-2 text-center">Please change your default password to a new one.</p>
