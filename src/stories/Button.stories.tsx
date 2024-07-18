@@ -47,10 +47,10 @@ export const Tertiary: Story = {
   },
 };
 
-export const Grey: Story = {
-  render: (args) => <div className="w-[50dvw] flex justify-center"><Button {...args}>Grey 🌚</Button></div>,
+export const Outline: Story = {
+  render: (args) => <div className="w-[50dvw] flex justify-center"><Button {...args}>Outline 🌚</Button></div>,
   args: {
-    theme: "grey",
+    theme: "outline",
   },
 };
 
