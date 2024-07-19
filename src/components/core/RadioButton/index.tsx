@@ -48,7 +48,7 @@ export const RadioButton: React.FC<RadioButtonProps> = forwardRef(
         value={value}
         checked={checked}
         disabled={disabled}
-        className={cn("zsm-radio", className)}
+        className={cn("ego-radio", className)}
         {...props}
       />
     );

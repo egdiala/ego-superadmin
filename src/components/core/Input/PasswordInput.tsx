@@ -33,12 +33,12 @@ export const PasswordInput: React.FC<PasswordInputProps> = (props) => {
     };
   
     return (
-        <div className='zsm-input--outer'>
+        <div className='ego-input--outer'>
             <RenderIf condition={!!props?.label}>
-                <label htmlFor={props?.name} className='zsm-input--label'>{props?.label}</label>
+                <label htmlFor={props?.name} className='ego-input--label'>{props?.label}</label>
             </RenderIf>
-            <div className='zsm-input--inner'>
-                <input type={props.showPassword && togglePassword ? "text" : "password"} className={["zsm-input pl-2", props.showPassword ? "pr-10" : "pr-2"].join(" ").trim()} {...props} />
+            <div className='ego-input--inner'>
+                <input type={props.showPassword && togglePassword ? "text" : "password"} className={["ego-input pl-2", props.showPassword ? "pr-10" : "pr-2"].join(" ").trim()} {...props} />
                 <RenderIf condition={!!props.showPassword}>
                     <button
                         type='button'
@@ -55,7 +55,7 @@ export const PasswordInput: React.FC<PasswordInputProps> = (props) => {
                 </RenderIf>
             </div>
             <RenderIf condition={!!props?.error}>
-                <span className='zsm-input--error'>{props?.error}</span>
+                <span className='ego-input--error'>{props?.error}</span>
             </RenderIf>
         </div>
     );

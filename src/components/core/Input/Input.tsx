@@ -36,10 +36,10 @@ interface InputProps extends React.AllHTMLAttributes<HTMLInputElement> {
  */
 export const Input: React.FC<InputProps> = (props) => {
   return (
-    <div className="zsm-input--outer">
+    <div className="ego-input--outer">
       <RenderIf condition={!!props?.label}>
         <div className="text-sm tracking-custom flex items-center">
-          <label htmlFor={props?.name} className="zsm-input--label">
+          <label htmlFor={props?.name} className="ego-input--label">
             {props?.label}
           </label>
           {!!props?.optional && (
@@ -47,7 +47,7 @@ export const Input: React.FC<InputProps> = (props) => {
           )}
         </div>
       </RenderIf>
-      <div className="zsm-input--inner">
+      <div className="ego-input--inner">
         <RenderIf condition={!!props?.iconLeft}>
           <Icon
             icon={props?.iconLeft as string | IconifyIcon}
@@ -56,7 +56,7 @@ export const Input: React.FC<InputProps> = (props) => {
         </RenderIf>
         <input
           className={[
-            "zsm-input",
+            "ego-input",
             props?.iconLeft ? "pl-10" : "pl-2",
             props?.iconRight ? "pr-10" : "pr-2",
           ]
@@ -72,7 +72,7 @@ export const Input: React.FC<InputProps> = (props) => {
         </RenderIf>
       </div>
       <RenderIf condition={!!props?.error}>
-        <span className="zsm-input--error">{props?.error}</span>
+        <span className="ego-input--error">{props?.error}</span>
       </RenderIf>
     </div>
   );

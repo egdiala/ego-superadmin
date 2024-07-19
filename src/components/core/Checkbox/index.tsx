@@ -48,7 +48,7 @@ export const Checkbox: React.FC<CheckboxProps> = forwardRef(
         value={value}
         checked={checked}
         disabled={disabled}
-        className={cn("zsm-checkbox", className)}
+        className={cn("ego-checkbox", className)}
         {...props}
       />
     );

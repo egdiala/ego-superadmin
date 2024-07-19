@@ -1,21 +1,21 @@
 @import "../../../forms.css";
 
-.zsm-textarea--label {
+.ego-textarea--label {
   @apply text-grey-dark-2 font-normal text-sm !important;
 }
 
-.zsm-input--error {
+.ego-input--error {
   @apply text-semantics-error font-normal text-xs !important;
 }
 
-.zsm-input--inner {
+.ego-input--inner {
   @apply relative w-full h-fit;
 }
 
-.zsm-input--outer {
+.ego-input--outer {
   @apply grid gap-2 content-start w-full h-fit relative;
 }
 
-.zsm-message-box {
+.ego-message-box {
   @apply rounded-md grid w-full p-3 border border-grey-dark-3 bg-white focus:border-green-0 focus:bg-light-green text-grey-dark-1 focus:ring focus:ring-green-0/[0.24] disabled:bg-white disabled:border-grey-dark-3 disabled:text-grey-dark-3 caret-grey-dark-1 transition-all duration-300 ease-out !important;
 }

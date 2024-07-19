@@ -44,21 +44,21 @@ interface TextAreaProps extends React.AllHTMLAttributes<HTMLTextAreaElement> {
 export const TextArea: React.FC<TextAreaProps> = (props) => {
   const postTextAreaId = useId();
   return (
-    <div className={`${props.containerVariant} zsm-input--outer`}>
+    <div className={`${props.containerVariant} ego-input--outer`}>
        
       <RenderIf condition={!!props?.label}>
-        <label htmlFor={postTextAreaId} className='zsm-input--label'>
+        <label htmlFor={postTextAreaId} className='ego-input--label'>
           {props?.label}
         </label>
       </RenderIf>
-      <div className='zsm-input--inner'>
+      <div className='ego-input--inner'>
         <textarea
           id={postTextAreaId}
           maxLength={props.maxLength}
           data-testId={props.id}
           rows={5}
           cols={33}
-          className='zsm-message-box'
+          className='ego-message-box'
           {...props}
         />
         <RenderIf condition={!!props?.maxLength}>
@@ -68,10 +68,10 @@ export const TextArea: React.FC<TextAreaProps> = (props) => {
         </RenderIf>
       </div>
       <RenderIf condition={!!props?.help}>
-        <span className='zsm-input--help'>{props?.help}</span>
+        <span className='ego-input--help'>{props?.help}</span>
       </RenderIf>
       <RenderIf condition={!!props?.error}>
-        <span className='zsm-input--error'>{props?.error}</span>
+        <span className='ego-input--error'>{props?.error}</span>
       </RenderIf>
     </div>
   );

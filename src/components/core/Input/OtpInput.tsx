@@ -142,7 +142,7 @@ export const OtpInput: React.FC<OtpInputProps> = (props) => {
                 <input
                 {...props}
                 key={i.toString()}
-                className='zsm-otp-input'
+                className='ego-otp-input'
                 type='text'
                 autoFocus={i === props.value.length}
                 inputMode='numeric'
@@ -155,7 +155,7 @@ export const OtpInput: React.FC<OtpInputProps> = (props) => {
             ))}
         </div>
         <RenderIf condition={!!props?.error}>
-            <span className='zsm-input--error'>{props?.error}</span>
+            <span className='ego-input--error'>{props?.error}</span>
         </RenderIf>
     </div>
   );

@@ -55,7 +55,7 @@ export const Pagination: React.FC<PaginationProps> = ({
 
   return (
     <div
-      className={`zsm-pagination-container ${className ?? "pt-4 px-4 pb-2.5"}`}
+      className={`ego-pagination-container ${className ?? "pt-4 px-4 pb-2.5"}`}
     >
       <div className="relative inline-block text-left">
         <div className="text-grey-dark-3 inline-flex justify-center w-full focus:outline-none items-center gap-2">
@@ -70,7 +70,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           type="button"
           onClick={prev}
           disabled={currentPage === 1}
-          className={currentPage === 1 ? "zsm-pagination-arrow-button-inactive" : "zsm-pagination-arrow-button-active"}
+          className={currentPage === 1 ? "ego-pagination-arrow-button-inactive" : "ego-pagination-arrow-button-active"}
         >
           <Icon
             icon="heroicons:chevron-left-solid"
@@ -83,7 +83,7 @@ export const Pagination: React.FC<PaginationProps> = ({
               <button
                 key={`${item.toString()}-${idx}`}
                 type="button"
-                className="zsm-pagination-number-button-inactive"
+                className="ego-pagination-number-button-inactive"
                 disabled
               >
                 &#8230;
@@ -93,8 +93,8 @@ export const Pagination: React.FC<PaginationProps> = ({
                 key={item.toString()}
                 className={
                   currentPage === item
-                    ? "zsm-pagination-number-button-active"
-                    : "zsm-pagination-number-button-inactive"
+                    ? "ego-pagination-number-button-active"
+                    : "ego-pagination-number-button-inactive"
                 }
                 type="button"
                 disabled={currentPage === item}
@@ -109,7 +109,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           type="button"
           onClick={next}
           disabled={currentPage === totalPages}
-          className={currentPage === totalPages ? "zsm-pagination-arrow-button-inactive" : "zsm-pagination-arrow-button-active"}
+          className={currentPage === totalPages ? "ego-pagination-arrow-button-inactive" : "ego-pagination-arrow-button-active"}
         >
           <Icon
             icon="heroicons:chevron-right-solid"

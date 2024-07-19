@@ -41,21 +41,21 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
   const btn = {
     themes: {
-      primary: "zsm-button--primary",
-      secondary: "zsm-button--secondary",
-      tertiary: "zsm-button--tertiary",
-      outline: "zsm-button--outline",
-      white: "zsm-button--white",
-      ghost: "zsm-button--ghost",
-      "arrow-cta-1": "zsm-button--arrow-cta-1",
-      "arrow-cta-2": "zsm-button--arrow-cta-2"
+      primary: "ego-button--primary",
+      secondary: "ego-button--secondary",
+      tertiary: "ego-button--tertiary",
+      outline: "ego-button--outline",
+      white: "ego-button--white",
+      ghost: "ego-button--ghost",
+      "arrow-cta-1": "ego-button--arrow-cta-1",
+      "arrow-cta-2": "ego-button--arrow-cta-2"
     },
   };
 
-  const width = block && "zsm-button--block";
+  const width = block && "ego-button--block";
   
   return (
-    <button className={cn("w-fit", "zsm-button", btn.themes[theme as keyof typeof btn.themes], width, className)} {...props}>
+    <button className={cn("w-fit", "ego-button", btn.themes[theme as keyof typeof btn.themes], width, className)} {...props}>
         <RenderIf condition={loading!}>
             <div className="flex items-center justify-center">
                 <Loader className="spinner" />

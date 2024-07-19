@@ -34,18 +34,18 @@ export const TableAction: React.FC<TableActionProps> = ({
 }) => {
   const btn = {
     themes: {
-      primary: "zsm-table-action--primary",
-      secondary: "zsm-table-action--secondary",
-      tertiary: "zsm-table-action--tertiary",
-      grey: "zsm-table-action--grey",
-      ghost: "zsm-table-action--ghost",
+      primary: "ego-table-action--primary",
+      secondary: "ego-table-action--secondary",
+      tertiary: "ego-table-action--tertiary",
+      grey: "ego-table-action--grey",
+      ghost: "ego-table-action--ghost",
     },
   };
 
-  const width = block && "zsm-button--block";
+  const width = block && "ego-button--block";
   
   return (
-    <button className={cn("w-fit", "zsm-button", btn.themes[theme as keyof typeof btn.themes], width, className)} {...props}>
+    <button className={cn("w-fit", "ego-button", btn.themes[theme as keyof typeof btn.themes], width, className)} {...props}>
 {       children}
     </button>
   );
