@@ -11,7 +11,7 @@ export const Sidebar: React.FC = () => {
             <div data-slot="section" className="grid gap-1">
             {
                 appRoutes.map((item) =>
-                    <ModuleListItem {...item} />
+                    <ModuleListItem key={item.to} {...item} />
                 )
             }
             </div>
@@ -19,7 +19,7 @@ export const Sidebar: React.FC = () => {
             <div className="text-dark-green-1 pl-3 font-medium uppercase text-[0.625rem]/3">Finance</div>
             {
                 financeRoutes.map((item) =>
-                    <ModuleListItem {...item} />
+                    <ModuleListItem key={item.to} {...item} />
                 )
             }
             </div>
@@ -27,7 +27,7 @@ export const Sidebar: React.FC = () => {
             <div className="text-dark-green-1 pl-3 font-medium uppercase text-[0.625rem]/3">Admin Accounts</div>
             {
                 adminRoutes.map((item) =>
-                    <ModuleListItem {...item} />
+                    <ModuleListItem key={item.to} {...item} />
                 )
             }
             </div>

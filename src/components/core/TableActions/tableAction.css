@@ -15,7 +15,7 @@
 }
 
 .ego-table-action--ghost {
-  @apply bg-transparent border border-transparent hover:border-light-green hover:bg-light-green text-green-0 rounded py-3 px-2 text-sm font-medium !important;
+  @apply bg-transparent border border-transparent hover:border-light-green hover:bg-light-green text-dark-green-1 rounded py-3 px-4 text-sm font-medium !important;
 }
 
 .ego-table-action--secondary > svg {
