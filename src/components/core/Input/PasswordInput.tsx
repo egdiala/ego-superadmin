@@ -42,7 +42,7 @@ export const PasswordInput: React.FC<PasswordInputProps> = (props) => {
                 <RenderIf condition={!!props.showPassword}>
                     <button
                         type='button'
-                        onClick={toggleVisibility}
+                        onClick={() => toggleVisibility()}
                         className={`${props.showPassword ? "toggle-password-icon" : "hidden"}`}
                     >
                         <RenderIf condition={togglePassword}>

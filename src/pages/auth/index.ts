@@ -1,5 +1,3 @@
-export * from "./ChangePassword"
-export * from "./ChangePasswordSuccess"
 export * from "./ForgotPassword"
 export * from "./Login"
 export * from "./ResetPassword"

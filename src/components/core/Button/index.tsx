@@ -56,7 +56,7 @@ export const Button: React.FC<ButtonProps> = ({
   
   return (
     <button className={cn("w-fit", "ego-button", btn.themes[theme as keyof typeof btn.themes], width, className)} {...props}>
-        <RenderIf condition={loading!}>
+        <RenderIf condition={!!loading}>
             <div className="flex items-center justify-center">
                 <Loader className="spinner" />
             </div>
