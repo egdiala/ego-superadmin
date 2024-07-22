@@ -98,7 +98,7 @@ export const Table: React.FC<TableProps> = ({
   }, [location.search]);
 
   return (
-    <div className="min-h-40vh h-full flex flex-col rounded-lg">
+    <>
       <div className="lg:w-full lg:left-auto lg:relative lg:right-auto left-0 right-0 overflow-x-scroll scrollbar-hide">
         <table className="font-cabin w-full table-auto">
           {/* Table Head */}
@@ -106,14 +106,14 @@ export const Table: React.FC<TableProps> = ({
             {table.getHeaderGroups().map((headerGroup) => (
               <tr
                 key={headerGroup.id}
-                className="w-full flex justify-between items-center px-2 py-2.5 bg-grey-dark-4 rounded-lg bg-neutral-variant cursor-pointer mb-2"
+                className="w-full flex justify-between items-center px-2 py-2.5 bg-grey-dark-4 rounded-lg bg-neutral-variant cursor-pointer"
               >
                 {headerGroup.headers.map((header, index) => {
                   return (
                     <th
                       key={header.id}
                       colSpan={header.colSpan}
-                      className="w-full text-left"
+                      className="w-full text-left last:text-right"
                       style={{
                         width: `${header.getSize()}px`,
                         opacity: header.id === "action" ? 0 : 1,
@@ -121,7 +121,7 @@ export const Table: React.FC<TableProps> = ({
                     >
                       {header.isPlaceholder ? null : (
                         <td
-                          className={`w-full flex items-center gap-1 text-left
+                          className={`w-full flex items-center gap-1
                             ${
                               header.column.getCanSort()
                                 ? "cursor-pointer select-none"
@@ -143,7 +143,7 @@ export const Table: React.FC<TableProps> = ({
                               : undefined
                           }
                         >
-                          <span className="text-left text-grey-dark-1 text-sm font-medium whitespace-nowrap">
+                          <span className="text-grey-dark-1 text-sm font-medium whitespace-nowrap">
                             {flexRender(
                               header.column.columnDef.header,
                               header.getContext()
@@ -178,7 +178,7 @@ export const Table: React.FC<TableProps> = ({
                     key={row.id}
                     data-testid={row.id}
                     onClick={() => onClick(row)}
-                    className="w-full flex justify-between hover:bg-green-4 items-center px-2 py-3.5 mb-2"
+                    className="w-full flex justify-between hover:bg-green-4 items-center px-2 py-3.5"
                   >
                     {row.getVisibleCells().map((cell) => {
                       return (
@@ -226,6 +226,6 @@ export const Table: React.FC<TableProps> = ({
           goToPage={(v) => goToPage(Number(v))}
         />
       </RenderIf>
-    </div>
+    </>
   );
 };

@@ -1,5 +1,5 @@
 .ego-pagination-container {
-  @apply flex flex-col md:flex-row items-center justify-between gap-2 w-full;
+  @apply flex flex-row items-center justify-between gap-2 w-full;
 }
 
 .ego-pagination-arrow-button-inactive {
