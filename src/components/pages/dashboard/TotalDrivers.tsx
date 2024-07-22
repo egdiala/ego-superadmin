@@ -36,19 +36,9 @@ export const TotalDrivers: React.FC<TotalDriversDashboardProps> = ({ className }
                     colors={data.map((item) => item.color)}
                     margin={{ top: 5, right: 0, bottom: 5, left: 0 }}
                     innerRadius={0.9}
-                    cornerRadius={3}
+                    cornerRadius={0.95}
                     activeInnerRadiusOffset={3}
                     activeOuterRadiusOffset={3}
-                    borderWidth={1}
-                    borderColor={{
-                        from: "color",
-                        modifiers: [
-                            [
-                                "darker",
-                                0.2
-                            ]
-                        ]
-                    }}
                     isInteractive={false}
                     enableArcLinkLabels={false}
                     arcLinkLabelsSkipAngle={10}
