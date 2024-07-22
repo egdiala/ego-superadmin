@@ -66,7 +66,7 @@ export const ServiceRequests: React.FC<ServiceRequestsHomeProps> = ({ className 
                 <div className="p-4 flex items-center justify-between gap-1 bg-portal-bg rounded-lg w-full">
                 {
                     referrals.map((referral) =>
-                    <div className="grid gap-1">
+                    <div key={referral.label} className="grid gap-1">
                         <h4 className="capitalize text-grey-dark-2 text-xs">{referral.label}</h4>
                         <span className="text-grey-dark-1 text-base">{referral.amount}</span>
                     </div>

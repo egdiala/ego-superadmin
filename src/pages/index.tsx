@@ -1,9 +1,11 @@
 import React from "react";
-import { Customers, PaymentValue, ServiceRequests, TotalTrips, TripDetails, Vehicles } from "@/components/pages/dashboard";
+import { Customers, DistanceCovered, PaymentValue, ServiceRequests, TotalDrivers, TotalTrips, TripDetails, Vehicles } from "@/components/pages/dashboard";
+import { pageVariants } from "@/constants/animateVariants";
+import { motion } from "framer-motion";
 
 export const DashboardPage: React.FC = () => {
     return (
-        <div className="flex flex-col gap-3.5">
+        <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">
             <h1 className="text-grey-dark-1 font-bold text-2xl md:text-[2rem]">Dashboard</h1>
             <div className="grid gap-6">
                 <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
@@ -19,6 +21,10 @@ export const DashboardPage: React.FC = () => {
                 <TripDetails />
                 <ServiceRequests />
             </div>
-        </div>
+            <div className="grid gap-6 xl:grid-cols-7">
+                <TotalDrivers className="xl:col-span-3" />
+                <DistanceCovered className="xl:col-span-4" />
+            </div>
+        </motion.div>
     )
 }

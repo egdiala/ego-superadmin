@@ -1,5 +1,7 @@
 import React from "react";
 import { cn } from "@/libs/cn";
+import { TableAction } from "@/components/core";
+import { Icon } from "@iconify/react";
 
 interface TripDetailsDashboardProps {
     [x: string]: any
@@ -18,24 +20,20 @@ export const TripDetails: React.FC<TripDetailsDashboardProps> = ({ className }) 
     ]
     return (
         <div className={cn("flex flex-col gap-6 px-4 pt-4 pb-7 rounded-lg bg-white", className)}>
-            <div className="p-2 grid gap-1 bg-portal-bg rounded-lg w-fit">
-                <h4 className="text-grey-dark-2 text-xs">Av. fare per trip</h4>
-                <span className="text-grey-dark-1 text-xl">₦5,936</span>
-            </div>
-            <div className="flex items-center gap-5 justify-between">
-            {
-                models1.map((item) =>
-                <div key={item.label} className="grid gap-1">
-                    <h4 className="text-grey-dark-2 text-xs text-left">{item.label}</h4>
-                    <span className="text-grey-dark-1 text-lg text-left">{item.value}</span>
+            <div className="flex items-start justify-between">
+                <div className="p-2 grid gap-1 bg-portal-bg rounded-lg w-fit">
+                    <h4 className="text-grey-dark-2 text-xs">Av. fare per trip</h4>
+                    <span className="text-grey-dark-1 text-xl">₦5,936</span>
                 </div>
-                )
-            }
+                <TableAction theme="ghost">
+                    <Icon icon="mdi:funnel" className="size-4" />
+                    Filter
+                </TableAction>
             </div>
-            <div className="flex items-center gap-5 justify-between">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 justify-between">
             {
-                models2.map((item) =>
-                <div key={item.label} className="grid gap-1">
+                [...models1, ...models2].map((item, idx) =>
+                <div key={idx} className="grid gap-1">
                     <h4 className="text-grey-dark-2 text-xs text-left">{item.label}</h4>
                     <span className="text-grey-dark-1 text-lg text-left">{item.value}</span>
                 </div>
