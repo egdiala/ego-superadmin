@@ -1,7 +1,7 @@
 import React from "react";
-import { Customers, DistanceCovered, PaymentValue, ServiceRequests, TotalDrivers, TotalTrips, TripDetails, Vehicles } from "@/components/pages/dashboard";
-import { pageVariants } from "@/constants/animateVariants";
 import { motion } from "framer-motion";
+import { pageVariants } from "@/constants/animateVariants";
+import { Customers, DistanceCovered, PaymentValue, Ratings, ServiceRequests, TopCommuters, TopDrivers, TopVehicles, TotalDrivers, TotalTrips, TripDetails, Vehicles } from "@/components/pages/dashboard";
 
 export const DashboardPage: React.FC = () => {
     return (
@@ -24,6 +24,14 @@ export const DashboardPage: React.FC = () => {
             <div className="grid gap-6 xl:grid-cols-7">
                 <TotalDrivers className="xl:col-span-3" />
                 <DistanceCovered className="xl:col-span-4" />
+            </div>
+            <div className="grid gap-6 xl:grid-cols-7">
+                <TopDrivers className="xl:col-span-4" />
+                <Ratings className="xl:col-span-3" />
+            </div>
+            <div className="grid gap-6 xl:grid-cols-7">
+                <TopVehicles className="xl:col-span-3" />
+                <TopCommuters className="xl:col-span-4" />
             </div>
         </motion.div>
     )

@@ -1,4 +1,4 @@
-import React, { type ReactNode } from "react";
+import React, { forwardRef, type ReactNode } from "react";
 import { cn } from "@/libs/cn";
 import "./tableAction.css"
 import "./../Button/button.css";
@@ -25,13 +25,13 @@ interface TableActionProps extends React.HTMLAttributes<HTMLButtonElement> {
 /**
  * Table Action component for user interaction
  */
-export const TableAction: React.FC<TableActionProps> = ({
+export const TableAction: React.FC<TableActionProps> = forwardRef(({
   className,
   block,
   theme,
   children,
   ...props
-}) => {
+}, ref: React.LegacyRef<HTMLButtonElement>) => {
   const btn = {
     themes: {
       primary: "ego-table-action--primary",
@@ -45,8 +45,8 @@ export const TableAction: React.FC<TableActionProps> = ({
   const width = block && "ego-button--block";
   
   return (
-    <button className={cn("w-fit", "ego-button", btn.themes[theme as keyof typeof btn.themes], width, className)} {...props}>
+    <button className={cn("w-fit", "ego-button", btn.themes[theme as keyof typeof btn.themes], width, className)} ref={ref} {...props}>
 {       children}
     </button>
   );
-};
+});
