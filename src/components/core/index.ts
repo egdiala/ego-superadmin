@@ -6,5 +6,6 @@ export * from "./ModuleListItem";
 export * from "./Pagination";
 export * from "./RadioButton";
 export * from "./RenderIf";
+export * from "./Table"
 export * from "./TableActions"
 export * from "./Textarea";

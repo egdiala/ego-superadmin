@@ -58,9 +58,9 @@ export const Pagination: React.FC<PaginationProps> = ({
       className={`ego-pagination-container ${className ?? "pt-4 px-4 pb-2.5"}`}
     >
       <div className="relative inline-block text-left">
-        <div className="text-grey-dark-3 inline-flex justify-center w-full focus:outline-none items-center gap-2">
+        <div className="text-sm text-grey-dark-3 inline-flex justify-center w-full focus:outline-none items-center gap-2">
             Showing page 
-            <span className="text-grey-dark-1 text-sm font-normal">
+            <span className="text-grey-dark-1 font-normal">
                 {currentPage} of {totalPages}
             </span>
         </div>
@@ -77,33 +77,9 @@ export const Pagination: React.FC<PaginationProps> = ({
             className="text-base"
           />
         </button>
-        <div className="flex items-center gap-2">
-          {paginationRange?.map((item, idx) =>
-            item === DOTS ? (
-              <button
-                key={`${item.toString()}-${idx}`}
-                type="button"
-                className="ego-pagination-number-button-inactive"
-                disabled
-              >
-                &#8230;
-              </button>
-            ) : (
-              <button
-                key={item.toString()}
-                className={
-                  currentPage === item
-                    ? "ego-pagination-number-button-active"
-                    : "ego-pagination-number-button-inactive"
-                }
-                type="button"
-                disabled={currentPage === item}
-                onClick={() => goToPage(item)}
-              >
-                {item}
-              </button>
-            )
-          )}
+        <div className="relative flex flex-col items-center gap-2">
+          <input value={currentPage} onChange={(e) => goToPage(e.target.value)} className="rounded-md text-base text-center border border-input-filled bg-grey-dark-4 focus:border-green-base focus:bg-light-green text-grey-dark-1 placeholder:text-grey-dark-3 focus:ring focus:ring-green-base/[0.24] disabled:bg-white disabled:border-grey-dark-3 disabled:text-grey-dark-3 caret-grey-dark-1 transition-all duration-300 ease-out px-2 max-w-11 w-full block h-7" />
+          <span className="absolute -bottom-4 text-grey-dark-3 text-[0.625rem]/3 whitespace-nowrap">Click to Edit</span>
         </div>
         <button
           type="button"
