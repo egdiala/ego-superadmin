@@ -2,7 +2,7 @@ export const appRoutes = [
     { to:"/", name:"Home", icon:"heroicons-solid:view-grid" },
     { to:"/trips", name:"All Trips", icon:"bx:trip" },
     { to:"/drivers", name:"Drivers", icon:"mdi:steering" },
-    { to:"/riders", name:"Riders", icon:"mdi:steering" },
+    { to:"/riders", name:"Riders", icon:"fa-solid:users" },
     { to:"/vehicles", name:"Vehicles", icon:"mingcute:car-3-fill" },
     { to:"/customers", name:"Customers", icon:"mingcute:building-2-fill" },
     { to:"/service-request", name:"Service Request", icon:"bi:tools" },
