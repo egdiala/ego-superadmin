@@ -43,7 +43,7 @@ export const Input: React.FC<InputProps> = (props) => {
             {props?.label}
           </label>
           {!!props?.optional && (
-            <span className="font-normal text-[#A2AAA9] ml-1">(Optional)</span>
+            <span className="font-normal text-grey-dark-3 ml-1">(Optional)</span>
           )}
         </div>
       </RenderIf>

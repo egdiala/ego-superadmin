@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { DashboardPage } from "@/pages";
-import { DriversPage } from "@/pages/drivers/Drivers";
+import { DriversPage } from "@/pages/drivers";
 
 const DashboardRoutes = () => {
   return (

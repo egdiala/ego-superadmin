@@ -10,8 +10,7 @@
   }
 }
 
-.ego-module-list-item--active,
-.active {
+.ego-module-list-item--active {
   @apply text-dark-green-1 hover:text-dark-green-1 bg-yellow-3 hover:bg-yellow-3 font-medium transition-all duration-300 ease-out !important;
 
   svg {

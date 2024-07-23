@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
-import { usePagination, DOTS } from "./usePagination";
 import { Icon } from "@iconify/react";
 import "./pagination.css";
 
@@ -43,15 +42,6 @@ export const Pagination: React.FC<PaginationProps> = ({
   next,
   className,
 }) => {
-  const paginationRange = usePagination({
-    pages: totalPages,
-    siblingCount: 1,
-    currentPage,
-  });
-
-  if (currentPage === 0 || paginationRange?.length! < 1) {
-    return null;
-  }
 
   return (
     <div
@@ -78,7 +68,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           />
         </button>
         <div className="relative flex flex-col items-center gap-2">
-          <input value={currentPage} onChange={(e) => goToPage(e.target.value)} className="rounded-md text-base text-center border border-input-filled bg-grey-dark-4 focus:border-green-base focus:bg-light-green text-grey-dark-1 placeholder:text-grey-dark-3 focus:ring focus:ring-green-base/[0.24] disabled:bg-white disabled:border-grey-dark-3 disabled:text-grey-dark-3 caret-grey-dark-1 transition-all duration-300 ease-out px-2 max-w-11 w-full block h-7" />
+          <input value={currentPage} type="text" inputMode="numeric" onChange={(e) => goToPage(e.target.value)} className="rounded-md text-base text-center border border-input-filled bg-grey-dark-4 focus:border-green-base focus:bg-light-green text-grey-dark-1 placeholder:text-grey-dark-3 focus:ring focus:ring-green-base/[0.24] disabled:bg-white disabled:border-grey-dark-3 disabled:text-grey-dark-3 caret-grey-dark-1 transition-all duration-300 ease-out px-2 max-w-11 w-full block h-7" />
           <span className="absolute -bottom-4 text-grey-dark-3 text-[0.625rem]/3 whitespace-nowrap">Click to Edit</span>
         </div>
         <button
