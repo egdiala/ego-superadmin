@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { login, sendResetPasswordEmail, setPassword } from "../../apis/auth";
+import { confirmResetPasswordOTP, login, sendResetPasswordEmail, sendResetPasswordOTP, setPassword } from "../../apis/auth";
 import { axiosInstance } from "@/services/axiosInstance";
 import { APP_TOKEN_STORAGE_KEY, APP_USERDATA_STORAGE_KEY } from "@/constants/utils";
 import { setItem } from "@/utils/localStorage";
@@ -50,6 +50,32 @@ export const useSetPassword = (fn?: (v: any) => void) => {
 export const useSendResetPasswordEmail = (fn?: (v: any) => void) => {
   return useMutation({
     mutationFn: sendResetPasswordEmail,
+    onSuccess: (response: any) => {
+      fn?.(response);
+    },
+    onError: (err: any) => {
+      console.error(err)
+    },
+  });
+};
+
+// eslint-disable-next-line no-unused-vars
+export const useSendResetPasswordOTP = (fn?: (v: any) => void) => {
+  return useMutation({
+    mutationFn: sendResetPasswordOTP,
+    onSuccess: (response: any) => {
+      fn?.(response);
+    },
+    onError: (err: any) => {
+      console.error(err)
+    },
+  });
+};
+
+// eslint-disable-next-line no-unused-vars
+export const useConfirmResetPasswordOTP = (fn?: (v: any) => void) => {
+  return useMutation({
+    mutationFn: confirmResetPasswordOTP,
     onSuccess: (response: any) => {
       fn?.(response);
     },

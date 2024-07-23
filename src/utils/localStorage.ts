@@ -3,8 +3,8 @@
  * @param storageKey - String for the item key
  * @returns The item from localStorage
  */
-export function getItem(storageKey: string) {
-    return localStorage.getItem(storageKey)
+export function getItem<T>(storageKey: string) {
+    return localStorage.getItem(storageKey) as T
 }
 
 /**
@@ -15,4 +15,9 @@ export function getItem(storageKey: string) {
  */
 export function setItem(key: string, value: any) {
     return localStorage.setItem(key, value)
+}
+
+
+export function removeItem(key: string) {
+    return localStorage.removeItem(key)
 }

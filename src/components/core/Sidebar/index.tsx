@@ -37,8 +37,8 @@ export const Sidebar: React.FC = () => {
             <div className="flex items-center gap-2">
                 <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" className="size-10 rounded-full object-cover" alt="user" />
                 <div className="flex-1 grid gap-0.5">
-                    <h3 className="font-medium text-sm/4 text-grey-dark-1 line-clamp-1">{admin?.first_name} {admin?.last_name}</h3>
-                    <span className="font-medium text-xs text-grey-dark-3 line-clamp-1">{admin?.user_type}</span>
+                    <h3 className="font-medium text-sm/4 text-grey-dark-1 line-clamp-1 capitalize">{admin?.first_name} {admin?.last_name}</h3>
+                    <span className="font-medium text-xs text-grey-dark-3 line-clamp-1 capitalize">{admin?.user_type}</span>
                 </div>
             </div>
         </nav>

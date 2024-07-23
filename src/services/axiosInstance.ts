@@ -7,6 +7,13 @@ export const axiosInstance: AxiosInstance = axios.create({
   },
 });
 
+export const axiosMessagingInstance: AxiosInstance = axios.create({
+  baseURL: import.meta.env.VITE_EGO_MESSAGING_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
 const token = localStorage.getItem("token") as string;
 
 

@@ -4,7 +4,17 @@ export type LoginType = {
 }
 
 export type SetPasswordType = {
-    email: string;
-    old_password: string;
+    otp: string;
     new_password: string;
+    otp_request_id: string;
+}
+
+export type SendResendPasswordOTPType = {
+    otp_mode?: string;
+    otp_request_id: string;
+}
+
+export type ConfirmResendPasswordOTPType = {
+    otp: string;
+    otp_request_id: string;
 }
