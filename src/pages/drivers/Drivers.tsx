@@ -5,8 +5,10 @@ import { pageVariants } from "@/constants/animateVariants";
 import { Icon } from "@iconify/react";
 import { makeData } from "@/hooks/makeData";
 import { CreateDriverModal } from "@/components/pages/drivers";
+import { useNavigate } from "react-router-dom";
 
 export const DriversPage: React.FC = () => {
+    const navigate = useNavigate();
     const dummyData = makeData(50);
     const [data, setData] = useState(dummyData);
     const [toggleModals, setToggleModals] = useState({
@@ -95,6 +97,7 @@ export const DriversPage: React.FC = () => {
             <Table
                 columns={columns}
                 data={data}
+                onClick={() => navigate("/drivers/3/profile")}
                 getData={getData}
                 totalCount={dummyData.length}
                 onPageChange={handlePageChange}
