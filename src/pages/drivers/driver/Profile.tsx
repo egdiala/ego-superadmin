@@ -1,7 +1,8 @@
 import React from "react";
-import { motion } from "framer-motion";
-import { pageVariants } from "@/constants/animateVariants";
 import { Icon } from "@iconify/react";
+import { motion } from "framer-motion";
+import whiteCar from "@/assets/white_car.svg";
+import { pageVariants } from "@/constants/animateVariants";
 
 export const DriverProfilePage: React.FC = () => {
     const gridItems = [
@@ -26,6 +27,34 @@ export const DriverProfilePage: React.FC = () => {
                         </div>
                         )
                     }
+                </div>
+            </div>
+            <div className="flex flex-col gap-6 w-full border border-grey-dark-4 rounded-lg py-4 px-5">
+                <h2 className="font-semibold text-base text-grey-dark-1">ID & Vehicle Info</h2>
+                <div className="grid grid-cols-5">
+                    <div className="grid gap-1">
+                        <h4 className="text-grey-dark-3 text-sm">NIN</h4>
+                        <span className="text-grey-dark-1 text-sm">12345632783</span>
+                    </div>
+                    <div className="grid gap-1">
+                        <h4 className="text-grey-dark-3 text-sm">Driver’s License No.</h4>
+                        <span className="text-grey-dark-1 text-sm">12345632783</span>
+                    </div>
+                    <div className="grid gap-1">
+                        <h4 className="text-grey-dark-3 text-sm">Vehicle Assignment Status</h4>
+                        <div className="text-white text-sm px-2 py-0.5 bg-green-1 rounded w-fit">Assigned</div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <img src={whiteCar} alt="vehicle" className="object-cover object-center w-12" />
+                        <div className="grid gap-1">
+                            <h4 className="text-grey-dark-1 fon-medium text-sm">ABC123DEF</h4>
+                            <span className="text-grey-dark-2 text-sm">GS3 Sedan</span>
+                        </div>
+                    </div>
+                    <div className="grid gap-1">
+                        <h4 className="text-grey-dark-3 text-sm">Model</h4>
+                        <span className="text-grey-dark-1 text-sm">Lease</span>
+                    </div>
                 </div>
             </div>
         </motion.div>

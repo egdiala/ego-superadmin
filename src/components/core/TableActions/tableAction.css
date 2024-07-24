@@ -3,7 +3,7 @@
 }
 
 .ego-table-action--secondary {
-  @apply bg-light-green border border-light-green hover:border-green-0 hover:bg-green-0 text-grey-dark-1 hover:text-white rounded py-3 px-2 text-sm font-medium justify-center !important;
+  @apply bg-green-3 border border-light-green hover:border-green-0 hover:bg-green-0 text-grey-dark-1 hover:text-white rounded py-3 px-2 text-sm font-medium justify-center !important;
 }
 
 .ego-table-action--tertiary {

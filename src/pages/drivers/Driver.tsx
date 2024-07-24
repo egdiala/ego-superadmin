@@ -21,11 +21,11 @@ export const DriverPage: React.FC = () => {
                 <h1 className="text-grey-dark-1 font-bold text-xl">Ronald Julius</h1>
                 <div className="flex items-center gap-2 pb-4">
                     <Button theme="danger">
-                        <Icon icon="ph:trash" className="size-4" />
+                        <Icon icon="ph:trash-bold" className="size-4" />
                         Delete Driver
                     </Button>
                     <Button theme="primary">
-                        <Icon icon="emojione-monotone:white-exclamation-mark" className="size-4" />
+                        <Icon icon="ph:exclamation-mark-bold" className="size-4" />
                         Suspend Driver
                     </Button>
                 </div>
