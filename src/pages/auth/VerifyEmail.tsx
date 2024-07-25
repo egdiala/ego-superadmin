@@ -74,6 +74,7 @@ export const VerifyEmailPage: React.FC = () => {
                     </div>
                 </div>
                 <Button type="button" theme="primary" loading={isConfirming} disabled={isConfirming} block onClick={() => confirmOTP({ otp_request_id, otp })}>Reset Password</Button>
+                <Link to="/auth/login" className="text-center text-dark-green-1 text-base font-semibold">Sign in instead</Link>
             </div>
         </motion.div>
     )

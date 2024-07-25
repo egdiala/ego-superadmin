@@ -1,5 +1,6 @@
-import React, { useId } from "react";
+import React, { Fragment } from "react";
 import { RenderIf } from "@/components/core";
+import { Description, Field, Label, Textarea } from "@headlessui/react"
 import "./textarea.css";
 
 interface TextAreaProps extends React.AllHTMLAttributes<HTMLTextAreaElement> {
@@ -21,6 +22,10 @@ interface TextAreaProps extends React.AllHTMLAttributes<HTMLTextAreaElement> {
    */
   help?: string;
   /**
+   * Name for input element
+   */
+  name?: string;
+  /**
    * Error message
    */
   error?: string | boolean;
@@ -41,38 +46,30 @@ interface TextAreaProps extends React.AllHTMLAttributes<HTMLTextAreaElement> {
 /**
  * Input component for entering user data
  */
-export const TextArea: React.FC<TextAreaProps> = (props) => {
-  const postTextAreaId = useId();
+export const TextArea: React.FC<TextAreaProps> = ({ containerVariant, label, id, help, error, name, placeholder, maxLength, ...props}) => {
   return (
-    <div className={`${props.containerVariant} ego-input--outer`}>
-       
-      <RenderIf condition={!!props?.label}>
-        <label htmlFor={postTextAreaId} className='ego-input--label'>
-          {props?.label}
-        </label>
-      </RenderIf>
-      <div className='ego-input--inner'>
-        <textarea
-          id={postTextAreaId}
-          maxLength={props.maxLength}
-          data-testId={props.id}
-          rows={5}
-          cols={33}
-          className='ego-message-box'
-          {...props}
-        />
-        <RenderIf condition={!!props?.maxLength}>
-          <p className="text-xs text-neutral-30 absolute bottom-0 left-[12px] pb-2">
-            {(String(props.value)?.length ?? 0)}/{props.maxLength} words
-          </p>
+    <div className={`${containerVariant} ego-input--outer`}>
+      <Field>
+        <RenderIf condition={!!label}>
+          <Label className="ego-input--label">Description</Label>
         </RenderIf>
-      </div>
-      <RenderIf condition={!!props?.help}>
-        <span className='ego-input--help'>{props?.help}</span>
-      </RenderIf>
-      <RenderIf condition={!!props?.error}>
-        <span className='ego-input--error'>{props?.error}</span>
-      </RenderIf>
+        <RenderIf condition={!!help}>
+          <Description className="ego-input--help">This will be shown under the product title.</Description>
+        </RenderIf>
+        <div className='ego-input--inner'>
+          <Textarea as={Fragment}>
+          <textarea id={id} rows={5} cols={33} maxLength={maxLength} placeholder={placeholder} name={name} className='ego-message-box' {...props} />
+          </Textarea>
+          <RenderIf condition={!!maxLength}>
+            <p className="text-xs text-neutral-30 absolute bottom-0 left-[12px] pb-2">
+              {(String(props.value)?.length ?? 0)}/{maxLength} words
+            </p>
+          </RenderIf>
+        </div>
+        <RenderIf condition={!!error}>
+          <span className='ego-input--error'>{error}</span>
+        </RenderIf>
+      </Field>
     </div>
   );
 };

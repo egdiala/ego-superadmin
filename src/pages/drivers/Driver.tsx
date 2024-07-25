@@ -1,12 +1,32 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useCallback, useState } from "react";
 import { motion } from "framer-motion";
 import { pageVariants } from "@/constants/animateVariants";
 import { NavLink, Outlet } from "react-router-dom";
 import { Breadcrumb, Button } from "@/components/core";
 import { Icon } from "@iconify/react";
 import { cn } from "@/libs/cn";
+import { DeleteDriverModal, SuspendDriverModal } from "@/components/pages/drivers";
 
 export const DriverPage: React.FC = () => {
+    const [toggleModals, setToggleModals] = useState({
+        openDeleteDriverModal: false,
+        openSuspendDriverModal: false,
+    })
+  
+    const toggleSuspendDriver = useCallback(() => {
+      setToggleModals((prev) => ({
+        ...prev,
+        openSuspendDriverModal: !toggleModals.openSuspendDriverModal,
+      }))
+    }, [toggleModals.openSuspendDriverModal])
+  
+    const toggleDeleteDriver = useCallback(() => {
+      setToggleModals((prev) => ({
+        ...prev,
+        openDeleteDriverModal: !toggleModals.openDeleteDriverModal,
+      }))
+    }, [toggleModals.openDeleteDriverModal])
+    
     const subRoutes = [
         { name: "Profile", link: "/drivers/3/profile" },
         { name: "Trips", link: "/drivers/3/trips" },
@@ -20,11 +40,11 @@ export const DriverPage: React.FC = () => {
             <div className="flex items-start justify-between">
                 <h1 className="text-grey-dark-1 font-bold text-xl">Ronald Julius</h1>
                 <div className="flex items-center gap-2 pb-4">
-                    <Button theme="danger">
+                    <Button type="button" theme="danger" onClick={toggleDeleteDriver}>
                         <Icon icon="ph:trash-bold" className="size-4" />
                         Delete Driver
                     </Button>
-                    <Button theme="primary">
+                    <Button type="button" theme="primary" onClick={toggleSuspendDriver}>
                         <Icon icon="ph:exclamation-mark-bold" className="size-4" />
                         Suspend Driver
                     </Button>
@@ -48,6 +68,8 @@ export const DriverPage: React.FC = () => {
             </div>
             <Outlet />
         </div>
+        <DeleteDriverModal isOpen={toggleModals.openDeleteDriverModal} close={toggleDeleteDriver} />
+        <SuspendDriverModal isOpen={toggleModals.openSuspendDriverModal} close={toggleSuspendDriver} />
       </motion.div>
     )
 }

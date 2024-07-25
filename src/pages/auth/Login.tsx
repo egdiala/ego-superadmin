@@ -6,7 +6,7 @@ import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { routeVariants } from "@/constants/animateVariants";
 import { getItem, removeItem, setItem } from "@/utils/localStorage";
 import { changePasswordSchema, loginSchema } from "@/validations/auth";
-import { Button, Input, OtpInput, PasswordInput } from "@/components/core";
+import { Button, Checkbox, Input, OtpInput, PasswordInput } from "@/components/core";
 import { useConfirmResetPasswordOTP, useLogin, useSendResetPasswordOTP, useSetPassword } from "@/services/hooks/mutations";
 
 export const LoginPage: React.FC = () => {
@@ -41,10 +41,14 @@ export const LoginPage: React.FC = () => {
             setCountdown((prevCountdown) => prevCountdown - 1);
           }, 1000);
         }
+
+        if (state !== "verify-otp") {
+            return () => clearInterval(interval)
+        }
     
         // Cleanup interval on component unmount
         return () => clearInterval(interval);
-    }, [isButtonDisabled]);
+    }, [isButtonDisabled, state]);
     
     useEffect(() => {
         if (countdown <= 0) {
@@ -72,7 +76,8 @@ export const LoginPage: React.FC = () => {
         validationSchema: loginSchema,
         initialValues: {
             email: "",
-            password: ""
+            password: "",
+            remember_me: false
         },
         onSubmit(values) {
             login(values)
@@ -108,6 +113,10 @@ export const LoginPage: React.FC = () => {
                         <div className="grid gap-6 pb-6">
                             <Input id="email" label="Email" type="text" placeholder="example@email.com" {...register("email")} />
                             <PasswordInput id="password" label="Password" placeholder="•••••••••" {...register("password")} showPassword />
+                            <div className="flex items-center gap-1.5">
+                                <Checkbox checked={loginValues.remember_me} {...register("remember_me")} />
+                                <span className="text-dark-green-1 font-medium text-sm">Remember me</span>
+                            </div>
                         </div>
                         <Button type="submit" theme="primary" loading={isLoggingIn} disabled={isLoggingIn || !isValid} block>Sign In</Button>
                         <Link to="/auth/forgot-password" className="text-center text-dark-green-1 underline underline-offset-2 decoration-dark-green-1 text-base font-semibold">Reset Password</Link>

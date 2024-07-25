@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button, Input } from "@/components/core";
 import { forgotPasswordSchema } from "@/validations/auth";
 import { routeVariants } from "@/constants/animateVariants";
@@ -41,6 +41,7 @@ export const ForgotPasswordPage: React.FC = () => {
             <form onSubmit={handleSubmit} className="flex flex-col gap-7">
                 <Input label="Email" type="text" placeholder="example@email.com" {...register("email")} />
                 <Button type="submit" theme="primary" block loading={isSendingEmail || isSendingOTP} disabled={isSendingEmail || isSendingOTP || !isValid}>Verify Email</Button>
+                <Link to="/auth/login" className="text-center text-dark-green-1 text-base font-semibold">Sign in instead</Link>
             </form>
         </motion.div>
     )

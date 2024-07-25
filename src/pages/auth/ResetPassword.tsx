@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { changePasswordSchema } from "@/validations/auth";
 import { Button, PasswordInput } from "@/components/core";
 import { getItem, removeItem } from "@/utils/localStorage";
@@ -41,6 +41,7 @@ export const ResetPasswordPage: React.FC = () => {
                     <PasswordInput id="confirm_password" label="Confirmed Password" placeholder="•••••••••" {...changePasswordFormik.register("confirm_password")} showPassword />
                 </div>
                 <Button type="submit" theme="primary" block loading={isChangingPassword} disabled={isChangingPassword || !changePasswordFormik.isValid}>Update Password</Button>
+                <Link to="/auth/login" className="text-center text-dark-green-1 text-base font-semibold">Sign in instead</Link>
             </form>
         </motion.div>
     )

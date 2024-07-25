@@ -73,9 +73,10 @@ export const DriverTripsPage: React.FC = () => {
             <div className="flex-1 grid grid-cols-4 gap-4 py-4">
                 {
                     trips.map((item) =>
-                    <div key={item.label} className={cn("grid content-center justify-items-center gap-2 h-24 py-4 rounded-lg", item.color)}>
-                        <h4 className="text-grey-dark-2 text-sm">{item.label}</h4>
-                        <span className="text-grey-dark-1 text-[2rem]/9">{item.value}</span>
+                    <div key={item.label} className={cn("relative grid overflow-hidden content-center justify-items-center gap-2 h-24 py-4 rounded-lg", item.color)}>
+                      <Icon icon="bx:trip" className="absolute size-20 -left-4 self-center text-grey-dark-3 text-opacity-10" />
+                      <h4 className="text-grey-dark-2 text-sm">{item.label}</h4>
+                      <span className="text-grey-dark-1 text-[2rem]/9">{item.value}</span>
                     </div>
                     )
                 }
