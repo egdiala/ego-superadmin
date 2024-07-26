@@ -4,32 +4,33 @@ import { axiosInstance } from "@/services/axiosInstance";
 import { APP_TOKEN_STORAGE_KEY, APP_USERDATA_STORAGE_KEY } from "@/constants/utils";
 import { setItem } from "@/utils/localStorage";
 import { useNavigate } from "react-router-dom";
-
+import { errorToast, successToast } from "@/utils/createToast";
 
 function onLoginSuccess(responseData: any) {
-    const { token, ...userData } = responseData;
-    setItem(APP_TOKEN_STORAGE_KEY, token);
-    setItem(APP_USERDATA_STORAGE_KEY, JSON.stringify(userData));
-    axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  const { token, ...userData } = responseData;
+  setItem(APP_TOKEN_STORAGE_KEY, token);
+  setItem(APP_USERDATA_STORAGE_KEY, JSON.stringify(userData));
+  axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 }
 
 // eslint-disable-next-line no-unused-vars
 export const useLogin = (fn?: (v: any) => void) => {
-    const navigate = useNavigate();
-    return useMutation({
-        mutationFn: login,
-        onSuccess: (response: any) => {
-            if (response.status === "ok") {
-                onLoginSuccess(response?.data)
-                navigate("/")
-            } else {
-                fn?.(response);
-            }
-        },
-        onError: (err: any) => {
-        console.error(err)
-        },
-    });
+  const navigate = useNavigate();
+  return useMutation({
+    mutationFn: login,
+    onSuccess: (response: any) => {
+      successToast({ message: "Logged In Successfully!" })
+      if (response.status === "ok") {
+          onLoginSuccess(response?.data)
+          navigate("/")
+      } else {
+          fn?.(response);
+      }
+    },
+    onError: (err: any) => {
+      errorToast(err)
+    },
+  });
 };
 
 // eslint-disable-next-line no-unused-vars
@@ -37,11 +38,11 @@ export const useSetPassword = (fn?: (v: any) => void) => {
   return useMutation({
     mutationFn: setPassword,
     onSuccess: (response: any) => {
-      console.log(response);
+      successToast({ message: "Password Set Successfully!" })
       fn?.(response);
     },
     onError: (err: any) => {
-      console.error(err)
+      errorToast(err)
     },
   });
 };
@@ -54,7 +55,7 @@ export const useSendResetPasswordEmail = (fn?: (v: any) => void) => {
       fn?.(response);
     },
     onError: (err: any) => {
-      console.error(err)
+      errorToast(err)
     },
   });
 };
@@ -64,10 +65,11 @@ export const useSendResetPasswordOTP = (fn?: (v: any) => void) => {
   return useMutation({
     mutationFn: sendResetPasswordOTP,
     onSuccess: (response: any) => {
+      successToast({ message: "OTP Sent Successfully!" })
       fn?.(response);
     },
     onError: (err: any) => {
-      console.error(err)
+      errorToast(err)
     },
   });
 };
@@ -77,10 +79,11 @@ export const useConfirmResetPasswordOTP = (fn?: (v: any) => void) => {
   return useMutation({
     mutationFn: confirmResetPasswordOTP,
     onSuccess: (response: any) => {
+      successToast({ message: "OTP Validated Successfully!" })
       fn?.(response);
     },
     onError: (err: any) => {
-      console.error(err)
+      errorToast(err)
     },
   });
 };

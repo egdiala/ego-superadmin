@@ -6,7 +6,7 @@ import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { routeVariants } from "@/constants/animateVariants";
 import { getItem, removeItem, setItem } from "@/utils/localStorage";
 import { changePasswordSchema, loginSchema } from "@/validations/auth";
-import { Button, Checkbox, Input, OtpInput, PasswordInput } from "@/components/core";
+import { Button, Input, OtpInput, PasswordInput } from "@/components/core";
 import { useConfirmResetPasswordOTP, useLogin, useSendResetPasswordOTP, useSetPassword } from "@/services/hooks/mutations";
 
 export const LoginPage: React.FC = () => {
@@ -76,8 +76,7 @@ export const LoginPage: React.FC = () => {
         validationSchema: loginSchema,
         initialValues: {
             email: "",
-            password: "",
-            remember_me: false
+            password: ""
         },
         onSubmit(values) {
             login(values)
@@ -113,10 +112,6 @@ export const LoginPage: React.FC = () => {
                         <div className="grid gap-6 pb-6">
                             <Input id="email" label="Email" type="text" placeholder="example@email.com" {...register("email")} />
                             <PasswordInput id="password" label="Password" placeholder="•••••••••" {...register("password")} showPassword />
-                            <div className="flex items-center gap-1.5">
-                                <Checkbox checked={loginValues.remember_me} {...register("remember_me")} />
-                                <span className="text-dark-green-1 font-medium text-sm">Remember me</span>
-                            </div>
                         </div>
                         <Button type="submit" theme="primary" loading={isLoggingIn} disabled={isLoggingIn || !isValid} block>Sign In</Button>
                         <Link to="/auth/forgot-password" className="text-center text-dark-green-1 underline underline-offset-2 decoration-dark-green-1 text-base font-semibold">Reset Password</Link>
@@ -182,7 +177,7 @@ export const LoginPage: React.FC = () => {
                         <img src={successLogo} alt="success_logo" width={122} height={122} className="mx-auto" />
                         <div className="grid gap-1 justify-items-center">
                             <h1 className="font-bold text-2xl md:text-[2rem] text-grey-dark-1 text-center">Good Job</h1>
-                            <p className="font-normal text-sm text-grey-dark-2 text-center">You have successfully changed your password, Kindly Sign in to your account.</p>
+                            <p className="font-normal text-sm text-grey-dark-2 text-center">You have successfully changed your password. Kindly sign in to your account.</p>
                         </div>
                     </div>
                     <Button type="button" theme="primary" block onClick={backToLogin}>Sign in with New Password</Button>

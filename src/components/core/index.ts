@@ -10,4 +10,5 @@ export * from "./RenderIf";
 export * from "./Table"
 export * from "./TableActions"
 export * from "./Textarea";
+export * from "./Toast";
 export * from "./Toggle";
