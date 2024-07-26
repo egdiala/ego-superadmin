@@ -12,6 +12,7 @@ export type Person = {
   phoneNumber: string;
   status: "active" | "inactive" | "suspended";
   vehicleStatus: "assigned" | "unassigned";
+  role: "support" | "admin";
   createdAt: Date | string;
   subRows?: Person[];
 };
@@ -35,6 +36,10 @@ const newPerson = (): Person => {
     progress: faker.number.int(100),
     phoneNumber: faker.phone.number(),
     createdAt: fullDateFormatter(faker.date.anytime()),
+    role: faker.helpers.shuffle<Person["role"]>([
+      "support",
+      "admin"
+    ])[0]!,
     status: faker.helpers.shuffle<Person["status"]>([
       "active",
       "inactive",

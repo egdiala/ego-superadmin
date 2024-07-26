@@ -2,7 +2,7 @@ import React, { Fragment, useCallback, useState } from "react";
 import { motion } from "framer-motion";
 import { pageVariants } from "@/constants/animateVariants";
 import { NavLink, Outlet } from "react-router-dom";
-import { Breadcrumb, Button } from "@/components/core";
+import { Breadcrumb, Button, RenderIf } from "@/components/core";
 import { Icon } from "@iconify/react";
 import { cn } from "@/libs/cn";
 import { DeleteDriverModal, SuspendDriverModal } from "@/components/pages/drivers";
@@ -52,7 +52,7 @@ export const DriverPage: React.FC = () => {
             </div>
             <div className="rounded border-2 border-grey-dark-4 p-1 flex items-center gap-2 w-full">
                 {
-                    subRoutes.map((route) => 
+                    subRoutes.map((route, idx) => 
                     <Fragment>
                     <NavLink key={route.link} to={route.link} className="flex w-full">
                     {({ isActive }) => (
@@ -61,7 +61,7 @@ export const DriverPage: React.FC = () => {
                         </div>
                     )}
                     </NavLink>
-                    <hr className="w-20 flex border-input-filled rotate-90" />
+                    <RenderIf condition={(subRoutes.length - 1) !== idx}><hr className="w-20 flex border-input-filled rotate-90" /></RenderIf>
                     </Fragment>
                     )
                 }

@@ -1,19 +1,18 @@
 import React, { useCallback } from "react";
 import { Icon } from "@iconify/react";
+import { Button, TextArea } from "@/components/core";
 import { suspendDriverSchema } from "@/validations/driver";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
-import { Button, Input, TextArea, Toggle } from "@/components/core";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
-import { AnimatePresence, motion } from "framer-motion";
 
-interface SuspendDriverModalProps {
+interface DeactivateAdminModalProps {
     isOpen: boolean;
     // eslint-disable-next-line no-unused-vars
     close: (value: boolean) => void
 }
 
-export const SuspendDriverModal: React.FC<SuspendDriverModalProps> = ({ isOpen, close }) => {
-    const { handleSubmit, isValid, register, resetForm, setFieldValue, values: suspendDriverValues } = useFormikWrapper({
+export const DeactivateAdminModal: React.FC<DeactivateAdminModalProps> = ({ isOpen, close }) => {
+    const { handleSubmit, isValid, register, resetForm } = useFormikWrapper({
         initialValues: {
             hour: "",
             mins: "",
@@ -40,34 +39,16 @@ export const SuspendDriverModal: React.FC<SuspendDriverModalProps> = ({ isOpen, 
                     <div className="grid gap-2">
                         <div className="flex items-center justify-between">
                             <DialogTitle as="h1" className="text-xl font-bold text-grey-dark-1">
-                                Suspend [Driver name]?
+                                Deactivate [account name]?
                             </DialogTitle>
                         <button type="button" onClick={closeModal} className="size-8 p-2 grid place-content-center text-grey-dark-3 hover:text-grey-dark-1 hover:bg-light-green rounded-full ease-out duration-300 transition-all"><Icon icon="ph:x-bold" /></button>
                         </div>
-                        <p className="text-grey-dark-3 text-sm">This action would suspend [Driver name] from this platform</p>
+                        <p className="text-grey-dark-3 text-sm">This action would deactivate [account name] account and won’t be able to access this platform.</p>
                     </div>
                     <TextArea placeholder="Reason" {...register("reason")} />
-                    <div className="rounded-md border border-[#CDCEDA] py-3.5 px-3 flex items-center justify-between">
-                        <span className="text-sm text-grey-dark-2">Indefinite Suspension</span>
-                        <Toggle checked={suspendDriverValues.indefinite_suspension} onChange={(v) => setFieldValue("indefinite_suspension", v, true)} name="indefinite_suspension" />
-                    </div>
-                    <AnimatePresence>
-                        {
-                            !suspendDriverValues.indefinite_suspension && (
-                                <motion.div initial={{ height: "0px", opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: "0px" }} transition={{ duration: 0.5, ease: "easeOut" }} className="flex flex-col gap-4 items-start overflow-x-visible overflow-y-clip">
-                                <Input label="Re-activation date & Time" type="date" {...register("reactivation_date_time")} />
-                                <div className="flex items-start gap-4">
-                                    <Input label="Hour" type="text" placeholder="HH" {...register("hour")} />
-                                    <Input label="Mins" type="text" placeholder="MM" {...register("mins")} />
-                                    <Input label="Time of the day" type="text" placeholder="PM" {...register("time_of_day")} />
-                                </div>      
-                                </motion.div>
-                            )
-                        }
-                    </AnimatePresence>
                     <div className="flex items-center justify-end w-full md:w-2/3 ml-auto pt-10 gap-2 md:gap-4">
                         <Button type="button" theme="tertiary" onClick={closeModal} block>Cancel</Button>
-                        <Button type="submit" theme="primary" disabled={!isValid} block>Suspend</Button>
+                        <Button type="submit" theme="primary" disabled={!isValid} block>Deactivate Account</Button>
                     </div>
                 </DialogPanel>
             </div>
