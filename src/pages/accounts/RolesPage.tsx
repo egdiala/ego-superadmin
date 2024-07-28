@@ -1,16 +1,16 @@
 import React, { useCallback, useState } from "react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
-import { makeData } from "@/hooks/makeData";
 import { pageVariants } from "@/constants/animateVariants";
 import { DeleteRoleModal } from "@/components/pages/roles";
-import { Button, SearchInput, Table, TableAction } from "@/components/core";
+import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { useNavigate } from "react-router-dom";
+import { useGetRoles } from "@/services/hooks/queries";
+import { Loader } from "@/components/core/Button/Loader";
 
 export const RolesPage: React.FC = () => {
     const navigate = useNavigate()
-    const dummyData = makeData(50);
-    const [data, setData] = useState(dummyData);
+    const { data: roles, isFetching } = useGetRoles()
     const [toggleModals, setToggleModals] = useState({
         openDeleteRoleModal: false,
     })
@@ -25,11 +25,26 @@ export const RolesPage: React.FC = () => {
     const columns = [
       {
         header: () => "Name",
-        accessorKey: "fullName",
+        accessorKey: "name",
       },
       {
         header: () => "Permissions",
-        accessorKey: "role",
+        accessorKey: "data",
+        cell: ({ row }: { row: any; }) => {
+          const items = row?.original?.data
+            return (
+              <div className="flex items-center gap-4">
+                {
+                  Object.keys(items)?.map((item) =>
+                    <div key={item} className="flex items-center gap-1 rounded-full bg-grey-dark-4 py-1 px-2 text-sm text-grey-dark-2 capitalize">
+                      <span>{items[item]?.length}</span>
+                      <span>{item}</span>
+                    </div>
+                  )
+                }
+              </div>
+            )
+        }
       },
       {
         header: () => "Action",
@@ -45,48 +60,46 @@ export const RolesPage: React.FC = () => {
       }
     ];
 
-    const paginateData = (currentPage: number, rowsPerPage: number) => {
-      const startIndex = (currentPage - 1) * rowsPerPage;
-      const endIndex = startIndex + rowsPerPage;
-      const newData = dummyData.slice(startIndex, endIndex);
-      setData(newData);
+    const handlePageChange = () => {
+      // in a real page, this function would paginate the data from the backend
+      
     };
 
-    const handlePageChange = (currentPage: number, rowsPerPage: number) => {
+    const getData = () => {
       // in a real page, this function would paginate the data from the backend
-      paginateData(currentPage, rowsPerPage);
-    };
-
-    const getData = (currentPage: number, rowsPerPage: number) => {
-      // in a real page, this function would paginate the data from the backend
-      paginateData(currentPage, rowsPerPage);
+      
     };
   
     return (
-        <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-4">
-            <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
-                <div className="w-full md:w-1/3 xl:w-1/4">
-                    <SearchInput placeholder="Search name" />
-                </div>
-                <div className="flex items-center gap-2 w-full sm:w-auto">
-                    <TableAction theme="ghost" block>
-                        <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-                        Export
-                    </TableAction>
-                    <Button theme="primary" onClick={() => navigate("/accounts/roles/create")} block>
-                        <Icon icon="ph:plus" className="size-4" />
-                        Add New Role
-                    </Button>
-                </div>
-            </div>
-            <Table
-                columns={columns}
-                data={data}
-                getData={getData}
-                totalCount={dummyData.length}
-                onPageChange={handlePageChange}
-            />
-            <DeleteRoleModal isOpen={toggleModals.openDeleteRoleModal} close={toggleDeleteRole} />
-        </motion.div>
+      <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-4">
+        <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
+          <div className="w-full md:w-1/3 xl:w-1/4">
+            <SearchInput placeholder="Search name" />
+          </div>
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <TableAction theme="ghost" block>
+              <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
+              Export
+            </TableAction>
+            <Button theme="primary" onClick={() => navigate("/accounts/roles/create")} block>
+              <Icon icon="ph:plus" className="size-4" />
+              Add New Role
+            </Button>
+          </div>
+        </div>
+        <RenderIf condition={!isFetching}>
+          <Table
+              columns={columns}
+              data={roles!}
+              getData={getData}
+              totalCount={roles?.length}
+              onPageChange={handlePageChange}
+          />
+        </RenderIf>
+        <RenderIf condition={isFetching}>
+            <div className="flex w-full h-[90dvh] items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
+        </RenderIf>
+        <DeleteRoleModal isOpen={toggleModals.openDeleteRoleModal} close={toggleDeleteRole} />
+      </motion.div>
     )
 }

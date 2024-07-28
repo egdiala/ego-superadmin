@@ -60,7 +60,7 @@ export const Table: React.FC<TableProps> = ({
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    debugTable: true,
+    debugTable: false,
   });
 
   const handlePageChange = (page: number) => {

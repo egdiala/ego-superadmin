@@ -65,7 +65,8 @@ export const CreateRolePage: React.FC = () => {
             if ((action === "create" || action === "update" || action === "delete") && !isChecked) {
                 const foundItems = permissions.filter((permission) => permission?.label?.toLowerCase() === "view")?.[0]?.items
                 const foundItem = foundItems.filter((item) => item?.key?.toLowerCase() === value?.key?.toLowerCase())?.[0]
-                setFieldValue("role_list.view", [...values.role_list.view, foundItem.tag]).then(() => console.log(values))
+                const uniqueSet = new Set([...values.role_list.view, foundItem.tag]);
+                setFieldValue("role_list.view", Array.from(uniqueSet))
             }
 
         })
