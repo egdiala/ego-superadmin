@@ -19,3 +19,11 @@ export type CreatePermissionType = {
         view: string[]
     }
 }
+
+export interface FetchedRolesType {
+    name: string;
+    data: Record<keyof FetchedRoleLists, string[]>;
+    createdAt: string | Date;
+    updatedAt: string | Date;
+    role_id: string
+}

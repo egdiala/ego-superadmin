@@ -100,7 +100,7 @@ export const Table: React.FC<TableProps> = ({
   return (
     <div className="grid gap-8">
       <div className="lg:w-full lg:left-auto lg:relative lg:right-auto left-0 right-0 overflow-x-scroll scrollbar-hide">
-        <table className="font-cabin w-full table-auto">
+        <table className="table-auto w-full">
           {/* Table Head */}
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -116,7 +116,7 @@ export const Table: React.FC<TableProps> = ({
                       className="w-full text-left last:text-right"
                       style={{
                         width: `${header.getSize()}px`,
-                        opacity: header.id === "action" ? 0 : 1,
+                        // opacity: header.id === "action" ? 0 : 1,
                       }}
                     >
                       {header.isPlaceholder ? null : (

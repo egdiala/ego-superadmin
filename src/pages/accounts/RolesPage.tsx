@@ -14,7 +14,7 @@ export const RolesPage: React.FC = () => {
     const [toggleModals, setToggleModals] = useState({
         openDeleteRoleModal: false,
     })
-  
+
     const toggleDeleteRole = useCallback(() => {
       setToggleModals((prev) => ({
         ...prev,
@@ -30,6 +30,7 @@ export const RolesPage: React.FC = () => {
       {
         header: () => "Permissions",
         accessorKey: "data",
+        size: 350,
         cell: ({ row }: { row: any; }) => {
           const items = row?.original?.data
             return (
@@ -89,15 +90,15 @@ export const RolesPage: React.FC = () => {
         </div>
         <RenderIf condition={!isFetching}>
           <Table
-              columns={columns}
-              data={roles!}
-              getData={getData}
-              totalCount={roles?.length}
-              onPageChange={handlePageChange}
+            columns={columns}
+            data={roles!}
+            getData={getData}
+            totalCount={roles?.length}
+            onPageChange={handlePageChange}
           />
         </RenderIf>
         <RenderIf condition={isFetching}>
-            <div className="flex w-full h-[90dvh] items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
+            <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
         </RenderIf>
         <DeleteRoleModal isOpen={toggleModals.openDeleteRoleModal} close={toggleDeleteRole} />
       </motion.div>
