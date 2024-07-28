@@ -16,9 +16,9 @@ export const DriverProfilePage: React.FC = () => {
     ]
     return (
         <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-4 pt-2">
-            <div className="flex items-center gap-10 bg-green-4 p-4 rounded-lg">
+            <div className="flex flex-col md:flex-row md:items-center gap-10 bg-green-4 p-4 rounded-lg">
                 <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" className="size-32 rounded-2xl object-cover" alt="user" />
-                <div className="flex-1 grid grid-cols-4 gap-y-8">
+                <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-y-8">
                     {
                         gridItems.map((item) =>
                         <div key={item.label} className="grid gap-1">
@@ -31,7 +31,7 @@ export const DriverProfilePage: React.FC = () => {
             </div>
             <div className="flex flex-col gap-6 w-full border border-grey-dark-4 rounded-lg py-4 px-5">
                 <h2 className="font-semibold text-base text-grey-dark-1">ID & Vehicle Info</h2>
-                <div className="grid grid-cols-5">
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
                     <div className="grid gap-1">
                         <h4 className="text-grey-dark-3 text-sm">NIN</h4>
                         <span className="text-grey-dark-1 text-sm">12345632783</span>

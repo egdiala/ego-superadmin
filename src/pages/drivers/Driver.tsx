@@ -37,26 +37,26 @@ export const DriverPage: React.FC = () => {
       <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">
         <Breadcrumb items={[{ label: "All Drivers", link: "/drivers" }, { label: "Ronald Julius", link: "/drivers/3/profile" }]} showBack />
         <div className="grid content-start gap-5 py-6 px-4 bg-white rounded-lg">
-            <div className="flex items-start justify-between">
+            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                 <h1 className="text-grey-dark-1 font-bold text-xl">Ronald Julius</h1>
-                <div className="flex items-center gap-2 pb-4">
-                    <Button type="button" theme="danger" onClick={toggleDeleteDriver}>
+                <div className="flex items-center gap-2 pb-4 w-full sm:w-auto">
+                    <Button type="button" theme="danger" onClick={toggleDeleteDriver} block>
                         <Icon icon="ph:trash-bold" className="size-4" />
                         Delete Driver
                     </Button>
-                    <Button type="button" theme="primary" onClick={toggleSuspendDriver}>
+                    <Button type="button" theme="primary" onClick={toggleSuspendDriver} block>
                         <Icon icon="ph:exclamation-mark-bold" className="size-4" />
                         Suspend Driver
                     </Button>
                 </div>
             </div>
-            <div className="rounded border-2 border-grey-dark-4 p-1 flex items-center gap-2 w-full">
+            <div className="rounded border-2 border-grey-dark-4 p-1 flex items-center gap-2 w-full overflow-scroll">
                 {
                     subRoutes.map((route, idx) => 
                     <Fragment>
                     <NavLink key={route.link} to={route.link} className="flex w-full">
                     {({ isActive }) => (
-                        <div className={cn("text-center py-1 flex-1 rounded", isActive ? "bg-green-1 text-white font-semibold text-sm" : "hover:bg-light-green")}>
+                        <div className={cn("text-center py-1 px-5 flex-1 rounded whitespace-nowrap", isActive ? "bg-green-1 text-white font-semibold text-sm" : "hover:bg-light-green")}>
                             {route.name}
                         </div>
                     )}

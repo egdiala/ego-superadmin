@@ -70,7 +70,7 @@ export const DriverTripsPage: React.FC = () => {
     ]
     return (
         <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-2 pt-2">
-            <div className="flex-1 grid grid-cols-4 gap-4 py-4">
+            <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 py-4">
                 {
                     trips.map((item) =>
                     <div key={item.label} className={cn("relative grid overflow-hidden content-center justify-items-center gap-2 h-24 py-4 rounded-lg", item.color)}>

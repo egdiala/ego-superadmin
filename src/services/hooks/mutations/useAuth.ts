@@ -1,16 +1,17 @@
 import { useMutation } from "@tanstack/react-query";
-import { confirmResetPasswordOTP, login, sendResetPasswordEmail, sendResetPasswordOTP, setPassword } from "../../apis/auth";
-import { axiosInstance } from "@/services/axiosInstance";
-import { APP_TOKEN_STORAGE_KEY, APP_USERDATA_STORAGE_KEY } from "@/constants/utils";
 import { setItem } from "@/utils/localStorage";
 import { useNavigate } from "react-router-dom";
+import { axiosInit } from "@/services/axiosInit";
 import { errorToast, successToast } from "@/utils/createToast";
+import { APP_TOKEN_STORAGE_KEY, APP_USERDATA_STORAGE_KEY } from "@/constants/utils";
+import { confirmResetPasswordOTP, login, sendResetPasswordEmail, sendResetPasswordOTP, setPassword } from "../../apis/auth";
+
 
 function onLoginSuccess(responseData: any) {
   const { token, ...userData } = responseData;
   setItem(APP_TOKEN_STORAGE_KEY, token);
   setItem(APP_USERDATA_STORAGE_KEY, JSON.stringify(userData));
-  axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  axiosInit(token)
 }
 
 // eslint-disable-next-line no-unused-vars

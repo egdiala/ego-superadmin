@@ -98,7 +98,7 @@ export const Table: React.FC<TableProps> = ({
   }, [location.search]);
 
   return (
-    <>
+    <div className="grid gap-8">
       <div className="lg:w-full lg:left-auto lg:relative lg:right-auto left-0 right-0 overflow-x-scroll scrollbar-hide">
         <table className="font-cabin w-full table-auto">
           {/* Table Head */}
@@ -226,6 +226,6 @@ export const Table: React.FC<TableProps> = ({
           goToPage={(v) => goToPage(Number(v))}
         />
       </RenderIf>
-    </>
+    </div>
   );
 };

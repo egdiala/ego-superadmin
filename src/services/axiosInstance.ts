@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from "axios";
+import { axiosInit } from "./axiosInit";
 
 export const axiosInstance: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_EGO_BASE_URL,
@@ -14,9 +15,16 @@ export const axiosMessagingInstance: AxiosInstance = axios.create({
   },
 });
 
+export const axiosSettingsInstance: AxiosInstance = axios.create({
+  baseURL: import.meta.env.VITE_EGO_SETTINGS_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
 const token = localStorage.getItem("token") as string;
 
 
 if (token) {
-  axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  axiosInit(token)
 }

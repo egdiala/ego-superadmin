@@ -57,7 +57,7 @@ export const Breadcrumb = ({ items, showBack = false }: BreadcrumbProps) => {
               <span>{item.label}</span>
             )}
             {index !== displayItems.length - 1 && (
-                <Icon icon="ph:caret-right" className="text-grey-dark-3 size-2" />
+                <Icon icon="ph:caret-right" className="text-grey-dark-3 size-3" />
             )}
           </li>
         ))}
