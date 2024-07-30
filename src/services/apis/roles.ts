@@ -16,3 +16,19 @@ export const getRoles = async () => {
   const res = await axiosSettingsInstance.get(GET_ROLES_API);
   return res.data;
 };
+
+export const deleteRole = async (id: string) => {
+  const res = await axiosSettingsInstance.delete(`${GET_ROLES_API}/${id}`);
+  return res.data;
+};
+
+export const getRole = async (id: string) => {
+  const res = await axiosSettingsInstance.get(`${GET_ROLES_API}/${id}`);
+  return res.data;
+};
+
+export const editRole = async (data: CreatePermissionType & { id: string; }) => {
+  const { id, ...body } = data
+  const res = await axiosSettingsInstance.put(`${GET_ROLES_API}/${id}`, body);
+  return res.data;
+};

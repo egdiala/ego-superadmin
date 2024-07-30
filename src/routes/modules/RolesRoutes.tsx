@@ -5,7 +5,7 @@ const RolesRoutes = () => {
   return (
     <Routes>
       <Route path="create" element={<CreateRolePage />} />
-      <Route path="edit" element={<EditRolePage />} />
+      <Route path="edit/:id" element={<EditRolePage />} />
     </Routes>
   );
 };
