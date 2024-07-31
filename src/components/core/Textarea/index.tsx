@@ -5,24 +5,24 @@ import "./textarea.css";
 
 interface TextAreaProps extends React.AllHTMLAttributes<HTMLTextAreaElement> {
   /**
-   * Id for input element
+   * Id for textarea element
    */
   id?: string;
 
   /**
-   * Label for input element
+   * Label for textarea element
    */
   label?: string;
   /**
-   * styles for input element
+   * styles for textarea element
    */
   containerVariant?: string;
   /**
-   * Help text for input element
+   * Help text for textarea element
    */
   help?: string;
   /**
-   * Name for input element
+   * Name for textarea element
    */
   name?: string;
   /**
@@ -44,7 +44,7 @@ interface TextAreaProps extends React.AllHTMLAttributes<HTMLTextAreaElement> {
 }
 
 /**
- * Input component for entering user data
+ * Textarea component for entering user data
  */
 export const TextArea: React.FC<TextAreaProps> = ({ containerVariant, label, id, help, error, name, placeholder, maxLength, ...props}) => {
   return (

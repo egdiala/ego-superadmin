@@ -28,11 +28,16 @@ export const RolesPage: React.FC = () => {
       {
         header: () => "Name",
         accessorKey: "name",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original
+          return (
+            <div className="flex items-center whitespace-nowrap">{item?.name}</div>
+          )
+        }
       },
       {
         header: () => "Permissions",
         accessorKey: "data",
-        size: 350,
         cell: ({ row }: { row: any; }) => {
           const items = row?.original?.data
             return (
