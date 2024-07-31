@@ -8,7 +8,7 @@ import "./sidebar.css";
 
 export const Sidebar: React.FC = () => {
     const admin = getAdminData()
-    console.log(admin)
+
     return (
         <nav className="bg-white flex flex-col transition-all ease-out duration-500 gap-8 px-5 pt-6 pb-[3.125rem] h-screen w-full max-w-60 fixed inset-y-0 left-0 max-lg:hidden">
             <img src="/eGO_logo_green.svg" className="w-32" alt="eGO_green_logo" />
