@@ -163,7 +163,7 @@ export const Table: React.FC<TableProps> = ({
                       return (
                         <td
                           key={cell.id}
-                          className="text-left px-2 py-3.5 text-grey-dark-2 text-sm font-normal"
+                          className="text-left pl-2 pr-3 py-3.5 text-grey-dark-2 text-sm font-normal"
                           onClick={(e) => {
                             if (
                               cell.column.id === "action" ||
