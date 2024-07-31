@@ -8,20 +8,21 @@ import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { createAdminSchema } from "@/validations/admin";
 import type { FetchedRolesType } from "@/types/roles";
 import { Loader } from "@/components/core/Button/Loader";
+import type { FetchedAdminType } from "@/types/admin";
 
 
 interface EditAdminModalProps {
     isOpen: boolean;
-    admin_id: string;
+    admin: FetchedAdminType;
     // eslint-disable-next-line no-unused-vars
     close: (value: boolean) => void
 }
 
-export const EditAdminModal: React.FC<EditAdminModalProps> = ({ admin_id, isOpen, close }) => {
+export const EditAdminModal: React.FC<EditAdminModalProps> = ({ admin, isOpen, close }) => {
     const [query, setQuery] = useState("")
     const { data: roles, isFetching } = useGetRoles()
     const { mutate: edit, isPending } = useEditAdmin(() => onClose())
-    const { data: admin, isFetching: isFetchingAdmin } = useGetAdmin(admin_id)
+    const { data: fetchedAdmin, isFetching: isFetchingAdmin } = useGetAdmin(admin?.auth_id)
     const genders = [{ label: "Male", value: "male" }, { label: "Female", value: "female" }]
 
     const filteredRoles =
@@ -33,17 +34,17 @@ export const EditAdminModal: React.FC<EditAdminModalProps> = ({ admin_id, isOpen
 
     const { handleSubmit, isValid, register, resetForm, setFieldValue } = useFormikWrapper({
         initialValues: {
-            first_name: admin?.first_name || "",
-            last_name: admin?.last_name || "",
-            email: admin?.email || "",
-            phone_number: admin?.phone_number || "",
+            first_name: fetchedAdmin?.first_name || "",
+            last_name: fetchedAdmin?.last_name || "",
+            email: fetchedAdmin?.email || "",
+            phone_number: fetchedAdmin?.phone_number || "",
             gender: "",
             role_id: ""
         },
         enableReinitialize: true,
         validationSchema: createAdminSchema,
         onSubmit(values) {
-            edit({ id: admin_id, ...values })
+            edit({ id: admin?.auth_id, ...values })
         },
     })
 

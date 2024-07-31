@@ -7,10 +7,11 @@ import { pageVariants } from "@/constants/animateVariants";
 import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { CreateAdminModal, DeactivateAdminModal, EditAdminModal } from "@/components/pages/accounts";
 import type { FetchedAdminType } from "@/types/admin";
+import { cn } from "@/libs/cn";
 
 export const AccountsPage: React.FC = () => {
     const { data: admins, isFetching } = useGetAdmins()
-    const [activeAdmin, setActiveAdmin] = useState("")
+    const [activeAdmin, setActiveAdmin] = useState<FetchedAdminType | null>(null)
     const [toggleModals, setToggleModals] = useState({
         openCreateAdminModal: false,
         openDeactivateAdminModal: false,
@@ -82,7 +83,7 @@ export const AccountsPage: React.FC = () => {
                 type="button"
                 className="rounded bg-grey-dark-4 py-1 px-2 text-grey-dark-1 text-sm"
                 onClick={() => {
-                  setActiveAdmin(item?.auth_id)
+                  setActiveAdmin(item)
                   toggleEditAdmin()
                 }}
               >
@@ -90,13 +91,13 @@ export const AccountsPage: React.FC = () => {
               </button>
               <button
                 type="button"
-                className="rounded bg-semantics-error/10 py-1 px-2 text-semantics-error text-sm"
+                className={cn(item?.status === 1 ? "text-semantics-error bg-semantics-error/10" : "text-green-1 bg-green-1/10", "rounded py-1 px-2  text-sm")}
                 onClick={() => {
-                  setActiveAdmin(item?.auth_id)
+                  setActiveAdmin(item)
                   toggleDeactivateAdmin()
                 }}
               >
-                Deactivate
+                {item?.status === 1 ? "Deactivate" : "Activate"}
               </button>
             </div>
           )
@@ -157,15 +158,15 @@ export const AccountsPage: React.FC = () => {
             isOpen={toggleModals.openEditAdminModal}
             close={() => {
               toggleEditAdmin()
-              setActiveAdmin("")
+              setActiveAdmin(null)
             }}
-            admin_id={activeAdmin}
+            admin={activeAdmin!}
           />
           <DeactivateAdminModal 
-            admin_id={activeAdmin} 
+            admin={activeAdmin!} 
             close={() => {
               toggleDeactivateAdmin()
-              setActiveAdmin("")
+              setActiveAdmin(null)
             }}
             isOpen={toggleModals.openDeactivateAdminModal} 
           />

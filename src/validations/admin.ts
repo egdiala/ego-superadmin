@@ -11,7 +11,12 @@ export const createAdminSchema = Yup.object().shape({
 })
 
 export const suspendAdminSchema = Yup.object().shape({
-    suspend_reason: Yup.string().required("Reason is required"),
+    status: Yup.string().required("Status is required"),
+    suspend_reason: Yup.string().nullable()
+        .when("status", {
+            is: () => "1",
+            then: () => Yup.string().required("Reason is required"),
+        }),
 })
 
 export const editAdminProfileSchema = Yup.object().shape({

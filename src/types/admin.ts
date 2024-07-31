@@ -9,6 +9,7 @@ export type CreateAdminType = {
 
 export interface FetchedAdminType extends Omit<CreateAdminType, "gender" | "role_id"> {
     avatar: string;
+    status: number;
     auth_id: string;
 }
 
