@@ -9,12 +9,12 @@ import { ResponsiveLine, type LineSvgProps } from "@nivo/line"
  * Disclaimer 👀... Make sure parent container has a defined height, otherwise height will be 0 and no chart will be rendered.
  */
 export const LineChart: React.FC<LineSvgProps & { className: string }> = ({ className, ...props }) => {
-    const [scope, animate] = useAnimate()
+    const [scope, animate] = useAnimate<HTMLDivElement>()
     const isInView = useInView(scope, { once: true })
     
     useEffect(() => {
         if (isInView) {
-            const circles = Array.from(document.querySelectorAll("circle")).reverse()
+            const circles = Array.from(scope.current.querySelectorAll("circle")).reverse()
             const enterAnimation = async () => {
                 animate("path", { pathLength: [0, 1] }, { duration: 2, ease: "easeOut" });
             }

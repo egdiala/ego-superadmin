@@ -1,5 +1,9 @@
 import * as Yup from "yup";
 
+export const deleteRoleSchema = Yup.object().shape({
+    reason: Yup.string().required("Reason is required"),
+})
+
 export const createRoleSchema = Yup.object().shape({
     name: Yup.string().required("Role name is required"),
     role_list: Yup.object().shape({

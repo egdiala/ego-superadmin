@@ -1,29 +1,28 @@
 import React, { useCallback } from "react";
 import { Icon } from "@iconify/react";
 import { Button, TextArea } from "@/components/core";
-import { suspendDriverSchema } from "@/validations/driver";
+import { suspendAdminSchema } from "@/validations/admin";
+import { useEditAdmin } from "@/services/hooks/mutations";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 
 interface DeactivateAdminModalProps {
     isOpen: boolean;
+    admin_id: string;
     // eslint-disable-next-line no-unused-vars
     close: (value: boolean) => void
 }
 
-export const DeactivateAdminModal: React.FC<DeactivateAdminModalProps> = ({ isOpen, close }) => {
+export const DeactivateAdminModal: React.FC<DeactivateAdminModalProps> = ({ admin_id, isOpen, close }) => {
+    const { mutate: edit, isPending } = useEditAdmin(() => closeModal(), "Deactivated")
     const { handleSubmit, isValid, register, resetForm } = useFormikWrapper({
         initialValues: {
-            hour: "",
-            mins: "",
-            reason: "",
-            time_of_day: "",
-            reactivation_date_time: "",
-            indefinite_suspension: false
+            suspend_reason: "",
+            status: "2"
         },
-        validationSchema: suspendDriverSchema,
-        onSubmit: () => {
-
+        validationSchema: suspendAdminSchema,
+        onSubmit(values) {
+            edit({ ...values, id: admin_id })
         }
     })
 
@@ -45,10 +44,10 @@ export const DeactivateAdminModal: React.FC<DeactivateAdminModalProps> = ({ isOp
                         </div>
                         <p className="text-grey-dark-3 text-sm">This action would deactivate [account name] account and won’t be able to access this platform.</p>
                     </div>
-                    <TextArea placeholder="Reason" {...register("reason")} />
+                    <TextArea placeholder="Reason" {...register("suspend_reason")} />
                     <div className="flex items-center justify-end w-full md:w-2/3 ml-auto pt-10 gap-2 md:gap-4">
                         <Button type="button" theme="tertiary" onClick={closeModal} block>Cancel</Button>
-                        <Button type="submit" theme="primary" disabled={!isValid} block>Deactivate Account</Button>
+                        <Button type="submit" theme="primary" loading={isPending} disabled={isPending || !isValid} block>Deactivate Account</Button>
                     </div>
                 </DialogPanel>
             </div>
