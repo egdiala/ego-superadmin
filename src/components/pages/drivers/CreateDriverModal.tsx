@@ -1,8 +1,11 @@
 import React, { Fragment } from "react";
-import { Button, Input } from "@/components/core";
+import { Button, Input, SelectInput } from "@/components/core";
 import { Dialog, DialogPanel, DialogTitle, Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { Loader } from "@/components/core/Button/Loader";
 import { Icon } from "@iconify/react";
+import { useFormikWrapper } from "@/hooks/useFormikWrapper";
+import { createDriverSchema } from "@/validations/driver";
+import { useCreateDriver } from "@/services/hooks/mutations";
 
 interface CreateDriverModalProps {
     isOpen: boolean;
@@ -11,31 +14,59 @@ interface CreateDriverModalProps {
 }
 
 const SingleDriver: React.FC<CreateDriverModalProps> = ({ close }) => {
+    const { mutate: create, isPending } = useCreateDriver()
+    const genders = [
+        { label: "Male", value: "male" },
+        { label: "Female", value: "female" }
+    ]
+
+    const { handleSubmit, isValid, register, resetForm } = useFormikWrapper({
+        initialValues: {
+            first_name: "",
+            last_name: "",
+            email: "",
+            phone_number: "",
+            gender: "",
+            nin: "",
+            driver_license: ""
+        },
+        validationSchema: createDriverSchema,
+        onSubmit(values) {
+            create(values)
+        },
+    })
+
+    const onClose = () => {
+        resetForm();
+        close(false);
+    }
+
     return (
-        <Fragment>
+        <form className="grid gap-6" onSubmit={handleSubmit}>
             <div className="grid gap-6">
                 <div className="flex flex-col md:flex-row md:items-start gap-6">
-                    <Input type="text" label="First Name" />
-                    <Input type="text" label="Last Name" />
+                    <Input type="text" label="First Name" {...register("first_name")} />
+                    <Input type="text" label="Last Name" {...register("last_name")} />
                 </div>
                 <div className="flex flex-col md:flex-row md:items-start gap-6">
-                    <Input type="text" label="Phone Number" />
-                    <Input type="text" label="Gender" />
+                    <Input type="text" label="Phone Number" {...register("phone_number")} />
+                    <SelectInput options={genders} label="Gender" {...register("gender")} />
                 </div>
                 <div className="flex flex-col md:flex-row md:items-start gap-6">
-                    <Input type="text" label="NIN" />
-                    <Input type="text" label="Driver’s License No." />
+                    <Input type="text" label="NIN" {...register("nin")} />
+                    <Input type="text" label="Driver’s License No." {...register("driver_license")} />
                 </div>
-                <div className="flex flex-col md:flex-row md:items-start gap-6">
+                <Input type="text" label="Email" {...register("email")} />
+                {/* <div className="flex flex-col md:flex-row md:items-start gap-6">
                     <Input type="text" label="Upload Driver’s License" optional />
                     <Input type="text" label="Upload Profile Image" />
-                </div>
+                </div> */}
             </div>
             <div className="flex items-center justify-end w-full md:w-1/2 ml-auto pt-10 gap-2 md:gap-4">
-                <Button theme="tertiary" onClick={() => close(false)} block>Cancel</Button>
-                <Button theme="primary" block>Add Driver</Button>
+                <Button type="button" theme="tertiary" onClick={onClose} block>Cancel</Button>
+                <Button type="submit" theme="primary" loading={isPending} disabled={isPending || !isValid} block>Add Driver</Button>
             </div>
-        </Fragment>
+        </form>
     )
 }
 

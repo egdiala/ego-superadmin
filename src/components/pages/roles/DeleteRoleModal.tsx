@@ -3,7 +3,7 @@ import { Icon } from "@iconify/react";
 import { Button, TextArea } from "@/components/core";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
-import { FetchedRolesType } from "@/types/roles";
+import type { FetchedRolesType } from "@/types/roles";
 import { useDeleteRole } from "@/services/hooks/mutations";
 import { deleteRoleSchema } from "@/validations/roles";
 

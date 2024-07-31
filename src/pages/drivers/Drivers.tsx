@@ -1,109 +1,141 @@
 import React, { useCallback, useState } from "react";
 import { motion } from "framer-motion";
-import { Button, SearchInput, Table, TableAction } from "@/components/core";
+import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { pageVariants } from "@/constants/animateVariants";
 import { Icon } from "@iconify/react";
-import { makeData } from "@/hooks/makeData";
 import { CreateDriverModal } from "@/components/pages/drivers";
 import { useNavigate } from "react-router-dom";
+import { useGetDrivers } from "@/services/hooks/queries";
+import { Loader } from "@/components/core/Button/Loader";
+import { format, formatRelative } from "date-fns";
+import type { FetchedDriverType } from "@/types/drivers";
+import { cn } from "@/libs/cn";
 
 export const DriversPage: React.FC = () => {
-    const navigate = useNavigate();
-    const dummyData = makeData(50);
-    const [data, setData] = useState(dummyData);
-    const [toggleModals, setToggleModals] = useState({
-        openFilterModal: false,
-        openCreateDriverModal: false,
-    })
+  const navigate = useNavigate();
+  const { data: drivers, isFetching } = useGetDrivers()
+  const [toggleModals, setToggleModals] = useState({
+    openFilterModal: false,
+    openCreateDriverModal: false,
+  })
 
-    const columns = [
-      {
-        header: () => "Reg. Date",
-        accessorKey: "createdAt",
-      },
-      {
-        header: () => "Name",
-        accessorKey: "fullName",
-      },
-      {
-        header: () => "Email",
-        accessorKey: "email",
-      },
-      {
-        header: () => "Phone Number",
-        accessorKey: "phoneNumber",
-      },
-      {
-        header: () => "Vehicle Assignment Status",
-        accessorKey: "vehicleStatus",
-      },
-      {
-        header: () => "Status",
-        accessorKey: "status",
+  const columns = [
+    {
+      header: () => "Reg. Date",
+      accessorKey: "createdAt",
+      cell: ({ row }: { row: any; }) => {
+        const item = row?.original as FetchedDriverType
+        return (
+          <div className="text-sm text-grey-dark-2 lowercase"><span className="capitalize">{formatRelative(item?.createdAt, new Date()).split(" ")[0]}</span> • {format(item?.createdAt, "p")}</div>
+        )
       }
-    ];
+    },
+    {
+      header: () => "Name",
+      accessorKey: "fullName",
+      cell: ({ row }: { row: any; }) => {
+        const item = row?.original as FetchedDriverType
+        return (
+          <div className="text-sm text-grey-dark-2 capitalize">{item?.first_name} {item?.last_name}</div>
+        )
+      }
+    },
+    {
+      header: () => "Email",
+      accessorKey: "email",
+    },
+    {
+      header: () => "Phone Number",
+      accessorKey: "phone_number",
+      cell: ({ row }: { row: any; }) => {
+        const item = row?.original as FetchedDriverType
+        return (
+          <div className="text-sm text-grey-dark-2 capitalize">{item?.phone_number || "-"}</div>
+        )
+      }
+    },
+    {
+      header: () => "Vehicle Assignment Status",
+      accessorKey: "vehicleStatus",
+      cell: ({ row }: { row: any; }) => {
+        const item = row?.original as FetchedDriverType
+        return (
+          <div className={cn(item?.vehicle_id ? "bg-green-3" : "bg-yellow-3", "flex w-fit rounded items-center text-grey-dark-2 px-2 py-0.5 text-sm")}>{item?.vehicle_id ? "Assigned" : "Unassigned"}</div>
+        )
+      }
+    },
+    {
+      header: () => "Status",
+      accessorKey: "status",
+      cell: ({ row }: { row: any; }) => {
+        const item = row?.original as FetchedDriverType
+        return (
+          <div className={cn(item?.status === 1 ? "text-dark-green-1" : "text-grey-dark-1", "font-medium text-sm")}>{item?.status === 1 ? "Active" : "Suspended"}</div>
+        )
+      }
+    }
+  ];
 
-    const paginateData = (currentPage: number, rowsPerPage: number) => {
-      const startIndex = (currentPage - 1) * rowsPerPage;
-      const endIndex = startIndex + rowsPerPage;
-      const newData = dummyData.slice(startIndex, endIndex);
-      setData(newData);
-    };
+  const handlePageChange = () => {
+    // in a real page, this function would paginate the data from the backend
 
-    const handlePageChange = (currentPage: number, rowsPerPage: number) => {
-      // in a real page, this function would paginate the data from the backend
-      paginateData(currentPage, rowsPerPage);
-    };
+  };
 
-    const getData = (currentPage: number, rowsPerPage: number) => {
-      // in a real page, this function would paginate the data from the backend
-      paginateData(currentPage, rowsPerPage);
-    };
+  const getData = () => {
+    // in a real page, this function would paginate the data from the backend
+
+  };
+
+  const toggleCreateDriver = useCallback(() => {
+    setToggleModals((prev) => ({
+      ...prev,
+      openCreateDriverModal: !toggleModals.openCreateDriverModal,
+    }))
+  }, [toggleModals.openCreateDriverModal])
   
-    const toggleCreateDriver = useCallback(() => {
-      setToggleModals((prev) => ({
-        ...prev,
-        openCreateDriverModal: !toggleModals.openCreateDriverModal,
-      }))
-    },[toggleModals.openCreateDriverModal])
-    return (
-      <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">
-        <h1 className="text-grey-dark-1 font-bold text-2xl md:text-[2rem]">Drivers</h1>
-        <div className="grid content-start gap-5 py-6 px-4 bg-white rounded-lg">
-            <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
-                <div className="w-full md:w-1/3 xl:w-1/4">
-                    <SearchInput placeholder="Search name, ref etc" />
-                </div>
-                
-                <div className="flex items-center gap-2 flex-wrap">
-                  <div className="flex items-center gap-2 w-full sm:w-auto">
-                    <TableAction theme="ghost" block>
-                      <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-                      Export
-                    </TableAction>
-                    <TableAction theme="grey" block>
-                      <Icon icon="mdi:funnel" className="size-4" />
-                      Filter
-                    </TableAction>
-                  </div>
-                  <div className="w-full sm:w-auto">
-                    <Button theme="primary" onClick={toggleCreateDriver} block>
-                      <Icon icon="ph:plus" className="size-4" />
-                      Add New Driver
-                    </Button>
-                  </div>
-                </div>
+  return (
+    <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">
+      <h1 className="text-grey-dark-1 font-bold text-2xl md:text-[2rem]">Drivers</h1>
+      <div className="grid content-start gap-5 py-6 px-4 bg-white rounded-lg">
+        <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
+          <div className="w-full md:w-1/3 xl:w-1/4">
+            <SearchInput placeholder="Search name, ref etc" />
+          </div>
+          
+          <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <TableAction theme="ghost" block>
+                <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
+                Export
+              </TableAction>
+              <TableAction theme="grey" block>
+                <Icon icon="mdi:funnel" className="size-4" />
+                Filter
+              </TableAction>
             </div>
-            <Table
-                columns={columns}
-                data={data}
-                onClick={() => navigate("/drivers/3/profile")}
-                getData={getData}
-                totalCount={dummyData.length}
-                onPageChange={handlePageChange}
-            />
+            <div className="w-full sm:w-auto">
+              <Button theme="primary" onClick={toggleCreateDriver} block>
+                <Icon icon="ph:plus" className="size-4" />
+                Add New Driver
+              </Button>
+            </div>
+          </div>
         </div>
-        <CreateDriverModal isOpen={toggleModals.openCreateDriverModal} close={toggleCreateDriver} />
-      </motion.div>
-    )
+        <RenderIf condition={!isFetching}>
+          <Table
+            columns={columns}
+            data={drivers ?? []}
+            onClick={(row) => navigate(`/drivers/${row?.id}/profile`)}
+            getData={getData}
+            totalCount={drivers?.length}
+            onPageChange={handlePageChange}
+          />
+        </RenderIf>
+        <RenderIf condition={isFetching}>
+          <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
+        </RenderIf>
+      </div>
+      <CreateDriverModal isOpen={toggleModals.openCreateDriverModal} close={toggleCreateDriver} />
+    </motion.div>
+  )
 }

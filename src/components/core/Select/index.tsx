@@ -56,7 +56,7 @@ export const SelectInput: React.FC<SelectInputProps> = ({ containerVariant, labe
                     )} {...props}
                 >
 
-                    <option value="" selected={false}></option>
+                    <option defaultValue="" selected={false}></option>
                     {
                         options.map((option, idx) =>
                             <option key={idx} value={option.value}>{option.label}</option>

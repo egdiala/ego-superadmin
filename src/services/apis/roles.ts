@@ -1,4 +1,4 @@
-import { CreatePermissionType } from "@/types/roles";
+import type { CreatePermissionType } from "@/types/roles";
 import { axiosSettingsInstance } from "../axiosInstance";
 import { CREATE_ROLE_API, GET_ROLE_LISTS_API, GET_ROLES_API } from "@/constants/api";
 

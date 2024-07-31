@@ -13,3 +13,6 @@ export const GET_ROLES_API = "admin/operations/roles"
 // Admins
 export const CREATE_ADMIN_API = "admin/accounts"
 export const GET_ADMIN_PROFILE_API = "admin/accounts/get-profile"
+
+// Drivers
+export const CREATE_DRIVER_API = "admin/drivers"

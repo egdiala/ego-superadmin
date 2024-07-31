@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getAdmin, getAdminProfile, getAdmins } from "@/services/apis/admin";
 import { GET_ADMIN, GET_ADMIN_PROFILE, GET_ADMINS } from "@/constants/queryKeys";
-import { FetchedAdminProfile, FetchedAdminType } from "@/types/admin";
+import type { FetchedAdminProfile, FetchedAdminType } from "@/types/admin";
 
 export const useGetAdmins = () => {
   return useQuery({

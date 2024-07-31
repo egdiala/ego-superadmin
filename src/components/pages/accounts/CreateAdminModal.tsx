@@ -4,7 +4,7 @@ import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { ComboBox } from "@/components/core/ComboBox";
 import { useGetRoles } from "@/services/hooks/queries";
-import { FetchedRolesType } from "@/types/roles";
+import type { FetchedRolesType } from "@/types/roles";
 import { createAdminSchema } from "@/validations/admin";
 import { useCreateAdmin } from "@/services/hooks/mutations";
 

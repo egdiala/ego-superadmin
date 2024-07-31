@@ -6,7 +6,7 @@ import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { CreateAdminModal, DeactivateAdminModal, EditAdminModal } from "@/components/pages/accounts";
-import { FetchedAdminType } from "@/types/admin";
+import type { FetchedAdminType } from "@/types/admin";
 
 export const AccountsPage: React.FC = () => {
     const { data: admins, isFetching } = useGetAdmins()

@@ -6,7 +6,7 @@ import { useGetAdmin, useGetRoles } from "@/services/hooks/queries";
 import { useEditAdmin } from "@/services/hooks/mutations";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { createAdminSchema } from "@/validations/admin";
-import { FetchedRolesType } from "@/types/roles";
+import type { FetchedRolesType } from "@/types/roles";
 import { Loader } from "@/components/core/Button/Loader";
 
 

@@ -7,3 +7,6 @@ export const GET_ROLE_LISTS = "get-role-lists"
 export const GET_ADMINS = "get-admins"
 export const GET_ADMIN = "get-admin"
 export const GET_ADMIN_PROFILE = "get-admin-profile"
+
+// Drivers
+export const GET_DRIVERS = "get-drivers"

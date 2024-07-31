@@ -1,4 +1,15 @@
 import * as Yup from "yup";
+import { EmailSchema } from "./auth";
+
+export const createDriverSchema = Yup.object().shape({
+    first_name: Yup.string().required("First name is required"),
+    last_name: Yup.string().required("Last name is required"),
+    email: EmailSchema,
+    phone_number: Yup.string().required("Phone number is required"),
+    gender: Yup.string().required("Select a gender"),
+    nin: Yup.string().length(11, "NIN should be 11 digits").required("NIN is required"),
+    driver_license: Yup.string().required("Driver license is required"),
+})
 
 export const suspendDriverSchema = Yup.object().shape({
     indefinite_suspension: Yup.boolean().required(),

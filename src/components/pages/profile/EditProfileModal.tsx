@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import { Button, Input } from "@/components/core";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { Icon } from "@iconify/react";
-import { FetchedAdminProfile } from "@/types/admin";
+import type { FetchedAdminProfile } from "@/types/admin";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { editAdminProfileSchema } from "@/validations/admin";
 import { useEditAdmin } from "@/services/hooks/mutations";
