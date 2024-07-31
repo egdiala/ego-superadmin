@@ -106,58 +106,37 @@ export const Table: React.FC<TableProps> = ({
             {table.getHeaderGroups().map((headerGroup) => (
               <tr
                 key={headerGroup.id}
-                className="w-full flex justify-between items-center px-2 py-2.5 bg-grey-dark-4 rounded-lg bg-neutral-variant cursor-pointer"
+                className="bg-grey-dark-4 rounded-lg cursor-pointer"
               >
                 {headerGroup.headers.map((header, index) => {
                   return (
                     <th
                       key={header.id}
-                      colSpan={header.colSpan}
-                      className="w-full text-left last:text-right"
-                      style={{
-                        width: `${header.getSize()}px`,
-                        // opacity: header.id === "action" ? 0 : 1,
-                      }}
+                      className={`text-left px-2 py-2.5 last:text-right ${header.column.getCanSort() && "cursor-pointer select-none"}`}
+                      onClick={index === 0 ? header.column.getToggleSortingHandler() : () => { }}
+                      title={
+                        header.column.getCanSort()
+                          ? header.column.getNextSortingOrder() === "asc"
+                            ? "Sort ascending"
+                            : header.column.getNextSortingOrder() === "desc"
+                              ? "Sort descending"
+                              : "Clear sort"
+                          : undefined
+                      }
                     >
-                      {header.isPlaceholder ? null : (
-                        <td
-                          className={`w-full flex items-center gap-1
-                            ${
-                              header.column.getCanSort()
-                                ? "cursor-pointer select-none"
-                                : ""
-                            }
-                          `}
-                          onClick={
-                            index === 0
-                              ? header.column.getToggleSortingHandler()
-                              : () => {}
-                          }
-                          title={
-                            header.column.getCanSort()
-                              ? header.column.getNextSortingOrder() === "asc"
-                                ? "Sort ascending"
-                                : header.column.getNextSortingOrder() === "desc"
-                                  ? "Sort descending"
-                                  : "Clear sort"
-                              : undefined
-                          }
-                        >
-                          <span className="text-grey-dark-1 text-sm font-medium whitespace-nowrap">
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                          </span>
+                      <div className="flex items-center gap-1 text-grey-dark-1 text-sm font-medium whitespace-nowrap">
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
 
-                          <RenderIf condition={index === 0}>
-                            <Icon
-                              icon="ph:caret-up-down-fill"
-                              className="text-neutral-40"
-                            />
-                          </RenderIf>
-                        </td>
-                      )}
+                        <RenderIf condition={index === 0}>
+                          <Icon
+                            icon="ph:caret-up-down-fill"
+                            className="text-neutral-40"
+                          />
+                        </RenderIf>
+                      </div>
                     </th>
                   );
                 })}
@@ -178,14 +157,13 @@ export const Table: React.FC<TableProps> = ({
                     key={row.id}
                     data-testid={row.id}
                     onClick={() => onClick(row)}
-                    className="w-full flex justify-between hover:bg-green-4 items-center px-2 py-3.5"
+                    className="hover:bg-green-4"
                   >
                     {row.getVisibleCells().map((cell) => {
                       return (
                         <td
                           key={cell.id}
-                          className="w-full text-left text-grey-dark-2 text-sm font-normal"
-                          style={{ width: `${cell.column.getSize()}px` }}
+                          className="text-left px-2 py-3.5 text-grey-dark-2 text-sm font-normal"
                           onClick={(e) => {
                             if (
                               cell.column.id === "action" ||

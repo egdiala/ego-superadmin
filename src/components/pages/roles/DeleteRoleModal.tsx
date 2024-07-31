@@ -5,7 +5,7 @@ import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { FetchedRolesType } from "@/types/roles";
 import { useDeleteRole } from "@/services/hooks/mutations";
-import { deleteRoleSchema } from "@/validations/role";
+import { deleteRoleSchema } from "@/validations/roles";
 
 interface DeleteRoleModalProps {
     isOpen: boolean;

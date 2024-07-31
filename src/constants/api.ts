@@ -9,3 +9,7 @@ export const CONFIRM_RESET_PASSWORD_OTP_API = "user/otps/confirm"
 export const GET_ROLE_LISTS_API = "admin/operations/role-lists"
 export const CREATE_ROLE_API = "admin/operations/roles"
 export const GET_ROLES_API = "admin/operations/roles"
+
+// Admins
+export const CREATE_ADMIN_API = "admin/accounts"
+export const GET_ADMIN_PROFILE_API = "admin/accounts/get-profile"
