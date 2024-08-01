@@ -23,7 +23,10 @@ export const EditAdminModal: React.FC<EditAdminModalProps> = ({ admin, isOpen, c
     const { data: roles, isFetching } = useGetRoles()
     const { mutate: edit, isPending } = useEditAdmin(() => onClose())
     const { data: fetchedAdmin, isFetching: isFetchingAdmin } = useGetAdmin(admin?.auth_id)
-    const genders = [{ label: "Male", value: "male" }, { label: "Female", value: "female" }]
+    const genders = [
+        { label: "Male", value: "male" },
+        { label: "Female", value: "female" }
+    ]
 
     const filteredRoles =
         query === ""
@@ -32,14 +35,14 @@ export const EditAdminModal: React.FC<EditAdminModalProps> = ({ admin, isOpen, c
             return role.name.toLowerCase().includes(query.toLowerCase())
             })
 
-    const { handleSubmit, isValid, register, resetForm, setFieldValue } = useFormikWrapper({
+    const { handleSubmit, isValid, register, resetForm, setFieldValue, values } = useFormikWrapper({
         initialValues: {
             first_name: fetchedAdmin?.first_name || "",
             last_name: fetchedAdmin?.last_name || "",
             email: fetchedAdmin?.email || "",
             phone_number: fetchedAdmin?.phone_number || "",
-            gender: "",
-            role_id: ""
+            gender: fetchedAdmin?.gender || "",
+            role_id: roles?.filter((item) => item?.role_id === fetchedAdmin?.role_id)[0]?.role_id || ""
         },
         enableReinitialize: true,
         validationSchema: createAdminSchema,
@@ -77,6 +80,7 @@ export const EditAdminModal: React.FC<EditAdminModalProps> = ({ admin, isOpen, c
                             onClose={() => setQuery("")}
                             options={filteredRoles ?? []} 
                             onChange={(value) => setQuery(value)} 
+                            defaultValue={roles?.filter((role) => role?.role_id === values?.role_id)?.[0]}
                             displayValue={(item: FetchedRolesType) => item?.name} 
                             optionLabel={(option: FetchedRolesType) => option?.name} 
                             setSelected={(value: FetchedRolesType) => setFieldValue("role_id", value?.role_id)} 

@@ -70,7 +70,15 @@ export const AccountsPage: React.FC = () => {
       },
       {
         header: () => "Admin Role",
-        accessorKey: "role",
+        accessorKey: "role_data.name",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedAdminType
+          return (
+            <div className="flex items-center gap-6">
+              {item?.role_data?.name || "-"}
+            </div>
+          )
+        }
       },
       {
         header: () => "Actions",

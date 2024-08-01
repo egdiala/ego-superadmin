@@ -1,3 +1,5 @@
+import type { AxiosProgressEvent } from "axios";
+
 export type CreateDriverType = {
     first_name: string;
     last_name: string;
@@ -33,4 +35,10 @@ export interface FetchedDriverType extends Omit<CreateDriverType, "nin" | "drive
     createdAt: Date | string;
     updatedAt: Date | string;
     driver_id: string;
+}
+
+export interface BulkUploadDriversParams {
+    files: FormData;
+    // eslint-disable-next-line no-unused-vars
+    onUploadProgress: (progressEvent: AxiosProgressEvent) => void;
 }

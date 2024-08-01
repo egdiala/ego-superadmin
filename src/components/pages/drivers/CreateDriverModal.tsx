@@ -1,11 +1,13 @@
-import React, { Fragment } from "react";
-import { Button, Input, SelectInput } from "@/components/core";
-import { Dialog, DialogPanel, DialogTitle, Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
-import { Loader } from "@/components/core/Button/Loader";
+import React, { type ChangeEvent, Fragment, useState } from "react";
 import { Icon } from "@iconify/react";
-import { useFormikWrapper } from "@/hooks/useFormikWrapper";
+import { Loader } from "@/components/core/Button/Loader";
 import { createDriverSchema } from "@/validations/driver";
-import { useCreateDriver } from "@/services/hooks/mutations";
+import { useFormikWrapper } from "@/hooks/useFormikWrapper";
+import { Button, Input, RenderIf, SelectInput } from "@/components/core";
+import { useBulkUploadDrivers, useCreateDriver } from "@/services/hooks/mutations";
+import { Dialog, DialogPanel, DialogTitle, Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
+import { AnimatePresence, motion } from "framer-motion";
+import type { AxiosProgressEvent } from "axios";
 
 interface CreateDriverModalProps {
     isOpen: boolean;
@@ -71,30 +73,68 @@ const SingleDriver: React.FC<CreateDriverModalProps> = ({ close }) => {
 }
 
 const MultipleDrivers: React.FC<CreateDriverModalProps> = ({ close }) => {
+    const [progress, setProgress] = useState(0);
+    const { mutate: upload, isPending: isUploading } = useBulkUploadDrivers(setProgress, () => {})
+
+    const { handleSubmit, isValid, setFieldValue, resetForm, values } = useFormikWrapper<{ files: File | string; }>({
+        initialValues: {
+            files: "",
+        },
+        // validationSchema: createDriverSchema,
+        onSubmit(values) {
+            const formData = new FormData();
+            formData.append("files", values.files);
+
+            upload({ files: formData, onUploadProgress: (progressEvent: AxiosProgressEvent) => {
+                const percentCompleted = Math.round((progressEvent.loaded * 100) / (progressEvent.total as number));
+                setProgress(percentCompleted);
+            }})
+        },
+    })
+
+    const prepareDoc = async(e: ChangeEvent<HTMLInputElement>) => {
+        const target = e.target as HTMLInputElement
+        const files = target.files as FileList
+        const file = files[0]
+        await setFieldValue("files", file, true);
+    }
+
+    const onClose = () => {
+        resetForm();
+        close(false);
+    }
     return (
-        <Fragment>
+        <form className="grid gap-6" onSubmit={handleSubmit}>
             <div className="grid gap-4">
-                <div className="text-sm text-grey-dark-2">Please be sure to use the template document meant for this information.  <span className="font-bold text-green-base underline underline-offset-1">Download here</span></div>
-                <label htmlFor="dropzone-file" className='w-full cursor-pointer py-12 border border-dashed border-[#D7D8D8] rounded-lg bg-green-4'>
+                <div className="text-sm text-grey-dark-2">Please be sure to use the template document meant for this information.  <a download="bulk_create_drivers_template.csv" href="/bulk_create_drivers_template.csv" className="font-bold text-green-base underline underline-offset-1">Download here</a></div>
+                <label htmlFor="files" className='w-full cursor-pointer py-12 border border-dashed border-[#D7D8D8] rounded-lg bg-green-4'>
                     <div className='grid gap-6 content-center justify-items-center w-full text-center mx-auto max-w-sm'>
                         <Icon icon="solar:cloud-upload-linear" className="size-14 text-grey-dark-3" />
                         <p className='text-sm text-neutral-base font-normal'>Drag & drop file here or<br/><span className='text-dark-green-1 font-semibold underline decoration-dark-green-1 underline-offset-2'>Select file</span></p>
                     </div>
-                    <input name='file' id="dropzone-file" type="file" accept=".doc,.docx,.pdf" className="hidden" />
+                    <input id="files" type="file" accept=".csv" name="files" className="hidden" onChange={(e) => prepareDoc(e)} />
                 </label>
-                <div className="flex w-full items-center justify-between py-3 px-4 bg-grey-dark-4 rounded">
-                    <span className="text-grey-dark-1 text-sm flex-1">File name</span>
-                    <div className="flex items-center gap-2">
-                        <Loader className="spinner text-green-1" />
-                        <span className="font-medium text-sm text-grey-dark-1">40%</span>
-                    </div>
-                </div>
+                <AnimatePresence mode="wait">
+                    {
+                        !!(values?.files as File)?.name && (
+                        <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} className="flex w-full items-start gap-4 justify-between py-3 px-4 bg-grey-dark-4 rounded">
+                            <span className="text-grey-dark-1 text-sm flex-1">{(values?.files as File)?.name}</span>
+                            <RenderIf condition={isUploading}>
+                            <div className="flex items-center gap-2">
+                                <Loader className="spinner text-green-1" />
+                                <span className="font-medium text-sm text-grey-dark-1">{progress}%</span>
+                            </div>
+                            </RenderIf>
+                        </motion.div>
+                        )
+                    }
+                </AnimatePresence>
             </div>
             <div className="flex items-center justify-end w-full md:w-1/2 ml-auto pt-10 gap-2 md:gap-4">
-                <Button theme="tertiary" onClick={() => close(false)} block>Cancel</Button>
-                <Button theme="primary" block>Upload Drivers</Button>
+                <Button type="button" theme="tertiary" onClick={onClose} block>Cancel</Button>
+                <Button type="submit" theme="primary" loading={isUploading} disabled={isUploading || !isValid} block>Upload Drivers</Button>
             </div>
-        </Fragment>
+        </form>
     )
 }
 

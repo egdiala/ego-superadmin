@@ -7,10 +7,26 @@ export type CreateAdminType = {
     role_id: string;
 }
 
-export interface FetchedAdminType extends Omit<CreateAdminType, "gender" | "role_id"> {
-    avatar: string;
-    status: number;
+export interface FetchedAdminType extends CreateAdminType {
     auth_id: string;
+    avatar: string;
+    createdAt: Date | string;
+    role_data: {
+        _id: string;
+        name: string;
+        data: {
+            create: string[]
+            delete: string[]
+            update: string[]
+            view: string[]
+        },
+        createdAt: Date | string;
+        updatedAt: Date | string;
+        __v: 0
+    }
+    status: number;
+    updatedAt: Date | string;
+    user_type: string;
 }
 
 export interface UpdateAdminType extends Partial<CreateAdminType> {
