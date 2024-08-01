@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { Button, Input, RenderIf, SelectInput } from "@/components/core";
-import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { ComboBox } from "@/components/core/ComboBox";
-import { useGetAdmin, useGetRoles } from "@/services/hooks/queries";
+import type { FetchedRolesType } from "@/types/roles";
+import type { FetchedAdminType } from "@/types/admin";
+import { useGetRoles } from "@/services/hooks/queries";
+import { createAdminSchema } from "@/validations/admin";
+import { Loader } from "@/components/core/Button/Loader";
 import { useEditAdmin } from "@/services/hooks/mutations";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
-import { createAdminSchema } from "@/validations/admin";
-import type { FetchedRolesType } from "@/types/roles";
-import { Loader } from "@/components/core/Button/Loader";
-import type { FetchedAdminType } from "@/types/admin";
+import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
+import { Button, Input, RenderIf, SelectInput } from "@/components/core";
 
 
 interface EditAdminModalProps {
@@ -22,7 +22,6 @@ export const EditAdminModal: React.FC<EditAdminModalProps> = ({ admin, isOpen, c
     const [query, setQuery] = useState("")
     const { data: roles, isFetching } = useGetRoles()
     const { mutate: edit, isPending } = useEditAdmin(() => onClose())
-    const { data: fetchedAdmin, isFetching: isFetchingAdmin } = useGetAdmin(admin?.auth_id)
     const genders = [
         { label: "Male", value: "male" },
         { label: "Female", value: "female" }
@@ -35,14 +34,14 @@ export const EditAdminModal: React.FC<EditAdminModalProps> = ({ admin, isOpen, c
             return role.name.toLowerCase().includes(query.toLowerCase())
             })
 
-    const { handleSubmit, isValid, register, resetForm, setFieldValue, values } = useFormikWrapper({
+    const { handleSubmit, isValid, register, resetForm, setFieldValue } = useFormikWrapper({
         initialValues: {
-            first_name: fetchedAdmin?.first_name || "",
-            last_name: fetchedAdmin?.last_name || "",
-            email: fetchedAdmin?.email || "",
-            phone_number: fetchedAdmin?.phone_number || "",
-            gender: fetchedAdmin?.gender || "",
-            role_id: roles?.filter((item) => item?.role_id === fetchedAdmin?.role_id)[0]?.role_id || ""
+            first_name: admin?.first_name || "",
+            last_name: admin?.last_name || "",
+            email: admin?.email || "",
+            phone_number: admin?.phone_number || "",
+            gender: admin?.gender || "",
+            role_id: roles?.filter((role) => role?.role_id === admin?.role_id)[0]?.role_id || ""
         },
         enableReinitialize: true,
         validationSchema: createAdminSchema,
@@ -64,10 +63,10 @@ export const EditAdminModal: React.FC<EditAdminModalProps> = ({ admin, isOpen, c
                     <DialogTitle as="h1" className="text-xl font-bold text-grey-dark-1">
                         Edit Admin Account
                     </DialogTitle>
-                    <RenderIf condition={isFetchingAdmin}>
+                    <RenderIf condition={isFetching}>
                         <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
                     </RenderIf>
-                    <RenderIf condition={!isFetchingAdmin}>
+                    <RenderIf condition={!isFetching}>
                     <div className="grid gap-6">
                         <Input type="text" label="First Name" {...register("first_name")} />
                         <Input type="text" label="Last Name" {...register("last_name")} />
@@ -80,7 +79,7 @@ export const EditAdminModal: React.FC<EditAdminModalProps> = ({ admin, isOpen, c
                             onClose={() => setQuery("")}
                             options={filteredRoles ?? []} 
                             onChange={(value) => setQuery(value)} 
-                            defaultValue={roles?.filter((role) => role?.role_id === values?.role_id)?.[0]}
+                            defaultValue={roles?.filter((role) => role?.role_id == admin?.role_id)?.[0]}
                             displayValue={(item: FetchedRolesType) => item?.name} 
                             optionLabel={(option: FetchedRolesType) => option?.name} 
                             setSelected={(value: FetchedRolesType) => setFieldValue("role_id", value?.role_id)} 

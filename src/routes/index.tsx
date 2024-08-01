@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import AuthLayout from "@/layouts/AuthLayout";
 import { AnimatePresence } from "framer-motion";
-import { AuthRoutes, DashboardRoutes, DriversRoutes, RolesRoutes } from "./modules";
+import { AuthRoutes, CustomersRoutes, DashboardRoutes, DriversRoutes, RolesRoutes } from "./modules";
 import ProtectedLayout from "@/layouts/ProtectedLayout";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { AccountsLayout } from "@/pages/accounts/Accounts";
@@ -26,6 +26,7 @@ const Router = () => {
                 </Route>
                 <Route path="/accounts/roles/*" element={<ProtectedLayout><LocationProvider><RolesRoutes /></LocationProvider></ProtectedLayout>} />
                 <Route path="/profile" element={<ProtectedLayout><LocationProvider><ProfilePage /></LocationProvider></ProtectedLayout>} />
+                <Route path="customers/*" element={<ProtectedLayout><LocationProvider><CustomersRoutes /></LocationProvider></ProtectedLayout>} />
             </Routes>
         </BrowserRouter>
     );

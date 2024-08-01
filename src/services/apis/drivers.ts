@@ -12,6 +12,11 @@ export const getDrivers = async () => {
   return res.data;
 };
 
+export const getDriver = async (id: string) => {
+  const res = await axiosInstance.get(`${CREATE_DRIVER_API}/${id}`);
+  return res.data;
+};
+
 export const bulkUploadDrivers = async (payload: BulkUploadDriversParams) => {
   const res = await axiosInstance.post(BULK_UPLOAD_DRIVERS_API, payload.files, {
     headers: {

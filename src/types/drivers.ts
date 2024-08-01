@@ -25,6 +25,10 @@ export interface FetchedDriverType extends Omit<CreateDriverType, "nin" | "drive
     vehicle_id: string;
     suspension_status: number;
     firebase_token: string;
+    vehOrg: {
+        vehicle: null,
+        organization: null
+    };
     bank_data: {
         bank_name: string;
         bank_code: string;

@@ -1,17 +1,17 @@
 .ego-table-action--primary {
-  @apply bg-green-0 border border-green-0 hover:bg-grey-dark-1 hover:border-grey-dark-1 text-white rounded py-3 px-2 text-sm font-medium justify-center !important;
+  @apply bg-green-0 border border-green-0 hover:bg-grey-dark-1 hover:border-grey-dark-1 text-white rounded py-3 px-4 text-sm font-medium justify-center !important;
 }
 
 .ego-table-action--secondary {
-  @apply bg-green-3 border border-light-green hover:border-green-0 hover:bg-green-0 text-grey-dark-1 hover:text-white rounded py-3 px-2 text-sm font-medium justify-center !important;
+  @apply bg-green-3 border border-light-green hover:border-green-0 hover:bg-green-0 text-grey-dark-1 hover:text-white rounded py-3 px-4 text-sm font-medium justify-center !important;
 }
 
 .ego-table-action--tertiary {
-  @apply bg-transparent border border-green-0 hover:bg-green-0 text-green-0 hover:text-white rounded py-3 px-2 text-sm font-medium justify-center !important;
+  @apply bg-transparent border border-green-0 hover:bg-green-0 text-green-0 hover:text-white rounded py-3 px-4 text-sm font-medium justify-center !important;
 }
 
 .ego-table-action--grey {
-  @apply bg-grey-dark-4 hover:bg-light-green border border-grey-dark-4 hover:border-green-0 text-grey-dark-1 hover:text-green-0 rounded py-3 px-2 text-sm font-medium justify-center !important;
+  @apply bg-grey-dark-4 hover:bg-light-green border border-grey-dark-4 hover:border-green-0 text-grey-dark-1 hover:text-green-0 rounded py-3 px-4 text-sm font-medium justify-center !important;
 }
 
 .ego-table-action--ghost {

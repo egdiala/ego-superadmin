@@ -1,29 +1,45 @@
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
+import blankImg from "@/assets/blank.svg";
 import whiteCar from "@/assets/white_car.svg";
+import { useGetDriver } from "@/services/hooks/queries";
 import { pageVariants } from "@/constants/animateVariants";
+import { cn } from "@/libs/cn";
+import { RenderIf } from "@/components/core";
 
 export const DriverProfilePage: React.FC = () => {
-    const gridItems = [
-        { label: "Email", value: "example@gmail.com" },
-        { label: "Phone Number", value: "0814 5632 783" },
-        { label: "Rating", value: <div className="flex items-center gap-1"><Icon icon="ph:star-fill" className="text-semantics-amber size-3.5" />4.7</div> },
-        { label: "Gender", value: "Male" },
-        { label: "Date of Birth", value: "2nd May, 1990" },
-        { label: "State of Origin", value: "Lagos" },
-        { label: "Business assigned to", value: "Payroll services" },
-    ]
+    const { data: driver, refetch } = useGetDriver("")
+    const gridItems = useMemo(() => {
+        return [
+            { label: "Email", value: driver?.email },
+            { label: "Phone Number", value: driver?.phone_number },
+            { label: "Rating", value: <div className="flex items-center gap-1"><Icon icon="ph:star-fill" className="text-semantics-amber size-3.5" />-</div> },
+            { label: "Gender", value: driver?.gender },
+            { label: "Date of Birth", value: "-" },
+            { label: "State of Origin", value: "-" },
+            { label: "Business assigned to", value: driver?.vehOrg?.organization ?? "-" },
+        ]
+    },[driver?.email, driver?.gender, driver?.phone_number, driver?.vehOrg?.organization])
+    useEffect(() => {
+        if (driver === undefined) {
+            refetch()
+        }
+    },[driver, refetch])
     return (
         <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-4 pt-2">
             <div className="flex flex-col md:flex-row md:items-center gap-10 bg-green-4 p-4 rounded-lg">
-                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" className="size-32 rounded-2xl object-cover" alt="user" />
+                <img
+                    src={driver?.avatar || blankImg}
+                    className="size-32 rounded-2xl object-cover"
+                    alt="user"
+                />
                 <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-y-8">
                     {
                         gridItems.map((item) =>
-                        <div key={item.label} className="grid gap-1">
+                        <div key={item.label} className="grid gap-1 group">
                             <h4 className="text-grey-dark-3 text-sm">{item.label}</h4>
-                            <span className="text-grey-dark-1 text-sm">{item.value}</span>
+                            <span className="text-grey-dark-1 text-sm capitalize group-first:lowercase">{item.value}</span>
                         </div>
                         )
                     }
@@ -34,16 +50,17 @@ export const DriverProfilePage: React.FC = () => {
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
                     <div className="grid gap-1">
                         <h4 className="text-grey-dark-3 text-sm">NIN</h4>
-                        <span className="text-grey-dark-1 text-sm">12345632783</span>
+                        <span className="text-grey-dark-1 text-sm">{driver?.nin_id?.value}</span>
                     </div>
                     <div className="grid gap-1">
                         <h4 className="text-grey-dark-3 text-sm">Driver’s License No.</h4>
-                        <span className="text-grey-dark-1 text-sm">12345632783</span>
+                        <span className="text-grey-dark-1 text-sm">{driver?.driver_license_id?.value}</span>
                     </div>
                     <div className="grid gap-1">
                         <h4 className="text-grey-dark-3 text-sm">Vehicle Assignment Status</h4>
-                        <div className="text-white text-sm px-2 py-0.5 bg-green-1 rounded w-fit">Assigned</div>
+                        <div className={cn("text-white text-sm px-2 py-0.5 rounded w-fit", driver?.vehOrg?.vehicle ? "bg-green-1" : "bg-semantics-error")}>{driver?.vehOrg?.vehicle ? "Assigned" : "Unassigned"}</div>
                     </div>
+                    <RenderIf condition={!!driver?.vehOrg?.vehicle}>
                     <div className="flex items-center gap-2">
                         <img src={whiteCar} alt="vehicle" className="object-cover object-center w-12" />
                         <div className="grid gap-1">
@@ -55,6 +72,7 @@ export const DriverProfilePage: React.FC = () => {
                         <h4 className="text-grey-dark-3 text-sm">Model</h4>
                         <span className="text-grey-dark-1 text-sm">Lease</span>
                     </div>
+                    </RenderIf>
                 </div>
             </div>
         </motion.div>

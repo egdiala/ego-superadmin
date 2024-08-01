@@ -125,7 +125,7 @@ export const DriversPage: React.FC = () => {
           <Table
             columns={columns}
             data={drivers ?? []}
-            onClick={(row) => navigate(`/drivers/${row?.id}/profile`)}
+            onClick={({ original }) => navigate(`/drivers/${original?.driver_id}/profile`)}
             getData={getData}
             totalCount={drivers?.length}
             onPageChange={handlePageChange}
