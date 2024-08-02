@@ -31,7 +31,6 @@ interface ComboBoxProps<T> {
   disabled?: boolean;
   selected?: T;
   defaultValue?: T;
-  multiple?: boolean;
   // eslint-disable-next-line no-unused-vars
   setSelected: (value: T) => void;
   onClose?: () => void;
@@ -47,13 +46,13 @@ interface ComboBoxProps<T> {
   [x: string]: unknown;
 }
 
-export const ComboBox: React.FC<ComboBoxProps<any>> = ({ containerVariant, label, help, error, selected, options, multiple, onChange, displayValue, defaultValue, optionLabel, setSelected, onClose, disabled = false }) => {
+export const ComboBox: React.FC<ComboBoxProps<any>> = ({ containerVariant, label, help, error, selected, options, onChange, displayValue, defaultValue, optionLabel, setSelected, onClose, disabled = false }) => {
     return (
         <div className={`${containerVariant} relative ego-input--outer`}>
             <RenderIf condition={!!label}>
                 <label className="ego-input--label">{label}</label>
             </RenderIf>
-            <Combobox multiple={multiple} disabled={disabled} value={selected} defaultValue={defaultValue} onChange={(value) => setSelected(value)} onClose={onClose}>
+            <Combobox disabled={disabled} value={selected} defaultValue={defaultValue} onChange={(value) => setSelected(value)} onClose={onClose}>
                 <div className="relative">
                 <ComboboxInput
                     className="ego-input pl-2 pr-8"
