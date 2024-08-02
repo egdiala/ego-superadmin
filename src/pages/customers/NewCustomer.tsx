@@ -1,12 +1,16 @@
 import React, { useMemo, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { Breadcrumb, Button, Input, SearchInput, SelectInput, Table } from "@/components/core";
-import { pageVariants } from "@/constants/animateVariants";
 import { cn } from "@/libs/cn";
-import { useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import { makeData } from "@/hooks/makeData";
+import { useNavigate } from "react-router-dom";
+import { PurchaseModel } from "@/types/organizations";
+import { AnimatePresence, motion } from "framer-motion";
+import { pageVariants } from "@/constants/animateVariants";
 import { useGetIndustries } from "@/services/hooks/queries";
+import { useFormikWrapper } from "@/hooks/useFormikWrapper";
+import { useCreateOrganization } from "@/services/hooks/mutations";
+import { createOrganizationSchema } from "@/validations/organizations";
+import { Breadcrumb, Button, Input, SearchInput, SelectInput, Table } from "@/components/core";
 
 export const NewCustomersPage: React.FC = () => {
     const navigate = useNavigate()
@@ -14,9 +18,13 @@ export const NewCustomersPage: React.FC = () => {
     const dummyData = makeData(50);
     const [data, setData] = React.useState(dummyData);
     const { data: fetchedIndustries, isFetching } = useGetIndustries()
+    const { mutate: create, isPending: isCreating } = useCreateOrganization((res) => {
+      console.log(res);
+      setStep(2)
+    })
 
     const industries = useMemo(() => {
-        return fetchedIndustries?.sort((a, b) => a?.id > b?.id ? 1 : -1)?.map((item) => ({ label: item?.label, value: item?.id }))
+        return fetchedIndustries?.sort((a, b) => a?.id > b?.id ? 1 : -1)?.map((item) => ({ label: item?.label, value: item?.label }))
     },[fetchedIndustries])
     
     const companyTypes = [
@@ -25,6 +33,33 @@ export const NewCustomersPage: React.FC = () => {
         { label: "Limited Liability Company", value: "Limited Liability Company" },
         { label: "Corporation", value: "Corporation" },
     ]
+    
+    const models = [
+        { label: "Lease Model", value: PurchaseModel.Lease.toString() },
+        { label: "E-Hailing Model", value: PurchaseModel.EHailing.toString() },
+        { label: "Staff Commute Model", value: PurchaseModel.StaffCommute.toString() },
+    ]
+
+    const { handleSubmit, isValid, register } = useFormikWrapper({
+        initialValues: {
+            purchase_model: "",
+            email: "",
+            name: "",
+            business_id: "",
+            industry: "",
+            company_type: "",
+            vehicle_purchase: "",
+            employee_no: "",
+            company_tin: "",
+            authorize_rep_name: "",
+            authorize_rep_email: "",
+            authorize_rep_phone: "",
+        },
+        validationSchema: createOrganizationSchema,
+        onSubmit(values) {
+            create(values)
+        },
+    })
 
     const columns = [
       {
@@ -106,38 +141,38 @@ export const NewCustomersPage: React.FC = () => {
                 <AnimatePresence mode="popLayout">
                     {
                         step === 1 && (
-                            <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-4">
+                            <motion.form onSubmit={handleSubmit} variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-4">
                                 <div className="grid gap-6 pb-14">
                                     <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-8">
-                                        <Input label="EV Purchase Model (Multiple select)" type="text" />
-                                        <Input label="Registered Business Name" type="text" />
+                                        <SelectInput label="EV Purchase Model (Multiple select)" options={models} {...register("purchase_model")} />
+                                        <Input label="Registered Business Name" type="text" {...register("name")} />
                                     </div>
                                     <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-8">
-                                        <Input label="CAC Registration Number" type="text" />
-                                        <Input label="Business Email  Address" type="text" />
+                                        <Input label="CAC Registration Number" inputMode="numeric" type="text" {...register("business_id")} />
+                                        <Input label="Business Email  Address" inputMode="email" {...register("email")} />
                                     </div>
                                     <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-8">
-                                        <SelectInput label="Industry" options={industries ?? []} disabled={isFetching} />
-                                        <SelectInput label="Company Type" options={companyTypes} />
+                                        <SelectInput label="Industry" options={industries ?? []} disabled={isFetching} {...register("industry")} />
+                                        <SelectInput label="Company Type" options={companyTypes} {...register("company_type")} />
                                     </div>
                                     <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-8">
-                                        <Input label="Company Tax Identification Number" type="text" />
-                                        <Input label="Number of Vehicles Purchased" type="text" />
+                                        <Input label="Company Tax Identification Number" type="text" {...register("company_tin")} />
+                                        <Input label="Number of Vehicles Purchased" type="text" {...register("vehicle_purchase")} />
                                     </div>
                                     <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-8">
-                                        <Input label="Number of Employees" type="text" />
-                                        <Input label="Authorized Rep Name and Title" type="text" />
+                                        <Input label="Number of Employees" type="text" {...register("employee_no")} />
+                                        <Input label="Authorized Rep Name and Title" type="text" {...register("authorize_rep_name")} />
                                     </div>
                                     <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-8">
-                                        <Input label="Authorized Rep Email" type="text" />
-                                        <Input label="Authorized Rep Phone Number" type="text" />
+                                        <Input label="Authorized Rep Email" type="text" {...register("authorize_rep_email")} />
+                                        <Input label="Authorized Rep Phone Number" type="text" {...register("authorize_rep_phone")} />
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-end md:w-1/2 xl:w-1/6 ml-auto pt-10 gap-2 md:gap-4 w-full">
                                     <Button type="button" theme="tertiary" onClick={() => navigate("/customers")} block>Cancel</Button>
-                                    <Button type="button" theme="primary" onClick={() => setStep(2)} block>Next</Button>
+                                    <Button type="submit" theme="primary" loading={isCreating} disabled={isCreating || !isValid}  block>Next</Button>
                                 </div>
-                            </motion.div>
+                            </motion.form>
                         )
                     }
                 </AnimatePresence>
@@ -163,7 +198,7 @@ export const NewCustomersPage: React.FC = () => {
                                 />
                                 <div className="flex items-center justify-end md:w-1/2 xl:w-1/6 ml-auto pt-10 gap-2 md:gap-4 w-full">
                                     <Button type="button" theme="tertiary" onClick={() => setStep(1)} block>Previous</Button>
-                                    <Button type="button" theme="primary" block>Add Customer</Button>
+                                    <Button type="button" theme="primary"block>Add Customer</Button>
                                 </div>
                             </motion.div>
                         )
