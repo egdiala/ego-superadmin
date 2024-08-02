@@ -21,3 +21,17 @@ export enum PurchaseModel {
     EHailing = 3
 }
 
+export type CreateOrganizationType = {
+    purchase_model: string;
+    email: string;
+    name: string;
+    business_id: string;
+    industry: string;
+    company_type: string;
+    vehicle_purchase: string;
+    employee_no: string;
+    company_tin: string;
+    authorize_rep_name: string;
+    authorize_rep_email: string;
+    authorize_rep_phone: string;
+}
