@@ -3,11 +3,11 @@ import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { useGetDriver } from "@/services/hooks/queries";
+import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { NavLink, Outlet, useParams } from "react-router-dom";
 import { Breadcrumb, Button, RenderIf } from "@/components/core";
 import { DeleteDriverModal, SuspendDriverModal } from "@/components/pages/drivers";
-import { Loader } from "@/components/core/Button/Loader";
 
 export const DriverPage: React.FC = () => {
   const params = useParams()

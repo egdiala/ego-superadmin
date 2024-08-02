@@ -20,3 +20,6 @@ export const BULK_UPLOAD_DRIVERS_API = "admin/drivers/bulk-driver-upload"
 
 // Organizations
 export const GET_ORGANIZATIONS_API = "admin/organizations"
+
+// Other
+export const GET_INDUSTRIES_API = "industries"

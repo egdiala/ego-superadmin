@@ -48,7 +48,7 @@ export const Breadcrumb = ({ items, showBack = false }: BreadcrumbProps) => {
           <li
             key={item.label}
             className={`flex items-center gap-2 text-sm font-normal capitalize
-              ${index === items.length - 1 ? "text-grey-dark-1" : "text-grey-dark-3"}
+              ${index === items.length - 1 ? "text-grey-dark-1" : "text-grey-dark-2"}
             `}
           >
             {item.link ? (

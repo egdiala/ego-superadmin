@@ -1,4 +1,5 @@
 export * from "./useAdmin"
 export * from "./useDrivers"
 export * from "./useOrganizations"
+export * from "./useOther"
 export * from "./useRoles"

@@ -14,3 +14,6 @@ export const GET_DRIVER = "get-driver"
 
 // Organizations
 export const GET_ORGANIZATIONS = "get-organizations"
+
+// Other
+export const GET_INDUSTRIES = "get-industries"

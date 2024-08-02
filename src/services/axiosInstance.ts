@@ -22,6 +22,13 @@ export const axiosSettingsInstance: AxiosInstance = axios.create({
   },
 });
 
+export const otherInstance: AxiosInstance = axios.create({
+  baseURL: import.meta.env.VITE_EGO_OTHER_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
 const token = localStorage.getItem("token") as string;
 
 
