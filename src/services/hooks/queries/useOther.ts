@@ -6,6 +6,7 @@ export const useGetIndustries = () => {
   return useQuery({
     queryKey: [GET_INDUSTRIES],
     queryFn: getIndustries,
+    refetchOnWindowFocus: false,
     select: (res) => res?.content as { id: string; label: string; }[],
     retry: false,
   });
