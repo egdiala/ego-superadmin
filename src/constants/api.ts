@@ -15,8 +15,8 @@ export const CREATE_ADMIN_API = "admin/accounts"
 export const GET_ADMIN_PROFILE_API = "admin/accounts/profile"
 
 // Drivers
-export const CREATE_DRIVER_API = "admin/drivers"
-export const BULK_UPLOAD_DRIVERS_API = "admin/drivers/bulk-driver-upload"
+export const CREATE_DRIVER_API = "admin/users"
+export const BULK_UPLOAD_DRIVERS_API = "admin/users/bulk-driver-upload"
 
 // Organizations
 export const GET_ORGANIZATIONS_API = "admin/organizations"
