@@ -1,11 +1,20 @@
 import React from "react";
+import emptyState from "@/assets/empty_state_illustration.svg"
 
-export const EmptyState: React.FC<{ emptyStateText?: string | null }> = ({ emptyStateText = null }) => {
+interface EmptyStateProps {
+  emptyStateText: string | null
+}
+
+export const EmptyState: React.FC<EmptyStateProps> = ({ emptyStateText = null }) => {
   return (
-    <div className="min-h-[29rem] flex items-center flex-col justify-center">
-      <p className="max-w-[25rem] text-base text-neutral-base text-center">
-        { emptyStateText ?? "Uh oh! It seems the desk is a little lonely. Time to  bring some life into this corner of the universe!" }
-      </p>
+    <div className="h-full w-full flex items-center flex-col gap-5 py-20 justify-center">
+      <img src={emptyState} alt="empty_state_illustration" />
+      <div className="grid gap-1">
+        <h4 className="font-bold text-grey-dark-1 text-2xl text-center">Nothing here</h4>
+        <p className="text-sm text-grey-dark-2 text-center">
+          {emptyStateText}
+        </p>
+      </div>
     </div>
   );
 };

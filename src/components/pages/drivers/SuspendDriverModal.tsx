@@ -51,10 +51,10 @@ export const SuspendDriverModal: React.FC<SuspendDriverModalProps> = ({ isOpen, 
                         <span className="text-sm text-grey-dark-2">Indefinite Suspension</span>
                         <Toggle checked={suspendDriverValues.indefinite_suspension} onChange={(v) => setFieldValue("indefinite_suspension", v, true)} name="indefinite_suspension" />
                     </div>
-                    <AnimatePresence>
+                    <AnimatePresence mode="sync">
                         {
                             !suspendDriverValues.indefinite_suspension && (
-                                <motion.div initial={{ height: "0px", opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: "0px" }} transition={{ duration: 0.5, ease: "easeOut" }} className="flex flex-col gap-4 items-start overflow-x-visible overflow-y-clip">
+                                <motion.div initial={{ height: "0px", opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: "0px", opacity: 0 }} transition={{ duration: 0.5, ease: "easeOut" }} className="flex flex-col gap-4 items-end overflow-x-visible overflow-y-clip">
                                 <Input label="Re-activation date & Time" type="date" {...register("reactivation_date_time")} />
                                 <div className="flex items-start gap-4">
                                     <Input label="Hour" type="text" placeholder="HH" {...register("hour")} />

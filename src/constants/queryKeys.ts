@@ -12,6 +12,9 @@ export const GET_ADMIN_PROFILE = "get-admin-profile"
 export const GET_DRIVERS = "get-drivers"
 export const GET_DRIVER = "get-driver"
 
+// Vehicles
+export const GET_VEHICLES = "get-vehicles"
+
 // Organizations
 export const GET_ORGANIZATIONS = "get-organizations"
 

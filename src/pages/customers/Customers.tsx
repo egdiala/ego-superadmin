@@ -89,6 +89,7 @@ export const CustomersPage: React.FC = () => {
             data={drivers ?? []}
             onClick={({ original }) => navigate(`/drivers/${original?.organization_id}/profile`)}
             getData={getData}
+            emptyStateText="You have not added any customer yet."
             totalCount={drivers?.length}
             onPageChange={handlePageChange}
           />

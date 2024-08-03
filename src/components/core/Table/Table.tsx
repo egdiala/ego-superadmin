@@ -145,11 +145,12 @@ export const Table: React.FC<TableProps> = ({
           </thead>
 
           {/* Table Body */}
-          {loading ? (
+          <RenderIf condition={loading}>
             <tbody className="min-h-[20rem]">
               <TableLoader />
             </tbody>
-          ) : data.length > 0 ? (
+          </RenderIf>
+          <RenderIf condition={data.length > 0}>
             <tbody>
               {table.getRowModel().rows.map((row) => {
                 return (
@@ -184,15 +185,16 @@ export const Table: React.FC<TableProps> = ({
                 );
               })}
             </tbody>
-          ) : (
-            <tbody className="flex items-center justify-center">
-              <EmptyState emptyStateText={emptyStateText} />
-            </tbody>
-          )}
+          </RenderIf>
         </table>
+        <RenderIf condition={data.length < 1 && !loading}>
+            <div className="flex items-center justify-center">
+              <EmptyState emptyStateText={emptyStateText} />
+            </div>
+        </RenderIf>
       </div>
 
-      <RenderIf condition={paginateData && data.length > 0 && !loading}>
+      <RenderIf condition={paginateData && (totalCount as number) > 0 && !loading}>
         <Pagination
           className="px-0 py-3"
           count={totalCount as number}
