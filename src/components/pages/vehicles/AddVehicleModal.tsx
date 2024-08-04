@@ -16,7 +16,7 @@ interface AddVehicleModalProps {
 }
 
 const SingleVehicle: React.FC<AddVehicleModalProps> = ({ close }) => {
-    const { mutate: create, isPending } = useCreateVehicle()
+    const { mutate: create, isPending } = useCreateVehicle(() => onClose())
 
     const { handleSubmit, isValid, register, resetForm } = useFormikWrapper({
         initialValues: {
@@ -33,7 +33,8 @@ const SingleVehicle: React.FC<AddVehicleModalProps> = ({ close }) => {
         },
         validationSchema: createVehicleSchema,
         onSubmit(values) {
-            create(values)
+            const { year_manufacture, year_purchase, ...data } = values
+            create({ ...data, year_manufacture: year_manufacture.toString(), year_purchase: year_purchase.toString() })
         },
     })
 

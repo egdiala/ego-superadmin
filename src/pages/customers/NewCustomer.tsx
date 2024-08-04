@@ -2,19 +2,21 @@ import React, { useMemo, useState } from "react";
 import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
 import { useNavigate } from "react-router-dom";
+import { format, formatRelative } from "date-fns";
+import { FetchedVehicleType } from "@/types/vehicles";
 import { PurchaseModel } from "@/types/organizations";
 import { AnimatePresence, motion } from "framer-motion";
+import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
-import { useGetIndustries, useGetVehicles } from "@/services/hooks/queries";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { useCreateOrganization } from "@/services/hooks/mutations";
 import { createOrganizationSchema } from "@/validations/organizations";
+import { useGetIndustries, useGetVehicles } from "@/services/hooks/queries";
 import { Breadcrumb, Button, Input, RenderIf, SearchInput, SelectInput, Table } from "@/components/core";
-import { Loader } from "@/components/core/Button/Loader";
 
 export const NewCustomersPage: React.FC = () => {
     const navigate = useNavigate()
-    const [step, setStep] = useState(2)
+    const [step, setStep] = useState(1)
     const { data: vehicles, isFetching: isFetchingVehicles } = useGetVehicles()
     const { data: fetchedIndustries, isFetching } = useGetIndustries()
     const { mutate: create, isPending: isCreating } = useCreateOrganization((res) => {
@@ -63,50 +65,66 @@ export const NewCustomersPage: React.FC = () => {
     const columns = [
       {
         header: () => "Reg. Date",
-        accessorKey: "firstName",
+        accessorKey: "createdAt",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedVehicleType
+          return (
+            <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{formatRelative(item?.createdAt, new Date()).split(" ")[0]}</span> • {format(item?.createdAt, "p")}</div>
+          )
+        }
       },
       {
-        header: () => "Plate No.",
-        accessorKey: "lastName",
+        header: () => "Plate Number",
+        accessorKey: "plate_number",
       },
       {
-        header: () => "Serial No.",
-        accessorKey: "age",
+        header: () => "Serial Number",
+        accessorKey: "car_number",
       },
       {
         header: () => "Mileage",
-        accessorKey: "visits",
+        accessorKey: "mileage",
       },
       {
         header: () => "Battery Status",
-        accessorKey: "status",
+        accessorKey: "online", //will be changed when the accurate response is added in data returned
+        cell: () => {
+          return (
+            <div className="flex items-center gap-1 text-dark-green-1"><Icon icon="material-symbols-light:bolt" className="text-green-1" />100%</div>
+          )
+        }
       },
       {
         header: () => "Driver Assign. Status",
-        accessorKey: "progress",
+        accessorKey: "driver_assigned",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedVehicleType
+          return (
+            <div className={cn(item?.driver_assigned ? "text-grey-dark-2 bg-green-3" : "text-grey-dark-1 bg-yellow-1", "w-fit rounded px-2 py-0.5 font-medium text-sm")}>{item?.driver_assigned ? "Assigned" : "Unassigned"}</div>
+          )
+        }
       },
-      // strictly follow the setup for header, accessorkey and size for all 'Action' columns
       {
         header: () => "Status",
-        accessorKey: "action",
+        accessorKey: "status",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedVehicleType
+          return (
+            <div className={cn(item?.status === 1 ? "text-green-1" : "text-semantics-error", "font-medium text-sm")}>{item?.status === 1 ? "Active" : "Inactive"}</div>
+          )
+        }
       },
       {
         header: () => "Action",
         accessorKey: "actions",
         size: 50, // used 70 because I have two action buttons, 50 is ideal for 1 button
         cell: () => (
-          <div className="w-fit flex items-center rounded border border-neutral-10 text-xs px-[2px]">
-            <button onClick={() => {}} className="py-2 px-2">
+            <button onClick={() => {}} className="py-2 px-2 group hover:bg-green-1 hover:border-green-1 rounded-lg border border-grey-dark-4 ease-out transition-colors duration-300">
               <Icon
-                icon="ph:pencil-simple-line"
-                className="text-neutral-base"
+                icon="gg:assign"
+                className="size-5 text-grey-dark-3 group-hover:text-white"
               />
             </button>
-            <div className="h-7 w-[1px] border-r border-r-neutral-10 mx-[2px]"></div>
-            <button className="py-2 px-2">
-              <Icon icon="ph:user-switch" className="text-neutral-base" />
-            </button>
-          </div>
         ),
       },
     ];

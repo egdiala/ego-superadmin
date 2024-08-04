@@ -4,16 +4,16 @@ import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { format, formatRelative } from "date-fns";
-import type { FetchedDriverType } from "@/types/drivers";
-import { useGetDrivers } from "@/services/hooks/queries";
 import { Loader } from "@/components/core/Button/Loader";
+import { useGetVehicles } from "@/services/hooks/queries";
 import { pageVariants } from "@/constants/animateVariants";
+import type { FetchedVehicleType } from "@/types/vehicles";
 import { AddVehicleModal } from "@/components/pages/vehicles";
 import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 
 export const VehiclesPage: React.FC = () => {
   const navigate = useNavigate();
-  const { data: drivers, isFetching } = useGetDrivers()
+  const { data: drivers, isFetching } = useGetVehicles()
   const [toggleModals, setToggleModals] = useState({
     openFilterModal: false,
     openAddVehicleModal: false,
@@ -24,43 +24,40 @@ export const VehiclesPage: React.FC = () => {
       header: () => "Reg. Date",
       accessorKey: "createdAt",
       cell: ({ row }: { row: any; }) => {
-        const item = row?.original as FetchedDriverType
+        const item = row?.original as FetchedVehicleType
         return (
           <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{formatRelative(item?.createdAt, new Date()).split(" ")[0]}</span> • {format(item?.createdAt, "p")}</div>
         )
       }
     },
     {
-      header: () => "Name",
-      accessorKey: "fullName",
-      cell: ({ row }: { row: any; }) => {
-        const item = row?.original as FetchedDriverType
+      header: () => "Plate Number",
+      accessorKey: "plate_number",
+    },
+    {
+      header: () => "Serial Number",
+      accessorKey: "car_number",
+    },
+    {
+      header: () => "Mileage",
+      accessorKey: "mileage",
+    },
+    {
+      header: () => "Battery Status",
+      accessorKey: "online", //will be changed when the accurate response is added in data returned
+      cell: () => {
         return (
-          <div className="text-sm text-grey-dark-2 capitalize whitespace-nowrap">{item?.first_name} {item?.last_name}</div>
+          <div className="flex items-center gap-1 text-dark-green-1"><Icon icon="material-symbols-light:bolt" className="text-green-1" />100%</div>
         )
       }
     },
     {
-      header: () => "Email",
-      accessorKey: "email",
-    },
-    {
-      header: () => "Phone Number",
-      accessorKey: "phone_number",
+      header: () => "Driver Assign. Status",
+      accessorKey: "driver_assigned",
       cell: ({ row }: { row: any; }) => {
-        const item = row?.original as FetchedDriverType
+        const item = row?.original as FetchedVehicleType
         return (
-          <div className="text-sm text-grey-dark-2 capitalize">{item?.phone_number || "-"}</div>
-        )
-      }
-    },
-    {
-      header: () => "Vehicle Assignment Status",
-      accessorKey: "vehicleStatus",
-      cell: ({ row }: { row: any; }) => {
-        const item = row?.original as FetchedDriverType
-        return (
-          <div className={cn(item?.vehicle_id ? "bg-green-3" : "bg-yellow-3", "flex w-fit rounded items-center text-grey-dark-2 px-2 py-0.5 text-sm")}>{item?.vehicle_id ? "Assigned" : "Unassigned"}</div>
+          <div className={cn(item?.driver_assigned ? "text-grey-dark-2 bg-green-3" : "text-grey-dark-1 bg-yellow-1", "w-fit rounded px-2 py-0.5 font-medium text-sm")}>{item?.driver_assigned ? "Assigned" : "Unassigned"}</div>
         )
       }
     },
@@ -68,9 +65,9 @@ export const VehiclesPage: React.FC = () => {
       header: () => "Status",
       accessorKey: "status",
       cell: ({ row }: { row: any; }) => {
-        const item = row?.original as FetchedDriverType
+        const item = row?.original as FetchedVehicleType
         return (
-          <div className={cn(item?.status === 1 ? "text-dark-green-1" : "text-grey-dark-1", "font-medium text-sm")}>{item?.status === 1 ? "Active" : "Suspended"}</div>
+          <div className={cn(item?.status === 1 ? "text-green-1" : "text-semantics-error", "font-medium text-sm")}>{item?.status === 1 ? "Active" : "Inactive"}</div>
         )
       }
     }

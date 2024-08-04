@@ -26,7 +26,7 @@ export const DriversPage: React.FC = () => {
       cell: ({ row }: { row: any; }) => {
         const item = row?.original as FetchedDriverType
         return (
-          <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{formatRelative(item?.createdAt, new Date()).split(" ")[0]}</span> • {format(item?.createdAt, "p")}</div>
+          <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{formatRelative(item?.createdAt, new Date()).split("at")[0]}</span> • {format(item?.createdAt, "p")}</div>
         )
       }
     },

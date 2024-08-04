@@ -5,7 +5,7 @@ export const appRoutes = [
     { to:"/riders", name:"Riders", icon:"lucide:users" },
     { to:"/vehicles", name:"Vehicles", icon:"lucide:car-taxi-front" },
     { to:"/customers", name:"Customers", icon:"lucide:building" },
-    { to:"/service-request", name:"Service Request", icon:"lucide:settings" },
+    { to:"/service-request", name:"Service Request", icon:"lucide:bolt" },
     { to:"/notifications", name:"Notifications", icon:"lucide:bell", count: 3 },
 ]
 

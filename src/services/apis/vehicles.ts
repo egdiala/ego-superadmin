@@ -1,4 +1,4 @@
-import type { CreateVehicleType } from "@/types/vehicles";
+import type { AssignVehicleType, CreateVehicleType } from "@/types/vehicles";
 import { axiosVehicleInstance } from "../axiosInstance";
 import { GET_VEHICLES_API } from "@/constants/api";
 
@@ -8,6 +8,11 @@ export const getVehicles = async () => {
 };
 
 export const createVehicle = async (data: CreateVehicleType) => {
+  const res = await axiosVehicleInstance.post(GET_VEHICLES_API, data);
+  return res.data;
+};
+
+export const assignVehicle = async (data: AssignVehicleType) => {
   const res = await axiosVehicleInstance.post(GET_VEHICLES_API, data);
   return res.data;
 };
