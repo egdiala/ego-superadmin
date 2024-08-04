@@ -14,7 +14,7 @@ export const suspendAdminSchema = Yup.object().shape({
     status: Yup.string().required("Status is required"),
     suspend_reason: Yup.string().nullable()
         .when("status", {
-            is: () => "1",
+            is: (val: string) => val === "1",
             then: () => Yup.string().required("Reason is required"),
         }),
 })

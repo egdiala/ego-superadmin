@@ -14,6 +14,7 @@ import { EmptyState } from "./EmptyState";
 import { TableLoader } from "./TableLoader";
 import { useLocation } from "react-router-dom";
 import { getPaginationParams } from "@/hooks/usePaginationParams";
+import { cn } from "@/libs/cn";
 
 interface TableProps {
   columns: ColumnDef<any>[]; // table columns; see Table.stories.tsx for sample use
@@ -42,7 +43,7 @@ export const Table: React.FC<TableProps> = ({
   totalCount,
   emptyStateText = "",
   onPageChange,
-  onClick = () => {},
+  onClick,
   paginateData = true,
 }) => {
   const location = useLocation();
@@ -157,8 +158,8 @@ export const Table: React.FC<TableProps> = ({
                   <tr
                     key={row.id}
                     data-testid={row.id}
-                    onClick={() => onClick(row)}
-                    className="hover:bg-green-4"
+                    onClick={() => onClick?.(row)}
+                    className={cn("hover:bg-green-4", !onClick ? "cursor-default" : "cursor-pointer")}
                   >
                     {row.getVisibleCells().map((cell) => {
                       return (

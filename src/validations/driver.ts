@@ -20,8 +20,8 @@ export const suspendDriverSchema = Yup.object().shape({
         .max(12, "Hour must be between 0 and 12")
         .nullable()
         .when("indefinite_suspension", {
-            is: () => false,
-            then: () => Yup.number().required("Hour is required when indefinite suspension is false"),
+            is: (val: boolean) => val === false,
+            then: () => Yup.number().required("Hour is required"),
         }),
     mins: Yup.number()
         .typeError("Mins must be a number")
@@ -29,21 +29,21 @@ export const suspendDriverSchema = Yup.object().shape({
         .max(59, "Mins must be between 0 and 59")
         .nullable()
         .when("indefinite_suspension", {
-            is: () => false,
-            then: () => Yup.number().required("Mins are required when indefinite suspension is false"),
+            is: (val: boolean) => val === false,
+            then: () => Yup.number().required("Mins are required"),
         }),
     time_of_day: Yup.string()
         .oneOf(["AM", "PM"], "Time of the day must be either AM or PM")
         .nullable()
         .when("indefinite_suspension", {
-            is: () => false,
-            then: () => Yup.string().required("Time of the day is required when indefinite suspension is false"),
+            is: (val: boolean) => val === false,
+            then: () => Yup.string().required("Time of the day is required"),
         }),
     reactivation_date_time: Yup.date()
         .min(new Date(), "Re-activation date & time must be in the future")
         .nullable()
         .when("indefinite_suspension", {
-            is: () => false,
-            then: () => Yup.date().required("Re-activation date & time is required when indefinite suspension is false"),
+            is: (val: boolean) => val === false,
+            then: () => Yup.date().required("Re-activation date & time is required"),
         })
 })

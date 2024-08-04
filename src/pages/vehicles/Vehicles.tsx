@@ -2,7 +2,6 @@ import React, { useCallback, useState } from "react";
 import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
 import { format, formatRelative } from "date-fns";
 import { Loader } from "@/components/core/Button/Loader";
 import { useGetVehicles } from "@/services/hooks/queries";
@@ -12,7 +11,6 @@ import { AddVehicleModal } from "@/components/pages/vehicles";
 import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 
 export const VehiclesPage: React.FC = () => {
-  const navigate = useNavigate();
   const { data: drivers, isFetching } = useGetVehicles()
   const [toggleModals, setToggleModals] = useState({
     openFilterModal: false,
@@ -122,7 +120,6 @@ export const VehiclesPage: React.FC = () => {
           <Table
             columns={columns}
             data={drivers ?? []}
-            onClick={({ original }) => navigate(`/drivers/${original?.driver_id}/profile`)}
             getData={getData}
             totalCount={drivers?.length}
             onPageChange={handlePageChange}

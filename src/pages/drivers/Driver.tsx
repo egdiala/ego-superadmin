@@ -1,16 +1,17 @@
-import React, { Fragment, useCallback, useState } from "react";
+import React, { Fragment, useCallback, useEffect, useState } from "react";
 import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { useGetDriver } from "@/services/hooks/queries";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
-import { NavLink, Outlet, useParams } from "react-router-dom";
+import { NavLink, Outlet, useNavigate, useParams } from "react-router-dom";
 import { Breadcrumb, Button, RenderIf } from "@/components/core";
 import { DeleteDriverModal, SuspendDriverModal } from "@/components/pages/drivers";
 
 export const DriverPage: React.FC = () => {
   const params = useParams()
+  const navigate = useNavigate()
   const { data: driver, isFetching } = useGetDriver(params?.id as string)
   const [toggleModals, setToggleModals] = useState({
     openDeleteDriverModal: false,
@@ -37,6 +38,12 @@ export const DriverPage: React.FC = () => {
       { name: "Driver Payment", link: `/drivers/${params?.id as string}/driver-payment` },
       { name: "Ratings", link: `/drivers/${params?.id as string}/ratings` },
   ]
+
+  useEffect(() => {
+    if (!driver?.driver_id && !isFetching) {
+      navigate("/drivers")
+    }
+  },[driver?.driver_id, isFetching, navigate])
   return (
     <Fragment>
       <RenderIf condition={!isFetching}>
@@ -74,8 +81,8 @@ export const DriverPage: React.FC = () => {
             </div>
             <Outlet />
           </div>
-          <DeleteDriverModal isOpen={toggleModals.openDeleteDriverModal} close={toggleDeleteDriver} />
-          <SuspendDriverModal isOpen={toggleModals.openSuspendDriverModal} close={toggleSuspendDriver} />
+          <DeleteDriverModal driver={driver!} isOpen={toggleModals.openDeleteDriverModal} close={toggleDeleteDriver} />
+          <SuspendDriverModal driver={driver!} isOpen={toggleModals.openSuspendDriverModal} close={toggleSuspendDriver} />
         </motion.div>
       </RenderIf>
       <RenderIf condition={isFetching}>
