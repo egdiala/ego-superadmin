@@ -17,7 +17,7 @@ import { Breadcrumb, Button, Input, RenderIf, SearchInput, SelectInput, Table } 
 export const NewCustomersPage: React.FC = () => {
     const navigate = useNavigate()
     const [step, setStep] = useState(1)
-    const { data: vehicles, isFetching: isFetchingVehicles } = useGetVehicles()
+    const { data: vehicles, isFetching: isFetchingVehicles } = useGetVehicles({ driver_assigned: "1" })
     const { data: fetchedIndustries, isFetching } = useGetIndustries()
     const { mutate: create, isPending: isCreating } = useCreateOrganization((res) => {
       console.log(res);
@@ -113,20 +113,7 @@ export const NewCustomersPage: React.FC = () => {
             <div className={cn(item?.status === 1 ? "text-green-1" : "text-semantics-error", "font-medium text-sm")}>{item?.status === 1 ? "Active" : "Inactive"}</div>
           )
         }
-      },
-      {
-        header: () => "Action",
-        accessorKey: "actions",
-        size: 50, // used 70 because I have two action buttons, 50 is ideal for 1 button
-        cell: () => (
-            <button onClick={() => {}} className="py-2 px-2 group hover:bg-green-1 hover:border-green-1 rounded-lg border border-grey-dark-4 ease-out transition-colors duration-300">
-              <Icon
-                icon="gg:assign"
-                className="size-5 text-grey-dark-3 group-hover:text-white"
-              />
-            </button>
-        ),
-      },
+      }
     ];
 
   const handlePageChange = () => {

@@ -5,7 +5,9 @@ import {
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
+  RowSelectionState,
   SortingState,
+  TableOptions,
   useReactTable,
 } from "@tanstack/react-table";
 import { Icon } from "@iconify/react";
@@ -23,6 +25,7 @@ interface TableProps {
   loading?: boolean;
   perPage?: number;
   paginateData?: boolean; // show pagination
+  config?: Partial<TableOptions<any>>
   totalCount?: number; // total count of table data
   emptyStateText?: string;
   // eslint-disable-next-line no-unused-vars
@@ -45,23 +48,28 @@ export const Table: React.FC<TableProps> = ({
   onPageChange,
   onClick,
   paginateData = true,
+  config
 }) => {
   const location = useLocation();
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [currentPage, setCurrentPage] = React.useState<number>(page);
   const [rowsPerPage, setRowsPerPage] = React.useState<number>(perPage);
+  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({})
 
   const table = useReactTable({
     data,
     columns,
     state: {
       sorting,
+      rowSelection,
     },
+    onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     debugTable: false,
+    ...config
   });
 
   const handlePageChange = (page: number) => {
@@ -159,7 +167,7 @@ export const Table: React.FC<TableProps> = ({
                     key={row.id}
                     data-testid={row.id}
                     onClick={() => onClick?.(row)}
-                    className={cn("hover:bg-green-4", !onClick ? "cursor-default" : "cursor-pointer")}
+                    className={cn("hover:bg-green-4", !onClick ? "cursor-default" : "cursor-pointer", row?.getIsSelected() && "bg-green-4")}
                   >
                     {row.getVisibleCells().map((cell) => {
                       return (

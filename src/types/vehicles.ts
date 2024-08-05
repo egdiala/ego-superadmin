@@ -50,11 +50,30 @@ export interface FetchedVehicleType {
     data_mode: string;
     createdAt: Date | string;
     updatedAt: Date | string;
-    vehicle_id: string
+    vehicle_id: string;
+    driver_id?: string;
+    driver_data?: {
+        first_name: string;
+        last_name: string;
+        email: string;
+        phone_number: string;
+    }
 }
 
 export type AssignVehicleType = {
     auth_id: string;
     vehicle_id: string;
     user_type: "driver" | "organization";
+}
+
+export interface FetchVehiclesQuery {
+    q?: string; // Search for plate number
+    driver_id?: string;
+    organization_id?: string;
+    organization_assigned?: string | boolean;
+    driver_assigned?: "0" | "1";
+    status?: string;
+    page?: string;
+    item_per_page?: string;
+    component?: "count" | "export" | "count-status";
 }

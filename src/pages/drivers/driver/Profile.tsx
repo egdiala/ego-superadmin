@@ -64,10 +64,12 @@ export const DriverProfilePage: React.FC = () => {
                     <div className="flex items-center gap-2">
                         <img src={whiteCar} alt="vehicle" className="object-cover object-center w-12" />
                         <div className="grid gap-1">
-                            <h4 className="text-grey-dark-1 fon-medium text-sm">ABC123DEF</h4>
-                            <span className="text-grey-dark-2 text-sm">GS3 Sedan</span>
+                            <h4 className="text-grey-dark-1 fon-medium text-sm">{driver?.vehOrg?.vehicle?.plate_number}</h4>
+                            <span className="text-grey-dark-2 text-sm">{driver?.vehOrg?.vehicle?.car_model}</span>
                         </div>
                     </div>
+                    </RenderIf>
+                    <RenderIf condition={!!driver?.vehOrg?.organization}>
                     <div className="grid gap-1">
                         <h4 className="text-grey-dark-3 text-sm">Model</h4>
                         <span className="text-grey-dark-1 text-sm">Lease</span>

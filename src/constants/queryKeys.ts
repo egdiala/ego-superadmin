@@ -14,6 +14,7 @@ export const GET_DRIVER = "get-driver"
 
 // Vehicles
 export const GET_VEHICLES = "get-vehicles"
+export const GET_VEHICLE = "get-vehicle"
 
 // Organizations
 export const GET_ORGANIZATIONS = "get-organizations"

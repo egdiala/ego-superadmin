@@ -9,9 +9,11 @@ import { pageVariants } from "@/constants/animateVariants";
 import type { FetchedVehicleType } from "@/types/vehicles";
 import { AddVehicleModal } from "@/components/pages/vehicles";
 import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { useNavigate } from "react-router-dom";
 
 export const VehiclesPage: React.FC = () => {
-  const { data: drivers, isFetching } = useGetVehicles()
+  const navigate = useNavigate()
+  const { data: drivers, isFetching } = useGetVehicles({})
   const [toggleModals, setToggleModals] = useState({
     openFilterModal: false,
     openAddVehicleModal: false,
@@ -24,7 +26,7 @@ export const VehiclesPage: React.FC = () => {
       cell: ({ row }: { row: any; }) => {
         const item = row?.original as FetchedVehicleType
         return (
-          <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{formatRelative(item?.createdAt, new Date()).split("at")[0]}</span> • {format(item?.createdAt, "p")}</div>
+          <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{formatRelative(item?.createdAt, new Date()).split(" at ")[0]}</span> • {format(item?.createdAt, "p")}</div>
         )
       }
     },
@@ -123,6 +125,7 @@ export const VehiclesPage: React.FC = () => {
             getData={getData}
             totalCount={drivers?.length}
             onPageChange={handlePageChange}
+            onClick={({ original }) => navigate(`/vehicles/${original?.vehicle_id}/profile`)}
           />
         </RenderIf>
         <RenderIf condition={isFetching}>
