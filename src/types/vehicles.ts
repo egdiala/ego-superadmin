@@ -1,3 +1,5 @@
+import type { AxiosProgressEvent } from "axios";
+
 export type CreateVehicleType = {
     plate_no: string;
     model: string;
@@ -38,6 +40,11 @@ export interface FetchedVehicleType {
     on_trip: string;
     unsuspend_date: string;
     mileage: number;
+    org_data: {
+        name: string;
+        email: string;
+        phone_number: string;
+    }
     payment_plan: {
         asset: number;
     },
@@ -76,4 +83,10 @@ export interface FetchVehiclesQuery {
     page?: string;
     item_per_page?: string;
     component?: "count" | "export" | "count-status";
+}
+
+export interface BulkUploadVehiclesParams {
+    files: FormData;
+    // eslint-disable-next-line no-unused-vars
+    onUploadProgress: (progressEvent: AxiosProgressEvent) => void;
 }

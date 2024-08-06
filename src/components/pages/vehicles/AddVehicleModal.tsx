@@ -6,7 +6,7 @@ import { Loader } from "@/components/core/Button/Loader";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { Button, Input, RenderIf } from "@/components/core";
 import { createVehicleSchema } from "@/validations/vehicles";
-import { useBulkUploadDrivers, useCreateVehicle } from "@/services/hooks/mutations";
+import { useBulkUploadVehicles, useCreateVehicle } from "@/services/hooks/mutations";
 import { Dialog, DialogPanel, DialogTitle, Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 
 interface AddVehicleModalProps {
@@ -77,7 +77,7 @@ const SingleVehicle: React.FC<AddVehicleModalProps> = ({ close }) => {
 
 const MultipleVehicles: React.FC<AddVehicleModalProps> = ({ close }) => {
     const [progress, setProgress] = useState(0);
-    const { mutate: upload, isPending: isUploading } = useBulkUploadDrivers(setProgress, () => {})
+    const { mutate: upload, isPending: isUploading } = useBulkUploadVehicles(setProgress, () => {})
 
     const { handleSubmit, isValid, setFieldValue, resetForm, values } = useFormikWrapper<{ files: File | string; }>({
         initialValues: {
@@ -109,7 +109,7 @@ const MultipleVehicles: React.FC<AddVehicleModalProps> = ({ close }) => {
     return (
         <form className="grid gap-6" onSubmit={handleSubmit}>
             <div className="grid gap-4">
-                <div className="text-sm text-grey-dark-2">Please be sure to use the template document meant for this information.  <a download="bulk_create_drivers_template.csv" href="/bulk_create_drivers_template.csv" className="font-bold text-green-base underline underline-offset-1">Download here</a></div>
+                <div className="text-sm text-grey-dark-2">Please be sure to use the template document meant for this information.  <a download="bulk_create_vehicles_template.csv" href="/bulk_create_vehicles_template.csv" className="font-bold text-green-base underline underline-offset-1">Download here</a></div>
                 <label htmlFor="files" className='w-full cursor-pointer py-12 border border-dashed border-[#D7D8D8] rounded-lg bg-green-4'>
                     <div className='grid gap-6 content-center justify-items-center w-full text-center mx-auto max-w-sm'>
                         <Icon icon="solar:cloud-upload-linear" className="size-14 text-grey-dark-3" />
@@ -135,7 +135,7 @@ const MultipleVehicles: React.FC<AddVehicleModalProps> = ({ close }) => {
             </div>
             <div className="flex items-center justify-end w-full md:w-1/2 ml-auto pt-10 gap-2 md:gap-4">
                 <Button type="button" theme="tertiary" onClick={onClose} block>Cancel</Button>
-                <Button type="submit" theme="primary" loading={isUploading} disabled={isUploading || !isValid} block>Upload Drivers</Button>
+                <Button type="submit" theme="primary" loading={isUploading} disabled={isUploading || !isValid} block>Upload Vehicles</Button>
             </div>
         </form>
     )

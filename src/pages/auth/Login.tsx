@@ -71,7 +71,7 @@ export const LoginPage: React.FC = () => {
     };
 
 
-    const { handleSubmit, isValid, register, values: loginValues } = useFormikWrapper({
+    const { handleSubmit, isValid, register, values: loginValues, resetForm } = useFormikWrapper({
         validateOnMount: true,
         validationSchema: loginSchema,
         initialValues: {
@@ -91,6 +91,7 @@ export const LoginPage: React.FC = () => {
             confirm_password: ""
         },
         onSubmit(values) {
+            resetForm()
             changePassword({ otp, new_password: values.new_password, otp_request_id })
         }
     })
