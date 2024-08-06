@@ -125,7 +125,7 @@ export const VehicleProfilePage: React.FC = () => {
                     <div className="flex items-center gap-2">
                         <div className="relative size-16 rounded">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/220px-QR_code_for_mobile_English_Wikipedia.svg.png" alt="qrCode" className="object-cover" />
-                            <div className="absolute p-0.5 bottom-0.5 right-1 bg-white rounded-sm grid place-content-center" style={{ boxShadow: "0px 0px 5.85px -0.93px rgba(10, 75, 75, 0.2);" }}>
+                            <div className="absolute p-0.5 bottom-0.5 right-1 bg-white rounded-sm grid place-content-center" style={{ boxShadow: "0px 0px 5.85px -0.93px rgba(10, 75, 75, 0.2)" }}>
                                 <Icon icon="lucide:scan" className="text-green-1 size-2" />
                             </div>
                         </div>

@@ -66,8 +66,8 @@ export const DriverPage: React.FC = () => {
             <div className="rounded border-2 border-grey-dark-4 p-1 flex items-center gap-2 w-full overflow-scroll">
               {
                 subRoutes.map((route, idx) => 
-                <Fragment>
-                  <NavLink key={route.link} to={route.link} className="flex w-full">
+                <Fragment key={route.link}>
+                  <NavLink to={route.link} className="flex w-full">
                   {({ isActive }) => (
                       <div className={cn("text-center py-1 px-5 flex-1 rounded whitespace-nowrap", isActive ? "bg-green-1 text-white font-semibold text-sm" : "hover:bg-light-green")}>
                           {route.name}
