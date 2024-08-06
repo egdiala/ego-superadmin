@@ -15,3 +15,8 @@ export const createOrganizationSchema = Yup.object().shape({
     authorize_rep_email: EmailSchema,
     authorize_rep_phone: Yup.string().required("Authorized Rep Phone Number is required"),
 })
+
+export const assignVehicleToOrganisationSchema = Yup.object().shape({
+    auth_id: Yup.string().required("Select an EV Purchase Model"),
+    vehicle_id: Yup.array().of(Yup.string()).min(1, "At least one vehicle must be selected"),
+})

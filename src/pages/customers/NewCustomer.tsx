@@ -9,19 +9,19 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
-import { useCreateOrganization } from "@/services/hooks/mutations";
-import { createOrganizationSchema } from "@/validations/organizations";
+import { useAssignVehicle, useCreateOrganization } from "@/services/hooks/mutations";
+import { assignVehicleToOrganisationSchema, createOrganizationSchema } from "@/validations/organizations";
 import { useGetIndustries, useGetVehicles } from "@/services/hooks/queries";
-import { Breadcrumb, Button, Input, RenderIf, SearchInput, SelectInput, Table } from "@/components/core";
+import { Breadcrumb, Button, Checkbox, Input, RenderIf, SearchInput, SelectInput, Table } from "@/components/core";
 
 export const NewCustomersPage: React.FC = () => {
     const navigate = useNavigate()
     const [step, setStep] = useState(1)
-    const { data: vehicles, isFetching: isFetchingVehicles } = useGetVehicles({ driver_assigned: "1" })
+    const { mutate, isPending } = useAssignVehicle(() => navigate("/customers"))
+    const { data: vehicles, isFetching: isFetchingVehicles } = useGetVehicles({ driver_assigned: "0" })
     const { data: fetchedIndustries, isFetching } = useGetIndustries()
-    const { mutate: create, isPending: isCreating } = useCreateOrganization((res) => {
-      console.log(res);
-      setStep(2)
+    const { mutate: create, isPending: isCreating } = useCreateOrganization(({ data }) => {
+      setFieldValue("auth_id", data?.auth_id).then(() => setStep(2))
     })
 
     const industries = useMemo(() => {
@@ -62,14 +62,43 @@ export const NewCustomersPage: React.FC = () => {
         },
     })
 
+    const { handleSubmit: submitCreateCustomer, isValid: isAssignVehiclesValid, setFieldValue, values } = useFormikWrapper({
+      initialValues: {
+        auth_id: "",
+        vehicle_id: [] as string[],
+        user_type: "organization" as "organization",
+      },
+      enableReinitialize: true,
+      validationSchema: assignVehicleToOrganisationSchema,
+      onSubmit: () => {
+        const { vehicle_id, ...rest } = values;
+        mutate({ vehicle_id: vehicle_id?.join(", "), ...rest })
+      },
+    })
+
     const columns = [
       {
         header: () => "Reg. Date",
         accessorKey: "createdAt",
         cell: ({ row }: { row: any; }) => {
           const item = row?.original as FetchedVehicleType
+          const isAssigned = values.vehicle_id?.includes(item?.vehicle_id)
           return (
-            <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{formatRelative(item?.createdAt, new Date()).split("at")[0]}</span> • {format(item?.createdAt, "p")}</div>
+            <div className="flex items-center gap-2.5">
+              <Checkbox
+                name="vehicle"
+                value={item?.vehicle_id}
+                disabled={isPending}
+                checked={isAssigned}
+                onChange={() => {
+                  !isAssigned ? setFieldValue("vehicle_id", [...values.vehicle_id, item?.vehicle_id]) : setFieldValue("vehicle_id", values.vehicle_id.filter((id) => id !== item?.vehicle_id))
+                  row.toggleSelected()
+                }}
+              />
+              <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap">
+                <span className="capitalize">{formatRelative(item?.createdAt, new Date()).split("at")[0]}</span> • {format(item?.createdAt, "p")}
+              </div>
+            </div>
           )
         }
       },
@@ -181,14 +210,14 @@ export const NewCustomersPage: React.FC = () => {
               <AnimatePresence mode="popLayout">
                   {
                       step === 2 && (
-                          <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-4">
+                          <motion.form onSubmit={submitCreateCustomer} variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-4">
                               <div className="flex flex-col md:flex-row gap-4 md:items-center">
                                   <div className="w-full md:w-1/3 xl:w-1/4">
                                       <SearchInput placeholder="Search name, ref etc" />
                                   </div>
                                   
                                   <div className="flex items-center text-sm text-grey-dark-2 px-2 py-2.5 rounded bg-green-4">
-                                      Vehicles Selected: &nbsp;<span className="font-semibold text-green-1">46</span>
+                                      Vehicles Selected: &nbsp;<span className="font-semibold text-green-1">{values?.vehicle_id?.length}</span>
                                   </div>
                               </div>
                               <RenderIf condition={!isFetchingVehicles}>
@@ -202,13 +231,13 @@ export const NewCustomersPage: React.FC = () => {
                                 />
                                 <div className="flex items-center justify-end md:w-1/2 xl:w-1/6 ml-auto pt-10 gap-2 md:gap-4 w-full">
                                     <Button type="button" theme="tertiary" onClick={() => setStep(1)} block>Previous</Button>
-                                    <Button type="button" theme="primary"block>Add Customer</Button>
+                                    <Button type="submit" theme="primary" disabled={!isAssignVehiclesValid} block>Add Customer</Button>
                                 </div>
                               </RenderIf>
                               <RenderIf condition={isFetchingVehicles}>
                                 <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
                               </RenderIf>
-                          </motion.div>
+                          </motion.form>
                       )
                   }
               </AnimatePresence>

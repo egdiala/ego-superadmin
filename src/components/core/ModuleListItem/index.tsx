@@ -28,8 +28,8 @@ export const ModuleListItem: React.FC<ModuleListItemProps> = ({ count, icon, nam
     return (
         <NavLink to={to}>
             {({ isActive }) => (
-                <div className={cn("ego-module-list-item", isActive ? "ego-module-list-item--active" : "ego-module-list-item--inactive")}>
-                    <Icon icon={icon} className="size-5" />
+                <div className={cn("ego-module-list-item group", isActive ? "ego-module-list-item--active" : "ego-module-list-item--inactive")}>
+                    <Icon icon={icon} className={cn("size-5 transition-all duration-300 ease-out", isActive ? "text-dark-green-1 group-hover:text-dark-green-1" : "text-grey-dark-2 group-hover:text-grey-dark-1")} />
                     <span className="flex-1 line-clamp-1">{name}</span>
                     <RenderIf condition={!!count}>
                         <div className='bg-semantics-error py-0.5 px-1.5 rounded-3xl text-white font-medium text-[0.625rem]/3'>{count}</div>

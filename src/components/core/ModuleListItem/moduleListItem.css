@@ -4,16 +4,8 @@
 
 .ego-module-list-item--inactive {
   @apply text-grey-dark-2 hover:text-grey-dark-1 hover:bg-yellow-4 transition-all duration-300 ease-out !important;
-
-  svg {
-    @apply text-grey-dark-2 hover:text-grey-dark-1 transition-all duration-300 ease-out !important;
-  }
 }
 
 .ego-module-list-item--active {
   @apply text-dark-green-1 hover:text-dark-green-1 bg-yellow-3 hover:bg-yellow-3 font-medium transition-all duration-300 ease-out !important;
-
-  svg {
-    @apply text-dark-green-1 hover:text-dark-green-1 transition-all duration-300 ease-out !important;
-  }
 }

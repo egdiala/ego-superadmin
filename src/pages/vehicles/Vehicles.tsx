@@ -43,6 +43,11 @@ export const VehiclesPage: React.FC = () => {
       accessorKey: "mileage",
     },
     {
+      header: () => "Company",
+      accessorKey: "company",
+      cell: () => (<>-</>)
+    },
+    {
       header: () => "Battery Status",
       accessorKey: "online", //will be changed when the accurate response is added in data returned
       cell: () => {
