@@ -21,3 +21,7 @@ export const createVehicleSchema = Yup.object().shape({
     engine_no: Yup.string().required("Engine Number is required"),
     vehicle_imei: Yup.string().required("Dashcam IMEI is required"),
 })
+
+export const revokeDriverSchema = Yup.object().shape({
+    reason: Yup.string().required("Reason is required"),
+})

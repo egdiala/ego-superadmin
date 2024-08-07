@@ -21,6 +21,7 @@ export const BULK_UPLOAD_DRIVERS_API = "admin/users/bulk-driver-upload"
 // Vehicles
 export const GET_VEHICLES_API = "admin/vehicles"
 export const ASSIGN_VEHICLES_API = "admin/vehicles/assign"
+export const REVOKE_VEHICLE_API = "admin/vehicles/revoke"
 export const BULK_UPLOAD_VEHICLES_API = "admin/vehicles/bulk-vehicle-upload"
 
 // Organizations

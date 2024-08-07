@@ -7,6 +7,7 @@ import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { Breadcrumb, Button, RenderIf } from "@/components/core";
 import { NavLink, Outlet, useNavigate, useParams } from "react-router-dom";
+import { RevokeDriverModal } from "@/components/pages/vehicles";
 
 export const VehiclePage: React.FC = () => {
     const params = useParams()
@@ -60,6 +61,7 @@ export const VehiclePage: React.FC = () => {
                         </div>
                         <Outlet />
                     </div>
+                    <RevokeDriverModal vehicleId={vehicle?.vehicle_id!} isOpen={revokeDriver} driver={{ ...vehicle?.driver_data!, driver_id: vehicle?.driver_id! }} close={setRevokeDriver} />
                 </motion.div>
             </RenderIf>
             <RenderIf condition={isFetching}>

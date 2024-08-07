@@ -1,6 +1,6 @@
 import { axiosVehicleInstance } from "../axiosInstance";
 import { createQueryString } from "@/utils/createQuery";
-import { ASSIGN_VEHICLES_API, BULK_UPLOAD_VEHICLES_API, GET_VEHICLES_API } from "@/constants/api";
+import { ASSIGN_VEHICLES_API, BULK_UPLOAD_VEHICLES_API, GET_VEHICLES_API, REVOKE_VEHICLE_API } from "@/constants/api";
 import type { AssignVehicleType, BulkUploadVehiclesParams, CreateVehicleType, FetchVehiclesQuery } from "@/types/vehicles";
 
 export const getVehicles = async (query: FetchVehiclesQuery) => {
@@ -31,5 +31,10 @@ export const assignVehicle = async (data: AssignVehicleType) => {
 
 export const getVehicle = async (id: string) => {
   const res = await axiosVehicleInstance.get(`${GET_VEHICLES_API}/${id}`);
+  return res.data;
+};
+
+export const revokeVehicle = async (data: AssignVehicleType) => {
+  const res = await axiosVehicleInstance.post(REVOKE_VEHICLE_API, data);
   return res.data;
 };

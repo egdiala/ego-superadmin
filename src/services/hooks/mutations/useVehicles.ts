@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { errorToast, successToast } from "@/utils/createToast";
-import { GET_VEHICLES } from "@/constants/queryKeys";
-import { assignVehicle, bulkUploadVehicles, createVehicle } from "@/services/apis/vehicles";
+import { GET_VEHICLE, GET_VEHICLES } from "@/constants/queryKeys";
+import { assignVehicle, bulkUploadVehicles, createVehicle, revokeVehicle } from "@/services/apis/vehicles";
 import type { Dispatch, SetStateAction } from "react";
 
 // eslint-disable-next-line no-unused-vars
@@ -28,6 +28,22 @@ export const useAssignVehicle = (fn?: (v: any) => void) => {
         onSuccess: (response: any) => {
             queryClient.invalidateQueries({ queryKey: [GET_VEHICLES] });
             successToast({ message: "Vehicle Assigned Successfully!" })
+            fn?.(response);
+        },
+        onError: (err: any) => {
+            errorToast(err)
+        },
+    });
+};
+
+// eslint-disable-next-line no-unused-vars
+export const useRevokeVehicle = (fn?: (v: any) => void) => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: revokeVehicle,
+        onSuccess: (response: any) => {
+            queryClient.invalidateQueries({ queryKey: [GET_VEHICLE] });
+            successToast({ message: "Vehicle Revoked Successfully!" })
             fn?.(response);
         },
         onError: (err: any) => {
