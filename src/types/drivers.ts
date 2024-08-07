@@ -32,7 +32,10 @@ export interface FetchedDriverType extends Omit<CreateDriverType, "nin" | "drive
             plate_number: string;
             car_model: string;
         };
-        organization: null
+        organization: {
+            _id: string;
+            name: string;
+        }
     };
     bank_data: {
         bank_name: string;

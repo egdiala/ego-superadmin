@@ -18,7 +18,7 @@ export const DriverProfilePage: React.FC = () => {
             { label: "Gender", value: driver?.gender },
             { label: "Date of Birth", value: "-" },
             { label: "State of Origin", value: "-" },
-            { label: "Business assigned to", value: driver?.vehOrg?.organization ?? "-" },
+            { label: "Business assigned to", value: driver?.vehOrg?.organization?.name ?? "-" },
         ]
     },[driver?.email, driver?.gender, driver?.phone_number, driver?.vehOrg?.organization])
     useEffect(() => {
