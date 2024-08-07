@@ -6,6 +6,7 @@ import { suspendDriverSchema } from "@/validations/driver";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { Button, Input, SelectInput, TextArea, Toggle } from "@/components/core";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
+import { useUpdateUserStatus } from "@/services/hooks/mutations";
 
 interface SuspendDriverModalProps {
     isOpen: boolean;
@@ -15,18 +16,25 @@ interface SuspendDriverModalProps {
 }
 
 export const SuspendDriverModal: React.FC<SuspendDriverModalProps> = ({ isOpen, close, driver }) => {
+    const { mutate } = useUpdateUserStatus("Driver Suspended Successfully!")
     const { handleSubmit, isValid, register, resetForm, setFieldValue, values: suspendDriverValues } = useFormikWrapper({
         initialValues: {
             hour: "",
             mins: "",
             reason: "",
             time_of_day: "",
-            reactivation_date_time: "",
-            indefinite_suspension: true
+            unsuspend_date: "",
+            suspend_indefinite: true
         },
         validationSchema: suspendDriverSchema,
-        onSubmit: () => {
-            alert("Valid form")
+        onSubmit(values) {
+            const { hour, mins, time_of_day, suspend_indefinite, unsuspend_date, ...rest } = values
+            if (!suspend_indefinite) {
+                mutate({ auth_id: driver?.driver_id, user_type: "driver", unsuspend_date, suspend_indefinite: suspend_indefinite ? "1" : "0",  unsuspend_time: `${hour}:${mins}${time_of_day}`, status: driver?.status === 1 ? "2" : "1", suspension_status: driver?.suspension_status === 0 ? "1" : "0", ...rest })
+            } else {
+                mutate({ auth_id: driver?.driver_id, user_type: "driver", suspend_indefinite: suspend_indefinite ? "1" : "0", status: driver?.status === 1 ? "2" : "1", suspension_status: driver?.suspension_status === 0 ? "1" : "0", ...rest })
+            }
+            
         }
     })
 
@@ -52,13 +60,13 @@ export const SuspendDriverModal: React.FC<SuspendDriverModalProps> = ({ isOpen, 
                     <TextArea placeholder="Reason" {...register("reason")} />
                     <div className="rounded-md border border-[#CDCEDA] py-3.5 px-3 flex items-center justify-between">
                         <span className="text-sm text-grey-dark-2">Indefinite Suspension</span>
-                        <Toggle checked={suspendDriverValues.indefinite_suspension} onChange={(v) => setFieldValue("indefinite_suspension", v)} name="indefinite_suspension" />
+                        <Toggle checked={suspendDriverValues.suspend_indefinite} onChange={(v) => setFieldValue("suspend_indefinite", v)} name="suspend_indefinite" />
                     </div>
-                    <AnimatePresence mode="sync">
+                    <AnimatePresence>
                         {
-                            !suspendDriverValues.indefinite_suspension && (
-                                <motion.div initial={{ height: "0px", opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: "0px", opacity: 0 }} transition={{ duration: 0.5, ease: "easeOut" }} className="flex flex-col gap-4 items-end overflow-x-visible overflow-y-clip pb-1">
-                                <Input label="Re-activation date & Time" type="date" {...register("reactivation_date_time")} />
+                            !suspendDriverValues.suspend_indefinite && (
+                                <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} className="flex flex-col gap-4 justify-end items-end overflow-x-visible overflow-y-clip pb-1">
+                                <Input label="Re-activation date & Time" type="date" {...register("unsuspend_date")} />
                                 <div className="flex items-start gap-4">
                                     <Input label="Hour" type="text" inputMode="numeric" placeholder="HH" {...register("hour")} />
                                     <Input label="Mins" type="text" inputMode="numeric" placeholder="MM" {...register("mins")} />

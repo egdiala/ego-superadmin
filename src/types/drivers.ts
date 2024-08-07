@@ -54,3 +54,14 @@ export interface BulkUploadDriversParams {
     // eslint-disable-next-line no-unused-vars
     onUploadProgress: (progressEvent: AxiosProgressEvent) => void;
 }
+
+export type UpdateUserStatusType = {
+    auth_id: string;
+    status: "1" | "2"; // 1=active, 2= suspend
+    user_type: "driver" | "rider";
+    reason: string;
+    suspension_status: "0" | "1"; // 0=active, 1= suspend
+    unsuspend_date?: string;
+    unsuspend_time?: string;
+    suspend_indefinite: "0" | "1"; // 0=no, 1= yes
+}
