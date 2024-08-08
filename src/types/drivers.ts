@@ -65,3 +65,14 @@ export type UpdateUserStatusType = {
     unsuspend_time?: string;
     suspend_indefinite: "0" | "1"; // 0=no, 1= yes
 }
+
+export interface FetchDriversQuery {
+    q?: string; // Search for plate number
+    assign_status?: 0 | 1;
+    driver_status?: "0" | "1";
+    status?: 1 | 2;
+    suspension_status?: "0" | "1";
+    page?: string;
+    item_per_page?: string;
+    component?: "count" | "export" | "count-status";
+}

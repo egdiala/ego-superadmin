@@ -1,14 +1,26 @@
 import { Sidebar } from "@/components/core/Sidebar";
-import { isAuthenticated } from "@/utils/authUtil";
-import type { PropsWithChildren } from "react";
-import { Navigate } from "react-router-dom";
+import { useCheckPermission } from "@/hooks/useCheckPermission";
+import { getAdminData, isAuthenticated } from "@/utils/authUtil";
+import { type PropsWithChildren } from "react";
+import { Navigate, useLocation } from "react-router-dom";
 
 const ProtectedLayout = ({ children }: PropsWithChildren) => {
     const isLoggedIn = isAuthenticated();
+    const adminData = getAdminData()
+    const { pathname } = useLocation()
+    const { hasPermission, firstRoute } = useCheckPermission();
 
     if (!isLoggedIn) {
         localStorage.clear();
         return <Navigate to="/auth/login" replace />;
+    }
+
+    if (!hasPermission) {
+        return <Navigate to={firstRoute?.to as string} replace />;
+    }
+    
+    if (hasPermission && pathname === "/" && adminData?.user_type !== "superadmin") {
+        return <Navigate to={firstRoute?.to as string} replace />;
     }
   
     return (

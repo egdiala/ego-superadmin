@@ -15,7 +15,7 @@ export const VehicleAssignPage: React.FC = () => {
     const params = useParams()
     const navigate = useNavigate()
     const { mutate, isPending } = useAssignVehicle(() => navigate(`/vehicles/${params?.id as string}/profile`))
-    const { data: drivers, isFetching: isFetchingDrivers } = useGetDrivers()
+    const { data: drivers, isFetching: isFetchingDrivers } = useGetDrivers({ assign_status: 0, suspension_status: "0", status: 1 })
     const [driverToAssign, setDriverToAssign] = useState<FetchedDriverType | null>(null)
     const { data: vehicle, isFetching: isFetchingVehicle } = useGetVehicle(params?.id as string)
 

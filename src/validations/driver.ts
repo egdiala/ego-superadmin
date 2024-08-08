@@ -40,10 +40,18 @@ export const suspendDriverSchema = Yup.object().shape({
             then: () => Yup.string().required("Time of the day is required"),
         }),
     unsuspend_date: Yup.date()
-        .min(new Date(), "Re-activation date & time must be in the future")
         .nullable()
         .when("suspend_indefinite", {
             is: (val: boolean) => val === false,
-            then: () => Yup.date().required("Re-activation date & time is required"),
+            then: () => Yup.date().min(new Date(), "Re-activation date & time must be in the future").required("Re-activation date & time is required"),
         })
+})
+
+export const bulkCreateDriverSchema = Yup.object().shape({
+    files: Yup.mixed().required("Select a file to upload").test("fileType", "Only CSV files are allowed", (value) => {
+      if (value && value instanceof File) {
+        return value.type === "text/csv" || value.name.endsWith(".csv");
+      }
+      return false;
+    }),
 })

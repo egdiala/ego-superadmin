@@ -2,40 +2,77 @@ import React from "react";
 import { Link } from "react-router-dom";
 import blankImg from "@/assets/blank.svg";
 import { getAdminData } from "@/utils/authUtil";
-import { ModuleListItem } from "../ModuleListItem";
+import { useHasAnyPermission, useHasPermission } from "@/hooks/useHasPermission";
+import { ModuleListItem, RenderIf } from "@/components/core";
 import { appRoutes, financeRoutes, setupRoutes } from "@/constants/routes";
 import "./sidebar.css";
 
 export const Sidebar: React.FC = () => {
     const admin = getAdminData()
 
+    const appPermissions = appRoutes.map(route => ({
+        route,
+        hasPermission: useHasPermission(route.name.toUpperCase().replace(/\s+/g, "_"),  "view")
+    }));
+
+    const financePermissions = financeRoutes.map(route => ({
+        route,
+        hasPermission: useHasPermission(route.name.toUpperCase().replace(/\s+/g, "_"),  "view")
+    }));
+
+    const setupPermissions = setupRoutes.map(route => ({
+        route,
+        hasPermission: useHasPermission(route.name.toUpperCase().replace(/\s+/g, "_"),  "view", route.subRoutes)
+    }));
+
     return (
         <nav className="bg-white flex flex-col transition-all ease-out duration-500 gap-8 px-5 pt-6 pb-[3.125rem] h-screen w-full max-w-60 fixed inset-y-0 left-0 max-lg:hidden">
             <img src="/eGO_logo_green.svg" className="w-32" alt="eGO_green_logo" />
             <div className="pb-4 flex flex-1 flex-col overflow-y-auto [&>[data-slot=section]+[data-slot=section]]:mt-6">
-                <div data-slot="section" className="grid gap-1">
-                {
-                    appRoutes.map((item) =>
-                        <ModuleListItem key={item.to} {...item} />
-                    )
-                }
-                </div>
-                <div data-slot="section" className="grid gap-1">
-                <div className="text-dark-green-1 pl-3 font-medium uppercase text-[0.625rem]/3">Finance</div>
-                {
-                    financeRoutes.map((item) =>
-                        <ModuleListItem key={item.to} {...item} />
-                    )
-                }
-                </div>
-                <div data-slot="section" className="grid gap-1">
-                <div className="text-dark-green-1 pl-3 font-medium uppercase text-[0.625rem]/3">Setup</div>
-                {
-                    setupRoutes.map((item) =>
-                        <ModuleListItem key={item.to} {...item} />
-                    )
-                }
-                </div>
+                <RenderIf condition={useHasAnyPermission(appRoutes)}>
+                    <div data-slot="section" className="grid gap-1">
+                    {
+                        appPermissions.map((route) => {
+                            const { hasPermission, route: { ...rest } } = route;
+                            return (
+                                <RenderIf key={rest?.to} condition={hasPermission}>
+                                    <ModuleListItem {...rest} />
+                                </RenderIf>
+                            )
+                        })
+                    }
+                    </div>
+                </RenderIf>
+                <RenderIf condition={useHasAnyPermission(financeRoutes)}>
+                    <div data-slot="section" className="grid gap-1">
+                        <div className="text-dark-green-1 pl-3 font-medium uppercase text-[0.625rem]/3">Finance</div>
+                        {
+                            financePermissions.map((route) => {
+                                const { hasPermission, route: { ...rest } } = route;
+                                return (
+                                    <RenderIf key={rest?.to} condition={hasPermission}>
+                                        <ModuleListItem {...rest} />
+                                    </RenderIf>
+                                )
+                            })
+                        }
+                    </div>
+                </RenderIf>
+                <RenderIf condition={useHasAnyPermission(setupRoutes)}>
+                    <div data-slot="section" className="grid gap-1">
+                        <div className="text-dark-green-1 pl-3 font-medium uppercase text-[0.625rem]/3">Setup</div>
+                        {
+                            setupPermissions.map((route) => {
+                                const { hasPermission, route: { ...rest } } = route;
+                                return (
+                                    <RenderIf key={rest?.to} condition={hasPermission}>
+                                        <ModuleListItem {...rest} />
+                                    </RenderIf>
+                                )
+                            })
+                        }
+                    </div>
+                </RenderIf>
             </div>
             <Link to="/profile" className="flex items-center gap-2">
                 <img src={admin?.avatar || blankImg} className="size-10 rounded-full object-cover" alt="user" />

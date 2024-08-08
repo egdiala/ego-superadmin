@@ -13,7 +13,7 @@ import { cn } from "@/libs/cn";
 
 export const DriversPage: React.FC = () => {
   const navigate = useNavigate();
-  const { data: drivers, isFetching } = useGetDrivers()
+  const { data: drivers, isFetching } = useGetDrivers({})
   const [toggleModals, setToggleModals] = useState({
     openFilterModal: false,
     openCreateDriverModal: false,

@@ -19,6 +19,6 @@ export const setupRoutes = [
     { to:"/revenue-split", name:"Revenue Split", icon:"lucide:split" },
     { to:"/fees", name:"Fees", icon:"tabler:currency-naira" },
     { to:"/charge-stations", name:"Charge Stations", icon:"lucide:plug-zap" },
-    { to:"/accounts", name:"Accounts", icon:"lucide:circle-user-round" },
+    { to:"/accounts", name:"Accounts", icon:"lucide:circle-user-round", subRoutes: ["ACCESS_ROLE", "ADMIN_ACCOUNT"] },
     { to:"/activity-log", name:"Activity Log", icon:"lucide:logs" },
 ]

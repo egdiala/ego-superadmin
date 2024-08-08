@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { getDriver, getDrivers } from "@/services/apis/drivers";
 import { GET_DRIVER, GET_DRIVERS } from "@/constants/queryKeys";
-import type { FetchedDriverType } from "@/types/drivers";
+import type { FetchDriversQuery, FetchedDriverType } from "@/types/drivers";
 
-export const useGetDrivers = () => {
+export const useGetDrivers = (query: FetchDriversQuery) => {
   return useQuery({
-    queryKey: [GET_DRIVERS],
-    queryFn: getDrivers,
+    queryKey: [GET_DRIVERS, query],
+    queryFn: () => getDrivers(query),
     select: (res) => res?.data as FetchedDriverType[],
     retry: false,
   });

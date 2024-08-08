@@ -1,9 +1,10 @@
 import { axiosInstance } from "../axiosInstance";
-import type { BulkUploadDriversParams, CreateDriverType, UpdateUserStatusType } from "@/types/drivers";
+import type { BulkUploadDriversParams, CreateDriverType, FetchDriversQuery, UpdateUserStatusType } from "@/types/drivers";
 import { BULK_UPLOAD_DRIVERS_API, CREATE_DRIVER_API, UPDATE_DRIVER_STATUS_API } from "@/constants/api";
+import { createQueryString } from "@/utils/createQuery";
 
-export const getDrivers = async () => {
-  const res = await axiosInstance.get(CREATE_DRIVER_API);
+export const getDrivers = async (query: FetchDriversQuery) => {
+  const res = await axiosInstance.get(`${CREATE_DRIVER_API}${createQueryString(query)}`);
   return res.data;
 };
 

@@ -19,9 +19,18 @@ export const createVehicleSchema = Yup.object().shape({
     vehicle_vin: Yup.string().required("Vehicle Identification Number is required"),
     chassis_no: Yup.string().required("Chassis Number is required"),
     engine_no: Yup.string().required("Engine Number is required"),
-    vehicle_imei: Yup.string().required("Dashcam IMEI is required"),
+    vehicle_imei: Yup.string().nullable(),
 })
 
 export const revokeDriverSchema = Yup.object().shape({
     reason: Yup.string().required("Reason is required"),
+})
+
+export const bulkCreateVehicleSchema = Yup.object().shape({
+    files: Yup.mixed().required("Select a file to upload").test("fileType", "Only CSV files are allowed", (value) => {
+      if (value && value instanceof File) {
+        return value.type === "text/csv" || value.name.endsWith(".csv");
+      }
+      return false;
+    }),
 })
