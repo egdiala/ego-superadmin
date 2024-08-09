@@ -16,9 +16,9 @@ import { Breadcrumb, Button, Checkbox, Input, RenderIf, SearchInput, SelectInput
 
 export const NewCustomersPage: React.FC = () => {
     const navigate = useNavigate()
-    const [step, setStep] = useState(1)
+    const [step, setStep] = useState(2)
     const { mutate, isPending } = useAssignVehicle(() => navigate("/customers"))
-    const { data: vehicles, isFetching: isFetchingVehicles } = useGetVehicles({ driver_assigned: "0" })
+    const { data: vehicles, isFetching: isFetchingVehicles } = useGetVehicles({ driver_assigned: "1", organization_assigned: "0" })
     const { data: fetchedIndustries, isFetching } = useGetIndustries()
     const { mutate: create, isPending: isCreating } = useCreateOrganization(({ data }) => {
       setFieldValue("auth_id", data?.auth_id).then(() => setStep(2))

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { pageVariants } from "@/constants/animateVariants";
@@ -25,6 +25,10 @@ export const DriversPage: React.FC = () => {
     openFilterModal: false,
     openCreateDriverModal: false,
   })
+
+  const filteredDrivers = useMemo(() => {
+    return (drivers as FetchedDriverType[])?.filter((driver) => !!driver?.createdAt)
+  },[drivers])
 
   const columns = [
     {
@@ -134,7 +138,7 @@ export const DriversPage: React.FC = () => {
             columns={columns}
             perPage={itemsPerPage}
             onPageChange={handlePageChange}
-            data={drivers as FetchedDriverType[] ?? []}
+            data={filteredDrivers as FetchedDriverType[] ?? []}
             totalCount={(count as FetchedDriverCount)?.total}
             onClick={({ original }) => navigate(`/drivers/${original?.driver_id}/profile`)}
           />

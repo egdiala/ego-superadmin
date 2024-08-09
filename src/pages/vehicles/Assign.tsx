@@ -1,27 +1,37 @@
-import React, { Fragment, useState } from "react"
+import React, { Fragment, useMemo, useState } from "react"
 import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { format, formatRelative } from "date-fns";
-import { FetchedDriverType } from "@/types/drivers";
+import { FetchedDriverCount, FetchedDriverType } from "@/types/drivers";
 import { Loader } from "@/components/core/Button/Loader";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { pageVariants } from "@/constants/animateVariants";
 import { useGetDrivers, useGetVehicle } from "@/services/hooks/queries";
 import { Breadcrumb, Button, RadioButton, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { useAssignVehicle } from "@/services/hooks/mutations";
+import { setPaginationParams } from "@/hooks/usePaginationParams";
 
 export const VehicleAssignPage: React.FC = () => {
     const params = useParams()
     const navigate = useNavigate()
+    const itemsPerPage = 10;
+    const [page, setPage] = useState(1)
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [component] = useState<"count" | "export" | "count-status">("count")
     const { mutate, isPending } = useAssignVehicle(() => navigate(`/vehicles/${params?.id as string}/profile`))
-    const { data: drivers, isFetching: isFetchingDrivers } = useGetDrivers({ assign_status: 0, suspension_status: "0", status: 1 })
+    const { data: count, isFetching: fetchingCount } = useGetDrivers({ component })
+    const { data: drivers, isFetching: isFetchingDrivers } = useGetDrivers({ page: page.toString(), item_per_page: itemsPerPage.toString(), assign_status: 0, suspension_status: "0", status: 1 })
     const [driverToAssign, setDriverToAssign] = useState<FetchedDriverType | null>(null)
     const { data: vehicle, isFetching: isFetchingVehicle } = useGetVehicle(params?.id as string)
 
     const assignVehicle = () => {
         mutate({ auth_id: driverToAssign?.driver_id as string, vehicle_id: vehicle?.vehicle_id as string, user_type: "driver" })
     }
+
+    const filteredDrivers = useMemo(() => {
+        return (drivers as FetchedDriverType[])?.filter((driver) => !!driver?.createdAt)
+    },[drivers])
 
     const columns = [
         {
@@ -92,18 +102,14 @@ export const VehicleAssignPage: React.FC = () => {
         }
     ];
 
-    const handlePageChange = () => {
+    const handlePageChange = (page: number) => {
         // in a real page, this function would paginate the data from the backend
-
-    };
-
-    const getData = () => {
-        // in a real page, this function would paginate the data from the backend
-
+        setPage(page)
+        setPaginationParams(page, 10, searchParams, setSearchParams)
     };
     return (
         <Fragment>
-            <RenderIf condition={!isFetchingVehicle}>
+            <RenderIf condition={!isFetchingVehicle && !fetchingCount}>
                 <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">
                     <Breadcrumb items={[
                         { label: "Vehicles", link: "/vehicles" },
@@ -130,9 +136,9 @@ export const VehicleAssignPage: React.FC = () => {
                         <RenderIf condition={!isFetchingDrivers}>
                             <Table
                                 columns={columns}
-                                data={drivers as FetchedDriverType[] ?? []}
-                                getData={getData}
-                                totalCount={(drivers as FetchedDriverType[])?.length}
+                                data={filteredDrivers as FetchedDriverType[] ?? []}
+                                totalCount={(count as FetchedDriverCount)?.total}
+                                perPage={itemsPerPage}
                                 onPageChange={handlePageChange}
                                 config={{ enableRowSelection: true, enableMultiRowSelection: false }}
                             />

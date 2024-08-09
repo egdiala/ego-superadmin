@@ -44,8 +44,15 @@ export const VehiclesPage: React.FC = () => {
     },
     {
       header: () => "Company",
-      accessorKey: "company",
-      cell: () => (<>-</>)
+      accessorKey: "org_data?.name",
+      cell: ({ row }: { row: any; }) => {
+        const item = row?.original as FetchedVehicleType
+        return (
+          <div className="text-sm text-grey-dark-2 capitalize whitespace-nowrap">
+            {item?.org_data?.name || "-"}
+          </div>
+        )
+      }
     },
     {
       header: () => "Battery Status",
