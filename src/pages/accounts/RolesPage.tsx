@@ -106,6 +106,7 @@ export const RolesPage: React.FC = () => {
             columns={columns}
             data={roles!}
             getData={getData}
+            perPage={10}
             totalCount={roles?.length}
             onPageChange={handlePageChange}
           />

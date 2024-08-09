@@ -128,6 +128,7 @@ export const VehiclesPage: React.FC = () => {
             columns={columns}
             data={drivers ?? []}
             getData={getData}
+            perPage={10}
             totalCount={drivers?.length}
             onPageChange={handlePageChange}
             onClick={({ original }) => navigate(`/vehicles/${original?.vehicle_id}/profile`)}

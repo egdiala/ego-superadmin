@@ -1,19 +1,25 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { pageVariants } from "@/constants/animateVariants";
 import { Icon } from "@iconify/react";
 import { CreateDriverModal } from "@/components/pages/drivers";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useGetDrivers } from "@/services/hooks/queries";
 import { Loader } from "@/components/core/Button/Loader";
 import { format, formatRelative } from "date-fns";
-import type { FetchedDriverType } from "@/types/drivers";
+import type { FetchedDriverCount, FetchedDriverType } from "@/types/drivers";
 import { cn } from "@/libs/cn";
+import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 
 export const DriversPage: React.FC = () => {
   const navigate = useNavigate();
-  const { data: drivers, isFetching } = useGetDrivers({})
+  const location = useLocation();
+  const itemsPerPage = 10;
+  const [page, setPage] = useState(1)
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { data: count, isFetching: fetchingCount } = useGetDrivers({ component: "count" })
+  const { data: drivers, isFetching } = useGetDrivers({ page: page.toString(), item_per_page: itemsPerPage.toString() })
   const [toggleModals, setToggleModals] = useState({
     openFilterModal: false,
     openCreateDriverModal: false,
@@ -76,14 +82,10 @@ export const DriversPage: React.FC = () => {
     }
   ];
 
-  const handlePageChange = () => {
+  const handlePageChange = (page: number) => {
     // in a real page, this function would paginate the data from the backend
-
-  };
-
-  const getData = () => {
-    // in a real page, this function would paginate the data from the backend
-
+    setPage(page)
+      setPaginationParams(page, 10, searchParams, setSearchParams)
   };
 
   const toggleCreateDriver = useCallback(() => {
@@ -92,6 +94,10 @@ export const DriversPage: React.FC = () => {
       openCreateDriverModal: !toggleModals.openCreateDriverModal,
     }))
   }, [toggleModals.openCreateDriverModal])
+
+  useEffect(() => {
+    getPaginationParams(location, setPage, () => {})
+  },[location])
   
   return (
     <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">
@@ -121,17 +127,18 @@ export const DriversPage: React.FC = () => {
             </div>
           </div>
         </div>
-        <RenderIf condition={!isFetching}>
+        <RenderIf condition={!isFetching && !fetchingCount}>
           <Table
+            page={page}
             columns={columns}
-            data={drivers ?? []}
-            onClick={({ original }) => navigate(`/drivers/${original?.driver_id}/profile`)}
-            getData={getData}
-            totalCount={drivers?.length}
+            perPage={itemsPerPage}
             onPageChange={handlePageChange}
+            data={drivers as FetchedDriverType[] ?? []}
+            totalCount={(count as FetchedDriverCount)?.total}
+            onClick={({ original }) => navigate(`/drivers/${original?.driver_id}/profile`)}
           />
         </RenderIf>
-        <RenderIf condition={isFetching}>
+        <RenderIf condition={isFetching || fetchingCount}>
           <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
         </RenderIf>
       </div>

@@ -99,6 +99,8 @@ export const DriverTripsPage: React.FC = () => {
             <Table
                 columns={columns}
                 data={data}
+                page={1}
+                perPage={10}
                 getData={getData}
                 totalCount={dummyData.length}
                 onPageChange={handlePageChange}

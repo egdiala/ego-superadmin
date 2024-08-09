@@ -66,6 +66,8 @@ export const DriverPaymentPage: React.FC = () => {
                 columns={columns}
                 data={data}
                 getData={getData}
+                page={1}
+                perPage={10}
                 totalCount={dummyData.length}
                 onPageChange={handlePageChange}
             />

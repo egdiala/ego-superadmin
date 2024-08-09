@@ -130,9 +130,9 @@ export const VehicleAssignPage: React.FC = () => {
                         <RenderIf condition={!isFetchingDrivers}>
                             <Table
                                 columns={columns}
-                                data={drivers ?? []}
+                                data={drivers as FetchedDriverType[] ?? []}
                                 getData={getData}
-                                totalCount={drivers?.length}
+                                totalCount={(drivers as FetchedDriverType[])?.length}
                                 onPageChange={handlePageChange}
                                 config={{ enableRowSelection: true, enableMultiRowSelection: false }}
                             />

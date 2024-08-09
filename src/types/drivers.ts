@@ -49,6 +49,14 @@ export interface FetchedDriverType extends Omit<CreateDriverType, "nin" | "drive
     driver_id: string;
 }
 
+export interface FetchedDriverCount {
+    total: number
+    vehOrg: {
+        vehicle: null;
+        organization: null;
+    }
+}
+
 export interface BulkUploadDriversParams {
     files: FormData;
     // eslint-disable-next-line no-unused-vars

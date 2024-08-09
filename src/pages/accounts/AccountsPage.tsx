@@ -154,6 +154,7 @@ export const AccountsPage: React.FC = () => {
               columns={columns}
               data={admins!}
               getData={getData}
+              perPage={10}
               totalCount={admins?.length}
               onPageChange={handlePageChange}
           />

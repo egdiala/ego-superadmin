@@ -29,7 +29,7 @@ interface TableProps {
   totalCount?: number; // total count of table data
   emptyStateText?: string;
   // eslint-disable-next-line no-unused-vars
-  getData: (page: number, rowsPerPage: number) => void; // handle pagination on page mount
+  getData?: (page: number, rowsPerPage: number) => void; // handle pagination on page mount
   // eslint-disable-next-line no-unused-vars
   onClick?: (row: any) => void; // on click event for table row
   // eslint-disable-next-line no-unused-vars
@@ -39,8 +39,8 @@ interface TableProps {
 export const Table: React.FC<TableProps> = ({
   columns,
   data,
-  page = 1,
-  perPage = 10,
+  page,
+  perPage,
   loading = false,
   getData,
   totalCount,
@@ -53,8 +53,8 @@ export const Table: React.FC<TableProps> = ({
   const location = useLocation();
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [currentPage, setCurrentPage] = React.useState<number>(page);
-  const [rowsPerPage, setRowsPerPage] = React.useState<number>(perPage);
+  const [currentPage, setCurrentPage] = React.useState<number>(page as number);
+  const [rowsPerPage, setRowsPerPage] = React.useState<number>(perPage as number);
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({})
 
   const table = useReactTable({
@@ -74,7 +74,7 @@ export const Table: React.FC<TableProps> = ({
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    onPageChange(page, rowsPerPage);
+    onPageChange(page, (perPage as number));
   };
 
   // Function to navigate to a specific page
@@ -86,22 +86,22 @@ export const Table: React.FC<TableProps> = ({
 
   // Function to navigate to previous page
   const prev = () => {
-    if (currentPage > 1) {
-      handlePageChange(currentPage - 1);
+    if ((page as number) > 1) {
+      handlePageChange((page as number) - 1);
     }
   };
 
   // Function to navigate to next page
   const next = () => {
-    if (currentPage < totalCount!) {
-      handlePageChange(currentPage + 1);
+    if ((page as number) < totalCount!) {
+      handlePageChange((page as number) + 1);
     }
   };
 
   React.useEffect(() => {
     if (paginateData) {
       getPaginationParams(location, setCurrentPage, setRowsPerPage);
-      getData(currentPage, rowsPerPage);
+      getData?.(currentPage, (perPage as number));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search]);
@@ -202,14 +202,13 @@ export const Table: React.FC<TableProps> = ({
             </div>
         </RenderIf>
       </div>
-
       <RenderIf condition={paginateData && (totalCount as number) > 0 && !loading}>
         <Pagination
           className="px-0 py-3"
           count={totalCount as number}
-          currentPage={currentPage}
+          currentPage={page as number}
           dataLength={totalCount as number}
-          totalPages={Math.ceil((totalCount as number) / rowsPerPage)}
+          totalPages={Math.ceil((totalCount as number) / (perPage as number))}
           prev={prev}
           next={next}
           goToPage={(v) => goToPage(Number(v))}

@@ -16,7 +16,7 @@ interface SuspendDriverModalProps {
 }
 
 export const SuspendDriverModal: React.FC<SuspendDriverModalProps> = ({ isOpen, close, driver }) => {
-    const { mutate } = useUpdateUserStatus("Driver Suspended Successfully!")
+    const { mutate } = useUpdateUserStatus("Driver Suspended Successfully!", () => closeModal())
     const { handleSubmit, isValid, register, resetForm, setFieldValue, values: suspendDriverValues } = useFormikWrapper({
         initialValues: {
             hour: "",

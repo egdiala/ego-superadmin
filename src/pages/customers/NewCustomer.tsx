@@ -225,6 +225,8 @@ export const NewCustomersPage: React.FC = () => {
                                     getData={getData}
                                     columns={columns}
                                     data={vehicles ?? []}
+                                    page={1}
+                                    perPage={10}
                                     totalCount={vehicles?.length}
                                     onPageChange={handlePageChange}
                                     emptyStateText="You have not added any vehicle yet."

@@ -88,6 +88,7 @@ export const CustomersPage: React.FC = () => {
             columns={columns}
             data={drivers ?? []}
             getData={getData}
+            perPage={10}
             emptyStateText="You have not added any customer yet."
             totalCount={drivers?.length}
             onPageChange={handlePageChange}
