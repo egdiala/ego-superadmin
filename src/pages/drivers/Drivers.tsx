@@ -18,7 +18,8 @@ export const DriversPage: React.FC = () => {
   const itemsPerPage = 10;
   const [page, setPage] = useState(1)
   const [searchParams, setSearchParams] = useSearchParams();
-  const { data: count, isFetching: fetchingCount } = useGetDrivers({ component: "count" })
+  const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
+  const { data: count, isFetching: fetchingCount, refetch } = useGetDrivers({ component })
   const { data: drivers, isFetching } = useGetDrivers({ page: page.toString(), item_per_page: itemsPerPage.toString() })
   const [toggleModals, setToggleModals] = useState({
     openFilterModal: false,
@@ -97,7 +98,7 @@ export const DriversPage: React.FC = () => {
 
   useEffect(() => {
     getPaginationParams(location, setPage, () => {})
-  },[location])
+  }, [location])
   
   return (
     <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">
@@ -110,7 +111,7 @@ export const DriversPage: React.FC = () => {
           
           <div className="flex items-center gap-2 flex-wrap">
             <div className="flex items-center gap-2 w-full sm:w-auto">
-              <TableAction theme="ghost" block>
+              <TableAction theme="ghost" block onClick={() => component === "export" ? refetch() : setComponent("export")}>
                 <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
                 Export
               </TableAction>

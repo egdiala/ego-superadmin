@@ -1,12 +1,12 @@
 import { ReactNode } from "react";
 import AuthLayout from "@/layouts/AuthLayout";
+import { ProfilePage } from "@/pages/profile";
 import { AnimatePresence } from "framer-motion";
-import { AuthRoutes, CustomersRoutes, DashboardRoutes, DriversRoutes, RolesRoutes, VehiclesRoutes } from "./modules";
 import ProtectedLayout from "@/layouts/ProtectedLayout";
-import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { AccountsLayout } from "@/pages/accounts/Accounts";
 import { AccountsPage, RolesPage } from "@/pages/accounts";
-import { ProfilePage } from "@/pages/profile";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { AuthRoutes, CustomersRoutes, DashboardRoutes, DriversRoutes, RolesRoutes, TripsRoutes, VehiclesRoutes } from "./modules";
 
 
 function LocationProvider({ children }: { children: ReactNode }) {
@@ -28,6 +28,7 @@ const Router = () => {
                 <Route path="/profile" element={<ProtectedLayout><LocationProvider><ProfilePage /></LocationProvider></ProtectedLayout>} />
                 <Route path="customers/*" element={<ProtectedLayout><LocationProvider><CustomersRoutes /></LocationProvider></ProtectedLayout>} />
                 <Route path="vehicles/*" element={<ProtectedLayout><LocationProvider><VehiclesRoutes /></LocationProvider></ProtectedLayout>} />
+                <Route path="trips/*" element={<ProtectedLayout><LocationProvider><TripsRoutes /></LocationProvider></ProtectedLayout>} />
             </Routes>
         </BrowserRouter>
     );
