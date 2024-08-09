@@ -54,7 +54,6 @@ export const Table: React.FC<TableProps> = ({
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [currentPage, setCurrentPage] = React.useState<number>(page as number);
-  const [rowsPerPage, setRowsPerPage] = React.useState<number>(perPage as number);
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({})
 
   const table = useReactTable({
@@ -100,7 +99,7 @@ export const Table: React.FC<TableProps> = ({
 
   React.useEffect(() => {
     if (paginateData) {
-      getPaginationParams(location, setCurrentPage, setRowsPerPage);
+      getPaginationParams(location, setCurrentPage, () => {});
       getData?.(currentPage, (perPage as number));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
