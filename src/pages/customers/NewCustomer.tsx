@@ -16,12 +16,18 @@ import { Breadcrumb, Button, Checkbox, Input, RenderIf, SearchInput, SelectInput
 
 export const NewCustomersPage: React.FC = () => {
     const navigate = useNavigate()
-    const [step, setStep] = useState(2)
+    const [step, setStep] = useState(1)
     const { mutate, isPending } = useAssignVehicle(() => navigate("/customers"))
     const { data: vehicles, isFetching: isFetchingVehicles } = useGetVehicles({ driver_assigned: "1", organization_assigned: "0" })
     const { data: fetchedIndustries, isFetching } = useGetIndustries()
     const { mutate: create, isPending: isCreating } = useCreateOrganization(({ data }) => {
-      setFieldValue("auth_id", data?.auth_id).then(() => setStep(2))
+      setFieldValue("auth_id", data?.auth_id).then(() => {
+          if (stepOneValues?.purchase_model === "2") {
+            navigate("/customers")
+          } else {
+            setStep(2)
+          }
+      })
     })
 
     const industries = useMemo(() => {
@@ -41,7 +47,7 @@ export const NewCustomersPage: React.FC = () => {
         { label: "Staff Commute Model", value: PurchaseModel.StaffCommute.toString() },
     ]
 
-    const { handleSubmit, isValid, register } = useFormikWrapper({
+    const { handleSubmit, isValid, register, values: stepOneValues } = useFormikWrapper({
         initialValues: {
             purchase_model: "",
             email: "",
