@@ -89,9 +89,10 @@ export const CustomersPage: React.FC = () => {
             data={drivers ?? []}
             getData={getData}
             perPage={10}
-            emptyStateText="You have not added any customer yet."
             totalCount={drivers?.length}
             onPageChange={handlePageChange}
+            emptyStateText="You have not added any customer yet."
+            onClick={({ original }) => navigate(`/customers/${original?.organization_id}/dashboard`)}
           />
         </RenderIf>
         <RenderIf condition={isFetching}>

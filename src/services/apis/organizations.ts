@@ -11,3 +11,8 @@ export const createOrganization = async (data: CreateOrganizationType) => {
   const res = await axiosInstance.post(GET_ORGANIZATIONS_API, data);
   return res.data;
 };
+
+export const getOrganization = async (id: string) => {
+  const res = await axiosInstance.get(`${GET_ORGANIZATIONS_API}/${id}`);
+  return res.data;
+};
