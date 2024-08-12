@@ -41,23 +41,27 @@ export const CustomerPage: React.FC = () => {
           <div className="grid content-start gap-6 py-6 px-4 bg-white rounded-lg">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <h1 className="text-grey-dark-1 font-bold text-xl">{customer?.name}</h1>
-              <div className="flex items-center gap-2 pb-4 w-full sm:w-auto">
-                <TableAction theme="ghost" block>
-                    <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-                    Export
-                </TableAction>
-                <TableAction theme="grey" block>
-                    <Icon icon="lucide:pencil" className="size-4" />
-                    Edit
-                </TableAction>
-                <TableAction theme="secondary" block>
-                  <Icon icon="ph:exclamation-mark-bold" className="size-4" />
-                  Suspend Customer
-                </TableAction>
-                <TableAction theme="primary" block>
-                  <Icon icon="lucide:plus" className="size-4" />
-                  Assign Vehicles
-                </TableAction>
+              <div className="flex flex-col md:flex-row md:items-center gap-2 pb-4 w-full sm:w-auto">
+                <div className="grid grid-cols-2 gap-2">
+                    <TableAction theme="ghost" block>
+                        <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
+                        Export
+                    </TableAction>
+                    <TableAction theme="grey" block>
+                        <Icon icon="lucide:pencil" className="size-4" />
+                        Edit
+                    </TableAction>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                    <TableAction theme="secondary" block>
+                        <Icon icon="ph:exclamation-mark-bold" className="size-4" />
+                        Suspend Customer
+                    </TableAction>
+                    <TableAction theme="primary" block>
+                        <Icon icon="lucide:plus" className="size-4" />
+                        Assign Vehicles
+                    </TableAction>
+                </div>
               </div>
             </div>
             <div className="rounded border-2 border-grey-dark-4 p-1 flex items-center gap-2 w-full overflow-scroll">
