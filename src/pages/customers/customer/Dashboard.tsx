@@ -1,6 +1,6 @@
 import React from "react";
 
-export const CustomerDashboardPage = () => {
+export const CustomerDashboardPage: React.FC = () => {
     return (
         <div>Customer Dashboard</div>
     )
