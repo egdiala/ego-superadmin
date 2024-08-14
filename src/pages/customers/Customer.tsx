@@ -7,12 +7,13 @@ import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useGetOrganization } from "@/services/hooks/queries";
 import { Breadcrumb, RenderIf, TableAction } from "@/components/core";
-import { NavLink, Outlet, useNavigate, useParams } from "react-router-dom";
+import { NavLink, Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { SuspendCustomerModal } from "@/components/pages/customers";
 
 export const CustomerPage: React.FC = () => {
   const params = useParams()
   const navigate = useNavigate()
+  const location = useLocation()
   const { data: customer, isFetching } = useGetOrganization(params?.id as string)
   const [toggleModals, setToggleModals] = useState({
     openDeleteCustomerModal: false,
@@ -28,14 +29,14 @@ export const CustomerPage: React.FC = () => {
   
   const subRoutes = useMemo(() => {
     const subs = [
-        { name: "Dashboard", link: `/customers/${params?.id as string}/dashboard` },
-        (PurchaseModel.Lease === customer?.purchase_model! && { name: "Vehicles", link: `/customers/${params?.id as string}/vehicles` }),
-        (PurchaseModel.Lease === customer?.purchase_model! && { name: "Drivers", link: `/customers/${params?.id as string}/drivers` }),
-        { name: "Staff", link: `/customers/${params?.id as string}/staff` },
-        { name: "Trip History", link: `/customers/${params?.id as string}/trip-history` },
-        { name: "Wallet", link: `/customers/${params?.id as string}/wallet` },
-        { name: "Trip Payments", link: `/customers/${params?.id as string}/trip-payments` },
-        { name: "Ratings", link: `/customers/${params?.id as string}/ratings` },
+        { label: "Dashboard", link: `/customers/${params?.id as string}/dashboard` },
+        (PurchaseModel.Lease === customer?.purchase_model! && { label: "Vehicles", link: `/customers/${params?.id as string}/vehicles` }),
+        (PurchaseModel.Lease === customer?.purchase_model! && { label: "Drivers", link: `/customers/${params?.id as string}/drivers` }),
+        { label: "Staff", link: `/customers/${params?.id as string}/staffs` },
+        { label: "Trip History", link: `/customers/${params?.id as string}/trip-history` },
+        { label: "Wallet", link: `/customers/${params?.id as string}/wallet` },
+        { label: "Trip Payments", link: `/customers/${params?.id as string}/trip-payments` },
+        { label: "Ratings", link: `/customers/${params?.id as string}/ratings` },
     ]
     return subs.filter((item) => item !== false)
   },[customer?.purchase_model, params?.id])
@@ -49,7 +50,7 @@ export const CustomerPage: React.FC = () => {
     <Fragment>
       <RenderIf condition={!isFetching}>
         <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">
-          <Breadcrumb items={[{ label: "All Customers", link: "/customers" }, { label: customer?.name as string, link: `/customers/${params?.id as string}/dashboard` }, { label: "Dashboard", link: `/customers/${params?.id as string}/dashboard` }]} showBack />
+          <Breadcrumb items={[{ label: "All Customers", link: "/customers" }, { label: customer?.name as string, link: `/customers/${params?.id as string}/dashboard` }, subRoutes.filter((item) => item?.link === location?.pathname)[0]]} showBack />
           <div className="grid content-start gap-6 py-6 px-4 bg-white rounded-lg">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <h1 className="text-grey-dark-1 font-bold text-xl">{customer?.name}</h1>
@@ -83,7 +84,7 @@ export const CustomerPage: React.FC = () => {
                   <NavLink to={route.link} className="flex w-full">
                   {({ isActive }) => (
                       <div className={cn("text-center py-1 px-5 flex-1 rounded whitespace-nowrap text-sm", isActive ? "bg-green-1 text-white font-semibold" : "hover:bg-light-green")}>
-                          {route.name}
+                          {route.label}
                       </div>
                   )}
                   </NavLink>

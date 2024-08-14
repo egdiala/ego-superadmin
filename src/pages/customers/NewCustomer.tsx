@@ -230,10 +230,10 @@ export const NewCustomersPage: React.FC = () => {
                                 <Table
                                     getData={getData}
                                     columns={columns}
-                                    data={vehicles ?? []}
+                                    data={(vehicles as FetchedVehicleType[]) ?? []}
                                     page={1}
                                     perPage={10}
-                                    totalCount={vehicles?.length}
+                                    totalCount={(vehicles as FetchedVehicleType[])?.length}
                                     onPageChange={handlePageChange}
                                     emptyStateText="You have not added any vehicle yet."
                                 />

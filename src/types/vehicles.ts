@@ -90,3 +90,7 @@ export interface BulkUploadVehiclesParams {
     // eslint-disable-next-line no-unused-vars
     onUploadProgress: (progressEvent: AxiosProgressEvent) => void;
 }
+
+export interface FetchedVehicleCount {
+    total: number
+}
