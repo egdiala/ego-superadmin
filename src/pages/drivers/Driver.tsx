@@ -57,12 +57,10 @@ export const DriverPage: React.FC = () => {
                   <Icon icon="ph:trash-bold" className="size-4" />
                   Delete Driver
                 </Button>
-                <RenderIf condition={driver?.suspension_status === 0}>
                 <Button type="button" theme="primary" onClick={toggleSuspendDriver} block>
                   <Icon icon="ph:exclamation-mark-bold" className="size-4" />
-                  Suspend Driver
+                  {driver?.suspension_status === 0 ? "Suspend Driver" : "Unsuspend Driver"}
                 </Button>
-                </RenderIf>
               </div>
             </div>
             <div className="rounded border-2 border-grey-dark-4 p-1 flex items-center gap-2 w-full overflow-scroll">

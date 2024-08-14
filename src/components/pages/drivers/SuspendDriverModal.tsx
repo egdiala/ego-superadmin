@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import type { FetchedDriverType } from "@/types/drivers";
 import { suspendDriverSchema } from "@/validations/driver";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
-import { Button, Input, SelectInput, TextArea, Toggle } from "@/components/core";
+import { Button, Input, RenderIf, SelectInput, TextArea, Toggle } from "@/components/core";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { useUpdateUserStatus } from "@/services/hooks/mutations";
 
@@ -16,7 +16,7 @@ interface SuspendDriverModalProps {
 }
 
 export const SuspendDriverModal: React.FC<SuspendDriverModalProps> = ({ isOpen, close, driver }) => {
-    const { mutate, isPending } = useUpdateUserStatus("Driver Suspended Successfully!", () => closeModal())
+    const { mutate, isPending } = useUpdateUserStatus(`Driver ${driver?.suspension_status === 0 ? "Suspended" : "Unsuspended"} Successfully!`, () => closeModal())
     const { handleSubmit, isValid, register, resetForm, setFieldValue, values: suspendDriverValues } = useFormikWrapper({
         initialValues: {
             hour: "",
@@ -51,34 +51,36 @@ export const SuspendDriverModal: React.FC<SuspendDriverModalProps> = ({ isOpen, 
                     <div className="grid gap-2">
                         <div className="flex items-center justify-between">
                             <DialogTitle as="h1" className="text-xl font-bold text-grey-dark-1">
-                                Suspend {driver?.first_name} {driver?.last_name}?
+                                {driver?.suspension_status === 0 ? "Suspend" : "Unsuspend"} {driver?.first_name} {driver?.last_name}?
                             </DialogTitle>
                         <button type="button" onClick={closeModal} className="size-8 p-2 grid place-content-center text-grey-dark-3 hover:text-grey-dark-1 hover:bg-light-green rounded-full ease-out duration-300 transition-all"><Icon icon="ph:x-bold" /></button>
                         </div>
-                        <p className="text-grey-dark-3 text-sm">This action would suspend {driver?.first_name} {driver?.last_name} from this platform</p>
+                        <p className="text-grey-dark-3 text-sm">This action would {driver?.suspension_status === 0 ? "suspend" : "unsuspend"} {driver?.first_name} {driver?.last_name} from this platform</p>
                     </div>
                     <TextArea placeholder="Reason" {...register("reason")} />
-                    <div className="rounded-md border border-[#CDCEDA] py-3.5 px-3 flex items-center justify-between">
-                        <span className="text-sm text-grey-dark-2">Indefinite Suspension</span>
-                        <Toggle checked={suspendDriverValues.suspend_indefinite} onChange={(v) => setFieldValue("suspend_indefinite", v)} name="suspend_indefinite" />
-                    </div>
-                    <AnimatePresence>
-                        {
-                            !suspendDriverValues.suspend_indefinite && (
-                                <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} className="flex flex-col gap-4 justify-end items-end overflow-x-visible overflow-y-clip pb-1">
-                                <Input label="Re-activation date & Time" type="date" min={new Date().toJSON().slice(0, 10)} {...register("unsuspend_date")} />
-                                <div className="flex items-start gap-4">
-                                    <Input label="Hour" type="text" inputMode="numeric" placeholder="HH" {...register("hour")} />
-                                    <Input label="Mins" type="text" inputMode="numeric" placeholder="MM" {...register("mins")} />
-                                    <SelectInput label="Time of the day" options={[{ label: "AM", value: "AM" }, { label: "PM", value: "PM" }]} placeholder="PM" {...register("time_of_day")} />
-                                </div>      
-                                </motion.div>
-                            )
-                        }
-                    </AnimatePresence>
+                    <RenderIf condition={driver?.suspension_status === 0}>
+                        <div className="rounded-md border border-[#CDCEDA] py-3.5 px-3 flex items-center justify-between">
+                            <span className="text-sm text-grey-dark-2">Indefinite Suspension</span>
+                            <Toggle checked={suspendDriverValues.suspend_indefinite} onChange={(v) => setFieldValue("suspend_indefinite", v)} name="suspend_indefinite" />
+                        </div>
+                        <AnimatePresence>
+                            {
+                                !suspendDriverValues.suspend_indefinite && (
+                                    <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} className="flex flex-col gap-4 justify-end items-end overflow-x-visible overflow-y-clip pb-1">
+                                    <Input label="Re-activation date & Time" type="date" min={new Date().toJSON().slice(0, 10)} {...register("unsuspend_date")} />
+                                    <div className="flex items-start gap-4">
+                                        <Input label="Hour" type="text" inputMode="numeric" placeholder="HH" {...register("hour")} />
+                                        <Input label="Mins" type="text" inputMode="numeric" placeholder="MM" {...register("mins")} />
+                                        <SelectInput label="Time of the day" options={[{ label: "AM", value: "AM" }, { label: "PM", value: "PM" }]} placeholder="PM" {...register("time_of_day")} />
+                                    </div>      
+                                    </motion.div>
+                                )
+                            }
+                        </AnimatePresence>
+                    </RenderIf>
                     <div className="flex items-center justify-end w-full md:w-2/3 ml-auto pt-10 gap-2 md:gap-4">
                         <Button type="button" theme="tertiary" onClick={closeModal} block>Cancel</Button>
-                        <Button type="submit" theme="primary" loading={isPending} disabled={isPending || !isValid} block>Suspend</Button>
+                        <Button type="submit" theme="primary" loading={isPending} disabled={isPending || !isValid} block>{driver?.suspension_status === 0 ? "Suspend" : "Unsuspend"}</Button>
                     </div>
                 </DialogPanel>
             </div>
