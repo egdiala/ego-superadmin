@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { GET_ORGANIZATION, GET_ORGANIZATIONS } from "@/constants/queryKeys";
 import { getOrganization, getOrganizations } from "@/services/apis/organizations";
-import type { FetchedOrgaizationType } from "@/types/organizations";
+import type { FetchedOrgaizationType, FetchedSingleOrganizationType } from "@/types/organizations";
 
 export const useGetOrganizations = () => {
   return useQuery({
@@ -14,9 +14,10 @@ export const useGetOrganizations = () => {
 
 export const useGetOrganization = (id: string) => {
   return useQuery({
-    queryKey: [GET_ORGANIZATION, id],
+    enabled: !!id,
+    queryKey: [GET_ORGANIZATION],
     queryFn: () => getOrganization(id),
-    select: (res) => res?.data as FetchedOrgaizationType,
+    select: (res) => res?.data as FetchedSingleOrganizationType,
     retry: false,
   });
 };

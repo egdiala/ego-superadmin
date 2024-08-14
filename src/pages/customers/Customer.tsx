@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo } from "react";
+import React, { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
@@ -8,11 +8,23 @@ import { pageVariants } from "@/constants/animateVariants";
 import { useGetOrganization } from "@/services/hooks/queries";
 import { Breadcrumb, RenderIf, TableAction } from "@/components/core";
 import { NavLink, Outlet, useNavigate, useParams } from "react-router-dom";
+import { SuspendCustomerModal } from "@/components/pages/customers";
 
 export const CustomerPage: React.FC = () => {
   const params = useParams()
   const navigate = useNavigate()
   const { data: customer, isFetching } = useGetOrganization(params?.id as string)
+  const [toggleModals, setToggleModals] = useState({
+    openDeleteCustomerModal: false,
+    openSuspendCustomerModal: false,
+  })
+
+  const toggleSuspendCustomer = useCallback(() => {
+    setToggleModals((prev) => ({
+      ...prev,
+      openSuspendCustomerModal: !toggleModals.openSuspendCustomerModal,
+    }))
+  }, [toggleModals.openSuspendCustomerModal])
   
   const subRoutes = useMemo(() => {
     const subs = [
@@ -47,17 +59,17 @@ export const CustomerPage: React.FC = () => {
                         <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
                         Export
                     </TableAction>
-                    <TableAction theme="grey" block>
+                    <TableAction type="button" theme="grey" onClick={() => navigate(`/customers/${params?.id as string}/edit`)} block>
                         <Icon icon="lucide:pencil" className="size-4" />
                         Edit
                     </TableAction>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                    <TableAction theme="secondary" block>
+                    <TableAction type="button" theme="secondary" onClick={toggleSuspendCustomer} block>
                         <Icon icon="ph:exclamation-mark-bold" className="size-4" />
-                        Suspend Customer
+                        {customer?.status === 1 ? "Suspend Customer" : "Unsuspend Customer"}
                     </TableAction>
-                    <TableAction theme="primary" block>
+                    <TableAction type="button" theme="primary" onClick={() => navigate(`/customers/${params?.id as string}/assign`)} block>
                         <Icon icon="lucide:plus" className="size-4" />
                         Assign Vehicles
                     </TableAction>
@@ -70,18 +82,19 @@ export const CustomerPage: React.FC = () => {
                 <Fragment key={route.link}>
                   <NavLink to={route.link} className="flex w-full">
                   {({ isActive }) => (
-                      <div className={cn("text-center py-1 px-5 flex-1 rounded whitespace-nowrap", isActive ? "bg-green-1 text-white font-semibold text-sm" : "hover:bg-light-green")}>
+                      <div className={cn("text-center py-1 px-5 flex-1 rounded whitespace-nowrap text-sm", isActive ? "bg-green-1 text-white font-semibold" : "hover:bg-light-green")}>
                           {route.name}
                       </div>
                   )}
                   </NavLink>
-                  <RenderIf condition={(subRoutes.length - 1) !== idx}><hr className="w-64 block border-input-filled rotate-90" /></RenderIf>
+                  <RenderIf condition={(subRoutes.length - 1) !== idx}><div className="h-full rounded w-0 block border-r border-r-input-filled" /></RenderIf>
                 </Fragment>
                 )
               }
             </div>
             <Outlet />
           </div>
+          <SuspendCustomerModal isOpen={toggleModals.openSuspendCustomerModal} customer={customer!} close={toggleSuspendCustomer} />
         </motion.div>
       </RenderIf>
       <RenderIf condition={isFetching}>

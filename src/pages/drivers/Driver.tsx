@@ -71,12 +71,12 @@ export const DriverPage: React.FC = () => {
                 <Fragment key={route.link}>
                   <NavLink to={route.link} className="flex w-full">
                   {({ isActive }) => (
-                      <div className={cn("text-center py-1 px-5 flex-1 rounded whitespace-nowrap", isActive ? "bg-green-1 text-white font-semibold text-sm" : "hover:bg-light-green")}>
+                      <div className={cn("text-center py-1 px-5 flex-1 rounded whitespace-nowrap text-sm", isActive ? "bg-green-1 text-white font-semibold" : "hover:bg-light-green")}>
                           {route.name}
                       </div>
                   )}
                   </NavLink>
-                  <RenderIf condition={(subRoutes.length - 1) !== idx}><hr className="w-20 flex border-input-filled rotate-90" /></RenderIf>
+                  <RenderIf condition={(subRoutes.length - 1) !== idx}><div className="h-full rounded w-0 block border-r border-r-input-filled" /></RenderIf>
                 </Fragment>
                 )
               }

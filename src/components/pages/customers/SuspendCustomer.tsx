@@ -1,22 +1,22 @@
 import React, { useCallback } from "react";
 import { Icon } from "@iconify/react";
 import { AnimatePresence, motion } from "framer-motion";
-import type { FetchedDriverType } from "@/types/drivers";
 import { suspendDriverSchema } from "@/validations/driver";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
-import { Button, Input, SelectInput, TextArea, Toggle } from "@/components/core";
+import { FetchedOrgaizationType } from "@/types/organizations";
+import { useSuspendOrganization } from "@/services/hooks/mutations";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
-import { useUpdateUserStatus } from "@/services/hooks/mutations";
+import { Button, Input, SelectInput, TextArea, Toggle } from "@/components/core";
 
-interface SuspendDriverModalProps {
+interface SuspendCustomerModalProps {
     isOpen: boolean;
-    driver: FetchedDriverType;
+    customer: FetchedOrgaizationType;
     // eslint-disable-next-line no-unused-vars
     close: (value: boolean) => void
 }
 
-export const SuspendDriverModal: React.FC<SuspendDriverModalProps> = ({ isOpen, close, driver }) => {
-    const { mutate, isPending } = useUpdateUserStatus("Driver Suspended Successfully!", () => closeModal())
+export const SuspendCustomerModal: React.FC<SuspendCustomerModalProps> = ({ isOpen, close, customer }) => {
+    const { mutate, isPending } = useSuspendOrganization(`Customer ${customer?.status === 1 ? "Suspended" : "Unsuspended"} Successfully!`, () => closeModal())
     const { handleSubmit, isValid, register, resetForm, setFieldValue, values: suspendDriverValues } = useFormikWrapper({
         initialValues: {
             hour: "",
@@ -30,9 +30,9 @@ export const SuspendDriverModal: React.FC<SuspendDriverModalProps> = ({ isOpen, 
         onSubmit(values) {
             const { hour, mins, time_of_day, suspend_indefinite, unsuspend_date, ...rest } = values
             if (!suspend_indefinite) {
-                mutate({ auth_id: driver?.driver_id, user_type: "driver", unsuspend_date, suspend_indefinite: suspend_indefinite ? "1" : "0",  unsuspend_time: `${hour}:${mins}${time_of_day}`, status: driver?.status === 1 ? "2" : "1", suspension_status: driver?.suspension_status === 0 ? "1" : "0", ...rest })
+                mutate({ auth_id: customer?.organization_id, unsuspend_date, suspend_indefinite: suspend_indefinite ? "1" : "0",  unsuspend_time: `${hour}:${mins}${time_of_day}`, status: customer?.status === 1 ? "2" : "1", ...rest })
             } else {
-                mutate({ auth_id: driver?.driver_id, user_type: "driver", suspend_indefinite: suspend_indefinite ? "1" : "0", status: driver?.status === 1 ? "2" : "1", suspension_status: driver?.suspension_status === 0 ? "1" : "0", ...rest })
+                mutate({ auth_id: customer?.organization_id, suspend_indefinite: suspend_indefinite ? "1" : "0", status: customer?.status === 1 ? "2" : "1", ...rest })
             }
             
         }
@@ -51,11 +51,11 @@ export const SuspendDriverModal: React.FC<SuspendDriverModalProps> = ({ isOpen, 
                     <div className="grid gap-2">
                         <div className="flex items-center justify-between">
                             <DialogTitle as="h1" className="text-xl font-bold text-grey-dark-1">
-                                Suspend {driver?.first_name} {driver?.last_name}?
+                                {customer?.status === 1 ? "Suspend" : "Unsuspend"} {customer?.name}?
                             </DialogTitle>
                         <button type="button" onClick={closeModal} className="size-8 p-2 grid place-content-center text-grey-dark-3 hover:text-grey-dark-1 hover:bg-light-green rounded-full ease-out duration-300 transition-all"><Icon icon="ph:x-bold" /></button>
                         </div>
-                        <p className="text-grey-dark-3 text-sm">This action would suspend {driver?.first_name} {driver?.last_name} from this platform</p>
+                        <p className="text-grey-dark-3 text-sm">This action would {customer?.status === 1 ? "suspend" : "unsuspend"} {customer?.name} from this platform</p>
                     </div>
                     <TextArea placeholder="Reason" {...register("reason")} />
                     <div className="rounded-md border border-[#CDCEDA] py-3.5 px-3 flex items-center justify-between">
@@ -78,7 +78,7 @@ export const SuspendDriverModal: React.FC<SuspendDriverModalProps> = ({ isOpen, 
                     </AnimatePresence>
                     <div className="flex items-center justify-end w-full md:w-2/3 ml-auto pt-10 gap-2 md:gap-4">
                         <Button type="button" theme="tertiary" onClick={closeModal} block>Cancel</Button>
-                        <Button type="submit" theme="primary" loading={isPending} disabled={isPending || !isValid} block>Suspend</Button>
+                        <Button type="submit" theme="primary" loading={isPending} disabled={isPending || !isValid} block>{customer?.status === 1 ? "Suspend" : "Unsuspend"}</Button>
                     </div>
                 </DialogPanel>
             </div>

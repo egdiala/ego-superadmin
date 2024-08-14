@@ -5,7 +5,7 @@ import type { FetchedVehicleType, FetchVehiclesQuery } from "@/types/vehicles";
 
 export const useGetVehicles = (query: FetchVehiclesQuery) => {
   return useQuery({
-    queryKey: [GET_VEHICLES],
+    queryKey: [GET_VEHICLES, query],
     queryFn: () => getVehicles(query),
     select: (res) => res?.data as FetchedVehicleType[],
     retry: false,

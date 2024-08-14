@@ -15,6 +15,18 @@ export interface FetchedOrgaizationType {
     organization_id: string;
 }
 
+export interface FetchedSingleOrganizationType extends FetchedOrgaizationType {
+    address: string;
+    authorize_rep_email: string;
+    authorize_rep_name: string;
+    authorize_rep_phone: string;
+    company_tin: string;
+    company_type: string;
+    company_industry: string;
+    employee_number: number;
+    vehicle_purchase: number;
+}
+
 export enum PurchaseModel {
     Lease = 1,
     StaffCommute = 2,
@@ -34,4 +46,13 @@ export type CreateOrganizationType = {
     authorize_rep_name: string;
     authorize_rep_email: string;
     authorize_rep_phone: string;
+}
+
+export type SuspendOrganizationType = {
+    auth_id: string;
+    status: "1" | "2"; // 1=active, 2= suspend
+    reason: string;
+    unsuspend_date?: string;
+    unsuspend_time?: string;
+    suspend_indefinite: "0" | "1"; // 0=no, 1= yes
 }

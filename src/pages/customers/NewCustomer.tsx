@@ -9,9 +9,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
+import { useGetIndustries, useGetVehicles } from "@/services/hooks/queries";
 import { useAssignVehicle, useCreateOrganization } from "@/services/hooks/mutations";
 import { assignVehicleToOrganisationSchema, createOrganizationSchema } from "@/validations/organizations";
-import { useGetIndustries, useGetVehicles } from "@/services/hooks/queries";
 import { Breadcrumb, Button, Checkbox, Input, RenderIf, SearchInput, SelectInput, Table } from "@/components/core";
 
 export const NewCustomersPage: React.FC = () => {
