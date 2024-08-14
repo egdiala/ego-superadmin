@@ -133,10 +133,10 @@ export const VehiclesPage: React.FC = () => {
         <RenderIf condition={!isFetching}>
           <Table
             columns={columns}
-            data={drivers ?? []}
+            data={(drivers as FetchedVehicleType[]) ?? []}
             getData={getData}
             perPage={10}
-            totalCount={drivers?.length}
+            totalCount={(drivers as FetchedVehicleType[])?.length}
             onPageChange={handlePageChange}
             onClick={({ original }) => navigate(`/vehicles/${original?.vehicle_id}/profile`)}
           />

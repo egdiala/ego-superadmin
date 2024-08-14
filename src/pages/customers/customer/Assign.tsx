@@ -24,7 +24,7 @@ export const AssignOrganizationVehiclesPage: React.FC = () => {
     const { handleSubmit: submitCreateCustomer, isValid: isAssignVehiclesValid, setFieldValue, values } = useFormikWrapper({
       initialValues: {
         auth_id: params?.id as string,
-        vehicle_id: organizationVehicles?.map((item) => item?.vehicle_id) as string[],
+        vehicle_id: (organizationVehicles as FetchedVehicleType[])?.map((item) => item?.vehicle_id) as string[],
         user_type: "organization" as "organization",
       },
       enableReinitialize: true,
@@ -137,10 +137,10 @@ export const AssignOrganizationVehiclesPage: React.FC = () => {
                                 <Table
                                     getData={getData}
                                     columns={columns}
-                                    data={[...vehicles ?? [], ...organizationVehicles ?? []]}
+                                    data={[...(vehicles as FetchedVehicleType[]) ?? [], ...(organizationVehicles as FetchedVehicleType[]) ?? []]}
                                     page={1}
                                     perPage={10}
-                                    totalCount={vehicles?.length}
+                                    totalCount={(vehicles as FetchedVehicleType[])?.length}
                                     onPageChange={handlePageChange}
                                     emptyStateText="You have not added any vehicle yet."
                                 />
