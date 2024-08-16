@@ -1,10 +1,11 @@
 import React from "react";
+import { cn } from "@/libs/cn";
+import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
-import { Breadcrumb, RenderIf, TableAction } from "@/components/core";
 import { pageVariants } from "@/constants/animateVariants";
-import { Icon } from "@iconify/react";
-import { cn } from "@/libs/cn";
+import { TripDriverAndVehicle, TripDriverRating, TripInfo, TripPayment, TripRequestInfo, TripRider, TripRiderRating, TripSustainabilityMetrics } from "@/components/pages/trips";
+import { Breadcrumb, RenderIf, TableAction } from "@/components/core";
 import tripCar from "@/assets/trip_car.svg"
 
 export const TripPage: React.FC = () => {
@@ -87,6 +88,22 @@ export const TripPage: React.FC = () => {
                             </div>
                             )
                         }
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid gap-6 content-start">
+                            <TripRequestInfo />
+                            <TripInfo />
+                            <TripPayment />
+                            <TripDriverRating />
+                            <TripRiderRating />
+                        </div>
+                        <div className="grid gap-6 content-start">
+                            <TripRider />
+                            <TripDriverAndVehicle />
+                            <TripSustainabilityMetrics />
+                        </div>
+                        
+                        
                     </div>
                 </div>
             </div>
