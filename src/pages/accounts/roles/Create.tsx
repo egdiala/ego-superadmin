@@ -96,6 +96,18 @@ export const CreateRolePage: React.FC = () => {
             <RenderIf condition={!isFetching}>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4 bg-white p-4 rounded-lg">
                 <h1 className="font-semibold text-xl">Add New Role</h1>
+                <div className="grid p-4 gap-1 bg-amber-50 rounded-2xl w-full 2xl:max-w-screen-2xl">
+                    <div className="flex items-center gap-1">
+                        <Icon icon="ph:warning-circle-fill" className="size-5 text-amber-800" />
+                        <h2 className="font-medium text-base text-amber-800">Alert: Automatic Read Permission Selection</h2>
+                    </div>
+                    <p className="text-sm text-amber-800">To ensure proper functionality, please note that when you select "Create," "Update," or "Delete" permissions for any module, the corresponding "Read" permission will be automatically selected as well.</p>
+                    <h3 className="font-medium text-base text-amber-800">Why is this happening?</h3>
+                    <ul className="list-inside list-disc">
+                        <li className="text-sm text-amber-800">The "Read" permission is required to view the contents of any module. Without it, you wouldn't be able to access the module, which could lead to confusion or errors.</li>
+                        <li className="text-sm text-amber-800">By automatically enabling "Read" permission, we aim to provide a smoother and more intuitive experience, ensuring that all necessary permissions are in place without requiring additional steps from you.</li>
+                    </ul>
+                </div>
                 <div className="grid gap-6 pb-14">
                     <Input label="Role Name" type="text" {...register("name")} />
                     {

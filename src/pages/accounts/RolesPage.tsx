@@ -1,17 +1,27 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-import type { FetchedRolesType } from "@/types/roles";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import type { FetchedRolesCount, FetchedRolesType } from "@/types/roles";
 import { useGetRoles } from "@/services/hooks/queries";
 import { Loader } from "@/components/core/Button/Loader";
 import { DeleteRoleModal } from "@/components/pages/roles";
 import { pageVariants } from "@/constants/animateVariants";
 import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { format, formatRelative } from "date-fns";
+import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export const RolesPage: React.FC = () => {
     const navigate = useNavigate()
-    const { data: roles, isFetching } = useGetRoles()
+    const location = useLocation();
+    const itemsPerPage = 10;
+    const [page, setPage] = useState(1)
+    const [searchParams, setSearchParams] = useSearchParams();
+    const { value, onChangeHandler } = useDebounce(500)
+    const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
+    const { data: count, isFetching: fetchingCount, refetch } = useGetRoles({ component })
+    const { data: roles, isFetching } = useGetRoles({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value })
     const [activeItem, setActiveItem] = useState<FetchedRolesType | null>(null)
     const [toggleModals, setToggleModals] = useState({
       openDeleteRoleModal: false,
@@ -25,6 +35,16 @@ export const RolesPage: React.FC = () => {
     },[toggleModals.openDeleteRoleModal])
 
     const columns = [
+      {
+        header: () => "Date & Time",
+        accessorKey: "createdAt",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original
+          return (
+            <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{formatRelative(item?.createdAt, new Date()).split("at")[0]}</span> • {format(item?.createdAt, "p")}</div>
+          )
+        }
+      },
       {
         header: () => "Name",
         accessorKey: "name",
@@ -74,24 +94,24 @@ export const RolesPage: React.FC = () => {
       }
     ];
 
-    const handlePageChange = () => {
+    const handlePageChange = (page: number) => {
       // in a real page, this function would paginate the data from the backend
-      
+      setPage(page)
+        setPaginationParams(page, 10, searchParams, setSearchParams)
     };
 
-    const getData = () => {
-      // in a real page, this function would paginate the data from the backend
-      
-    };
+    useEffect(() => {
+      getPaginationParams(location, setPage, () => {})
+    }, [location, setPage])
   
     return (
       <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-4">
         <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
           <div className="w-full md:w-1/3 xl:w-1/4">
-            <SearchInput placeholder="Search name" />
+            <SearchInput placeholder="Search name" onChange={onChangeHandler} />
           </div>
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <TableAction theme="ghost" block>
+            <TableAction type="button" theme="ghost" block onClick={() => component === "export" ? refetch() : setComponent("export")}>
               <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
               Export
             </TableAction>
@@ -101,17 +121,17 @@ export const RolesPage: React.FC = () => {
             </Button>
           </div>
         </div>
-        <RenderIf condition={!isFetching}>
+        <RenderIf condition={!isFetching && !fetchingCount}>
           <Table
+            page={page}
             columns={columns}
-            data={roles!}
-            getData={getData}
-            perPage={10}
-            totalCount={roles?.length}
+            perPage={itemsPerPage}
             onPageChange={handlePageChange}
+            data={roles as FetchedRolesType[]}
+            totalCount={(count as FetchedRolesCount)?.total}
           />
         </RenderIf>
-        <RenderIf condition={isFetching}>
+        <RenderIf condition={isFetching || fetchingCount}>
             <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
         </RenderIf>
         <DeleteRoleModal role={activeItem} isOpen={toggleModals.openDeleteRoleModal} close={toggleDeleteRole} />

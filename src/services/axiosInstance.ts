@@ -29,6 +29,13 @@ export const axiosVehicleInstance: AxiosInstance = axios.create({
   },
 });
 
+export const axiosTripReportInstance: AxiosInstance = axios.create({
+  baseURL: import.meta.env.VITE_EGO_TRIP_REPORTING_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
 export const otherInstance: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_EGO_OTHER_URL,
   headers: {

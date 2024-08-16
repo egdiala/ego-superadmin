@@ -39,6 +39,10 @@ export const VehiclesPage: React.FC = () => {
       accessorKey: "car_number",
     },
     {
+      header: () => "Vehicle Model",
+      accessorKey: "car_model",
+    },
+    {
       header: () => "Mileage",
       accessorKey: "mileage",
     },

@@ -1,37 +1,51 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
-import { makeData } from "@/hooks/makeData";
-import { useNavigate } from "react-router-dom";
+import { format, formatRelative } from "date-fns";
+import type { FetchedTripType } from "@/types/trips";
+import { useGetTrips } from "@/services/hooks/queries";
+import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
-import { SearchInput, Table, TableAction } from "@/components/core";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 
 export const TripsPage: React.FC = () => {
-    const dummyData = makeData(50);
     const navigate = useNavigate();
-    const [page, setPage] = useState(1);
-    const [data, setData] = useState(dummyData);
+    const location = useLocation();
+    const itemsPerPage = 10;
+    const [page, setPage] = useState(1)
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
+    const { data: count, isFetching: fetchingCount, refetch } = useGetTrips({ component })
+    const { data: trips, isFetching } = useGetTrips({ page: page.toString(), item_per_page: itemsPerPage.toString() })
 
     const columns = [
       {
         header: () => "Date & Time",
-        accessorKey: "firstName",
+        accessorKey: "createdAt",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedTripType
+          return (
+            <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{formatRelative(item?.createdAt, new Date()).split("at")[0]}</span> • {format(item?.createdAt, "p")}</div>
+          )
+        }
       },
       {
         header: () => "Trip Ref.",
-        accessorKey: "lastName",
+        accessorKey: "trip_ref",
       },
       {
         header: () => "Business Name",
-        accessorKey: "age",
+        accessorKey: "ride_data.name",
       },
       {
         header: () => "Rider",
-        accessorKey: "visits",
+        accessorKey: "ride_data.name",
       },
       {
         header: () => "Driver",
-        accessorKey: "status",
+        accessorKey: "driver_data.name",
       },
       {
         header: () => "Model",
@@ -39,36 +53,33 @@ export const TripsPage: React.FC = () => {
       },
       {
         header: () => "Pickup",
-        accessorKey: "progress",
+        accessorKey: "ride_data.start_address",
       },
       {
         header: () => "Drop off",
-        accessorKey: "progress",
+        accessorKey: "ride_data.stop_location",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedTripType
+          return (
+            <div className="text-sm text-grey-dark-2 whitespace-nowrap">{item.ride_data.stop_location[item.ride_data.stop_location.length - 1].address}</div>
+          )
+        }
       },
       {
         header: () => "Status",
-        accessorKey: "status",
+        accessorKey: "ride_data.status",
       },
     ];
 
-    const paginateData = (currentPage: number, rowsPerPage: number) => {
-      const startIndex = (currentPage - 1) * rowsPerPage;
-      const endIndex = startIndex + rowsPerPage;
-      const newData = dummyData.slice(startIndex, endIndex);
-      setData(newData);
+    const handlePageChange = (page: number) => {
+      // in a real page, this function would paginate the data from the backend
+      setPage(page)
+        setPaginationParams(page, 10, searchParams, setSearchParams)
     };
 
-    const handlePageChange = (currentPage: number, rowsPerPage: number) => {
-      // in a real page, this function would paginate the data from the backend
-      setPage(currentPage)
-      paginateData(currentPage, rowsPerPage);
-    };
-
-    const getData = (currentPage: number, rowsPerPage: number) => {
-      // in a real page, this function would paginate the data from the backend
-      setPage(currentPage)
-      paginateData(currentPage, rowsPerPage);
-    };
+    useEffect(() => {
+      getPaginationParams(location, setPage, () => {})
+    }, [location, setPage])
     return (
         <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">
             <h1 className="text-grey-dark-1 font-bold text-2xl md:text-[2rem]">Trips</h1>
@@ -79,7 +90,7 @@ export const TripsPage: React.FC = () => {
                     </div>
                 
                     <div className="flex items-center gap-2 w-full sm:w-auto">
-                    <TableAction theme="ghost" block>
+                    <TableAction theme="ghost" block onClick={() => component === "export" ? refetch() : setComponent("export")}>
                         <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
                         Export
                     </TableAction>
@@ -89,18 +100,21 @@ export const TripsPage: React.FC = () => {
                     </TableAction>
                     </div>
                 </div>
-                <Table
-                    data={data}
-                    columns={columns}
-                    getData={getData}
-                    page={page}
-                    perPage={10}
-                    totalCount={dummyData.length}
-                    onPageChange={handlePageChange}
-                    onClick={({ original }) => navigate(`/trips/${original?.visits}`)}
-                />
+                <RenderIf condition={!isFetching && !fetchingCount}>
+                  <Table
+                      page={page}
+                      data={trips as FetchedTripType[]}
+                      columns={columns}
+                      perPage={itemsPerPage}
+                      totalCount={(count as any)?.total}
+                      onPageChange={handlePageChange}
+                      onClick={({ original }) => navigate(`/trips/${original?._id}`)}
+                  />
+                </RenderIf>
+                <RenderIf condition={isFetching || fetchingCount}>
+                  <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
+                </RenderIf>
             </div>
-
         </motion.div>
     )
 }

@@ -27,3 +27,15 @@ export interface FetchedRolesType {
     updatedAt: string | Date;
     role_id: string
 }
+
+export interface FetchRolesQuery {
+    q?: string; // Search for plate number
+    email?: string;
+    page?: string;
+    item_per_page?: string;
+    component?: "count" | "export" | "count-status";
+}
+
+export interface FetchedRolesCount {
+    total: number
+}

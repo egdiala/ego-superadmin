@@ -1,6 +1,7 @@
-import type { CreatePermissionType } from "@/types/roles";
+import type { CreatePermissionType, FetchRolesQuery } from "@/types/roles";
 import { axiosSettingsInstance } from "../axiosInstance";
 import { CREATE_ROLE_API, GET_ROLE_LISTS_API, GET_ROLES_API } from "@/constants/api";
+import { createQueryString } from "@/utils/createQuery";
 
 export const getRoleLists = async () => {
   const res = await axiosSettingsInstance.get(GET_ROLE_LISTS_API);
@@ -12,8 +13,8 @@ export const createRole = async (data: CreatePermissionType) => {
   return res.data;
 };
 
-export const getRoles = async () => {
-  const res = await axiosSettingsInstance.get(GET_ROLES_API);
+export const getRoles = async (query: FetchRolesQuery) => {
+  const res = await axiosSettingsInstance.get(`${GET_ROLES_API}${createQueryString(query)}`);
   return res.data;
 };
 

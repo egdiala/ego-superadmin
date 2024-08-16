@@ -50,3 +50,15 @@ export interface FetchedAdminProfile {
     updatedAt: Date | string;
     auth_id: string;
 }
+
+export interface FetchAdminsQuery {
+    q?: string; // Search for plate number
+    email?: string;
+    page?: string;
+    item_per_page?: string;
+    component?: "count" | "export" | "count-status";
+}
+
+export interface FetchedAdminsCount {
+    total: number
+}

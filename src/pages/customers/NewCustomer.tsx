@@ -125,7 +125,7 @@ export const NewCustomersPage: React.FC = () => {
         accessorKey: "online", //will be changed when the accurate response is added in data returned
         cell: () => {
           return (
-            <div className="flex items-center gap-1 text-dark-green-1"><Icon icon="material-symbols-light:bolt" className="text-green-1" />100%</div>
+            <div className="flex items-center gap-1 text-dark-green-1"><Icon icon="material-symbols-light:bolt" className="text-green-1" />0%</div>
           )
         }
       },
@@ -181,7 +181,7 @@ export const NewCustomersPage: React.FC = () => {
                           <motion.form onSubmit={handleSubmit} variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-4">
                               <div className="grid gap-6 pb-14">
                                   <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-8">
-                                      <SelectInput label="EV Purchase Model (Multiple select)" options={models} {...register("purchase_model")} />
+                                      <SelectInput label="EV Purchase Model" options={models} {...register("purchase_model")} />
                                       <Input label="Registered Business Name" type="text" {...register("name")} />
                                   </div>
                                   <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-8">

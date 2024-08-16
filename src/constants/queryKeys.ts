@@ -20,5 +20,9 @@ export const GET_VEHICLE = "get-vehicle"
 export const GET_ORGANIZATIONS = "get-organizations"
 export const GET_ORGANIZATION = "get-organization"
 
+// Trips
+export const GET_TRIPS = "get-trips"
+export const GET_TRIP = "get-trip"
+
 // Other
 export const GET_INDUSTRIES = "get-industries"

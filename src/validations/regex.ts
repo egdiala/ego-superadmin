@@ -7,3 +7,7 @@ export const SpecialCharacterRegex = /[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]+/;
 export const DigitRegex = /[0-9]/;
 
 export const NameRegex = /^[a-zA-Z]+(?:-[a-zA-Z]+)*$/;
+
+export const CACNumberRegex = /^[.@&]?[a-zA-Z0-9 ]+[ !.@&()]?[ a-zA-Z0-9!()]+/
+
+export const NINRegex = /^\d+$/

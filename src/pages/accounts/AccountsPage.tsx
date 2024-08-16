@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { useGetAdmins } from "@/services/hooks/queries";
@@ -6,11 +6,22 @@ import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { CreateAdminModal, DeactivateAdminModal, EditAdminModal } from "@/components/pages/accounts";
-import type { FetchedAdminType } from "@/types/admin";
+import type { FetchedAdminsCount, FetchedAdminType } from "@/types/admin";
 import { cn } from "@/libs/cn";
+import { format, formatRelative } from "date-fns";
+import { useLocation, useSearchParams } from "react-router-dom";
+import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export const AccountsPage: React.FC = () => {
-    const { data: admins, isFetching } = useGetAdmins()
+    const location = useLocation();
+    const itemsPerPage = 10;
+    const [page, setPage] = useState(1)
+    const [searchParams, setSearchParams] = useSearchParams();
+    const { value, onChangeHandler } = useDebounce(500)
+    const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
+    const { data: count, isFetching: fetchingCount, refetch } = useGetAdmins({ component })
+    const { data: admins, isFetching } = useGetAdmins({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value })
     const [activeAdmin, setActiveAdmin] = useState<FetchedAdminType | null>(null)
     const [toggleModals, setToggleModals] = useState({
         openCreateAdminModal: false,
@@ -40,6 +51,16 @@ export const AccountsPage: React.FC = () => {
     },[toggleModals.openEditAdminModal])
 
     const columns = [
+      {
+        header: () => "Date & Time",
+        accessorKey: "createdAt",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedAdminType
+          return (
+            <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{formatRelative(item?.createdAt, new Date()).split("at")[0]}</span> • {format(item?.createdAt, "p")}</div>
+          )
+        }
+      },
       {
         header: () => "Name",
         accessorKey: "fullName",
@@ -113,26 +134,26 @@ export const AccountsPage: React.FC = () => {
       }
     ];
 
-    const handlePageChange = () => {
+    const handlePageChange = (page: number) => {
       // in a real page, this function would paginate the data from the backend
-      
+      setPage(page)
+        setPaginationParams(page, 10, searchParams, setSearchParams)
     };
 
-    const getData = () => {
-      // in a real page, this function would paginate the data from the backend
-      
-    };
+    useEffect(() => {
+      getPaginationParams(location, setPage, () => {})
+    }, [location, setPage])
   
     return (
         <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-4">
           <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
             <div className="w-full md:w-1/3 xl:w-1/4">
-              <SearchInput placeholder="Search name" />
+              <SearchInput placeholder="Search name" onChange={onChangeHandler} />
             </div>
             
             <div className="flex items-center gap-2 flex-wrap">
               <div className="flex items-center gap-2 w-full sm:w-auto">
-                <TableAction theme="ghost" block>
+                <TableAction type="button" theme="ghost" block onClick={() => component === "export" ? refetch() : setComponent("export")}>
                   <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
                   Export
                 </TableAction>
@@ -149,17 +170,17 @@ export const AccountsPage: React.FC = () => {
               </div>
             </div>
           </div>
-          <RenderIf condition={!isFetching}>
+          <RenderIf condition={!isFetching && !fetchingCount}>
           <Table
+              page={page}
               columns={columns}
-              data={admins!}
-              getData={getData}
-              perPage={10}
-              totalCount={admins?.length}
+              perPage={itemsPerPage}
               onPageChange={handlePageChange}
+              data={(admins as FetchedAdminType[])}
+              totalCount={(count as FetchedAdminsCount)?.total}
           />
           </RenderIf>
-          <RenderIf condition={isFetching}>
+          <RenderIf condition={isFetching || fetchingCount}>
               <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
           </RenderIf>
           <CreateAdminModal isOpen={toggleModals.openCreateAdminModal} close={toggleCreateAdmin} />

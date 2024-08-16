@@ -1,13 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { getAdmin, getAdminProfile, getAdmins } from "@/services/apis/admin";
 import { GET_ADMIN, GET_ADMIN_PROFILE, GET_ADMINS } from "@/constants/queryKeys";
-import type { FetchedAdminProfile, FetchedAdminType } from "@/types/admin";
+import type { FetchAdminsQuery, FetchedAdminProfile, FetchedAdminsCount, FetchedAdminType } from "@/types/admin";
 
-export const useGetAdmins = () => {
+export const useGetAdmins = (query: FetchAdminsQuery) => {
   return useQuery({
-    queryKey: [GET_ADMINS],
-    queryFn: getAdmins,
-    select: (res) => res?.data as FetchedAdminType[],
+    queryKey: [GET_ADMINS, query],
+    queryFn: () => getAdmins(query),
+    select: (res) => res?.data as FetchedAdminType[] | FetchedAdminsCount,
     retry: false,
   });
 };

@@ -9,12 +9,23 @@ import { pageVariants } from "@/constants/animateVariants";
 import { useGetOrganizations } from "@/services/hooks/queries";
 import { PurchaseModel, type FetchedOrgaizationType } from "@/types/organizations";
 import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { format, formatRelative } from "date-fns";
 
 export const CustomersPage: React.FC = () => {
   const navigate = useNavigate();
   const { data: drivers, isFetching } = useGetOrganizations()
 
   const columns = [
+    {
+      header: () => "Date & Time",
+      accessorKey: "createdAt",
+      cell: ({ row }: { row: any; }) => {
+        const item = row?.original as FetchedOrgaizationType
+        return (
+          <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{formatRelative(item?.createdAt, new Date()).split("at")[0]}</span> • {format(item?.createdAt, "p")}</div>
+        )
+      }
+    },
     {
       header: () => "Business Name",
       accessorKey: "name",

@@ -13,7 +13,7 @@ export type CreateVehicleType = {
     vehicle_imei: string;
 }
 
-type Coordinate = [number, number];
+export type Coordinate = [number, number];
 
 export interface FetchedVehicleType {
     driver_assigned: boolean;

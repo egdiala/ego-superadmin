@@ -1,6 +1,7 @@
 import { axiosInstance } from "../axiosInstance";
-import type { CreateAdminType, UpdateAdminType } from "@/types/admin";
+import type { CreateAdminType, FetchAdminsQuery, UpdateAdminType } from "@/types/admin";
 import { CREATE_ADMIN_API, GET_ADMIN_PROFILE_API } from "@/constants/api";
+import { createQueryString } from "@/utils/createQuery";
 
 export const createAdmin = async (data: CreateAdminType) => {
     const res = await axiosInstance.post(CREATE_ADMIN_API, data);
@@ -13,8 +14,8 @@ export const editAdmin = async (data: Partial<UpdateAdminType> & { id: string; }
     return res.data;
 };
 
-export const getAdmins = async () => {
-    const res = await axiosInstance.get(CREATE_ADMIN_API);
+export const getAdmins = async (query: FetchAdminsQuery) => {
+    const res = await axiosInstance.get(`${CREATE_ADMIN_API}${createQueryString(query)}`);
     return res.data;
 };
 
