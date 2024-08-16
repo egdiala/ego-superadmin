@@ -16,14 +16,14 @@ interface CreateAdminModalProps {
 
 export const CreateAdminModal: React.FC<CreateAdminModalProps> = ({ isOpen, close }) => {
     const [query, setQuery] = useState("")
-    const { data: roles, isFetching } = useGetRoles()
+    const { data: roles, isFetching } = useGetRoles({})
     const { mutate: create, isPending } = useCreateAdmin(() => onClose())
     const genders = [{ label: "Male", value: "male" }, { label: "Female", value: "female" }]
 
     const filteredRoles =
         query === ""
-        ? roles
-        : roles?.filter((role) => {
+        ? (roles as FetchedRolesType[])
+        : (roles as FetchedRolesType[])?.filter((role) => {
             return role.name.toLowerCase().includes(query.toLowerCase())
             })
 
