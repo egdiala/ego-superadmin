@@ -25,6 +25,9 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => {
-    return <Sidebar />;
+    return <Sidebar showSidebar={false} />;
+  },
+  args: {
+    showSidebar: true,
   },
 };
