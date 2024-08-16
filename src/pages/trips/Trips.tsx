@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
+import { useDebounce } from "@/hooks/useDebounce";
 import { format, formatRelative } from "date-fns";
 import type { FetchedTripType } from "@/types/trips";
 import { useGetTrips } from "@/services/hooks/queries";
@@ -15,10 +16,11 @@ export const TripsPage: React.FC = () => {
     const location = useLocation();
     const itemsPerPage = 10;
     const [page, setPage] = useState(1)
+    const { value, onChangeHandler } = useDebounce(500)
     const [searchParams, setSearchParams] = useSearchParams();
     const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
     const { data: count, isFetching: fetchingCount, refetch } = useGetTrips({ component })
-    const { data: trips, isFetching } = useGetTrips({ page: page.toString(), item_per_page: itemsPerPage.toString() })
+    const { data: trips, isFetching } = useGetTrips({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value })
 
     const columns = [
       {
@@ -74,7 +76,7 @@ export const TripsPage: React.FC = () => {
     const handlePageChange = (page: number) => {
       // in a real page, this function would paginate the data from the backend
       setPage(page)
-        setPaginationParams(page, 10, searchParams, setSearchParams)
+        setPaginationParams(page, itemsPerPage, searchParams, setSearchParams)
     };
 
     useEffect(() => {
@@ -86,7 +88,7 @@ export const TripsPage: React.FC = () => {
             <div className="grid content-start gap-5 py-6 px-4 bg-white rounded-lg">
                 <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
                     <div className="w-full md:w-1/3 xl:w-1/4">
-                        <SearchInput placeholder="Search name, ref etc" />
+                        <SearchInput placeholder="Search name, ref etc" onChange={onChangeHandler} />
                     </div>
                 
                     <div className="flex items-center gap-2 w-full sm:w-auto">

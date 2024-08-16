@@ -1,15 +1,16 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
-import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
-import { pageVariants } from "@/constants/animateVariants";
+import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
-import { CreateDriverModal } from "@/components/pages/drivers";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { motion } from "framer-motion";
+import { format, formatRelative } from "date-fns";
+import { useDebounce } from "@/hooks/useDebounce";
 import { useGetDrivers } from "@/services/hooks/queries";
 import { Loader } from "@/components/core/Button/Loader";
-import { format, formatRelative } from "date-fns";
+import { pageVariants } from "@/constants/animateVariants";
+import { CreateDriverModal } from "@/components/pages/drivers";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import type { FetchedDriverCount, FetchedDriverType } from "@/types/drivers";
-import { cn } from "@/libs/cn";
+import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 
 export const DriversPage: React.FC = () => {
@@ -17,10 +18,11 @@ export const DriversPage: React.FC = () => {
   const location = useLocation();
   const itemsPerPage = 10;
   const [page, setPage] = useState(1)
+  const { value, onChangeHandler } = useDebounce(500)
   const [searchParams, setSearchParams] = useSearchParams();
   const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
   const { data: count, isFetching: fetchingCount, refetch } = useGetDrivers({ component })
-  const { data: drivers, isFetching } = useGetDrivers({ page: page.toString(), item_per_page: itemsPerPage.toString() })
+  const { data: drivers, isFetching } = useGetDrivers({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value })
   const [toggleModals, setToggleModals] = useState({
     openFilterModal: false,
     openCreateDriverModal: false,
@@ -90,7 +92,7 @@ export const DriversPage: React.FC = () => {
   const handlePageChange = (page: number) => {
     // in a real page, this function would paginate the data from the backend
     setPage(page)
-      setPaginationParams(page, 10, searchParams, setSearchParams)
+      setPaginationParams(page, itemsPerPage, searchParams, setSearchParams)
   };
 
   const toggleCreateDriver = useCallback(() => {
@@ -110,7 +112,7 @@ export const DriversPage: React.FC = () => {
       <div className="grid content-start gap-5 py-6 px-4 bg-white rounded-lg">
         <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
           <div className="w-full md:w-1/3 xl:w-1/4">
-            <SearchInput placeholder="Search name, ref etc" />
+            <SearchInput placeholder="Search name, ref etc" onChange={onChangeHandler} />
           </div>
           
           <div className="flex items-center gap-2 flex-wrap">

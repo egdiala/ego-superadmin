@@ -56,3 +56,15 @@ export type SuspendOrganizationType = {
     unsuspend_time?: string;
     suspend_indefinite: "0" | "1"; // 0=no, 1= yes
 }
+
+export interface FetchOrganizationQuery {
+    q?: string; // Search for plate number
+    email?: string;
+    page?: string;
+    item_per_page?: string;
+    component?: "count" | "export" | "count-status";
+}
+
+export interface FetchedOrganizationCount {
+    total: number
+}

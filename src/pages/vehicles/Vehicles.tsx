@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
@@ -6,14 +6,23 @@ import { format, formatRelative } from "date-fns";
 import { Loader } from "@/components/core/Button/Loader";
 import { useGetVehicles } from "@/services/hooks/queries";
 import { pageVariants } from "@/constants/animateVariants";
-import type { FetchedVehicleType } from "@/types/vehicles";
+import type { FetchedVehicleCount, FetchedVehicleType } from "@/types/vehicles";
 import { AddVehicleModal } from "@/components/pages/vehicles";
 import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useDebounce } from "@/hooks/useDebounce";
+import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 
 export const VehiclesPage: React.FC = () => {
   const navigate = useNavigate()
-  const { data: drivers, isFetching } = useGetVehicles({})
+  const location = useLocation();
+  const itemsPerPage = 10;
+  const [page, setPage] = useState(1)
+  const { value, onChangeHandler } = useDebounce(500)
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
+  const { data: count, isFetching: fetchingCount, refetch } = useGetVehicles({ component })
+  const { data: vehicles, isFetching } = useGetVehicles({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value })
   const [toggleModals, setToggleModals] = useState({
     openFilterModal: false,
     openAddVehicleModal: false,
@@ -89,15 +98,15 @@ export const VehiclesPage: React.FC = () => {
     }
   ];
 
-  const handlePageChange = () => {
+  const handlePageChange = (page: number) => {
     // in a real page, this function would paginate the data from the backend
-
+    setPage(page)
+    setPaginationParams(page, itemsPerPage, searchParams, setSearchParams)
   };
 
-  const getData = () => {
-    // in a real page, this function would paginate the data from the backend
-
-  };
+  useEffect(() => {
+    getPaginationParams(location, setPage, () => {})
+  }, [location, setPage])
 
   const toggleAddVehicle = useCallback(() => {
     setToggleModals((prev) => ({
@@ -112,12 +121,12 @@ export const VehiclesPage: React.FC = () => {
       <div className="grid content-start gap-5 py-6 px-4 bg-white rounded-lg">
         <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
           <div className="w-full md:w-1/3 xl:w-1/4">
-            <SearchInput placeholder="Search name, ref etc" />
+            <SearchInput placeholder="Search name, ref etc" onChange={onChangeHandler} />
           </div>
           
           <div className="flex items-center gap-2 flex-wrap">
             <div className="flex items-center gap-2 w-full sm:w-auto">
-              <TableAction theme="ghost" block>
+              <TableAction type="button" theme="ghost" block onClick={() => component === "export" ? refetch() : setComponent("export")}>
                 <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
                 Export
               </TableAction>
@@ -134,18 +143,18 @@ export const VehiclesPage: React.FC = () => {
             </div>
           </div>
         </div>
-        <RenderIf condition={!isFetching}>
+        <RenderIf condition={!isFetching && !fetchingCount}>
           <Table
+            page={page}
             columns={columns}
-            data={(drivers as FetchedVehicleType[]) ?? []}
-            getData={getData}
-            perPage={10}
-            totalCount={(drivers as FetchedVehicleType[])?.length}
+            perPage={itemsPerPage}
             onPageChange={handlePageChange}
+            data={(vehicles as FetchedVehicleType[]) ?? []}
+            totalCount={(count as FetchedVehicleCount)?.total}
             onClick={({ original }) => navigate(`/vehicles/${original?.vehicle_id}/profile`)}
           />
         </RenderIf>
-        <RenderIf condition={isFetching}>
+        <RenderIf condition={isFetching || fetchingCount}>
           <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
         </RenderIf>
       </div>

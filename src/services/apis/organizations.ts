@@ -1,9 +1,10 @@
-import type { CreateOrganizationType, SuspendOrganizationType } from "@/types/organizations";
 import { axiosInstance } from "../axiosInstance";
+import { createQueryString } from "@/utils/createQuery";
 import { GET_ORGANIZATIONS_API, SUSPEND_ORGANIZATION_API } from "@/constants/api";
+import type { CreateOrganizationType, FetchOrganizationQuery, SuspendOrganizationType } from "@/types/organizations";
 
-export const getOrganizations = async () => {
-  const res = await axiosInstance.get(GET_ORGANIZATIONS_API);
+export const getOrganizations = async (query: FetchOrganizationQuery) => {
+  const res = await axiosInstance.get(`${GET_ORGANIZATIONS_API}${createQueryString(query)}`);
   return res.data;
 };
 

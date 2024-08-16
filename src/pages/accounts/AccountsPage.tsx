@@ -137,7 +137,7 @@ export const AccountsPage: React.FC = () => {
     const handlePageChange = (page: number) => {
       // in a real page, this function would paginate the data from the backend
       setPage(page)
-        setPaginationParams(page, 10, searchParams, setSearchParams)
+        setPaginationParams(page, itemsPerPage, searchParams, setSearchParams)
     };
 
     useEffect(() => {

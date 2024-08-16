@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getRole, getRoleLists, getRoles } from "@/services/apis/roles";
 import { GET_ROLE, GET_ROLE_LISTS, GET_ROLES } from "@/constants/queryKeys";
 import type { FetchedRoleLists, FetchedRolesCount, FetchedRolesType, FetchRolesQuery } from "@/types/roles";
+import { errorToast } from "@/utils/createToast";
 
 export const useGetRoleLists = () => {
   return useQuery({
@@ -18,6 +19,10 @@ export const useGetRoles = (query: FetchRolesQuery) => {
     queryFn: () => getRoles(query),
     select: (res) => res?.data as FetchedRolesType[] | FetchedRolesCount,
     retry: false,
+    throwOnError(error) {
+      errorToast(error)
+      return false;
+    },
   });
 };
 

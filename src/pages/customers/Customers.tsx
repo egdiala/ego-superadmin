@@ -1,19 +1,28 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { format, formatRelative } from "date-fns";
+import { useDebounce } from "@/hooks/useDebounce";
 import { Loader } from "@/components/core/Button/Loader";
 import { pascalCaseToWords } from "@/utils/textFormatter";
 import { pageVariants } from "@/constants/animateVariants";
 import { useGetOrganizations } from "@/services/hooks/queries";
-import { PurchaseModel, type FetchedOrgaizationType } from "@/types/organizations";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
-import { format, formatRelative } from "date-fns";
+import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
+import { FetchedOrganizationCount, PurchaseModel, type FetchedOrgaizationType } from "@/types/organizations";
 
 export const CustomersPage: React.FC = () => {
   const navigate = useNavigate();
-  const { data: drivers, isFetching } = useGetOrganizations()
+  const location = useLocation();
+  const itemsPerPage = 10;
+  const [page, setPage] = useState(1)
+  const { value, onChangeHandler } = useDebounce(500)
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
+  const { data: count, isFetching: fetchingCount, refetch } = useGetOrganizations({ component })
+  const { data: drivers, isFetching } = useGetOrganizations({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value })
 
   const columns = [
     {
@@ -56,15 +65,15 @@ export const CustomersPage: React.FC = () => {
     }
   ];
 
-  const handlePageChange = () => {
+  const handlePageChange = (page: number) => {
     // in a real page, this function would paginate the data from the backend
-
+    setPage(page)
+      setPaginationParams(page, itemsPerPage, searchParams, setSearchParams)
   };
 
-  const getData = () => {
-    // in a real page, this function would paginate the data from the backend
-
-  };
+  useEffect(() => {
+    getPaginationParams(location, setPage, () => {})
+  }, [location, setPage])
 
   const toggleCreateOrganization = useCallback(() => {
     navigate("/customers/new")
@@ -76,12 +85,12 @@ export const CustomersPage: React.FC = () => {
       <div className="grid content-start gap-5 py-6 px-4 bg-white rounded-lg">
         <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
           <div className="w-full md:w-1/3 xl:w-1/4">
-            <SearchInput placeholder="Search name, reference etc" />
+            <SearchInput placeholder="Search name, reference etc" onChange={onChangeHandler} />
           </div>
           
           <div className="flex items-center gap-2 flex-wrap">
             <div className="flex items-center gap-2 w-full sm:w-auto">
-              <TableAction theme="grey" block>
+              <TableAction type="button" theme="grey" block onClick={() => component === "export" ? refetch() : setComponent("export")}>
                 <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
                 Export
               </TableAction>
@@ -94,19 +103,19 @@ export const CustomersPage: React.FC = () => {
             </div>
           </div>
         </div>
-        <RenderIf condition={!isFetching}>
+        <RenderIf condition={!isFetching && !fetchingCount}>
           <Table
+            page={page}
             columns={columns}
-            data={drivers ?? []}
-            getData={getData}
-            perPage={10}
-            totalCount={drivers?.length}
+            perPage={itemsPerPage}
             onPageChange={handlePageChange}
+            data={drivers as FetchedOrgaizationType[]}
             emptyStateText="You have not added any customer yet."
+            totalCount={(count as FetchedOrganizationCount)?.total}
             onClick={({ original }) => navigate(`/customers/${original?.organization_id}/dashboard`)}
           />
         </RenderIf>
-        <RenderIf condition={isFetching}>
+        <RenderIf condition={isFetching || fetchingCount}>
           <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
         </RenderIf>
       </div>

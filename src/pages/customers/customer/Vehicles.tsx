@@ -1,14 +1,14 @@
 import React, { Fragment, useEffect, useState } from "react";
+import { cn } from "@/libs/cn";
+import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
-import { useLocation, useParams, useSearchParams } from "react-router-dom";
 import { format, formatRelative } from "date-fns";
 import { RenderIf, Table } from "@/components/core";
-import type { FetchedVehicleCount, FetchedVehicleType } from "@/types/vehicles";
 import { Loader } from "@/components/core/Button/Loader";
 import { useGetVehicles } from "@/services/hooks/queries";
 import { pageVariants } from "@/constants/animateVariants";
-import { Icon } from "@iconify/react";
-import { cn } from "@/libs/cn";
+import { useLocation, useParams, useSearchParams } from "react-router-dom";
+import type { FetchedVehicleCount, FetchedVehicleType } from "@/types/vehicles";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 
 export const CustomerVehiclesPage: React.FC = () => {
@@ -81,7 +81,7 @@ export const CustomerVehiclesPage: React.FC = () => {
     const handlePageChange = (page: number) => {
         // in a real page, this function would paginate the data from the backend
         setPage(page)
-        setPaginationParams(page, 10, searchParams, setSearchParams)
+        setPaginationParams(page, itemsPerPage, searchParams, setSearchParams)
     };
 
     useEffect(() => {
