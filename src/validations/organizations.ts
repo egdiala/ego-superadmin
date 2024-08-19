@@ -1,12 +1,11 @@
 import * as Yup from "yup";
 import { EmailSchema } from "./auth";
-import { CACNumberRegex } from "./regex";
 
 export const createOrganizationSchema = Yup.object().shape({
     purchase_model: Yup.string().required("Select an EV Purchase Model"),
     email: EmailSchema,
     name: Yup.string().required("Registered Business Name is required"),
-    business_id: Yup.string().matches(CACNumberRegex).required("CAC Registration Number is required"),
+    business_id: Yup.string().required("CAC Registration Number is required"),
     industry: Yup.string().required("Select an industry"),
     company_type: Yup.string().required("Select a company type"),
     vehicle_purchase: Yup.string().required("Number of Vehicles Purchased is required"),
