@@ -25,7 +25,7 @@ export interface FetchedTripType {
         phone_number: string;
         email: string;
         name: string;
-    },
+    }
     ride_data: {
         rider_id: string;
         ride_type: string;
@@ -109,22 +109,27 @@ export interface FetchedTripType {
             longitude: number;
             latitude: number;
         }
-    },
+    }
+    org_data: {
+        _id: string;
+        name: string;
+        purchase_model: number;
+    }
     ride_status: string;
     ride_type: string;
     location: {
         origin: {
             type: string;
             coordinates: Coordinate
-        },
+        }
         destination: {
             type: string;
             coordinates: Coordinate
         }
-    },
+    }
     google_billable: boolean;
     google_ended: boolean;
-    request_area_data: {},
+    request_area_data: {};
     data_mode: string;
     createdAt: Date | string;
     updatedAt: Date | string;

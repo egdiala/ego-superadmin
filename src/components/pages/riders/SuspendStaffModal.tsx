@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { Icon } from "@iconify/react";
+import type { FetchedRider } from "@/types/riders";
 import { AnimatePresence, motion } from "framer-motion";
-import type { FetchedDriverType } from "@/types/drivers";
 import { suspendDriverSchema } from "@/validations/driver";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
@@ -9,7 +9,7 @@ import { Button, Input, SelectInput, TextArea, Toggle } from "@/components/core"
 
 interface SuspendStaffModalProps {
     isOpen: boolean;
-    staff?: FetchedDriverType;
+    staff?: FetchedRider;
     // eslint-disable-next-line no-unused-vars
     close: (value: boolean) => void
 }

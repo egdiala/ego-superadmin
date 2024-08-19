@@ -1,12 +1,12 @@
 import React from "react";
-import { Button, TextArea } from "@/components/core";
-import type { FetchedDriverType } from "@/types/drivers";
-import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { Icon } from "@iconify/react";
+import type { FetchedRider } from "@/types/riders";
+import { Button, TextArea } from "@/components/core";
+import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 
 interface DeleteStaffModalProps {
     isOpen: boolean;
-    rider?: FetchedDriverType;
+    staff?: FetchedRider;
     // eslint-disable-next-line no-unused-vars
     close: (value: boolean) => void
 }

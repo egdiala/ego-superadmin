@@ -19,6 +19,9 @@ export const CREATE_DRIVER_API = "admin/users/drivers"
 export const BULK_UPLOAD_DRIVERS_API = "admin/users/drivers/bulk-driver-upload"
 export const UPDATE_DRIVER_STATUS_API = "admin/users/drivers/account-status"
 
+// Riders
+export const GET_RIDERS_API = "admin/users/riders"
+
 // Vehicles
 export const GET_VEHICLES_API = "admin/vehicles"
 export const ASSIGN_VEHICLES_API = "admin/vehicles/assign"
