@@ -6,7 +6,7 @@ import ProtectedLayout from "@/layouts/ProtectedLayout";
 import { AccountsLayout } from "@/pages/accounts/Accounts";
 import { AccountsPage, RolesPage } from "@/pages/accounts";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import { AuthRoutes, CustomersRoutes, DashboardRoutes, DriversRoutes, RolesRoutes, TripsRoutes, VehiclesRoutes } from "./modules";
+import { AuthRoutes, CustomersRoutes, DashboardRoutes, DriversRoutes, RidersRoutes, RolesRoutes, TripsRoutes, VehiclesRoutes } from "./modules";
 
 
 function LocationProvider({ children }: { children: ReactNode }) {
@@ -28,6 +28,7 @@ const Router = () => {
                 <Route path="/profile" element={<ProtectedLayout><LocationProvider><ProfilePage /></LocationProvider></ProtectedLayout>} />
                 <Route path="customers/*" element={<ProtectedLayout><LocationProvider><CustomersRoutes /></LocationProvider></ProtectedLayout>} />
                 <Route path="vehicles/*" element={<ProtectedLayout><LocationProvider><VehiclesRoutes /></LocationProvider></ProtectedLayout>} />
+                <Route path="riders/*" element={<ProtectedLayout><LocationProvider><RidersRoutes /></LocationProvider></ProtectedLayout>} />
                 <Route path="trips/*" element={<ProtectedLayout><LocationProvider><TripsRoutes /></LocationProvider></ProtectedLayout>} />
             </Routes>
         </BrowserRouter>

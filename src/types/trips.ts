@@ -3,6 +3,7 @@ import type { Coordinate } from "./vehicles";
 export interface FetchTripsQuery {
     q?: string; // Search for plate number
     user_type?: "rider" | "driver" | "organization"
+    auth_id?: string;
     page?: string;
     item_per_page?: string;
     component?: "count" | "export" | "count-status";

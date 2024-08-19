@@ -110,7 +110,7 @@ export const TripsPage: React.FC = () => {
                       perPage={itemsPerPage}
                       totalCount={(count as any)?.total}
                       onPageChange={handlePageChange}
-                      onClick={({ original }) => navigate(`/trips/${original?._id}`)}
+                      onClick={({ original }) => navigate(`/trips/${original?.trip_id}`)}
                   />
                 </RenderIf>
                 <RenderIf condition={isFetching || fetchingCount}>

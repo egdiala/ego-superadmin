@@ -92,7 +92,7 @@ export const DriversPage: React.FC = () => {
   const handlePageChange = (page: number) => {
     // in a real page, this function would paginate the data from the backend
     setPage(page)
-      setPaginationParams(page, itemsPerPage, searchParams, setSearchParams)
+    setPaginationParams(page, itemsPerPage, searchParams, setSearchParams)
   };
 
   const toggleCreateDriver = useCallback(() => {

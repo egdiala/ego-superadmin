@@ -37,14 +37,24 @@ export const CustomerDriversPage: React.FC = () => {
       {
         header: () => "Name",
         accessorKey: "name",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedVehicleType
+          return (
+            <div className="flex items-center gap-2.5">
+              <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap">
+                <span className="capitalize">{item?.driver_data?.first_name} {item?.driver_data?.last_name}</span>
+              </div>
+            </div>
+          )
+        }
       },
       {
         header: () => "Email",
-        accessorKey: "email",
+        accessorKey: "driver_data.email",
       },
       {
         header: () => "Phone Number",
-        accessorKey: "phone_number",
+        accessorKey: "driver_data.phone_number",
       },
       {
         header: () => "Vehicle Assignment Status",

@@ -1,19 +1,20 @@
-import React, { Fragment, useMemo, useState } from "react"
+import React, { Fragment, useEffect, useMemo, useState } from "react"
 import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { format, formatRelative } from "date-fns";
 import { FetchedDriverCount, FetchedDriverType } from "@/types/drivers";
 import { Loader } from "@/components/core/Button/Loader";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { pageVariants } from "@/constants/animateVariants";
 import { useGetDrivers, useGetVehicle } from "@/services/hooks/queries";
 import { Breadcrumb, Button, RadioButton, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { useAssignVehicle } from "@/services/hooks/mutations";
-import { setPaginationParams } from "@/hooks/usePaginationParams";
+import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 
 export const VehicleAssignPage: React.FC = () => {
     const params = useParams()
+    const location = useLocation();
     const navigate = useNavigate()
     const itemsPerPage = 10;
     const [page, setPage] = useState(1)
@@ -107,6 +108,11 @@ export const VehicleAssignPage: React.FC = () => {
         setPage(page)
         setPaginationParams(page, itemsPerPage, searchParams, setSearchParams)
     };
+
+    useEffect(() => {
+        getPaginationParams(location, setPage, () => {})
+    }, [location])
+
     return (
         <Fragment>
             <RenderIf condition={!isFetchingVehicle && !fetchingCount}>
@@ -135,11 +141,12 @@ export const VehicleAssignPage: React.FC = () => {
                         </div>
                         <RenderIf condition={!isFetchingDrivers}>
                             <Table
+                                page={page}
                                 columns={columns}
-                                data={filteredDrivers as FetchedDriverType[] ?? []}
-                                totalCount={(count as FetchedDriverCount)?.total}
                                 perPage={itemsPerPage}
                                 onPageChange={handlePageChange}
+                                data={filteredDrivers as FetchedDriverType[] ?? []}
+                                totalCount={(count as FetchedDriverCount)?.total}
                                 config={{ enableRowSelection: true, enableMultiRowSelection: false }}
                             />
                         </RenderIf>
