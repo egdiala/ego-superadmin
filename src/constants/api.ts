@@ -30,7 +30,7 @@ export const BULK_UPLOAD_VEHICLES_API = "admin/vehicles/bulk-vehicle-upload"
 
 // Organizations
 export const GET_ORGANIZATIONS_API = "admin/organizations"
-export const SUSPEND_ORGANIZATION_API = "admin/organizations/suspend-org"
+export const SUSPEND_ORGANIZATION_API = "admin/organizations/suspend-account"
 
 // Trips
 export const GET_TRIPS_API = "admin/trips"

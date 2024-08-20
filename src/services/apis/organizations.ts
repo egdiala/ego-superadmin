@@ -25,7 +25,6 @@ export const getOrganization = async (id: string) => {
 };
 
 export const suspendOrganization = async (payload: SuspendOrganizationType) => {
-  const { auth_id, ...rest } = payload
-  const res = await axiosInstance.put(`${SUSPEND_ORGANIZATION_API}/${auth_id}`, rest);
+  const res = await axiosInstance.post(SUSPEND_ORGANIZATION_API, payload);
   return res.data;
 };
