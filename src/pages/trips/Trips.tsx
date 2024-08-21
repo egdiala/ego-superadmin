@@ -10,6 +10,7 @@ import { pageVariants } from "@/constants/animateVariants";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
+import { PurchaseModel } from "@/types/organizations";
 
 export const TripsPage: React.FC = () => {
     const navigate = useNavigate();
@@ -39,7 +40,7 @@ export const TripsPage: React.FC = () => {
       },
       {
         header: () => "Business Name",
-        accessorKey: "ride_data.name",
+        accessorKey: "org_data.name",
       },
       {
         header: () => "Rider",
@@ -51,7 +52,13 @@ export const TripsPage: React.FC = () => {
       },
       {
         header: () => "Model",
-        accessorKey: "progress",
+        accessorKey: "org_data.purchase_model",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedTripType
+          return (
+            <div className="text-sm text-grey-dark-2 whitespace-nowrap">{PurchaseModel[item?.org_data?.purchase_model] ?? "-"}</div>
+          )
+        }
       },
       {
         header: () => "Pickup",
@@ -59,11 +66,11 @@ export const TripsPage: React.FC = () => {
       },
       {
         header: () => "Drop off",
-        accessorKey: "ride_data.stop_location",
+        accessorKey: "ride_data.end_address",
         cell: ({ row }: { row: any; }) => {
           const item = row?.original as FetchedTripType
           return (
-            <div className="text-sm text-grey-dark-2 whitespace-nowrap">{item.ride_data.stop_location[item.ride_data.stop_location.length - 1].address}</div>
+            <div className="text-sm text-grey-dark-2 whitespace-nowrap">{item?.ride_data?.stop_location?.[item?.ride_data?.stop_location?.length - 1]?.address || item?.ride_data?.end_address}</div>
           )
         }
       },
