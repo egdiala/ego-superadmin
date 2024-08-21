@@ -1,11 +1,14 @@
 import { ReactNode } from "react";
+import { WalletPage } from "@/pages/wallet";
 import AuthLayout from "@/layouts/AuthLayout";
 import { ProfilePage } from "@/pages/profile";
 import { AnimatePresence } from "framer-motion";
+import { PaymentLogPage } from "@/pages/payments";
 import ProtectedLayout from "@/layouts/ProtectedLayout";
 import { AccountsLayout } from "@/pages/accounts/Accounts";
 import { AccountsPage, RolesPage } from "@/pages/accounts";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { OutstandingPaymentLogPage, OutstandingPaymentPage } from "@/pages/outstanding-payments";
 import { AuthRoutes, CustomersRoutes, DashboardRoutes, DriversRoutes, RidersRoutes, RolesRoutes, TripsRoutes, VehiclesRoutes } from "./modules";
 
 
@@ -30,6 +33,10 @@ const Router = () => {
                 <Route path="vehicles/*" element={<ProtectedLayout><LocationProvider><VehiclesRoutes /></LocationProvider></ProtectedLayout>} />
                 <Route path="riders/*" element={<ProtectedLayout><LocationProvider><RidersRoutes /></LocationProvider></ProtectedLayout>} />
                 <Route path="trips/*" element={<ProtectedLayout><LocationProvider><TripsRoutes /></LocationProvider></ProtectedLayout>} />
+                <Route path="wallet" element={<ProtectedLayout><LocationProvider><WalletPage /></LocationProvider></ProtectedLayout>} />
+                <Route path="payment-log" element={<ProtectedLayout><LocationProvider><PaymentLogPage /></LocationProvider></ProtectedLayout>} />
+                <Route path="outstanding-payment-log" element={<ProtectedLayout><LocationProvider><OutstandingPaymentLogPage /></LocationProvider></ProtectedLayout>} />
+                <Route path="outstanding-payment-log/:id" element={<ProtectedLayout><LocationProvider><OutstandingPaymentPage /></LocationProvider></ProtectedLayout>} />
             </Routes>
         </BrowserRouter>
     );

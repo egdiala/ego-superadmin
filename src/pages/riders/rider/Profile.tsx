@@ -58,7 +58,7 @@ export const RiderProfile: React.FC = () => {
     },[rider, refetch])
     return (
         <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-4 pt-2">
-            <div className="flex items-center gap-6 pb-6">
+            <div className="flex flex-col md:flex-row items-center gap-6 pb-6">
                 <div className="flex flex-col md:flex-row md:items-center gap-10 bg-green-4 p-4 rounded-lg flex-1">
                     <img
                         src={blankImg}
@@ -76,12 +76,12 @@ export const RiderProfile: React.FC = () => {
                         }
                     </div>
                 </div>
-                <div className={cn("flex flex-col gap-2 items-center max-w-52 py-4 px-12 rounded-lg", rider?.account_type === "staff" ? "bg-green-4" : "bg-yellow-2")}>
+                <div className={cn("flex flex-col gap-2 items-center w-full md:max-w-52 py-4 px-12 rounded-lg", rider?.account_type === "staff" ? "bg-green-4" : "bg-yellow-2")}>
                     <img src={rider?.account_type === "staff" ? bronze : silver} />
                     <h2 className="font-bold text-sm text-yellow-0 uppercase">{rider?.account_type}</h2>
                 </div>
             </div>
-            <div className="grid grid-cols-2 pb-6 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 pb-6 gap-6">
                 {
                     tripData.map((item) =>
                     <div key={item?.label} className="flex flex-col p-4 gap-6 bg-grey-dark-4 rounded-lg">
