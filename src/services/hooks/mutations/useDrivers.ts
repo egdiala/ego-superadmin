@@ -31,8 +31,14 @@ export const useBulkUploadDrivers = (setProgress: Dispatch<SetStateAction<number
         onSuccess: (response: any) => {
             setProgress(100);
             queryClient.invalidateQueries({ queryKey: [GET_DRIVERS] });
-            successToast({ message: "Drivers Added Successfully!" })
-            fn?.(response);
+            if (!!response?.data?.valid_upload_count && response?.data?.valid_upload_count > 0) {    
+                successToast({ message: "Drivers Added Successfully!" })
+                fn?.(response);
+            }
+            if (!!response?.data?.not_upload_count && response?.data?.not_upload_count > 0) {
+                errorToast({ message: response?.data?.msg })
+                fn?.(response?.data);
+            }
         },
         onError: (err: any) => {
             errorToast(err)

@@ -20,10 +20,14 @@ export const useLogin = (fn?: (v: any) => void) => {
   return useMutation({
     mutationFn: login,
     onSuccess: (response: any) => {
-      successToast({ message: "Logged In Successfully!" })
       if (response.status === "ok") {
+        if (!response?.data?.login_attempt?.account_disabled) {
+          successToast({ message: "Logged In Successfully!" })
           onLoginSuccess(response?.data)
           navigate("/")
+        } else {
+          errorToast({ message: "Your account is disabled" })
+        }
       } else {
           fn?.(response);
       }

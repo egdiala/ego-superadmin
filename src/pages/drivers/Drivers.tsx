@@ -7,7 +7,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { useGetDrivers } from "@/services/hooks/queries";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
-import { CreateDriverModal } from "@/components/pages/drivers";
+import { CreateDriverModal, FailedDriverUploadsModal } from "@/components/pages/drivers";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import type { FetchedDriverCount, FetchedDriverType } from "@/types/drivers";
 import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
@@ -19,6 +19,7 @@ export const DriversPage: React.FC = () => {
   const itemsPerPage = 10;
   const [page, setPage] = useState(1)
   const { value, onChangeHandler } = useDebounce(500)
+  const [failedUploads, setFailedUploads] = useState([])
   const [searchParams, setSearchParams] = useSearchParams();
   const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
   const { data: count, isFetching: fetchingCount, refetch } = useGetDrivers({ component })
@@ -26,6 +27,7 @@ export const DriversPage: React.FC = () => {
   const [toggleModals, setToggleModals] = useState({
     openFilterModal: false,
     openCreateDriverModal: false,
+    openFailedUploadsModal: false,
   })
 
   const filteredDrivers = useMemo(() => {
@@ -102,6 +104,13 @@ export const DriversPage: React.FC = () => {
     }))
   }, [toggleModals.openCreateDriverModal])
 
+  const toggleFailedUploads = useCallback(() => {
+    setToggleModals((prev) => ({
+      ...prev,
+      openFailedUploadsModal: !toggleModals.openFailedUploadsModal,
+    }))
+  }, [toggleModals.openFailedUploadsModal])
+
   useEffect(() => {
     getPaginationParams(location, setPage, () => {})
   }, [location])
@@ -149,7 +158,14 @@ export const DriversPage: React.FC = () => {
           <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
         </RenderIf>
       </div>
-      <CreateDriverModal isOpen={toggleModals.openCreateDriverModal} close={toggleCreateDriver} />
+      <FailedDriverUploadsModal isOpen={toggleModals.openFailedUploadsModal} data={failedUploads} close={toggleFailedUploads} />
+      <CreateDriverModal isOpen={toggleModals.openCreateDriverModal} close={(v) => {
+        toggleCreateDriver()
+        if (v?.length > 0) {
+          setFailedUploads(v)
+          toggleFailedUploads()
+        }
+      }} />
     </motion.div>
   )
 }

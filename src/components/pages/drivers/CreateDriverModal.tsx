@@ -12,7 +12,7 @@ import type { AxiosProgressEvent } from "axios";
 interface CreateDriverModalProps {
     isOpen: boolean;
     // eslint-disable-next-line no-unused-vars
-    close: (value: boolean) => void
+    close: (value: any) => void
 }
 
 const SingleDriver: React.FC<CreateDriverModalProps> = ({ close }) => {
@@ -74,7 +74,7 @@ const SingleDriver: React.FC<CreateDriverModalProps> = ({ close }) => {
 
 const MultipleDrivers: React.FC<CreateDriverModalProps> = ({ close }) => {
     const [progress, setProgress] = useState(0);
-    const { mutate: upload, isPending: isUploading } = useBulkUploadDrivers(setProgress, () => onClose())
+    const { mutate: upload, isPending: isUploading } = useBulkUploadDrivers(setProgress, (resData) => onClose(resData?.users_with_missing_field))
 
     const { handleSubmit, isValid, errors, setFieldValue, resetForm, values, setFieldError } = useFormikWrapper<{ files: File | string; }>({
         initialValues: {
@@ -129,9 +129,9 @@ const MultipleDrivers: React.FC<CreateDriverModalProps> = ({ close }) => {
         e.preventDefault();
     };
 
-    const onClose = () => {
+    const onClose = (v: any) => {
         resetForm();
-        close(false);
+        close(v);
     }
     return (
         <form className="grid gap-6" onSubmit={handleSubmit}>
