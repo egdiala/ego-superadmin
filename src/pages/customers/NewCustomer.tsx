@@ -198,7 +198,7 @@ export const NewCustomersPage: React.FC = () => {
                                   </div>
                                   <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-8">
                                       <Input label="Number of Employees" type="text" {...register("employee_no")} />
-                                      <Input label="Authorized Rep Name and Title" type="text" {...register("authorize_rep_name")} />
+                                      <Input label="Authorized Rep Name" type="text" {...register("authorize_rep_name")} />
                                   </div>
                                   <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-8">
                                       <Input label="Authorized Rep Email" type="text" {...register("authorize_rep_email")} />
