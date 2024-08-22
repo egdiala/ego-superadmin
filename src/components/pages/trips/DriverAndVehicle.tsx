@@ -2,10 +2,25 @@ import React from "react";
 import { Icon } from "@iconify/react";
 import vehicleSvg from "@/assets/vehicle.svg"
 
-export const TripDriverAndVehicle: React.FC = () => {
+interface TripDriverAndVehicleProps {
+    data: {
+        latitude: number;
+        longitude: number;
+        driver_id: string;
+        avatar: string;
+        plate_number: string;
+        car_model: string;
+        rating: number;
+        phone_number: string;
+        email: string;
+        name: string;
+    } | undefined
+}
+
+export const TripDriverAndVehicle: React.FC<TripDriverAndVehicleProps> = ({ data }) => {
     const infos = [
-        { label: "Email", value: "example@gmail.com" },
-        { label: "Phone Number", value: "0814 5632 783" },
+        { label: "Email", value: data?.email },
+        { label: "Phone Number", value: data?.phone_number },
     ]
     const information = [
         { label: "Total Km covered by vehicle before the time of the trip", value: "124km" },
@@ -17,15 +32,15 @@ export const TripDriverAndVehicle: React.FC = () => {
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
                 <div className="flex items-center gap-2">
                     <img
-                        alt="Ronald Julius"
+                        alt={data?.name}
                         className="size-10 rounded-full object-cover object-center"
-                        src="https://images.unsplash.com/flagged/photo-1595514191830-3e96a518989b?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                        src={data?.avatar}
                     />
                     <div className="grid gap-0.5">
-                        <h2 className="font-medium text-sm text-grey-dark-1">Ronald Julius</h2>
+                        <h2 className="font-medium text-sm text-grey-dark-1">{data?.name}</h2>
                         <div className="flex items-center gap-1">
                             <Icon icon="ph:star-fill" className="text-semantics-amber size-3.5" />
-                            <span className="text-sm text-grey-dark-3">4.7</span>
+                            <span className="text-sm text-grey-dark-3">{data?.rating}</span>
                         </div>
                     </div>
                 </div>
@@ -39,13 +54,13 @@ export const TripDriverAndVehicle: React.FC = () => {
                 }
                 <div className="flex items-center gap-2">
                     <img
-                        alt="ABC123DEF"
+                        alt={data?.plate_number}
                         className="h-9 w-20"
                         src={vehicleSvg}
                     />
                     <div className="grid gap-0.5">
-                        <h2 className="font-medium text-sm text-grey-dark-1">ABC123DEF</h2>
-                        <p className="text-sm text-grey-dark-2">Caspain</p>
+                        <h2 className="font-medium text-sm text-grey-dark-1">{data?.plate_number}</h2>
+                        <p className="text-sm text-grey-dark-2">{data?.car_model}</p>
                     </div>
                 </div>
                 {

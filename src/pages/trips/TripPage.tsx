@@ -12,7 +12,7 @@ import { TripDriverAndVehicle, TripDriverRating, TripInfo, TripPayment, TripRequ
 
 export const TripPage: React.FC = () => {
     const params = useParams()
-    const { isFetching } = useGetTrip(params?.id as string)
+    const { data: trip, isFetching } = useGetTrip(params?.id as string)
     const timeline = [
         {
             label: "Pickup",
@@ -104,11 +104,9 @@ export const TripPage: React.FC = () => {
                                 </div>
                                 <div className="grid gap-6 content-start">
                                     <TripRider />
-                                    <TripDriverAndVehicle />
+                                    <TripDriverAndVehicle data={trip?.driver_data} />
                                     <TripSustainabilityMetrics />
                                 </div>
-                                
-                                
                             </div>
                         </div>
                     </div>

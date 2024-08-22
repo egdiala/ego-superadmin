@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getTrip, getTrips } from "@/services/apis/trips";
 import { GET_TRIP, GET_TRIPS } from "@/constants/queryKeys";
-import type { FetchedTripType, FetchTripsQuery } from "@/types/trips";
+import type { FetchedSingleTrip, FetchedTripType, FetchTripsQuery } from "@/types/trips";
 import { errorToast } from "@/utils/createToast";
 
 export const useGetTrips = (query: FetchTripsQuery) => {
@@ -22,7 +22,7 @@ export const useGetTrip = (id: string) => {
     enabled: !!id,
     queryKey: [GET_TRIP],
     queryFn: () => getTrip(id),
-    select: (res) => res?.data as any,
+    select: (res) => res?.data as FetchedSingleTrip,
     retry: false,
   });
 };
