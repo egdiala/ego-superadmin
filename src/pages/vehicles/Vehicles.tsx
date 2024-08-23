@@ -21,7 +21,7 @@ export const VehiclesPage: React.FC = () => {
   const { value, onChangeHandler } = useDebounce(500)
   const [searchParams, setSearchParams] = useSearchParams();
   const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
-  const { data: count, isFetching: fetchingCount, refetch } = useGetVehicles({ component })
+  const { data: count, isFetching: fetchingCount, refetch } = useGetVehicles({ component, q: value })
   const { data: vehicles, isFetching } = useGetVehicles({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value })
   const [toggleModals, setToggleModals] = useState({
     openFilterModal: false,
@@ -72,7 +72,7 @@ export const VehiclesPage: React.FC = () => {
       accessorKey: "online", //will be changed when the accurate response is added in data returned
       cell: () => {
         return (
-          <div className="flex items-center gap-1 text-dark-green-1"><Icon icon="material-symbols-light:bolt" className="text-green-1" />100%</div>
+          <div className="flex items-center gap-1 text-dark-green-1"><Icon icon="material-symbols-light:bolt" className="text-green-1" />0%</div>
         )
       }
     },

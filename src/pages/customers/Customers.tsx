@@ -21,7 +21,7 @@ export const CustomersPage: React.FC = () => {
   const { value, onChangeHandler } = useDebounce(500)
   const [searchParams, setSearchParams] = useSearchParams();
   const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
-  const { data: count, isFetching: fetchingCount, refetch } = useGetOrganizations({ component })
+  const { data: count, isFetching: fetchingCount, refetch } = useGetOrganizations({ component, q: value })
   const { data: drivers, isFetching } = useGetOrganizations({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value })
 
   const columns = [

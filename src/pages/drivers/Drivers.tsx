@@ -22,7 +22,7 @@ export const DriversPage: React.FC = () => {
   const [failedUploads, setFailedUploads] = useState([])
   const [searchParams, setSearchParams] = useSearchParams();
   const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
-  const { data: count, isFetching: fetchingCount, refetch } = useGetDrivers({ component })
+  const { data: count, isFetching: fetchingCount, refetch } = useGetDrivers({ component, q: value })
   const { data: drivers, isFetching } = useGetDrivers({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value })
   const [toggleModals, setToggleModals] = useState({
     openFilterModal: false,

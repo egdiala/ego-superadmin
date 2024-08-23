@@ -20,7 +20,7 @@ export const TripsPage: React.FC = () => {
     const { value, onChangeHandler } = useDebounce(500)
     const [searchParams, setSearchParams] = useSearchParams();
     const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
-    const { data: count, isFetching: fetchingCount, refetch } = useGetTrips({ component })
+    const { data: count, isFetching: fetchingCount, refetch } = useGetTrips({ component, q: value })
     const { data: trips, isFetching } = useGetTrips({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value })
 
     const columns = [

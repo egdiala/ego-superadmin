@@ -20,7 +20,7 @@ export const RolesPage: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const { value, onChangeHandler } = useDebounce(500)
     const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
-    const { data: count, isFetching: fetchingCount, refetch } = useGetRoles({ component })
+    const { data: count, isFetching: fetchingCount, refetch } = useGetRoles({ component, q: value })
     const { data: roles, isFetching } = useGetRoles({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value })
     const [activeItem, setActiveItem] = useState<FetchedRolesType | null>(null)
     const [toggleModals, setToggleModals] = useState({

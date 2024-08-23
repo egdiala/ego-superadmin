@@ -78,7 +78,7 @@ export const AssignOrganizationVehiclesPage: React.FC = () => {
         accessorKey: "online", //will be changed when the accurate response is added in data returned
         cell: () => {
           return (
-            <div className="flex items-center gap-1 text-dark-green-1"><Icon icon="material-symbols-light:bolt" className="text-green-1" />100%</div>
+            <div className="flex items-center gap-1 text-dark-green-1"><Icon icon="material-symbols-light:bolt" className="text-green-1" />0%</div>
           )
         }
       },

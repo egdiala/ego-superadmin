@@ -52,7 +52,7 @@ export const RiderPage: React.FC = () => {
                     <Breadcrumb items={[{ label: "Riders", link: "/riders" }, { label: `${rider?.first_name} ${rider?.last_name}`, link: `/riders/${params?.id as string}/profile` }, { label: subRoutes.filter((item) => item?.link === location.pathname)?.[0]?.name, link: subRoutes.filter((item) => item?.link === location.pathname)?.[0]?.link }]} showBack />
                     <div className="grid content-start gap-5 py-6 px-4 bg-white rounded-lg">
                         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                            <h1 className="text-grey-dark-1 font-bold text-xl">{rider?.first_name} {rider?.last_name} <span className="capitalize font-normal">({rider?.gender})</span></h1>
+                            <h1 className="text-grey-dark-1 font-bold text-xl">{rider?.first_name} {rider?.last_name} {!!rider?.gender && (<span className="capitalize font-normal">({rider?.gender})</span>)}</h1>
                             <div className="flex items-center gap-2 pb-4 w-full sm:w-auto">
                                 <Button type="button" theme="danger" onClick={toggleDeleteStaff} block>
                                     <Icon icon="ph:trash-bold" className="size-4" />
@@ -82,8 +82,8 @@ export const RiderPage: React.FC = () => {
                         </div>
                         <Outlet />
                     </div>
-                    <DeleteStaffModal isOpen={toggleModals.openDeleteStaffModal} staff={rider} close={toggleDeleteStaff} />
-                    <SuspendStaffModal isOpen={toggleModals.openSuspendStaffModal} staff={rider} close={toggleSuspendStaff} />
+                    <DeleteStaffModal isOpen={toggleModals.openDeleteStaffModal} staff={rider!} close={toggleDeleteStaff} />
+                    <SuspendStaffModal isOpen={toggleModals.openSuspendStaffModal} staff={rider!} close={toggleSuspendStaff} />
                 </motion.div>
             </RenderIf>
 

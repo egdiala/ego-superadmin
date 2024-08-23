@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
@@ -19,8 +19,8 @@ export const RidersPage: React.FC = () => {
   const { value, onChangeHandler } = useDebounce(500)
   const [searchParams, setSearchParams] = useSearchParams();
   const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
-  const { data: count, isFetching: fetchingCount, refetch } = useGetRiders({ component })
-  const { data: riders, isFetching } = useGetRiders({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value })
+  const { data: count, isFetching: fetchingCount, refetch } = useGetRiders({ component, q: value })
+  const { data: riders, isLoading } = useGetRiders({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value })
 
   const columns = [
     {
@@ -72,38 +72,35 @@ export const RidersPage: React.FC = () => {
   }, [location])
   
   return (
-    <Fragment>
-        <RenderIf condition={!isFetching && !fetchingCount}>
-          <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">
-            <h1 className="text-grey-dark-1 font-bold text-2xl md:text-[2rem]">Riders</h1>
-            <div className="grid content-start gap-5 py-6 px-4 bg-white rounded-lg">
-              <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
-                <div className="w-full md:w-1/3 xl:w-1/4">
-                  <SearchInput placeholder="Search name, ref etc" onChange={onChangeHandler} />
-                </div>
-                
-                <div className="flex items-center gap-2 w-full sm:w-auto">
-                  <TableAction type="button" theme="grey" block onClick={() => component === "export" ? refetch() : setComponent("export")}>
-                    <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-                    Export
-                  </TableAction>
-                </div>
-              </div>
-              <Table
-                  page={page}
-                  columns={columns}
-                  perPage={itemsPerPage}
-                  onPageChange={handlePageChange}
-                  totalCount={(count as FetchedRiderCount)?.total}
-                  data={(riders as FetchedRiders)?.user_info ?? []}
-                  onClick={({ original }) => navigate(`/riders/${original?.auth_id}/profile`)}
-              />
-            </div>
-          </motion.div>
+    <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">
+      <h1 className="text-grey-dark-1 font-bold text-2xl md:text-[2rem]">Riders</h1>
+      <div className="grid content-start gap-5 py-6 px-4 bg-white rounded-lg">
+        <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
+          <div className="w-full md:w-1/3 xl:w-1/4">
+            <SearchInput placeholder="Search name, ref etc" onChange={onChangeHandler} disabled={isLoading || fetchingCount} />
+          </div>
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <TableAction type="button" theme="grey" block disabled={isLoading || fetchingCount} onClick={() => component === "export" ? refetch() : setComponent("export")}>
+              <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
+              Export
+            </TableAction>
+          </div>
+        </div>
+        <RenderIf condition={!isLoading && !fetchingCount}>
+          <Table
+              page={page}
+              columns={columns}
+              perPage={itemsPerPage}
+              onPageChange={handlePageChange}
+              totalCount={(count as FetchedRiderCount)?.total}
+              data={(riders as FetchedRiders)?.user_info ?? []}
+              onClick={({ original }) => navigate(`/riders/${original?.auth_id}/profile`)}
+          />
         </RenderIf>
-        <RenderIf condition={isFetching || fetchingCount}>
+        <RenderIf condition={isLoading || fetchingCount}>
           <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
         </RenderIf>
-    </Fragment>
+      </div>
+    </motion.div>
   )
 }

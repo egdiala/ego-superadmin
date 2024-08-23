@@ -20,7 +20,7 @@ export const AccountsPage: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const { value, onChangeHandler } = useDebounce(500)
     const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
-    const { data: count, isFetching: fetchingCount, refetch } = useGetAdmins({ component })
+    const { data: count, isFetching: fetchingCount, refetch } = useGetAdmins({ component, q: value })
     const { data: admins, isFetching } = useGetAdmins({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value })
     const [activeAdmin, setActiveAdmin] = useState<FetchedAdminType | null>(null)
     const [toggleModals, setToggleModals] = useState({

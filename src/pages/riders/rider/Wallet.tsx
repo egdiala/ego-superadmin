@@ -59,9 +59,9 @@ export const RiderWalletPage: React.FC = () => {
     };
 
     const trips = [
-        { label: "Wallet balance", value: "₦235,402,853", color: "bg-[#F8F9FB]" },
-        { label: "Inflow", value: "₦502,853", color: "bg-green-4" },
-        { label: "Outflow", value: "₦2,853", color: "bg-[#FDF2F2]" },
+        { label: "Wallet balance", value: "₦0", color: "bg-[#F8F9FB]" },
+        { label: "Inflow", value: "₦0", color: "bg-green-4" },
+        { label: "Outflow", value: "₦0", color: "bg-[#FDF2F2]" },
     ]
 
     return (

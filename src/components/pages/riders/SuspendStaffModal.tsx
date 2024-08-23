@@ -6,16 +6,18 @@ import { suspendDriverSchema } from "@/validations/driver";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { Button, Input, SelectInput, TextArea, Toggle } from "@/components/core";
+import { useUpdateRiderStatus } from "@/services/hooks/mutations";
 
 interface SuspendStaffModalProps {
     isOpen: boolean;
-    staff?: FetchedRider;
+    staff: FetchedRider;
     // eslint-disable-next-line no-unused-vars
     close: (value: boolean) => void
 }
 
-export const SuspendStaffModal: React.FC<SuspendStaffModalProps> = ({ isOpen, close }) => {
-    const { handleSubmit, register, resetForm, setFieldValue, values: suspendDriverValues } = useFormikWrapper({
+export const SuspendStaffModal: React.FC<SuspendStaffModalProps> = ({ isOpen, close, staff }) => {
+    const { mutate, isPending } = useUpdateRiderStatus(`Rider ${staff?.status === 1 ? "Suspended" : "Unsuspended"} Successfully!`, () => closeModal())
+    const { handleSubmit, register, isValid, resetForm, setFieldValue, values: suspendDriverValues } = useFormikWrapper({
         initialValues: {
             hour: "",
             mins: "",
@@ -25,7 +27,14 @@ export const SuspendStaffModal: React.FC<SuspendStaffModalProps> = ({ isOpen, cl
             suspend_indefinite: true
         },
         validationSchema: suspendDriverSchema,
-        onSubmit: () => {
+        onSubmit(values) {
+            const { hour, mins, time_of_day, suspend_indefinite, unsuspend_date, ...rest } = values
+            if (!suspend_indefinite) {
+                mutate({ auth_id: staff?.auth_id, user_type: "rider", unsuspend_date, suspend_indefinite: suspend_indefinite ? "1" : "0",  unsuspend_time: `${hour}:${mins}${time_of_day}`, status: staff?.status === 1 ? "2" : "1", ...rest })
+            } else {
+                mutate({ auth_id: staff?.auth_id, user_type: "rider", suspend_indefinite: suspend_indefinite ? "1" : "0", status: staff?.status === 1 ? "2" : "1", ...rest })
+            }
+            
         }
     })
 
@@ -42,11 +51,11 @@ export const SuspendStaffModal: React.FC<SuspendStaffModalProps> = ({ isOpen, cl
                     <div className="grid gap-2">
                         <div className="flex items-center justify-between">
                             <DialogTitle as="h1" className="text-xl font-bold text-grey-dark-1">
-                                Suspend [Staff name]?
+                                {staff?.status === 1 ? "Suspend" : "Unsuspend"} {staff?.first_name} {staff?.last_name}?
                             </DialogTitle>
                             <button type="button" onClick={closeModal} className="size-8 p-2 grid place-content-center text-grey-dark-3 hover:text-grey-dark-1 hover:bg-light-green rounded-full ease-out duration-300 transition-all"><Icon icon="ph:x-bold" /></button>
                         </div>
-                        <p className="text-grey-dark-3 text-sm">This action would suspend [staff name] from this platform</p>
+                        <p className="text-grey-dark-3 text-sm">This action would {staff?.status === 1 ? "suspend" : "unsuspend"} {staff?.first_name} {staff?.last_name} from this platform</p>
                     </div>
                     <TextArea placeholder="Reason" {...register("reason")} />
                     <div className="rounded-md border border-[#CDCEDA] py-3.5 px-3 flex items-center justify-between">
@@ -69,7 +78,7 @@ export const SuspendStaffModal: React.FC<SuspendStaffModalProps> = ({ isOpen, cl
                     </AnimatePresence>
                     <div className="flex items-center justify-end w-full md:w-2/3 ml-auto pt-10 gap-2 md:gap-4">
                         <Button type="button" theme="tertiary" onClick={closeModal} block>Cancel</Button>
-                        <Button type="submit" theme="primary" block>Suspend</Button>
+                        <Button type="submit" theme="primary" loading={isPending} disabled={isPending || !isValid} block>{staff?.status === 1 ? "Suspend" : "Unsuspend"}</Button>
                     </div>
                 </DialogPanel>
             </div>

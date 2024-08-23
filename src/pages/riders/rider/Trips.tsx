@@ -76,12 +76,12 @@ export const RiderTripsPage: React.FC = () => {
     }, [location])
 
     const trips = [
-        { label: "Total Requests Made", value: "2,853", color: "bg-[#F8F9FB]" },
-        { label: "Approved Trips", value: "1,853", color: "bg-[#F8F9FB]" },
-        { label: "Ongoing Trips", value: "653", color: "bg-yellow-4" },
-        { label: "Fulfilled Trips", value: "253", color: "bg-[#F6FBF6]" },
-        { label: "Unfulfilled Trips", value: "253", color: "bg-[#FDF2F2]" },
-        { label: "Rejected Trips", value: "253", color: "bg-[#FDF2F2]" },
+        { label: "Total Requests Made", value: "0", color: "bg-[#F8F9FB]" },
+        { label: "Approved Trips", value: "0", color: "bg-[#F8F9FB]" },
+        { label: "Ongoing Trips", value: "0", color: "bg-yellow-4" },
+        { label: "Fulfilled Trips", value: "0", color: "bg-[#F6FBF6]" },
+        { label: "Unfulfilled Trips", value: "0", color: "bg-[#FDF2F2]" },
+        { label: "Rejected Trips", value: "0", color: "bg-[#FDF2F2]" },
     ]
     return (
       <Fragment>
