@@ -96,14 +96,14 @@ export const TripPage: React.FC = () => {
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="grid gap-6 content-start">
-                                    <TripRequestInfo />
+                                    <TripRequestInfo data={trip!} />
                                     <TripInfo />
                                     <TripPayment />
                                     <TripDriverRating />
                                     <TripRiderRating />
                                 </div>
                                 <div className="grid gap-6 content-start">
-                                    <TripRider />
+                                    <TripRider data={trip!} />
                                     <TripDriverAndVehicle data={trip?.driver_data} />
                                     <TripSustainabilityMetrics />
                                 </div>

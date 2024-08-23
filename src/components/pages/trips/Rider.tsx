@@ -1,11 +1,17 @@
 import React from "react";
 import { Icon } from "@iconify/react";
+import { FetchedSingleTrip } from "@/types/trips";
+import blankImg from "@/assets/blank.svg";
 
-export const TripRider: React.FC = () => {
+interface TripRiderProps {
+    data: FetchedSingleTrip
+}
+
+export const TripRider: React.FC<TripRiderProps> = ({ data }) => {
     const infos = [
         { label: "Email", value: "example@gmail.com" },
-        { label: "Phone Number", value: "0814 5632 783" },
-        { label: "Business Name", value: "Infinity Payroll Services" },
+        { label: "Phone Number", value: data?.ride_data?.phone_number },
+        { label: "Business Name", value: data?.org_data?.name },
     ]
     return (
         <div className="flex flex-col h-fit gap-6 py-4 px-5 rounded-lg border border-input-filled">
@@ -13,15 +19,15 @@ export const TripRider: React.FC = () => {
             <div className="grid grid-cols-3 gap-6">
                 <div className="flex items-center gap-2">
                     <img
-                        alt="Albert Okoli"
+                        alt={data?.ride_data?.name}
                         className="size-10 rounded-full object-cover object-center"
-                        src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                        src={data?.ride_data?.avatar || blankImg}
                     />
                     <div className="grid gap-0.5">
-                        <h2 className="font-medium text-sm text-grey-dark-1">Albert Okoli</h2>
+                        <h2 className="font-medium text-sm text-grey-dark-1">{data?.ride_data?.name}</h2>
                         <div className="flex items-center gap-1">
                             <Icon icon="ph:star-fill" className="text-semantics-amber size-3.5" />
-                            <span className="text-sm text-grey-dark-3">4.7</span>
+                            <span className="text-sm text-grey-dark-3">{data?.ride_data?.rating}</span>
                         </div>
                     </div>
                 </div>
