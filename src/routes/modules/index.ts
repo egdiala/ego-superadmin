@@ -1,4 +1,5 @@
 export { default as AuthRoutes } from "./AuthRoutes"
+export { default as ChargeStationsRoutes } from "./ChargeStationsRoutes"
 export { default as CustomersRoutes } from "./CustomersRoutes"
 export { default as DashboardRoutes } from "./DashboardRoutes"
 export { default as DriversRoutes } from "./DriversRoutes"
