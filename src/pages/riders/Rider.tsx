@@ -60,7 +60,7 @@ export const RiderPage: React.FC = () => {
                                 </Button>
                                 <Button type="button" theme="primary" onClick={toggleSuspendStaff} block>
                                     <Icon icon="ph:exclamation-mark-bold" className="size-4" />
-                                    Suspend Staff
+                                    {rider?.status === 1 ? "Suspend Staff" : "Unsuspend Staff"}
                                 </Button>
                             </div>
                         </div>
