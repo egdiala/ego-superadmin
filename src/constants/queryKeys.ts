@@ -28,5 +28,8 @@ export const GET_ORGANIZATION = "get-organization"
 export const GET_TRIPS = "get-trips"
 export const GET_TRIP = "get-trip"
 
+// Ratings
+export const GET_RATINGS = "get-ratings"
+
 // Other
 export const GET_INDUSTRIES = "get-industries"
