@@ -31,5 +31,9 @@ export const GET_TRIP = "get-trip"
 // Ratings
 export const GET_RATINGS = "get-ratings"
 
+// Wallet
+export const GET_WALLET_STATS = "get-wallet-stats"
+export const GET_WALLET_TRANSACTION = "get-wallet-transaction"
+
 // Other
 export const GET_INDUSTRIES = "get-industries"

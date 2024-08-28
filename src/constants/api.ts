@@ -38,5 +38,9 @@ export const GET_TRIPS_API = "admin/trips"
 // Ratings
 export const GET_RATINGS_API = "admin/trips/ratings"
 
+// Wallet
+export const GET_WALLET_STATS_API = "admin/wallets/wallet-stats"
+export const GET_WALLET_TRANSACTION_API = "admin/wallets/wallet-transaction"
+
 // Other
 export const GET_INDUSTRIES_API = "industries"

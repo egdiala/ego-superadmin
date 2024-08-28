@@ -36,6 +36,13 @@ export const axiosTripReportInstance: AxiosInstance = axios.create({
   },
 });
 
+export const axiosWalletInstance: AxiosInstance = axios.create({
+  baseURL: import.meta.env.VITE_EGO_WALLET_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
 export const otherInstance: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_EGO_OTHER_URL,
   headers: {
