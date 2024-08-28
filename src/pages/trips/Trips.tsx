@@ -11,6 +11,7 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { PurchaseModel } from "@/types/organizations";
+import { pascalCaseToWords } from "@/utils/textFormatter";
 
 export const TripsPage: React.FC = () => {
     const navigate = useNavigate();
@@ -39,8 +40,14 @@ export const TripsPage: React.FC = () => {
         accessorKey: "trip_ref",
       },
       {
-        header: () => "Business Name",
+        header: () => "Business",
         accessorKey: "org_data.name",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedTripType
+          return (
+            <div className="text-sm text-grey-dark-2 whitespace-nowrap">{item?.org_data?.name}</div>
+          )
+        }
       },
       {
         header: () => "Rider",
@@ -56,13 +63,19 @@ export const TripsPage: React.FC = () => {
         cell: ({ row }: { row: any; }) => {
           const item = row?.original as FetchedTripType
           return (
-            <div className="text-sm text-grey-dark-2 whitespace-nowrap">{PurchaseModel[item?.org_data?.purchase_model] ?? "-"}</div>
+            <div className="text-sm text-grey-dark-2 whitespace-nowrap">{pascalCaseToWords(PurchaseModel[item?.org_data?.purchase_model]) ?? "-"}</div>
           )
         }
       },
       {
         header: () => "Pickup",
         accessorKey: "ride_data.start_address",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedTripType
+          return (
+            <div className="text-sm text-grey-dark-2 line-clamp-2">{item?.ride_data?.start_address}</div>
+          )
+        }
       },
       {
         header: () => "Drop off",
@@ -70,7 +83,7 @@ export const TripsPage: React.FC = () => {
         cell: ({ row }: { row: any; }) => {
           const item = row?.original as FetchedTripType
           return (
-            <div className="text-sm text-grey-dark-2 whitespace-nowrap">{item?.ride_data?.stop_location?.[item?.ride_data?.stop_location?.length - 1]?.address || item?.ride_data?.end_address}</div>
+            <div className="text-sm text-grey-dark-2 line-clamp-2">{item?.ride_data?.stop_location?.[item?.ride_data?.stop_location?.length - 1]?.address || item?.ride_data?.end_address}</div>
           )
         }
       },

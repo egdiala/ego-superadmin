@@ -18,9 +18,9 @@ export const RiderRatingsPage: React.FC = () => {
     const [page, setPage] = useState(1)
     const [searchParams, setSearchParams] = useSearchParams();
     const [component] = useState<"count" | "count-status">("count")
-    const { data: countStatus, isFetching: fetchingCountStatus } = useGetRatings({ component: "count-status", user_type: "driver", auth_id: params?.id as string })
-    const { data: count, isFetching: fetchingCount } = useGetRatings({ component, user_type: "driver", auth_id: params?.id as string })
-    const { data: ratings, isFetching } = useGetRatings({ user_type: "driver", auth_id: params?.id as string })
+    const { data: countStatus, isFetching: fetchingCountStatus } = useGetRatings({ component: "count-status", user_type: "rider", auth_id: params?.id as string })
+    const { data: count, isFetching: fetchingCount } = useGetRatings({ component, user_type: "rider", auth_id: params?.id as string })
+    const { data: ratings, isFetching } = useGetRatings({ user_type: "rider", auth_id: params?.id as string })
 
     const columns = [
       {
@@ -70,7 +70,7 @@ export const RiderRatingsPage: React.FC = () => {
     const trips = useMemo(() => {
       return [
         { label: "Total ratings", value: (countStatus as FetchedRatingCountStatus)?.total, color: "bg-[#F8F9FB]" },
-        { label: "Av. ratings", value: (countStatus as FetchedRatingCountStatus)?.rating, color: "bg-[#F6FBF6]" },
+        { label: "Av. ratings", value: (countStatus as FetchedRatingCountStatus)?.rating?.toFixed(1), color: "bg-[#F6FBF6]" },
       ]
     },[countStatus])
 

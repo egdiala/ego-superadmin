@@ -70,7 +70,7 @@ export const DriverRatingsPage: React.FC = () => {
     const trips = useMemo(() => {
       return [
           { label: "Total ratings", value: (countStatus as FetchedRatingCountStatus)?.total, color: "bg-[#F8F9FB]" },
-          { label: "Av. ratings", value: (countStatus as FetchedRatingCountStatus)?.rating, color: "bg-[#F6FBF6]" },
+          { label: "Av. ratings", value: (countStatus as FetchedRatingCountStatus)?.rating?.toFixed(1), color: "bg-[#F6FBF6]" },
       ]
     },[countStatus])
 
