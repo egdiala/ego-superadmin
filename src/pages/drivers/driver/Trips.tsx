@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
@@ -9,7 +9,7 @@ import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { Loader } from "@/components/core/Button/Loader";
-import type { FetchedTripType } from "@/types/trips";
+import type { FetchedTripCountStatus, FetchedTripType } from "@/types/trips";
 import { format, formatRelative } from "date-fns";
 
 export const DriverTripsPage: React.FC = () => {
@@ -21,6 +21,7 @@ export const DriverTripsPage: React.FC = () => {
     const { value, onChangeHandler } = useDebounce(500)
     const [searchParams, setSearchParams] = useSearchParams();
     const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
+    const { data: countStatus, isFetching: fetchingCountStatus } = useGetTrips({ component: "count-status", user_type: "driver", auth_id: params?.id as string })
     const { data: count, isFetching: fetchingCount, refetch } = useGetTrips({ component, user_type: "driver", auth_id: params?.id as string })
     const { data: driverTrips, isFetching } = useGetTrips({ user_type: "driver", auth_id: params?.id as string, page: page.toString(), item_per_page: itemsPerPage.toString(), q: value })
 
@@ -75,15 +76,17 @@ export const DriverTripsPage: React.FC = () => {
       getPaginationParams(location, setPage, () => {})
     }, [location])
 
-    const trips = [
-        { label: "Total Assigned Trips", value: "2,853", color: "bg-[#F8F9FB]" },
-        { label: "Fulfilled Trips", value: "1,853", color: "bg-[#F6FBF6]" },
-        { label: "Ongoing Trips", value: "653", color: "bg-yellow-4" },
-        { label: "Rejected Trips", value: "253", color: "bg-[#FDF2F2]" },
-    ]
+    const trips = useMemo(() => {
+      return [
+          { label: "Total Assigned Trips", value: (countStatus as FetchedTripCountStatus)?.total, color: "bg-[#F8F9FB]" },
+          { label: "Fulfilled Trips", value: (countStatus as FetchedTripCountStatus)?.fulfilled || "0", color: "bg-[#F6FBF6]" },
+          { label: "Ongoing Trips", value: (countStatus as FetchedTripCountStatus)?.ongoing || "0", color: "bg-yellow-4" },
+          { label: "Rejected Trips", value: (countStatus as FetchedTripCountStatus)?.rejected || "0", color: "bg-[#FDF2F2]" },
+      ]
+    },[countStatus])
     return (
       <Fragment>
-        <RenderIf condition={!isFetching && !fetchingCount}>
+        <RenderIf condition={!isFetching && !fetchingCount && !fetchingCountStatus}>
           <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-2 pt-2">
             <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 py-4">
                 {
@@ -116,13 +119,13 @@ export const DriverTripsPage: React.FC = () => {
               columns={columns}
               perPage={itemsPerPage}
               onPageChange={handlePageChange}
-              data={driverTrips ?? []}
+              data={(driverTrips as FetchedTripType[]) ?? []}
               totalCount={(count as any)?.total}
               onClick={({ original }) => navigate(`/trips/${original?.trip_id}`)}
             />
           </motion.div>
         </RenderIf>
-        <RenderIf condition={isFetching || fetchingCount}>
+        <RenderIf condition={isFetching || fetchingCount || fetchingCountStatus}>
           <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
         </RenderIf>
       </Fragment>

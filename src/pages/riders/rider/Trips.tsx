@@ -118,7 +118,7 @@ export const RiderTripsPage: React.FC = () => {
               columns={columns}
               perPage={itemsPerPage}
               onPageChange={handlePageChange}
-              data={riderTrips ?? []}
+              data={(riderTrips as FetchedTripType[]) ?? []}
               totalCount={(count as any)?.total}
               onClick={({ original }) => navigate(`/trips/${original?.trip_id}`)}
             />

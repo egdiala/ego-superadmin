@@ -7,6 +7,8 @@ import { useGetDriver } from "@/services/hooks/queries";
 import { pageVariants } from "@/constants/animateVariants";
 import { cn } from "@/libs/cn";
 import { RenderIf } from "@/components/core";
+import { pascalCaseToWords } from "@/utils/textFormatter";
+import { PurchaseModel } from "@/types/organizations";
 
 export const DriverProfilePage: React.FC = () => {
     const { data: driver, refetch } = useGetDriver("")
@@ -18,9 +20,9 @@ export const DriverProfilePage: React.FC = () => {
             { label: "Gender", value: driver?.gender },
             { label: "Date of Birth", value: "-" },
             { label: "State of Origin", value: "-" },
-            { label: "Business assigned to", value: driver?.vehOrg?.organization?.name ?? "-" },
+            { label: "Business assigned to", value: driver?.org_data?.name ?? "-" },
         ]
-    },[driver?.email, driver?.gender, driver?.phone_number, driver?.vehOrg?.organization])
+    },[driver?.email, driver?.gender, driver?.org_data?.name, driver?.phone_number])
     useEffect(() => {
         if (driver === undefined) {
             refetch()
@@ -58,21 +60,21 @@ export const DriverProfilePage: React.FC = () => {
                     </div>
                     <div className="grid gap-1">
                         <h4 className="text-grey-dark-3 text-sm">Vehicle Assignment Status</h4>
-                        <div className={cn("text-white text-sm px-2 py-0.5 rounded w-fit", driver?.vehOrg?.vehicle ? "bg-green-1" : "bg-semantics-error")}>{driver?.vehOrg?.vehicle ? "Assigned" : "Unassigned"}</div>
+                        <div className={cn("text-white text-sm px-2 py-0.5 rounded w-fit", driver?.vehicle_data?.driver_assigned ? "bg-green-1" : "bg-semantics-error")}>{driver?.vehicle_data?.driver_assigned ? "Assigned" : "Unassigned"}</div>
                     </div>
-                    <RenderIf condition={!!driver?.vehOrg?.vehicle}>
+                    <RenderIf condition={!!driver?.vehicle_data?.driver_assigned}>
                     <div className="flex items-center gap-2">
                         <img src={whiteCar} alt="vehicle" className="object-cover object-center w-12" />
                         <div className="grid gap-1">
-                            <h4 className="text-grey-dark-1 fon-medium text-sm">{driver?.vehOrg?.vehicle?.plate_number}</h4>
-                            <span className="text-grey-dark-2 text-sm">{driver?.vehOrg?.vehicle?.car_model}</span>
+                            <h4 className="text-grey-dark-1 fon-medium text-sm">{driver?.vehicle_data?.plate_number}</h4>
+                            <span className="text-grey-dark-2 text-sm">{driver?.vehicle_data?.car_model}</span>
                         </div>
                     </div>
                     </RenderIf>
-                    <RenderIf condition={!!driver?.vehOrg?.organization}>
+                    <RenderIf condition={!!driver?.org_data?._id}>
                     <div className="grid gap-1">
                         <h4 className="text-grey-dark-3 text-sm">Model</h4>
-                        <span className="text-grey-dark-1 text-sm">Lease</span>
+                        <span className="text-grey-dark-1 text-sm">{pascalCaseToWords(PurchaseModel[driver?.org_data?.purchase_model!])}</span>
                     </div>
                     </RenderIf>
                 </div>

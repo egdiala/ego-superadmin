@@ -117,7 +117,7 @@ export const CustomerTripHistoryPage: React.FC = () => {
                 page={page}
                 columns={columns}
                 perPage={itemsPerPage}
-                data={driverTrips ?? []}
+                data={(driverTrips as FetchedTripType[]) ?? []}
                 onPageChange={handlePageChange}
                 totalCount={(count as any)?.total}
                 emptyStateText="There are no trips for this customer."

@@ -12,6 +12,7 @@ export type CreateDriverType = {
 
 export interface FetchedDriverType extends Omit<CreateDriverType, "nin" | "driver_license"> {
     driver_status: number;
+    assign_status: number;
     nin_id: {
         value: string;
         status: number;
@@ -25,17 +26,19 @@ export interface FetchedDriverType extends Omit<CreateDriverType, "nin" | "drive
     vehicle_id: string;
     suspension_status: number;
     firebase_token: string;
-    vehOrg: {
-        vehicle: null | {
-            _id: string;
-            organization_assigned: boolean;
-            plate_number: string;
-            car_model: string;
-        };
-        organization: {
-            _id: string;
-            name: string;
-        }
+    org_data: {
+        _id: string;
+        name: string;
+        purchase_model: number;
+        status: number;
+    }
+    vehicle_data: {
+        _id: string;
+        car_model: string;
+        driver_assigned: boolean;
+        plate_number: string;
+        status: number;
+        organization_id: string;
     };
     bank_data: {
         bank_name: string;

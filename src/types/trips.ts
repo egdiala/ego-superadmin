@@ -137,6 +137,13 @@ export interface FetchedTripType {
     trip_id: string;
 }
 
+export interface FetchedTripCountStatus {
+    total: number;
+    fulfilled: number;
+    ongoing: number;
+    rejected: number
+}
+
 export interface FetchedSingleTrip {
     trip_ref: string;
     vehicle_id: string;

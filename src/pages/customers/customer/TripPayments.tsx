@@ -8,6 +8,7 @@ import { pageVariants } from "@/constants/animateVariants";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { FetchedTripType } from "@/types/trips";
 
 export const CustomerTripPaymentPage: React.FC = () => {
     const params = useParams();
@@ -84,7 +85,7 @@ export const CustomerTripPaymentPage: React.FC = () => {
               page={page}
               columns={columns}
               perPage={itemsPerPage}
-              data={driverTrips ?? []}
+              data={(driverTrips as FetchedTripType[]) ?? []}
               onPageChange={handlePageChange}
               totalCount={(count as any)?.total}
               emptyStateText="There are no trip payments for this customer."
