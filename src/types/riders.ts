@@ -31,6 +31,9 @@ export interface FetchedRider {
     org_data: {
         name: string;
     }
+    ride_data?: {
+        total: 1
+    }
 }
 
 export interface FetchedRiderCount {

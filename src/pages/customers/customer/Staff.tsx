@@ -53,7 +53,13 @@ export const CustomerStaffsPage: React.FC = () => {
       },
       {
         header: () => "Trips taken",
-        accessorKey: "trip_duration",
+        accessorKey: "ride_data.total",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedRider
+          return (
+            <div className="text-sm text-grey-dark-2 capitalize whitespace-nowrap">{item?.ride_data?.total || "0"}</div>
+          )
+        }
       },
       {
         header: () => "Supervisor",
