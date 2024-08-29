@@ -74,7 +74,7 @@ export const DriverProfilePage: React.FC = () => {
                     <RenderIf condition={!!driver?.org_data?._id}>
                     <div className="grid gap-1">
                         <h4 className="text-grey-dark-3 text-sm">Model</h4>
-                        <span className="text-grey-dark-1 text-sm">{pascalCaseToWords(PurchaseModel[driver?.org_data?.purchase_model!])}</span>
+                        <span className="text-grey-dark-1 text-sm">{pascalCaseToWords(PurchaseModel[driver?.org_data?.purchase_model!] ?? "")}</span>
                     </div>
                     </RenderIf>
                 </div>
