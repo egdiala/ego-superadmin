@@ -6,9 +6,11 @@ import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { cn } from "@/libs/cn";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { useGetWalletStats, useGetWalletTransactions } from "@/services/hooks/queries";
-import { FetchedWalletTransaction, FetchedWalletTransactionCount } from "@/types/wallet";
+import { FetchedWalletTransaction, FetchedWalletTransactionCount, WalletStatus } from "@/types/wallet";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { Loader } from "@/components/core/Button/Loader";
+import { format, formatRelative } from "date-fns";
+import { formattedNumber } from "@/utils/textFormatter";
 
 export const WalletPage: React.FC = () => {
     const location = useLocation();
@@ -24,34 +26,60 @@ export const WalletPage: React.FC = () => {
         {
             header: () => "Date & Time",
             accessorKey: "createdAt",
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as FetchedWalletTransaction
+                return (
+                    <div className="flex items-center gap-2.5">
+                        <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap">
+                            <span className="capitalize">{formatRelative(item?.updatedAt, new Date()).split("at")[0]}</span> • {format(item?.updatedAt, "p")}
+                        </div>
+                    </div>
+                )
+            }
         },
         {
             header: () => "Transaction ID",
-            accessorKey: "lastName",
+            accessorKey: "transaction_id",
         },
         {
             header: () => "Description",
-            accessorKey: "age",
+            accessorKey: "description",
         },
         {
             header: () => "Business/Staff Name",
-            accessorKey: "visits",
+            accessorKey: "business_name",
         },
         {
             header: () => "Type",
-            accessorKey: "type",
+            accessorKey: "transaction_type",
         },
         {
             header: () => "Model",
-            accessorKey: "progress",
+            accessorKey: "payment_method",
         },
         {
             header: () => "Amount",
             accessorKey: "amount",
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as FetchedWalletTransaction
+                return (
+                    <div className="flex items-center gap-2.5">
+                        {formattedNumber(item?.amount)}
+                    </div>
+                )
+            }
         },
         {
             header: () => "Status",
             accessorKey: "status",
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as FetchedWalletTransaction
+                return (
+                    <div className="flex items-center gap-2.5">
+                        {WalletStatus[item?.status]}
+                    </div>
+                )
+            }
         },
     ];
 
@@ -67,8 +95,8 @@ export const WalletPage: React.FC = () => {
 
     const trips = useMemo(() => {
         return [
-            { label: "Wallet balance", value: "₦235,402,853", color: "bg-[#F8F9FB]" },
-            { label: "Count", value: "2,853", color: "bg-green-4" },
+            { label: "Wallet balance", value: formattedNumber((count as FetchedWalletTransactionCount)?.balance || 0), color: "bg-[#F8F9FB]" },
+            { label: "Count", value: (count as FetchedWalletTransactionCount)?.total, color: "bg-green-4" },
         ]
     },[])
   

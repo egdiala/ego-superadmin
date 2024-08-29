@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 export interface FetchWalletStatsQuery {
     status?: "1" | "2"; // 1=successful, 2=failed
     auth_id?: string;
@@ -120,7 +121,8 @@ export interface FetchedWalletTransaction {
 
 export interface FetchedWalletTransactionCount {
     _id: null;
-    total: number
+    total: number;
+    balance?: number;
 }
 
 export interface FetchedWalletTransactionCountStatus {
@@ -136,4 +138,13 @@ export interface FetchedWalletStatsCount {
     credit_total?: number;
     debit_total?: number;
     failed_total?: number;
+}
+
+export enum WalletStatus {
+    Pending = 0, // 0 = pending
+    Successful = 1, // 1 = successful, completed, done
+    Failed = 2, // 2 = failed, canceled, declined
+    Abandoned = 3, // 3 = Abandoned
+    Refunded = 4, // 4 = refunded
+    Suspended = 5, // 5 = suspend
 }
