@@ -51,4 +51,5 @@ export interface FetchRidersQuery {
     page?: string;
     item_per_page?: string;
     component?: "count" | "export" | "count-status";
+    organization_id?: string;
 }

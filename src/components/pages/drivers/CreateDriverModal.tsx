@@ -1,4 +1,4 @@
-import React, { type ChangeEvent, DragEvent, Fragment, useState } from "react";
+import React, { type ChangeEvent, DragEvent, Fragment, useMemo, useState } from "react";
 import { Icon } from "@iconify/react";
 import { Loader } from "@/components/core/Button/Loader";
 import { bulkCreateDriverSchema, createDriverSchema } from "@/validations/driver";
@@ -8,6 +8,7 @@ import { useBulkUploadDrivers, useCreateDriver } from "@/services/hooks/mutation
 import { Dialog, DialogPanel, DialogTitle, Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { AxiosProgressEvent } from "axios";
+import { useGetStatesByCountry } from "@/services/hooks/queries";
 
 interface CreateDriverModalProps {
     isOpen: boolean;
@@ -17,6 +18,10 @@ interface CreateDriverModalProps {
 
 const SingleDriver: React.FC<CreateDriverModalProps> = ({ close }) => {
     const { mutate: create, isPending } = useCreateDriver(() => onClose())
+    const { data: states, isFetching: fetchingStates } = useGetStatesByCountry("NG")
+    const fetchedStates = useMemo(() => {
+        return states?.map((state) => ({ label: state.name, value: state.name }))?.sort((a,b) => a?.label > b?.label ? 1 : -1)
+    }, [states])
     const genders = [
         { label: "Male", value: "male" },
         { label: "Female", value: "female" }
@@ -30,7 +35,9 @@ const SingleDriver: React.FC<CreateDriverModalProps> = ({ close }) => {
             phone_number: "",
             gender: "",
             nin: "",
-            driver_license: ""
+            driver_license: "",
+            dob: "",
+            state_origin: "",
         },
         validationSchema: createDriverSchema,
         onSubmit(values) {
@@ -57,6 +64,10 @@ const SingleDriver: React.FC<CreateDriverModalProps> = ({ close }) => {
                 <div className="flex flex-col md:flex-row md:items-start gap-6">
                     <Input type="text" label="NIN" {...register("nin")} />
                     <Input type="text" label="Driver’s License No." {...register("driver_license")} />
+                </div>
+                <div className="flex flex-col md:flex-row md:items-start gap-6">
+                    <Input type="date" label="Date of Birth" {...register("dob")} />
+                    <SelectInput options={fetchedStates ?? []} disabled={fetchingStates} label="State of Origin" {...register("state_origin")} />
                 </div>
                 <Input type="text" label="Email" {...register("email")} />
                 {/* <div className="flex flex-col md:flex-row md:items-start gap-6">

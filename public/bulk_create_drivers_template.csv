@@ -1,2 +1,2 @@
-first_name,last_name,email,phone_number,gender,nin,driver_license
-John,Doe,zenodriver1@zeno.ng,08084779698,male,20029435497,2000055502
+first_name,last_name,email,phone_number,gender,nin,driver_license,dob,state_origin
+John,Doe,zenodriver1@zeno.ng,08084779698,male,20029435497,2000055502,1998-03-01,lagos

@@ -37,3 +37,6 @@ export const GET_WALLET_TRANSACTION = "get-wallet-transaction"
 
 // Other
 export const GET_INDUSTRIES = "get-industries"
+
+// CountryStateCity
+export const GET_STATES_BY_COUNTRY = "get-states-by-country"

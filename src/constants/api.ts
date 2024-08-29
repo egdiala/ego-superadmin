@@ -44,3 +44,6 @@ export const GET_WALLET_TRANSACTION_API = "admin/wallets/wallet-transaction"
 
 // Other
 export const GET_INDUSTRIES_API = "industries"
+
+// Country
+export const COUNTRY_API = "countries"

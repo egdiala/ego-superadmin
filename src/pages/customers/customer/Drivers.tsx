@@ -16,8 +16,8 @@ export const CustomerDriversPage: React.FC = () => {
     const location = useLocation();
     const [page, setPage] = useState(1)
     const [searchParams, setSearchParams] = useSearchParams();
-    const { data: count, isFetching: fetchingCount } = useGetVehicles({ component: "count", organization_id: params?.id as string })
-    const { data: organizationVehicles, isFetching: isFetchingOrganizationVehicles } = useGetVehicles({ organization_id: params?.id as string })
+    const { data: count, isFetching: fetchingCount } = useGetVehicles({ component: "count", organization_id: params?.id as string, driver_assigned: "1" })
+    const { data: organizationVehicles, isFetching: isFetchingOrganizationVehicles } = useGetVehicles({ organization_id: params?.id as string, driver_assigned: "1" })
 
     const columns = [
       {

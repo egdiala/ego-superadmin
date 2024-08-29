@@ -8,6 +8,8 @@ export const createDriverSchema = Yup.object().shape({
     phone_number: Yup.string().required("Phone number is required"),
     gender: Yup.string().required("Select a gender"),
     nin: Yup.string().length(11, "NIN should be 11 digits").required("NIN is required"),
+    dob: Yup.string().required("Date of birth is required"),
+    state_origin: Yup.string().required("State of origin is required"),
     driver_license: Yup.string().min(8, "Driver's license must be at least 8 characters long").max(14, "Driver's license cannot be more than 14 characters long").required("Driver license is required"),
 })
 

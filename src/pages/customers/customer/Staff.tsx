@@ -1,20 +1,47 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
-import { makeData } from "@/hooks/makeData";
 import { SearchInput, Table, TableAction } from "@/components/core";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useDebounce } from "@/hooks/useDebounce";
+import { useGetRiders } from "@/services/hooks/queries";
+import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
+import { FetchedRider, FetchedRiderCount, FetchedRiders } from "@/types/riders";
+import { motion } from "framer-motion";
+import { pageVariants } from "@/constants/animateVariants";
+import { format, formatRelative } from "date-fns";
 
 export const CustomerStaffsPage: React.FC = () => {
-    const dummyData = makeData(50);
-    const [data, setData] = React.useState(dummyData);
+    const params = useParams();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const itemsPerPage = 10;
+    const [page, setPage] = useState(1)
+    const { value, onChangeHandler } = useDebounce(500)
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
+    const { data: count, isFetching: fetchingCount, refetch } = useGetRiders({ component, q: value, organization_id: params?.id as string })
+    const { data: riders, isLoading } = useGetRiders({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value, organization_id: params?.id as string })
 
     const columns = [
       {
         header: () => "Creation Date",
         accessorKey: "createdAt",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedRider
+          return (
+            <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{formatRelative(item?.createdAt, new Date()).split("at")[0]}</span> • {format(item?.createdAt, "p")}</div>
+          )
+        }
       },
       {
         header: () => "Name",
-        accessorKey: "fullName",
+        accessorKey: "first_name",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedRider
+          return (
+            <div className="text-sm text-grey-dark-2 capitalize whitespace-nowrap">{item?.first_name} {item?.last_name}</div>
+          )
+        }
       },
       {
         header: () => "Email",
@@ -26,41 +53,34 @@ export const CustomerStaffsPage: React.FC = () => {
       },
       {
         header: () => "Trips taken",
-        accessorKey: "lastName",
+        accessorKey: "trip_duration",
       },
       {
         header: () => "Supervisor",
-        accessorKey: "lastName",
+        accessorKey: "org_data.name",
       },
     ];
 
-    const paginateData = (currentPage: number, rowsPerPage: number) => {
-      const startIndex = (currentPage - 1) * rowsPerPage;
-      const endIndex = startIndex + rowsPerPage;
-      const newData = dummyData.slice(startIndex, endIndex);
-      setData(newData);
+    const handlePageChange = (page: number) => {
+      // in a real page, this function would paginate the data from the backend
+      setPage(page)
+      setPaginationParams(page, itemsPerPage, searchParams, setSearchParams)
     };
 
-    const handlePageChange = (currentPage: number, rowsPerPage: number) => {
-      // in a real page, this function would paginate the data from the backend
-      paginateData(currentPage, rowsPerPage);
-    };
-
-    const getData = (currentPage: number, rowsPerPage: number) => {
-      // in a real page, this function would paginate the data from the backend
-      paginateData(currentPage, rowsPerPage);
-    };
+    useEffect(() => {
+      getPaginationParams(location, setPage, () => {})
+    }, [location])
     
     return (
-        <div className="flex flex-col gap-4 pt-4">
+        <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-4 pt-4">
             <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
                 <div className="w-full md:w-1/3 xl:w-1/4">
-                    <SearchInput placeholder="Search reference" />
+                    <SearchInput placeholder="Search staff" onChange={onChangeHandler} disabled={isLoading || fetchingCount} />
                 </div>
                 
                 <div className="flex items-center gap-2 flex-wrap">
                     <div className="flex items-center gap-2 w-full sm:w-auto">
-                        <TableAction theme="ghost" block>
+                        <TableAction theme="ghost" block disabled={isLoading || fetchingCount} onClick={() => component === "export" ? refetch() : setComponent("export")}>
                             <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
                             Export
                         </TableAction>
@@ -72,15 +92,15 @@ export const CustomerStaffsPage: React.FC = () => {
                 </div>
             </div>
             <Table
-                columns={columns}
-                data={data}
-                getData={getData}
-                perPage={10}
-                page={1}
-                totalCount={dummyData.length}
-                onPageChange={handlePageChange}
-                emptyStateText="You have not added any staff yet."
+              page={page}
+              columns={columns}
+              perPage={itemsPerPage}
+              onPageChange={handlePageChange}
+              totalCount={(count as FetchedRiderCount)?.total}
+              data={(riders as FetchedRiders)?.user_info ?? []}
+              onClick={({ original }) => navigate(`/riders/${original?.auth_id}/profile`)}
+              emptyStateText="You have not added any staff yet."
             />
-        </div>
+        </motion.div>
     )
 }

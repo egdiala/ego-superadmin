@@ -8,6 +8,8 @@ export type CreateDriverType = {
     gender: string;
     nin: string;
     driver_license: string;
+    dob: string;
+    state_origin: string;
 }
 
 export interface FetchedDriverType extends Omit<CreateDriverType, "nin" | "driver_license"> {
