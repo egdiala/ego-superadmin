@@ -45,7 +45,7 @@ export const SuspendDriverModal: React.FC<SuspendDriverModalProps> = ({ isOpen, 
     
     return (
         <Dialog open={isOpen} as="div" className="relative z-10 focus:outline-none" onClose={closeModal}>
-        <div className="fixed inset-0 z-10 w-screen overflow-scroll bg-grey-dark-4/70">
+        <div className="fixed inset-0 z-10 w-screen overflow-scroll scrollbar-hide bg-grey-dark-4/70">
             <div className="flex flex-col min-h-full items-center p-3 justify-end md:justify-center">
                 <DialogPanel as="form" onSubmit={handleSubmit} transition className="flex flex-col gap-5 justify-between w-full max-w-[30.625rem] rounded-lg bg-white p-4 md:p-5 backdrop-blur-2xl duration-300 ease-out transform data-[closed]:translate-y-full">
                     <div className="grid gap-2">

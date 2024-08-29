@@ -30,8 +30,10 @@ export const CustomerPage: React.FC = () => {
   const subRoutes = useMemo(() => {
     const subs = [
         { label: "Dashboard", link: `/customers/${params?.id as string}/dashboard` },
-        (PurchaseModel.Lease === customer?.purchase_model! && { label: "Vehicles", link: `/customers/${params?.id as string}/vehicles` }),
-        (PurchaseModel.Lease === customer?.purchase_model! && { label: "Drivers", link: `/customers/${params?.id as string}/drivers` }),
+        ((PurchaseModel.Lease) === customer?.purchase_model! && { label: "Vehicles", link: `/customers/${params?.id as string}/vehicles` }),
+        ((PurchaseModel.Lease) === customer?.purchase_model! && { label: "Drivers", link: `/customers/${params?.id as string}/drivers` }),
+        ((PurchaseModel.EHailing) === customer?.purchase_model! && { label: "Vehicles", link: `/customers/${params?.id as string}/vehicles` }),
+        ((PurchaseModel.EHailing) === customer?.purchase_model! && { label: "Drivers", link: `/customers/${params?.id as string}/drivers` }),
         { label: "Staff", link: `/customers/${params?.id as string}/staffs` },
         { label: "Trip History", link: `/customers/${params?.id as string}/trip-history` },
         { label: "Wallet", link: `/customers/${params?.id as string}/wallet` },
@@ -65,19 +67,21 @@ export const CustomerPage: React.FC = () => {
                         Edit
                     </TableAction>
                 </div>
-                <div className="grid grid-cols-2 gap-2">
+                <div className={cn("grid gap-2", (PurchaseModel.StaffCommute) !== customer?.purchase_model! ? "grid-cols-2" : "grid-cols-1")}>
                     <TableAction type="button" theme="secondary" onClick={toggleSuspendCustomer} block>
                         <Icon icon="ph:exclamation-mark-bold" className="size-4" />
                         {customer?.status === 1 ? "Suspend Customer" : "Unsuspend Customer"}
                     </TableAction>
+                    <RenderIf condition={(PurchaseModel.StaffCommute) !== customer?.purchase_model!}>
                     <TableAction type="button" theme="primary" onClick={() => navigate(`/customers/${params?.id as string}/assign`)} block>
                         <Icon icon="lucide:plus" className="size-4" />
                         Assign Vehicles
                     </TableAction>
+                    </RenderIf>
                 </div>
               </div>
             </div>
-            <div className="rounded border-2 border-grey-dark-4 p-1 flex items-center gap-2 w-full overflow-scroll">
+            <div className="rounded border-2 border-grey-dark-4 p-1 flex items-center gap-2 w-full overflow-scroll scrollbar-hide">
               {
                 subRoutes.map((route, idx) => 
                 <Fragment key={route.link}>

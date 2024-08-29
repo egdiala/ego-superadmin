@@ -63,7 +63,7 @@ export const DriverPage: React.FC = () => {
                 </Button>
               </div>
             </div>
-            <div className="rounded border-2 border-grey-dark-4 p-1 flex items-center gap-2 w-full overflow-scroll">
+            <div className="rounded border-2 border-grey-dark-4 p-1 flex items-center gap-2 w-full overflow-scroll scrollbar-hide">
               {
                 subRoutes.map((route, idx) => 
                 <Fragment key={route.link}>

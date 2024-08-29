@@ -43,7 +43,7 @@ export const VehiclePage: React.FC = () => {
                                 </Button>
                             </div>
                         </div>
-                        <div className="rounded border-2 border-grey-dark-4 p-1 flex items-center gap-2 w-full md:w-1/2 overflow-scroll">
+                        <div className="rounded border-2 border-grey-dark-4 p-1 flex items-center gap-2 w-full md:w-1/2 overflow-scroll scrollbar-hide">
                         {
                             subRoutes.map((route, idx) => 
                             <Fragment>
