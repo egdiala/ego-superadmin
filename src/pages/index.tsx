@@ -30,21 +30,19 @@ export const DashboardPage: React.FC = () => {
                         <TotalTrips className="xl:col-span-4" />
                         <Vehicles data={vehiclesCount as FetchedVehicleCountStatus} className="xl:col-span-3" />
                     </div>
-                    <div className="grid gap-6 xl:grid-cols-2">
-                        <TripDetails />
-                        <ServiceRequests data={serviceRequestCount as FetchedServiceRequestsCountStatus} />
-                    </div>
-                    <div className="grid gap-6 xl:grid-cols-7">
-                        <TotalDrivers data={driversCount as FetchedDriverCountStatus} className="xl:col-span-3" />
-                        <DistanceCovered className="xl:col-span-4" />
-                    </div>
-                    <div className="grid gap-6 xl:grid-cols-7">
-                        <TopDrivers className="xl:col-span-4" />
-                        <Ratings className="xl:col-span-3" />
-                    </div>
-                    <div className="grid gap-6 xl:grid-cols-7">
-                        <TopVehicles className="xl:col-span-3" />
-                        <TopCommuters className="xl:col-span-4" />
+                    <div className="grid gap-6 grid-cols-1 xl:grid-cols-2">
+                        <div className="grid gap-6 content-start">
+                            <TripDetails />
+                            <TotalDrivers data={driversCount as FetchedDriverCountStatus} />
+                            <TopDrivers />
+                            <TopVehicles />
+                        </div>
+                        <div className="grid gap-6 content-start">
+                            <ServiceRequests data={serviceRequestCount as FetchedServiceRequestsCountStatus} />
+                            <DistanceCovered />
+                            <Ratings />
+                            <TopCommuters />
+                        </div>
                     </div>
                 </motion.div>
             </RenderIf>
