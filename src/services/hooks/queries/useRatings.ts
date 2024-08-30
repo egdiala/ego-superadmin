@@ -10,6 +10,7 @@ export const useGetRatings = (query: FetchRatingsQuery) => {
     queryFn: () => getRatings(query),
     select: (res) => res?.data as FetchedRating[] | FetchedRatingCountStatus,
     retry: false,
+    refetchOnWindowFocus: false,
     throwOnError(error) {
       errorToast(error)
       return false;

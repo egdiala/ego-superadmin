@@ -1,37 +1,43 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
 import { BarChart, TableAction } from "@/components/core";
+import type { FetchedVehicleCountStatus } from "@/types/vehicles";
 import { Menu, MenuButton, MenuHeading, MenuItem, MenuItems, MenuSection } from "@headlessui/react"
 
 interface VehiclesHomeProps {
+    data: FetchedVehicleCountStatus
     [x: string]: any
 }
 
-export const Vehicles: React.FC<VehiclesHomeProps> = ({ className }) => {
-    const referrals = [
-        { label: "total", amount: "54,936" },
-        { label: "assigned", amount: "4,936" },
-        { label: "unassigned", amount: "234" },
-        { label: "active", amount: "35" },
-    ]
-    const data = [
-        {
-            "label": "Unassigned",
-            "total": 4,
-            "totalColor": "hsla(206, 10%, 55%, 1)",
-        },
-        {
-            "label": "Assigned",
-            "confirmed": 13,
-            "confirmedColor": "hsla(113, 43%, 50%, 1)",
-        },
-        {
-            "label": "Active",
-            "pending": 2,
-            "pendingColor": "hsla(206, 10%, 55%, 1)",
-        },
-    ]
+export const Vehicles: React.FC<VehiclesHomeProps> = ({ className, data }) => {
+    const referrals = useMemo(() => {
+        return [
+            { label: "total", amount: data?.total },
+            { label: "assigned", amount: data?.org_assigned },
+            { label: "unassigned", amount: data?.total - data?.driver_assigned },
+            { label: "active", amount: data?.active_count },
+        ]
+    },[data?.active_count, data?.driver_assigned, data?.org_assigned, data?.total])
+    const items = useMemo(() => {
+        return [
+            {
+                "label": "Unassigned",
+                "total": data?.total - data?.driver_assigned,
+                "totalColor": "hsla(206, 10%, 55%, 1)",
+            },
+            {
+                "label": "Assigned",
+                "confirmed": data?.driver_assigned,
+                "confirmedColor": "hsla(113, 43%, 50%, 1)",
+            },
+            {
+                "label": "Active",
+                "pending": data?.active_count,
+                "pendingColor": "hsla(206, 10%, 55%, 1)",
+            },
+        ]
+    },[data?.active_count, data?.driver_assigned, data?.total])
     const filters = ["Vehicle Status", "Business Model"]
     return (
         <div className={cn("flex flex-col p-6 gap-[1.625rem] h-full rounded-lg bg-white", className)}>
@@ -77,7 +83,7 @@ export const Vehicles: React.FC<VehiclesHomeProps> = ({ className }) => {
                     "confirmed",
                     "pending",
                 ]}
-                colors={data.map((item) => item.totalColor ?? item?.confirmedColor ?? item?.pendingColor) as string[]}
+                colors={items.map((item) => item.totalColor ?? item?.confirmedColor ?? item?.pendingColor) as string[]}
                 indexBy="label"
                 margin={{ top: 25, right: 20, bottom: 25, left: 20 }}
                 padding={0.85}
@@ -104,7 +110,7 @@ export const Vehicles: React.FC<VehiclesHomeProps> = ({ className }) => {
                 labelSkipHeight={12}
                 legends={[]}
                 role="application"
-                data={data}
+                data={items}
             />
         </div>
     )

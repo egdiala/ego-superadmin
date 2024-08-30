@@ -94,3 +94,10 @@ export interface BulkUploadVehiclesParams {
 export interface FetchedVehicleCount {
     total: number
 }
+
+export interface FetchedVehicleCountStatus {
+    total: number
+    driver_assigned: number
+    org_assigned: number
+    active_count: number
+}

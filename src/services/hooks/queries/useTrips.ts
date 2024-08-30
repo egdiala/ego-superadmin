@@ -10,6 +10,7 @@ export const useGetTrips = (query: FetchTripsQuery) => {
     queryFn: () => getTrips(query),
     select: (res) => res?.data as FetchedTripType[] | FetchedTripCountStatus,
     retry: false,
+    refetchOnWindowFocus: false,
     throwOnError(error) {
       errorToast(error)
       return false;
@@ -24,5 +25,6 @@ export const useGetTrip = (id: string) => {
     queryFn: () => getTrip(id),
     select: (res) => res?.data as FetchedSingleTrip,
     retry: false,
+    refetchOnWindowFocus: false,
   });
 };

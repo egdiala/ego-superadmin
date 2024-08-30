@@ -22,6 +22,9 @@ export const UPDATE_DRIVER_STATUS_API = "admin/users/account-status"
 // Riders
 export const GET_RIDERS_API = "admin/users/riders"
 
+// Service Requests
+export const GET_SERVICE_REQUESTS_API = "admin/maintenance/service-request"
+
 // Vehicles
 export const GET_VEHICLES_API = "admin/vehicles"
 export const ASSIGN_VEHICLES_API = "admin/vehicles/assign"

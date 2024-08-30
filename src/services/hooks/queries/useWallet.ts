@@ -10,6 +10,7 @@ export const useGetWalletStats = (query: FetchWalletStatsQuery) => {
     queryFn: () => getWalletStats(query),
     select: (res) => res?.data as FetchedWalletStatsCount,
     retry: false,
+    refetchOnWindowFocus: false,
     throwOnError(error) {
       errorToast(error)
       return false;
@@ -23,6 +24,7 @@ export const useGetWalletTransactions = (query: FetchWalletTransactionQuery) => 
     queryFn: () => getWalletTransactions(query),
     select: (res) => res?.data as FetchedWalletTransaction[] | FetchedWalletTransactionCount | FetchedWalletTransactionCountStatus,
     retry: false,
+    refetchOnWindowFocus: false,
     throwOnError(error) {
       errorToast(error)
       return false;

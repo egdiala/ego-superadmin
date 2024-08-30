@@ -62,6 +62,14 @@ export interface FetchedDriverCount {
     }
 }
 
+export interface FetchedDriverCountStatus {
+    total: number;
+    assign: number;
+    un_assign: number;
+    active: number;
+    suspended: number;
+}
+
 export interface BulkUploadDriversParams {
     files: FormData;
     // eslint-disable-next-line no-unused-vars

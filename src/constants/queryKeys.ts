@@ -20,6 +20,9 @@ export const GET_RIDER = "get-rider"
 export const GET_VEHICLES = "get-vehicles"
 export const GET_VEHICLE = "get-vehicle"
 
+// Service Requests
+export const GET_SERVICE_REQUESTS = "get-service-requests"
+
 // Organizations
 export const GET_ORGANIZATIONS = "get-organizations"
 export const GET_ORGANIZATION = "get-organization"

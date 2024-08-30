@@ -10,6 +10,7 @@ export const useGetRiders = (query: FetchRidersQuery) => {
     queryFn: () => getRiders(query),
     select: (res) => res?.data as FetchedRiders | FetchedRiderCount,
     retry: false,
+    refetchOnWindowFocus: false,
     throwOnError(error) {
       errorToast(error)
       return false;
@@ -24,5 +25,6 @@ export const useGetRider = (id: string) => {
     queryFn: () => getRider(id),
     select: (res) => res?.data as FetchedRider,
     retry: false,
+    refetchOnWindowFocus: false,
   });
 };

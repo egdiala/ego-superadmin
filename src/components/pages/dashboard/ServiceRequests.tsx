@@ -1,61 +1,65 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { cn } from "@/libs/cn";
 import { BarChart } from "@/components/core";
+import { FetchedServiceRequestsCountStatus } from "@/types/service-requests";
 
 interface ServiceRequestsHomeProps {
+    data: FetchedServiceRequestsCountStatus
     [x: string]: any
 }
 
-export const ServiceRequests: React.FC<ServiceRequestsHomeProps> = ({ className }) => {
-    const referrals = [
-        { label: "Total Req.", amount: "4,936" },
-        { label: "Pending", amount: "35" },
-        { label: "Cancelled", amount: "234" },
-        { label: "Completed", amount: "4,936" },
-    ]
-    const data = [
+export const ServiceRequests: React.FC<ServiceRequestsHomeProps> = ({ className, data }) => {
+    const referrals = useMemo(() => {
+        return [
+            { label: "Total Req.", amount: data?.total },
+            { label: "Pending", amount: data?.total_pending },
+            { label: "Cancelled", amount: data?.total_rejected },
+            { label: "Completed", amount: data?.total_complete },
+        ]
+    },[data?.total, data?.total_complete, data?.total_pending, data?.total_rejected])
+    const items = [
         {
             "label": "Total",
-            "total": 8,
+            "total": data?.total,
             "totalColor": "hsla(205, 92%, 10%, 1)",
-            "completed": 14,
+            "completed": data?.total_complete,
             "completedColor": "hsla(113, 43%, 50%, 1)",
-            "pending": 5,
+            "pending": data?.total_pending,
             "pendingColor": "hsla(41, 100%, 44%, 1)",
-            "cancelled": 1,
+            "cancelled": data?.total_rejected,
             "cancelledColor": "hsla(4, 80%, 48%, 1)",
         },
         {
             "label": "Completed",
-            "total": 8,
+            "total": data?.total,
             "totalColor": "hsla(205, 92%, 10%, 1)",
-            "completed": 14,
+            "completed": data?.total_complete,
             "completedColor": "hsla(113, 43%, 50%, 1)",
-            "pending": 5,
+            "pending": data?.total_pending,
             "pendingColor": "hsla(41, 100%, 44%, 1)",
-            "cancelled": 1,
+            "cancelled": data?.total_rejected,
             "cancelledColor": "hsla(4, 80%, 48%, 1)",
         },
         {
             "label": "Pending",
-            "total": 8,
+            "total": data?.total,
             "totalColor": "hsla(205, 92%, 10%, 1)",
-            "completed": 14,
+            "completed": data?.total_complete,
             "completedColor": "hsla(113, 43%, 50%, 1)",
-            "pending": 5,
+            "pending": data?.total_pending,
             "pendingColor": "hsla(41, 100%, 44%, 1)",
-            "cancelled": 1,
+            "cancelled": data?.total_rejected,
             "cancelledColor": "hsla(4, 80%, 48%, 1)",
         },
         {
             "label": "Cancelled",
-            "total": 8,
+            "total": data?.total,
             "totalColor": "hsla(205, 92%, 10%, 1)",
-            "completed": 14,
+            "completed": data?.total_complete,
             "completedColor": "hsla(113, 43%, 50%, 1)",
-            "pending": 5,
+            "pending": data?.total_pending,
             "pendingColor": "hsla(41, 100%, 44%, 1)",
-            "cancelled": 1,
+            "cancelled": data?.total_rejected,
             "cancelledColor": "hsla(4, 80%, 48%, 1)",
         },
     ]
@@ -113,7 +117,7 @@ export const ServiceRequests: React.FC<ServiceRequestsHomeProps> = ({ className 
                 legends={[]}
                 role="application"
                 ariaLabel="Service Requests Chart"
-                data={data}
+                data={items}
             />
         </div>
     )

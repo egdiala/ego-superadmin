@@ -10,6 +10,7 @@ export const useGetRoleLists = () => {
     queryFn: getRoleLists,
     select: (res) => res?.data as FetchedRoleLists,
     retry: false,
+    refetchOnWindowFocus: false,
   });
 };
 
@@ -19,6 +20,7 @@ export const useGetRoles = (query: FetchRolesQuery) => {
     queryFn: () => getRoles(query),
     select: (res) => res?.data as FetchedRolesType[] | FetchedRolesCount,
     retry: false,
+    refetchOnWindowFocus: false,
     throwOnError(error) {
       errorToast(error)
       return false;
@@ -32,5 +34,6 @@ export const useGetRole = (id: string) => {
     queryFn: () => getRole(id),
     select: (res) => res?.data as FetchedRolesType,
     retry: false,
+    refetchOnWindowFocus: false,
   });
 };

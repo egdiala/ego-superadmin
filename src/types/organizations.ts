@@ -68,3 +68,10 @@ export interface FetchOrganizationQuery {
 export interface FetchedOrganizationCount {
     total: number
 }
+
+export interface FetchedOrganizationCountStatus {
+    total: number;
+    lease_model: number;
+    staff_model: number;
+    ehailing_model: number;
+}
