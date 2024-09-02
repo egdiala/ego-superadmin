@@ -9,7 +9,7 @@ import { AccountsLayout } from "@/pages/accounts/Accounts";
 import { AccountsPage, RolesPage } from "@/pages/accounts";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { OutstandingPaymentLogPage, OutstandingPaymentPage } from "@/pages/outstanding-payments";
-import { AuthRoutes, ChargeStationsRoutes, CustomersRoutes, DashboardRoutes, DriversRoutes, RevenueSplitRoutes, RidersRoutes, RolesRoutes, TripsRoutes, VehiclesRoutes } from "./modules";
+import { AuthRoutes, ChargeStationsRoutes, CustomersRoutes, DashboardRoutes, DriversRoutes, FeesRoutes, RevenueSplitRoutes, RidersRoutes, RolesRoutes, TripsRoutes, VehiclesRoutes } from "./modules";
 
 
 function LocationProvider({ children }: { children: ReactNode }) {
@@ -39,6 +39,7 @@ const Router = () => {
                 <Route path="outstanding-payment-log" element={<ProtectedLayout><LocationProvider><OutstandingPaymentLogPage /></LocationProvider></ProtectedLayout>} />
                 <Route path="outstanding-payment-log/:id" element={<ProtectedLayout><LocationProvider><OutstandingPaymentPage /></LocationProvider></ProtectedLayout>} />
                 <Route path="revenue-split/*" element={<ProtectedLayout><LocationProvider><RevenueSplitRoutes /></LocationProvider></ProtectedLayout>} />
+                <Route path="fees/*" element={<ProtectedLayout><LocationProvider><FeesRoutes /></LocationProvider></ProtectedLayout>} />
             </Routes>
         </BrowserRouter>
     );

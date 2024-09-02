@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 import { makeData } from "@/hooks/makeData"
 import { Table, TableAction } from "@/components/core"
 import { pageVariants } from "@/constants/animateVariants"
-import { AddNewParameter, EditParameter } from "@/components/pages/revenue-split"
+import { AddNewParameter, DeleteParameter, EditParameter } from "@/components/pages/revenue-split"
 
 export const RevenueSplitStaffCommutePage: React.FC = () => {
     const dummyData = makeData(50);
@@ -13,6 +13,7 @@ export const RevenueSplitStaffCommutePage: React.FC = () => {
     const [page] = useState(1)
     const [toggleModals, setToggleModals] = useState({
         openAddNewParameterModal: false,
+        openDeleteParameterModal: false,
         openEditParameterModal: false
     })
 
@@ -29,6 +30,13 @@ export const RevenueSplitStaffCommutePage: React.FC = () => {
         openEditParameterModal: !toggleModals.openEditParameterModal,
         }))
     }, [toggleModals.openEditParameterModal])
+
+    const toggleDeleteParameter = useCallback(() => {
+        setToggleModals((prev) => ({
+        ...prev,
+        openDeleteParameterModal: !toggleModals.openDeleteParameterModal,
+        }))
+    }, [toggleModals.openDeleteParameterModal])
 
     const columns = [
         {
@@ -55,6 +63,7 @@ export const RevenueSplitStaffCommutePage: React.FC = () => {
                         <button
                             type="button"
                             className="text-semantics-error bg-semantics-error/10 rounded py-1 px-2  text-sm"
+                            onClick={toggleDeleteParameter}
                         >
                             Delete
                         </button>
@@ -103,6 +112,7 @@ export const RevenueSplitStaffCommutePage: React.FC = () => {
             />
             <AddNewParameter isOpen={toggleModals.openAddNewParameterModal} close={toggleNewParameter} />
             <EditParameter isOpen={toggleModals.openEditParameterModal} close={toggleEditParameter} />
+            <DeleteParameter isOpen={toggleModals.openDeleteParameterModal} close={toggleDeleteParameter} />
         </motion.div>
     )
 }

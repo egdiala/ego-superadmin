@@ -6,7 +6,7 @@ import { Table, TableAction } from "@/components/core"
 import { pageVariants } from "@/constants/animateVariants"
 import { AddNewParameter, DeleteParameter, EditParameter } from "@/components/pages/revenue-split"
 
-export const RevenueSplitLeasePage: React.FC = () => {
+export const FeesLeasePage: React.FC = () => {
     const dummyData = makeData(50);
     const [data, setData] = useState(dummyData);
     const itemsPerPage = 10;
