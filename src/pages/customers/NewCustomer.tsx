@@ -1,7 +1,7 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { format, formatRelative } from "date-fns";
 import { FetchedVehicleType } from "@/types/vehicles";
 import { PurchaseModel } from "@/types/organizations";
@@ -13,10 +13,15 @@ import { useGetIndustries, useGetVehicles } from "@/services/hooks/queries";
 import { useAssignVehicle, useCreateOrganization } from "@/services/hooks/mutations";
 import { assignVehicleToOrganisationSchema, createOrganizationSchema } from "@/validations/organizations";
 import { Breadcrumb, Button, Checkbox, Input, RenderIf, SearchInput, SelectInput, Table } from "@/components/core";
+import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 
 export const NewCustomersPage: React.FC = () => {
     const navigate = useNavigate()
+    const location = useLocation()
     const [step, setStep] = useState(1)
+    const itemsPerPage = 10;
+    const [page, setPage] = useState(1)
+    const [searchParams, setSearchParams] = useSearchParams();
     const { mutate, isPending } = useAssignVehicle(() => navigate("/customers"))
     const { data: vehicles, isFetching: isFetchingVehicles } = useGetVehicles({ driver_assigned: "1", organization_assigned: "0" })
     const { data: fetchedIndustries, isFetching } = useGetIndustries()
@@ -151,15 +156,15 @@ export const NewCustomersPage: React.FC = () => {
       }
     ];
 
-  const handlePageChange = () => {
-    // in a real page, this function would paginate the data from the backend
+    const handlePageChange = (page: number) => {
+      // in a real page, this function would paginate the data from the backend
+      setPage(page)
+        setPaginationParams(page, itemsPerPage, searchParams, setSearchParams)
+    };
 
-  };
-
-  const getData = () => {
-    // in a real page, this function would paginate the data from the backend
-
-  };
+    useEffect(() => {
+      getPaginationParams(location, setPage, () => {})
+    }, [location, setPage])
 
   return (
       <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">
@@ -228,14 +233,13 @@ export const NewCustomersPage: React.FC = () => {
                               </div>
                               <RenderIf condition={!isFetchingVehicles}>
                                 <Table
-                                    getData={getData}
+                                    page={page}
                                     columns={columns}
-                                    data={(vehicles as FetchedVehicleType[]) ?? []}
-                                    page={1}
-                                    perPage={10}
-                                    totalCount={(vehicles as FetchedVehicleType[])?.length}
+                                    perPage={itemsPerPage}
                                     onPageChange={handlePageChange}
+                                    data={(vehicles as FetchedVehicleType[]) ?? []}
                                     emptyStateText="You have not added any vehicle yet."
+                                    totalCount={(vehicles as FetchedVehicleType[])?.length}
                                 />
                                 <div className="flex items-center justify-end md:w-1/2 xl:w-1/6 ml-auto pt-10 gap-2 md:gap-4 w-full">
                                     <Button type="button" theme="tertiary" onClick={() => setStep(1)} block>Previous</Button>

@@ -1,21 +1,26 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { format, formatRelative } from "date-fns";
 import { FetchedVehicleType } from "@/types/vehicles";
 import { Loader } from "@/components/core/Button/Loader";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { pageVariants } from "@/constants/animateVariants";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { useAssignVehicle } from "@/services/hooks/mutations";
 import { useGetOrganization, useGetVehicles } from "@/services/hooks/queries";
 import { assignVehicleToOrganisationSchema } from "@/validations/organizations";
 import { Breadcrumb, Button, Checkbox, RenderIf, SearchInput, Table } from "@/components/core";
+import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 
 export const AssignOrganizationVehiclesPage: React.FC = () => {
     const params = useParams()
+    const location = useLocation()
     const navigate = useNavigate()
+    const itemsPerPage = 10;
+    const [page, setPage] = useState(1)
+    const [searchParams, setSearchParams] = useSearchParams();
     const { mutate, isPending } = useAssignVehicle(() => navigate("/customers"))
     const { data: customer, isFetching: isFetchingCustomer } = useGetOrganization(params?.id as string)
     const { data: vehicles, isFetching: isFetchingVehicles } = useGetVehicles({ driver_assigned: "1", organization_assigned: "0" })
@@ -103,15 +108,16 @@ export const AssignOrganizationVehiclesPage: React.FC = () => {
       }
     ];
 
-    const handlePageChange = () => {
-        // in a real page, this function would paginate the data from the backend
-
+    const handlePageChange = (page: number) => {
+      // in a real page, this function would paginate the data from the backend
+      setPage(page)
+        setPaginationParams(page, itemsPerPage, searchParams, setSearchParams)
     };
 
-    const getData = () => {
-        // in a real page, this function would paginate the data from the backend
-
-    };
+    useEffect(() => {
+      getPaginationParams(location, setPage, () => {})
+    }, [location, setPage])
+  
     return (
         <Fragment>
             <RenderIf condition={!isFetchingVehicles && !isFetchingCustomer}>
@@ -134,14 +140,13 @@ export const AssignOrganizationVehiclesPage: React.FC = () => {
                             </div>
                             <RenderIf condition={!isFetchingVehicles}>
                                 <Table
-                                    getData={getData}
+                                    page={page}
                                     columns={columns}
-                                    data={(vehicles as FetchedVehicleType[]) ?? []}
-                                    page={1}
-                                    perPage={10}
-                                    totalCount={(vehicles as FetchedVehicleType[])?.length}
+                                    perPage={itemsPerPage}
                                     onPageChange={handlePageChange}
+                                    data={(vehicles as FetchedVehicleType[]) ?? []}
                                     emptyStateText="You have not added any vehicle yet."
+                                    totalCount={(vehicles as FetchedVehicleType[])?.length}
                                 />
                             </RenderIf>
                             <RenderIf condition={isFetchingVehicles}>
