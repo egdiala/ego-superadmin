@@ -55,10 +55,10 @@ export const TripPage: React.FC = () => {
         <Fragment>
             <RenderIf condition={!isFetching}>
                 <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">
-                    <Breadcrumb items={[{ label: "All Trips", link: "/trips" }, { label: "Trip 39i439HIJD03", link: `/trips/${params?.id as string}/profile` }]} showBack />
+                    <Breadcrumb items={[{ label: "All Trips", link: "/trips" }, { label: trip?.trip_ref as string, link: `/trips/${params?.id as string}/profile` }]} showBack />
                     <div className="grid content-start gap-5 p-4 bg-white rounded-lg">
                         <div className="flex items-center justify-between">
-                            <h1 className="text-grey-dark-1 font-bold text-xl">Trip 39i439HIJD03</h1>
+                            <h1 className="text-grey-dark-1 font-bold text-xl">Trip {trip?.trip_ref}</h1>
                             <div className="flex items-center gap-2 pb-4 w-full sm:w-auto">
                                 <TableAction theme="ghost" block>
                                     <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
