@@ -6,7 +6,7 @@ import { PurchaseModel } from "@/types/organizations";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useGetOrganization } from "@/services/hooks/queries";
-import { Breadcrumb, RenderIf, TableAction } from "@/components/core";
+import { Breadcrumb, Button, RenderIf, TableAction } from "@/components/core";
 import { NavLink, Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { SuspendCustomerModal } from "@/components/pages/customers";
 
@@ -67,12 +67,16 @@ export const CustomerPage: React.FC = () => {
                         Edit
                     </TableAction>
                 </div>
-                <div className={cn("grid gap-2", (PurchaseModel.StaffCommute) !== customer?.purchase_model! ? "grid-cols-2" : "grid-cols-1")}>
+                <div className={cn("grid gap-2", (PurchaseModel.StaffCommute) !== customer?.purchase_model! ? "grid-cols-3" : "grid-cols-1")}>
                     <TableAction type="button" theme="secondary" onClick={toggleSuspendCustomer} block>
                         <Icon icon="ph:exclamation-mark-bold" className="size-4" />
                         {customer?.status === 1 ? "Suspend Customer" : "Unsuspend Customer"}
                     </TableAction>
                     <RenderIf condition={(PurchaseModel.StaffCommute) !== customer?.purchase_model!}>
+                    <Button type="button" theme="danger" onClick={() => navigate(`/customers/${params?.id as string}/revoke`)} block>
+                      <Icon icon="ph:trash-bold" className="size-4" />
+                      Revoke Vehicle
+                    </Button>
                     <TableAction type="button" theme="primary" onClick={() => navigate(`/customers/${params?.id as string}/assign`)} block>
                         <Icon icon="lucide:plus" className="size-4" />
                         Assign Vehicles

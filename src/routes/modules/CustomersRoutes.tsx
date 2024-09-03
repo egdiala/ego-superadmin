@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { AssignOrganizationVehiclesPage, CustomerDashboardPage, CustomerDriversPage, CustomerPage, CustomerRatingsPage, CustomersPage, CustomerStaffsPage, CustomerTripHistoryPage, CustomerTripPaymentPage, CustomerVehiclesPage, CustomerWalletPage, EditCustomerPage, NewCustomersPage } from "@/pages/customers";
+import { AssignOrganizationVehiclesPage, CustomerDashboardPage, CustomerDriversPage, CustomerPage, CustomerRatingsPage, CustomersPage, CustomerStaffsPage, CustomerTripHistoryPage, CustomerTripPaymentPage, CustomerVehiclesPage, CustomerWalletPage, EditCustomerPage, NewCustomersPage, RevokeOrganizationVehiclesPage } from "@/pages/customers";
 
 const CustomersRoutes = () => {
   return (
@@ -18,6 +18,7 @@ const CustomersRoutes = () => {
       </Route>
       <Route path=":id/edit" element={<EditCustomerPage />} />
       <Route path=":id/assign" element={<AssignOrganizationVehiclesPage />} />
+      <Route path=":id/revoke" element={<RevokeOrganizationVehiclesPage />} />
     </Routes>
   );
 };
