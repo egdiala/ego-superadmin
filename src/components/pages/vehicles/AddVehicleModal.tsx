@@ -23,8 +23,8 @@ const SingleVehicle: React.FC<AddVehicleModalProps> = ({ close }) => {
         initialValues: {
             plate_no: "",
             model: "",
-            year_manufacture: "" as unknown as Date,
-            year_purchase: "" as unknown as Date,
+            year_manufacture: "" as unknown as Date | any,
+            year_purchase: "" as unknown as Date | any,
             vehicle_color: "",
             vehicle_oem: "",
             vehicle_vin: "",
@@ -55,7 +55,7 @@ const SingleVehicle: React.FC<AddVehicleModalProps> = ({ close }) => {
                     <div className="grid grid-cols-1">
                         <DatePicker
                             selected={values.year_manufacture}
-                            onChange={(date) => setFieldValue("year_manufacture", date)}
+                            onChange={(date) => setFieldValue("year_manufacture", date?.getFullYear()?.toString())}
                             showYearPicker
                             dateFormat="yyyy"
                             customInput={<Input type="text" inputMode="numeric" iconRight="mingcute:calendar-fill" label="Year of Manufacture" />}
@@ -64,7 +64,7 @@ const SingleVehicle: React.FC<AddVehicleModalProps> = ({ close }) => {
                     <div className="grid grid-cols-1">
                         <DatePicker
                             selected={values.year_purchase}
-                            onChange={(date) => setFieldValue("year_purchase", date)}
+                            onChange={(date) => setFieldValue("year_purchase", date?.getFullYear()?.toString())}
                             showYearPicker
                             dateFormat="yyyy"
                             customInput={<Input type="text" inputMode="numeric" iconRight="mingcute:calendar-fill" label="Purchase Year" />}
