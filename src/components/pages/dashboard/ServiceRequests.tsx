@@ -5,7 +5,7 @@ import { FetchedServiceRequestsCountStatus } from "@/types/service-requests";
 
 interface ServiceRequestsHomeProps {
     data: FetchedServiceRequestsCountStatus
-    [x: string]: any
+    [key: PropertyKey]: any
 }
 
 export const ServiceRequests: React.FC<ServiceRequestsHomeProps> = ({ className, data }) => {

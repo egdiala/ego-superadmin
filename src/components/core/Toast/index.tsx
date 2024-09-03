@@ -21,7 +21,7 @@ export interface ToastProps {
   /**
    * Other unknown attributes
    */
-  [x: string]: unknown;
+  [key: PropertyKey]: unknown;
 }
 
 const alert = {

@@ -43,7 +43,7 @@ interface ComboBoxProps<T> {
   /**
    * Other unknown attributes
    */
-  [x: string]: unknown;
+  [key: PropertyKey]: unknown;
 }
 
 export const ComboBox: React.FC<ComboBoxProps<any>> = ({ containerVariant, label, help, error, selected, options, onChange, displayValue, defaultValue, optionLabel, setSelected, onClose, disabled = false }) => {

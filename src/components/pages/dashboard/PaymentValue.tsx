@@ -2,7 +2,7 @@ import React from "react";
 import { cn } from "@/libs/cn";
 
 interface PaymentValueDashboardProps {
-    [x: string]: any
+    [key: PropertyKey]: any
 }
 
 export const PaymentValue: React.FC<PaymentValueDashboardProps> = ({ className }) => {

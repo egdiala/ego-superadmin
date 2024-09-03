@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { TableAction } from "@/components/core";
 
 interface CustomerBatteryDetailsProps {
-    [x: string]: any
+    [key: PropertyKey]: any
 }
 
 export const CustomerBatteryDetails: React.FC<CustomerBatteryDetailsProps> = ({ className }) => {

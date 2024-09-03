@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react";
 import { TableAction } from "@/components/core";
 
 interface TopDriversDashboardProps {
-    [x: string]: any
+    [key: PropertyKey]: any
 }
 
 export const TopDrivers: React.FC<TopDriversDashboardProps> = ({ className }) => {

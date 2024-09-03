@@ -4,7 +4,7 @@ import { LineChart, TableAction } from "@/components/core";
 import { Icon } from "@iconify/react";
 
 interface TotalTripsHomeProps {
-    [x: string]: any
+    [key: PropertyKey]: any
 }
 
 export const TotalTrips: React.FC<TotalTripsHomeProps> = ({ className }) => {

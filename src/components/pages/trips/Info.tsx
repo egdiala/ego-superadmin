@@ -1,14 +1,20 @@
+import { FetchedSingleTrip } from "@/types/trips";
+import { format, formatRelative } from "date-fns";
 import React from "react";
 
-export const TripInfo: React.FC = () => {
+interface TripInfoProps {
+    data: FetchedSingleTrip
+}
+
+export const TripInfo: React.FC<TripInfoProps> = ({ data }) => {
     const infos = [
-        { label: "Trip Reference", value: "39i439HIJD03" },
-        { label: "Est. Time", value: "2hrs : 24mins" },
-        { label: "Est. Distance", value: "124km" },
-        { label: "Accepted Time", value: "Today • 12:34pm" },
-        { label: "Trip Start Time", value: "Today • 12:34pm" },
-        { label: "Trip End Time", value: "Today • 12:34pm" },
-        { label: "Total Trip Distance", value: "124km" },
+        { label: "Trip Reference", value: data?.trip_ref },
+        { label: "Est. Time", value: data?.ride_data?.est_time },
+        { label: "Est. Distance", value: `${data?.ride_data?.est_dst}km` },
+        { label: "Accepted Time", value: `${formatRelative(data?.ride_data?.accepted_at, new Date()).split("at")[0]} • ${format(data?.ride_data?.accepted_at, "p")}` },
+        { label: "Trip Start Time", value: `${formatRelative(data?.ride_data?.start_trip_at, new Date()).split("at")[0]} • ${format(data?.ride_data?.start_trip_at, "p")}` },
+        { label: "Trip End Time", value: `${formatRelative(data?.ride_data?.end_trip_at, new Date()).split("at")[0]} • ${format(data?.ride_data?.end_trip_at, "p")}` },
+        { label: "Total Trip Distance", value: `${data?.ride_data?.total_distance}km` },
         { label: "Actual Time Spent", value: "2hrs : 24mins" },
     ]
     return (
@@ -24,7 +30,7 @@ export const TripInfo: React.FC = () => {
                 infos.map((info) =>
                     <div className="grid gap-1">
                         <h3 className="text-grey-dark-3 text-sm">{info.label}</h3>
-                        <p className="text-grey-dark-1 font-medium text-sm">{info.value}</p>
+                        <p className="text-grey-dark-1 font-medium text-sm capitalize">{info.value}</p>
                     </div>
                 )
             }

@@ -16,7 +16,7 @@ interface SearchInputProps extends React.AllHTMLAttributes<HTMLInputElement> {
   /**
    * Other unknown attributes
    */
-  [x: string]: unknown;
+  [key: PropertyKey]: unknown;
 }
 
 /**

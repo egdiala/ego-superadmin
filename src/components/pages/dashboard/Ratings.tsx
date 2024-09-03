@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { TableAction } from "@/components/core";
 
 interface RatingsDashboardProps {
-    [x: string]: any
+    [key: PropertyKey]: any
 }
 
 export const Ratings: React.FC<RatingsDashboardProps> = ({ className }) => {

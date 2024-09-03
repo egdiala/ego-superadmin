@@ -7,7 +7,7 @@ import { Menu, MenuButton, MenuHeading, MenuItem, MenuItems, MenuSection } from 
 
 interface VehiclesHomeProps {
     data: FetchedVehicleCountStatus
-    [x: string]: any
+    [key: PropertyKey]: any
 }
 
 export const Vehicles: React.FC<VehiclesHomeProps> = ({ className, data }) => {

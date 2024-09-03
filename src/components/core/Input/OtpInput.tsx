@@ -15,7 +15,7 @@ export interface OtpInputProps
   /**
    * Other unknown attributes
    */
-  [x: string]: unknown;
+  [key: PropertyKey]: unknown;
 }
 
 /**

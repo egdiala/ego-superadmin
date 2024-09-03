@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react";
 import { TableAction } from "@/components/core";
 
 interface TopCommutersDashboardProps {
-    [x: string]: any
+    [key: PropertyKey]: any
 }
 
 export const TopCommuters: React.FC<TopCommutersDashboardProps> = ({ className }) => {

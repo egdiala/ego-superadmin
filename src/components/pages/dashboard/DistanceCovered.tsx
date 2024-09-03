@@ -5,7 +5,7 @@ import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 
 interface DistanceCoveredDashboardProps {
-    [x: string]: any
+    [key: PropertyKey]: any
 }
 
 export const DistanceCovered: React.FC<DistanceCoveredDashboardProps> = ({ className }) => {

@@ -25,7 +25,7 @@ interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   /**
    * Other unknown attributes
    */
-  [x: string]: any;
+  [key: PropertyKey]: any;
 }
 
 /**

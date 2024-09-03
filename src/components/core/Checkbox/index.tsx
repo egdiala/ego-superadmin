@@ -22,7 +22,7 @@ interface CheckboxProps extends React.HTMLAttributes<HTMLInputElement> {
   /**
    * Other unknown attributes
    */
-  [x: string]: any;
+  [key: PropertyKey]: any;
 }
 
 /**

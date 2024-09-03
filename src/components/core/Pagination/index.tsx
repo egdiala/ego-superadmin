@@ -27,7 +27,7 @@ export interface PaginationProps {
   /**
    * Other unknown attributes
    */
-  [x: string]: any;
+  [key: PropertyKey]: any;
 }
 
 /**

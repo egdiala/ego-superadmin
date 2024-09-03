@@ -4,7 +4,7 @@ import { ProgressCircle, TableAction } from "@/components/core";
 import { Icon } from "@iconify/react";
 
 interface CustomerTripDetailsProps {
-    [x: string]: any
+    [key: PropertyKey]: any
 }
 
 export const CustomerTripDetails: React.FC<CustomerTripDetailsProps> = ({ className }) => {

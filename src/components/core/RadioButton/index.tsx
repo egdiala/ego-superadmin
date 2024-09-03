@@ -22,7 +22,7 @@ interface RadioButtonProps extends React.HTMLAttributes<HTMLInputElement> {
   /**
    * Other unknown attributes
    */
-  [x: string]: any;
+  [key: PropertyKey]: any;
 }
 
 /**

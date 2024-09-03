@@ -5,7 +5,7 @@ import whiteCar from "@/assets/white_car.svg";
 import { TableAction } from "@/components/core";
 
 interface TopVehiclesDashboardProps {
-    [x: string]: any
+    [key: PropertyKey]: any
 }
 
 export const TopVehicles: React.FC<TopVehiclesDashboardProps> = ({ className }) => {

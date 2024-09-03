@@ -4,7 +4,7 @@ import { FetchedOrganizationCountStatus } from "@/types/organizations";
 
 interface CustomersDashboardProps {
     data: FetchedOrganizationCountStatus;
-    [x: string]: any
+    [key: PropertyKey]: any
 }
 
 export const Customers: React.FC<CustomersDashboardProps> = ({ data, className }) => {

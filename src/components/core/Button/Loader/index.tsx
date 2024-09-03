@@ -1,7 +1,7 @@
 import React from "react";
 
 interface LoadingAttributes {
-  [x: string]: unknown;
+  [key: PropertyKey]: unknown;
 }
 
 export const Loader: React.FC<LoadingAttributes> = (

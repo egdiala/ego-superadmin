@@ -19,7 +19,7 @@ interface PasswordInputProps extends React.AllHTMLAttributes<HTMLInputElement> {
   /**
    * Other unknown attributes
    */
-  [x: string]: unknown;
+  [key: PropertyKey]: unknown;
 }
 
 /**

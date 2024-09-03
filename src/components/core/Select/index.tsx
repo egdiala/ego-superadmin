@@ -35,7 +35,7 @@ interface SelectInputProps {
   /**
    * Other unknown attributes
    */
-  [x: string]: unknown;
+  [key: PropertyKey]: unknown;
 }
 
 export const SelectInput: React.FC<SelectInputProps> = ({ containerVariant, label, help, error, options, disabled = false, ...props }) => {

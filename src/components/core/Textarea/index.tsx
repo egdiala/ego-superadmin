@@ -40,7 +40,7 @@ interface TextAreaProps extends React.AllHTMLAttributes<HTMLTextAreaElement> {
   /**
    * Other unknown attributes
    */
-  [x: string]: unknown;
+  [key: PropertyKey]: unknown;
 }
 
 /**

@@ -3,7 +3,7 @@ import { cn } from "@/libs/cn";
 import { BarChart } from "@/components/core";
 
 interface CustomerServiceRequestsProps {
-    [x: string]: any
+    [key: PropertyKey]: any
 }
 
 export const CustomerServiceRequests: React.FC<CustomerServiceRequestsProps> = ({ className }) => {

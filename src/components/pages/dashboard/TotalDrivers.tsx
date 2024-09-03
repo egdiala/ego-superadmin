@@ -6,7 +6,7 @@ import { FetchedDriverCountStatus } from "@/types/drivers";
 
 interface TotalDriversDashboardProps {
     data: FetchedDriverCountStatus;
-    [x: string]: any
+    [key: PropertyKey]: any
 }
 
 export const TotalDrivers: React.FC<TotalDriversDashboardProps> = ({ className, data }) => {
