@@ -8,6 +8,7 @@ import { Button, Input, RenderIf } from "@/components/core";
 import { bulkCreateVehicleSchema, createVehicleSchema } from "@/validations/vehicles";
 import { useBulkUploadVehicles, useCreateVehicle } from "@/services/hooks/mutations";
 import { Dialog, DialogPanel, DialogTitle, Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
+import DatePicker from "react-datepicker";
 
 interface AddVehicleModalProps {
     isOpen: boolean;
@@ -18,12 +19,12 @@ interface AddVehicleModalProps {
 const SingleVehicle: React.FC<AddVehicleModalProps> = ({ close }) => {
     const { mutate: create, isPending } = useCreateVehicle(() => onClose())
 
-    const { handleSubmit, isValid, register, resetForm } = useFormikWrapper({
+    const { handleSubmit, isValid, register, resetForm, setFieldValue, values } = useFormikWrapper({
         initialValues: {
             plate_no: "",
             model: "",
-            year_manufacture: "",
-            year_purchase: "",
+            year_manufacture: "" as unknown as Date,
+            year_purchase: "" as unknown as Date,
             vehicle_color: "",
             vehicle_oem: "",
             vehicle_vin: "",
@@ -50,9 +51,25 @@ const SingleVehicle: React.FC<AddVehicleModalProps> = ({ close }) => {
                     <Input type="text" label="Plate Number" {...register("plate_no")} />
                     <Input type="text" label="Model" {...register("model")} />
                 </div>
-                <div className="flex flex-col md:flex-row md:items-start gap-6">
-                    <Input type="number" className="hide-number-input-arrows" inputMode="numeric" iconRight="mingcute:calendar-fill" label="Year of Manufacture" {...register("year_manufacture")} />
-                    <Input type="number" className="hide-number-input-arrows" inputMode="numeric" iconRight="mingcute:calendar-fill" label="Purchase Year" {...register("year_purchase")} />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1">
+                        <DatePicker
+                            selected={values.year_manufacture}
+                            onChange={(date) => setFieldValue("year_manufacture", date)}
+                            showYearPicker
+                            dateFormat="yyyy"
+                            customInput={<Input type="text" inputMode="numeric" iconRight="mingcute:calendar-fill" label="Year of Manufacture" />}
+                        />
+                    </div>
+                    <div className="grid grid-cols-1">
+                        <DatePicker
+                            selected={values.year_purchase}
+                            onChange={(date) => setFieldValue("year_purchase", date)}
+                            showYearPicker
+                            dateFormat="yyyy"
+                            customInput={<Input type="text" inputMode="numeric" iconRight="mingcute:calendar-fill" label="Purchase Year" />}
+                        />
+                    </div>
                 </div>
                 <div className="flex flex-col md:flex-row md:items-start gap-6">
                     <Input type="text" label="Color" {...register("vehicle_color")} />

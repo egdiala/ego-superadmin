@@ -42,3 +42,55 @@ body {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+.react-datepicker-popper,
+.react-datepicker__header {
+  @apply bg-white !important;
+}
+
+.react-datepicker__triangle {
+  font-family: "Public Sans", sans-serif !important;
+  @apply fill-white text-white !important;
+}
+
+.react-datepicker__year-text--selected {
+  @apply font-medium text-white text-lg bg-green-base !important;
+}
+
+.react-datepicker__year--container {
+  div:not(.react-datepicker__year-text--selected) {
+    @apply text-grey-dark-1 bg-white text-lg font-normal !important;
+  }
+}
+
+.react-datepicker__year-wrapper {
+  @apply max-w-52 !important;
+}
+
+div[tabindex="-1"]:hover {
+  @apply bg-light-green text-green-base !important;
+}
+
+.react-datepicker__navigation {
+  @apply grid place-content-center size-6 mt-2 bg-light-green text-green-base rounded !important;
+}
+
+.react-datepicker__navigation--previous {
+  @apply ml-5 !important;
+}
+
+.react-datepicker__navigation-icon--previous {
+  @apply before:border-green-base before:mr-[3px] before:mt-0.5 !important;
+}
+
+.react-datepicker__navigation--next {
+  @apply mr-5 !important;
+}
+
+.react-datepicker__navigation-icon--next {
+  @apply before:border-green-base before:ml-[3px] before:mt-0.5 !important;
+}
+
+.react-datepicker__year--container > .react-datepicker-year-header {
+  @apply font-semibold text-xl text-grey-dark-1 !important;
+}
