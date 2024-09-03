@@ -18,13 +18,12 @@ export const AssignOrganizationVehiclesPage: React.FC = () => {
     const navigate = useNavigate()
     const { mutate, isPending } = useAssignVehicle(() => navigate("/customers"))
     const { data: customer, isFetching: isFetchingCustomer } = useGetOrganization(params?.id as string)
-    const { data: organizationVehicles, isFetching: isFetchingOrganizationVehicles } = useGetVehicles({ organization_id: params?.id as string })
     const { data: vehicles, isFetching: isFetchingVehicles } = useGetVehicles({ driver_assigned: "1", organization_assigned: "0" })
 
     const { handleSubmit: submitCreateCustomer, isValid: isAssignVehiclesValid, setFieldValue, values } = useFormikWrapper({
       initialValues: {
         auth_id: params?.id as string,
-        vehicle_id: (organizationVehicles as FetchedVehicleType[])?.map((item) => item?.vehicle_id) as string[],
+        vehicle_id: [] as string[],
         user_type: "organization" as "organization",
       },
       enableReinitialize: true,
@@ -115,7 +114,7 @@ export const AssignOrganizationVehiclesPage: React.FC = () => {
     };
     return (
         <Fragment>
-            <RenderIf condition={!isFetchingVehicles && !isFetchingCustomer && !isFetchingOrganizationVehicles}>
+            <RenderIf condition={!isFetchingVehicles && !isFetchingCustomer}>
                 <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">
                     <Breadcrumb items={[{ label: "All Customers", link: "/customers" }, { label: customer?.name as string, link: `/customers/${params?.id}/dashboard` }, { label: "Assign Vehicle", link: `/customers/${params?.id}/assign` }]} showBack />
                     <div className="grid content-start gap-4 py-6 px-4 bg-white rounded-lg">
@@ -137,7 +136,7 @@ export const AssignOrganizationVehiclesPage: React.FC = () => {
                                 <Table
                                     getData={getData}
                                     columns={columns}
-                                    data={[...(vehicles as FetchedVehicleType[]) ?? [], ...(organizationVehicles as FetchedVehicleType[]) ?? []]}
+                                    data={(vehicles as FetchedVehicleType[]) ?? []}
                                     page={1}
                                     perPage={10}
                                     totalCount={(vehicles as FetchedVehicleType[])?.length}
@@ -152,7 +151,7 @@ export const AssignOrganizationVehiclesPage: React.FC = () => {
                     </div>
                 </motion.div>
             </RenderIf>
-            <RenderIf condition={isFetchingVehicles || isFetchingCustomer || isFetchingOrganizationVehicles}>
+            <RenderIf condition={isFetchingVehicles || isFetchingCustomer}>
                 <div className="flex w-full h-dvh items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
             </RenderIf>
         </Fragment>
