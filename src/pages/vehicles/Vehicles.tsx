@@ -62,7 +62,7 @@ export const VehiclesPage: React.FC = () => {
         const item = row?.original as FetchedVehicleType
         return (
           <div className="text-sm text-grey-dark-2 capitalize whitespace-nowrap">
-            {item?.org_data?.name || "-"}
+            {item?.org_data?.name || "eGO Business"}
           </div>
         )
       }

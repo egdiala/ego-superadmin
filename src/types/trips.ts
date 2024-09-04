@@ -170,18 +170,18 @@ export interface FetchedSingleTrip {
         start_coord: {
             longitude: number;
             latitude: number;
-        },
+        };
         end_coord: {
             longitude: number;
             latitude: number;
-        },
+        };
         start_address: string;
         end_address: string;
         dropoff_data: {
             address: string;
             longitude: number;
             latitude: number;
-        },
+        };
         est_dst: number;
         est_time: number;
         min_fare: number;
@@ -206,7 +206,8 @@ export interface FetchedSingleTrip {
         charge_data: {
             status: string;
             method: string;
-        },
+        };
+        payment_type: number;
         action: string;
         fare: number;
         amount: number;
@@ -233,7 +234,7 @@ export interface FetchedSingleTrip {
             charge_delay: string;
             charge_toll: string;
             charge_minimum: string;
-        },
+        };
         picked_at: Date | string;
         drop_off_data: {
             longitude: number;

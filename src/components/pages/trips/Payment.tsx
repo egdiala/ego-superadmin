@@ -1,11 +1,16 @@
 import React, { Fragment } from "react";
 import { Icon } from "@iconify/react";
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react"
+import type { FetchedSingleTrip } from "@/types/trips";
+
+interface TripPaymentProps {
+    data: FetchedSingleTrip
+}
 
 
-export const TripPayment: React.FC = () => {
+export const TripPayment: React.FC<TripPaymentProps> = ({ data }) => {
     const infos = [
-        { label: "Trip payment Model", value: "Lease" },
+        { label: "Trip payment Model", value: data?.ride_data?.payment_method },
         { label: "Additional Km", value: "0km" },
         { label: "Addtional fee", value: "₦0" }
     ]
@@ -39,7 +44,7 @@ export const TripPayment: React.FC = () => {
                 [infos[0]].map((info) =>
                     <div className="grid gap-1">
                         <h3 className="text-grey-dark-3 text-sm">{info.label}</h3>
-                        <p className="text-grey-dark-1 font-medium text-sm">{info.value}</p>
+                        <p className="text-grey-dark-1 font-medium text-sm capitalize">{info.value}</p>
                     </div>
                 )
             }

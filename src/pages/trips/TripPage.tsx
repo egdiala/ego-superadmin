@@ -98,7 +98,7 @@ export const TripPage: React.FC = () => {
                                 <div className="grid gap-6 content-start">
                                     <TripRequestInfo data={trip!} />
                                     <TripInfo data={trip!} />
-                                    <TripPayment />
+                                    <TripPayment data={trip!} />
                                     <TripDriverRating />
                                     <TripRiderRating />
                                 </div>
