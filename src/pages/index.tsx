@@ -3,12 +3,12 @@ import { motion } from "framer-motion";
 import { RenderIf } from "@/components/core";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
+import type { FetchedDriverCountStatus } from "@/types/drivers";
 import type { FetchedVehicleCountStatus } from "@/types/vehicles";
 import type { FetchedOrganizationCountStatus } from "@/types/organizations";
+import type { FetchedServiceRequestsCountStatus } from "@/types/service-requests";
 import { useGetDrivers, useGetOrganizations, useGetServiceRequests, useGetVehicles } from "@/services/hooks/queries";
 import { Customers, DistanceCovered, PaymentValue, Ratings, ServiceRequests, TopCommuters, TopDrivers, TopVehicles, TotalDrivers, TotalTrips, TripDetails, Vehicles } from "@/components/pages/dashboard";
-import type { FetchedServiceRequestsCountStatus } from "@/types/service-requests";
-import type { FetchedDriverCountStatus } from "@/types/drivers";
 
 export const DashboardPage: React.FC = () => {
     const { data: customerCount, isFetching: fetchingCustomers } = useGetOrganizations({ component: "count-status" })
