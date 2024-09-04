@@ -19,7 +19,7 @@ interface AddVehicleModalProps {
 const SingleVehicle: React.FC<AddVehicleModalProps> = ({ close }) => {
     const { mutate: create, isPending } = useCreateVehicle(() => onClose())
 
-    const { handleSubmit, isValid, register, resetForm, setFieldValue, values } = useFormikWrapper({
+    const { errors, handleSubmit, isValid, register, resetForm, setFieldValue, values } = useFormikWrapper({
         initialValues: {
             plate_no: "",
             model: "",
@@ -58,7 +58,7 @@ const SingleVehicle: React.FC<AddVehicleModalProps> = ({ close }) => {
                             onChange={(date) => setFieldValue("year_manufacture", date?.getFullYear()?.toString())}
                             showYearPicker
                             dateFormat="yyyy"
-                            customInput={<Input type="text" inputMode="numeric" iconRight="mingcute:calendar-fill" label="Year of Manufacture" />}
+                            customInput={<Input type="text" inputMode="numeric" iconRight="mingcute:calendar-fill" label="Year of Manufacture" error={errors?.year_manufacture as string} />}
                         />
                     </div>
                     <div className="grid grid-cols-1">
@@ -67,7 +67,7 @@ const SingleVehicle: React.FC<AddVehicleModalProps> = ({ close }) => {
                             onChange={(date) => setFieldValue("year_purchase", date?.getFullYear()?.toString())}
                             showYearPicker
                             dateFormat="yyyy"
-                            customInput={<Input type="text" inputMode="numeric" iconRight="mingcute:calendar-fill" label="Purchase Year" />}
+                            customInput={<Input type="text" inputMode="numeric" iconRight="mingcute:calendar-fill" label="Purchase Year" error={errors?.year_purchase as string} />}
                         />
                     </div>
                 </div>

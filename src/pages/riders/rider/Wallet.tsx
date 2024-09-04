@@ -61,7 +61,7 @@ export const RiderWalletPage: React.FC = () => {
         cell: ({ row }: { row: any; }) => {
           const item = row?.original as FetchedWalletTransaction
           return (
-            <div className="text-sm text-grey-dark-2 capitalize whitespace-nowrap">{item?.status === 1 ? "Successful" : "Failed"}</div>
+            <div className={cn("text-sm font-medium capitalize whitespace-nowrap", item?.status === 1 ? "text-dark-green-1" : "text-semantics-error")}>{item?.status === 1 ? "Successful" : "Failed"}</div>
           )
         }
       }

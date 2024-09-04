@@ -16,7 +16,7 @@ export const RiderProfile: React.FC = () => {
             { label: "Email", value: rider?.email },
             { label: "Phone Number", value: rider?.phone_number },
             { label: "NIN", value: rider?.nin_id?.value === rider?.email ? "-" : rider?.nin_id?.value },
-            { label: "Department", value: rider?.department_data?.name },
+            { label: "Department", value: rider?.department_data?.name ?? "-" },
             { label: "Average Rating", value: <div className="flex items-center gap-1"><Icon icon="ph:star-fill" className="text-semantics-amber size-3.5" />0</div> },
             { label: "Supervisor", value: "-" },
         ]
