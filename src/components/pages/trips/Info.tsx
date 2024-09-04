@@ -1,4 +1,5 @@
 import { FetchedSingleTrip } from "@/types/trips";
+import { formatTime } from "@/utils/textFormatter";
 import { format, formatRelative } from "date-fns";
 import React from "react";
 
@@ -9,7 +10,7 @@ interface TripInfoProps {
 export const TripInfo: React.FC<TripInfoProps> = ({ data }) => {
     const infos = [
         { label: "Trip Reference", value: data?.trip_ref },
-        { label: "Est. Time", value: data?.ride_data?.est_time },
+        { label: "Est. Time", value: formatTime(data?.ride_data?.est_time) },
         { label: "Est. Distance", value: `${data?.ride_data?.est_dst}km` },
         { label: "Accepted Time", value: `${formatRelative(data?.ride_data?.accepted_at, new Date()).split("at")[0]} • ${format(data?.ride_data?.accepted_at, "p")}` },
         { label: "Trip Start Time", value: `${formatRelative(data?.ride_data?.start_trip_at, new Date()).split("at")[0]} • ${format(data?.ride_data?.start_trip_at, "p")}` },

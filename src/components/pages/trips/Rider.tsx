@@ -9,7 +9,7 @@ interface TripRiderProps {
 
 export const TripRider: React.FC<TripRiderProps> = ({ data }) => {
     const infos = [
-        { label: "Email", value: "example@gmail.com" },
+        { label: "Email", value: data?.rider_data?.email },
         { label: "Phone Number", value: data?.ride_data?.phone_number },
         { label: "Business Name", value: data?.org_data?.name },
     ]

@@ -48,7 +48,8 @@ export interface FetchedDriverType extends Omit<CreateDriverType, "nin" | "drive
         account_number: string;
         account_name: string;
         status: boolean;
-    },
+    };
+    rating?: number;
     createdAt: Date | string;
     updatedAt: Date | string;
     driver_id: string;

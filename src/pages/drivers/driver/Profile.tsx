@@ -16,13 +16,13 @@ export const DriverProfilePage: React.FC = () => {
         return [
             { label: "Email", value: driver?.email },
             { label: "Phone Number", value: driver?.phone_number },
-            { label: "Rating", value: <div className="flex items-center gap-1"><Icon icon="ph:star-fill" className="text-semantics-amber size-3.5" />-</div> },
+            { label: "Rating", value: <div className="flex items-center gap-1"><Icon icon="ph:star-fill" className="text-semantics-amber size-3.5" />{driver?.rating ?? "-"}</div> },
             { label: "Gender", value: driver?.gender },
             { label: "Date of Birth", value: driver?.dob || "-" },
             { label: "State of Origin", value: driver?.state_origin || "-" },
             { label: "Business assigned to", value: driver?.org_data?.name ?? "eGO Business" },
         ]
-    },[driver?.dob, driver?.email, driver?.gender, driver?.org_data?.name, driver?.phone_number, driver?.state_origin])
+    },[driver?.dob, driver?.email, driver?.gender, driver?.org_data?.name, driver?.phone_number, driver?.rating, driver?.state_origin])
     useEffect(() => {
         if (driver === undefined) {
             refetch()

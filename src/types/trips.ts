@@ -159,7 +159,7 @@ export interface FetchedSingleTrip {
         phone_number: string;
         email: string;
         name: string;
-    },
+    };
     ride_data: {
         rider_id: string;
         ride_type: string;
@@ -239,7 +239,13 @@ export interface FetchedSingleTrip {
             longitude: number;
             latitude: number;
         }
-    },
+    };
+    rider_data: {
+        _id: string;
+        email: string;
+        first_name: string;
+        last_name: string;
+    };
     ride_status: string;
     ride_type: string;
     location: {
