@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { getTrip, getTrips } from "@/services/apis/trips";
-import { GET_TRIP, GET_TRIPS } from "@/constants/queryKeys";
-import type { FetchedSingleTrip, FetchedTripCountStatus, FetchedTripType, FetchTripsQuery } from "@/types/trips";
+import { getTrip, getTrips, getVehicleDistanceForOrg } from "@/services/apis/trips";
+import { GET_TRIP, GET_TRIPS, GET_VEHICLE_DISTANCE_FOR_ORG } from "@/constants/queryKeys";
+import type { FetchDistanceForOrgQuery, FetchedSingleTrip, FetchedTripCountStatus, FetchedTripType, FetchedVehicleDistanceForOrganization, FetchTripsQuery } from "@/types/trips";
 import { errorToast } from "@/utils/createToast";
 
 export const useGetTrips = (query: FetchTripsQuery) => {
@@ -28,3 +28,17 @@ export const useGetTrip = (id: string) => {
     refetchOnWindowFocus: false,
   });
 };
+
+export const useGetVehicleDistanceForOrg = (query: FetchDistanceForOrgQuery) => {
+  return useQuery({
+    queryKey: [GET_VEHICLE_DISTANCE_FOR_ORG, query],
+    queryFn: () => getVehicleDistanceForOrg(query),
+    select: (res) => res?.data as FetchedVehicleDistanceForOrganization,
+    retry: false,
+    refetchOnWindowFocus: false,
+    throwOnError(error) {
+      errorToast(error)
+      return false;
+    },
+  })
+}

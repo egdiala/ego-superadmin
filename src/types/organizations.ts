@@ -18,7 +18,8 @@ export interface FetchedOrgaizationType {
 export interface FetchedSingleOrganizationType extends FetchedOrgaizationType {
     address: string;
     authorize_rep_email: string;
-    authorize_rep_name: string;
+    authorize_rep_firstname: string;
+    authorize_rep_lastname: string;
     authorize_rep_phone: string;
     company_tin: string;
     company_type: string;
@@ -41,9 +42,9 @@ export type CreateOrganizationType = {
     industry: string;
     company_type: string;
     vehicle_purchase: string;
-    employee_no: string;
     company_tin: string;
-    authorize_rep_name: string;
+    authorize_rep_firstname: string;
+    authorize_rep_lastname: string;
     authorize_rep_email: string;
     authorize_rep_phone: string;
 }

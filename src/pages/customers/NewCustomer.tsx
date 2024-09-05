@@ -61,9 +61,9 @@ export const NewCustomersPage: React.FC = () => {
             industry: "",
             company_type: "",
             vehicle_purchase: "",
-            employee_no: "",
             company_tin: "",
-            authorize_rep_name: "",
+            authorize_rep_firstname: "",
+            authorize_rep_lastname: "",
             authorize_rep_email: "",
             authorize_rep_phone: "",
         },
@@ -202,8 +202,8 @@ export const NewCustomersPage: React.FC = () => {
                                       <Input label="Number of Vehicles Purchased" type="text" {...register("vehicle_purchase")} />
                                   </div>
                                   <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-8">
-                                      <Input label="Number of Employees" type="text" {...register("employee_no")} />
-                                      <Input label="Authorized Rep Name (Enter First and Last Name)" type="text" {...register("authorize_rep_name")} />
+                                      <Input label="Authorized Rep First Name" type="text" {...register("authorize_rep_firstname")} />
+                                      <Input label="Authorized Rep Last Name" type="text" {...register("authorize_rep_lastname")} />
                                   </div>
                                   <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-8">
                                       <Input label="Authorized Rep Email" type="text" {...register("authorize_rep_email")} />

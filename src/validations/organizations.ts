@@ -9,9 +9,9 @@ export const createOrganizationSchema = Yup.object().shape({
     industry: Yup.string().required("Select an industry"),
     company_type: Yup.string().required("Select a company type"),
     vehicle_purchase: Yup.string().required("Number of Vehicles Purchased is required"),
-    employee_no: Yup.string().required("Number of Employees is required"),
     company_tin: Yup.string().required("Tax Identification Number is required"),
-    authorize_rep_name: Yup.string().required("Authorized Rep Name is required"),
+    authorize_rep_firstname: Yup.string().required("Authorized Rep First Name is required"),
+    authorize_rep_lastname: Yup.string().required("Authorized Rep Last Name is required"),
     authorize_rep_email: EmailSchema,
     authorize_rep_phone: Yup.string().required("Authorized Rep Phone Number is required"),
 })

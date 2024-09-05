@@ -9,6 +9,11 @@ export interface FetchTripsQuery {
     component?: "count" | "export" | "count-status";
 }
 
+export interface FetchDistanceForOrgQuery {
+    organization_id: string;
+    vehicle_id?: string
+}
+
 export interface FetchedTripType {
     _id: string;
     trip_ref: string;
@@ -142,6 +147,15 @@ export interface FetchedTripCountStatus {
     fulfilled: number;
     ongoing: number;
     rejected: number
+}
+
+export interface FetchedVehicleDistanceForOrganization {
+    total_dst: number;
+    distance?: number;
+    total_time: number;
+    time?: number;
+    time_value: string;
+    distance_value: string;
 }
 
 export interface FetchedSingleTrip {

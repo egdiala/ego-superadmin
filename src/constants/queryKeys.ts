@@ -30,6 +30,7 @@ export const GET_ORGANIZATION = "get-organization"
 // Trips
 export const GET_TRIPS = "get-trips"
 export const GET_TRIP = "get-trip"
+export const GET_VEHICLE_DISTANCE_FOR_ORG = "get-vehicle-distance-for-organization"
 
 // Ratings
 export const GET_RATINGS = "get-ratings"

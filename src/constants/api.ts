@@ -37,6 +37,7 @@ export const SUSPEND_ORGANIZATION_API = "admin/organizations/suspend-account"
 
 // Trips
 export const GET_TRIPS_API = "admin/trips"
+export const GET_VEHICLE_DISTANCE_FOR_ORG_API = "admin/trips/vehicle-coverage"
 
 // Ratings
 export const GET_RATINGS_API = "admin/trips/ratings"

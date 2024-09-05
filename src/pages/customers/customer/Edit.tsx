@@ -15,7 +15,7 @@ export const EditCustomerPage: React.FC = () => {
     const navigate = useNavigate()
     const { data: customer, isFetching: isFetchingCustomer } = useGetOrganization(params?.id as string)
     const { data: fetchedIndustries, isFetching } = useGetIndustries()
-    const { mutate: edit, isPending: isCreating } = useEditOrganization(() => navigate(`/customers/${params?.id}/dashboard`))
+    const { mutate: edit, isPending: isCreating } = useEditOrganization(() => navigate(-1))
 
     const industries = useMemo(() => {
         return fetchedIndustries?.sort((a, b) => a?.id > b?.id ? 1 : -1)?.map((item) => ({ label: item?.label, value: item?.label }))
@@ -43,9 +43,9 @@ export const EditCustomerPage: React.FC = () => {
             industry: customer?.company_industry || "",
             company_type: customer?.company_type || "",
             vehicle_purchase: customer?.vehicle_purchase?.toString() || "",
-            employee_no: customer?.employee_number?.toString() || "",
             company_tin: customer?.company_tin || "",
-            authorize_rep_name: customer?.authorize_rep_name || "",
+            authorize_rep_firstname: customer?.authorize_rep_firstname || "",
+            authorize_rep_lastname: customer?.authorize_rep_lastname || "",
             authorize_rep_email: customer?.authorize_rep_email || "",
             authorize_rep_phone: customer?.authorize_rep_phone || ""
         },
@@ -71,7 +71,7 @@ export const EditCustomerPage: React.FC = () => {
                                     </div>
                                     <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-8">
                                         <Input label="CAC Registration Number" inputMode="numeric" type="text" {...register("business_id")} />
-                                        <Input label="Business Email  Address" inputMode="email" {...register("email")} />
+                                        <Input label="Business Email Address" inputMode="email" {...register("email")} />
                                     </div>
                                     <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-8">
                                         <SelectInput label="Industry" options={industries ?? []} disabled={isFetching} {...register("industry")} />
@@ -82,8 +82,8 @@ export const EditCustomerPage: React.FC = () => {
                                         <Input label="Number of Vehicles Purchased" type="text" {...register("vehicle_purchase")} />
                                     </div>
                                     <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-8">
-                                        <Input label="Number of Employees" type="text" {...register("employee_no")} />
-                                        <Input label="Authorized Rep Name (Enter First and Last Name)" type="text" {...register("authorize_rep_name")} />
+                                        <Input label="Authorized Rep First Name" type="text" {...register("authorize_rep_firstname")} />
+                                        <Input label="Authorized Rep Last Name" type="text" {...register("authorize_rep_lastname")} />
                                     </div>
                                     <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-8">
                                         <Input label="Authorized Rep Email" type="text" {...register("authorize_rep_email")} />

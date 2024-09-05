@@ -3,18 +3,20 @@ import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { TableAction } from "@/components/core";
+import type { FetchedRatingCountOne } from "@/types/ratings";
 
 interface RatingsDashboardProps {
+    data: FetchedRatingCountOne;
     [key: PropertyKey]: any
 }
 
-export const Ratings: React.FC<RatingsDashboardProps> = ({ className }) => {
+export const Ratings: React.FC<RatingsDashboardProps> = ({ className, data }) => {
     const ratings = [
-        { star: "5 stars", value: 318 },
-        { star: "4 stars", value: 69 },
-        { star: "3 stars", value: 150 },
-        { star: "2 stars", value: 77 },
-        { star: "1 star", value: 238 }
+        { star: "5 stars", value: data?.five },
+        { star: "4 stars", value: data?.four },
+        { star: "3 stars", value: data?.three },
+        { star: "2 stars", value: data?.two },
+        { star: "1 star", value: data?.one }
     ]
     const computeWidth = (value: number) => {
         const totalRating = ratings.reduce((sum, rating) => sum + rating.value, 0)

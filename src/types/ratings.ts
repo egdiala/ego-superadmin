@@ -5,7 +5,7 @@ export interface FetchRatingsQuery {
     item_per_page?: string;
     start_date?: string;
     end_date?: string;
-    component?: "count" | "count-status";
+    component?: "count" | "count-status" | "count-one";
 }
 
 export interface FetchedRating {
@@ -25,4 +25,13 @@ export interface FetchedRatingCountStatus {
     _id: null;
     total: number;
     rating: number;
+}
+
+export interface FetchedRatingCountOne {
+    total: number;
+    one: number;
+    two: number;
+    three: number;
+    four: number;
+    five: number;
 }
