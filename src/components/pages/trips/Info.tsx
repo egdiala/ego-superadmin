@@ -13,8 +13,8 @@ export const TripInfo: React.FC<TripInfoProps> = ({ data }) => {
         { label: "Est. Time", value: formatTime(data?.ride_data?.est_time) },
         { label: "Est. Distance", value: `${data?.ride_data?.est_dst}km` },
         { label: "Accepted Time", value: `${formatRelative(data?.ride_data?.accepted_at, new Date()).split("at")[0]} • ${format(data?.ride_data?.accepted_at, "p")}` },
-        { label: "Trip Start Time", value: `${formatRelative(data?.ride_data?.start_trip_at, new Date()).split("at")[0]} • ${format(data?.ride_data?.start_trip_at, "p")}` },
-        { label: "Trip End Time", value: `${formatRelative(data?.ride_data?.end_trip_at, new Date()).split("at")[0]} • ${format(data?.ride_data?.end_trip_at, "p")}` },
+        { label: "Trip Start Time", value: data?.ride_data?.start_trip_at ? `${formatRelative(data?.ride_data?.start_trip_at, new Date()).split("at")[0]} • ${format(data?.ride_data?.start_trip_at, "p")}` : "" },
+        { label: "Trip End Time", value: data?.ride_data?.end_trip_at ? `${formatRelative(data?.ride_data?.end_trip_at, new Date()).split("at")[0]} • ${format(data?.ride_data?.end_trip_at, "p")}` : "" },
         { label: "Total Trip Distance", value: `${data?.ride_data?.total_distance}km` },
         { label: "Actual Time Spent", value: "2hrs : 24mins" },
     ]

@@ -6,7 +6,7 @@ import blankImg from "@/assets/blank.svg";
 import vehicleImg from "@/assets/vehicle.svg";
 import { useGetVehicle } from "@/services/hooks/queries";
 import { pageVariants } from "@/constants/animateVariants";
-import { VehicleBatteryHealth } from "@/components/pages/vehicles";
+import { DistanceStats, VehicleBatteryHealth } from "@/components/pages/vehicles";
 
 export const VehicleProfilePage: React.FC = () => {
     const { data: vehicle, refetch } = useGetVehicle("")
@@ -145,6 +145,7 @@ export const VehicleProfilePage: React.FC = () => {
                 </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <DistanceStats />
                 <VehicleBatteryHealth />
             </div>
         </motion.div>
