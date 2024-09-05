@@ -69,7 +69,7 @@ export const RiderRatingsPage: React.FC = () => {
 
     const trips = useMemo(() => {
       return [
-        { label: "Total ratings", value: (countStatus as FetchedRatingCountStatus)?.total, color: "bg-[#F8F9FB]" },
+        { label: "Total ratings received", value: (countStatus as FetchedRatingCountStatus)?.total, color: "bg-[#F8F9FB]" },
         { label: "Av. ratings", value: (countStatus as FetchedRatingCountStatus)?.rating?.toFixed(1), color: "bg-[#F6FBF6]" },
       ]
     },[countStatus])

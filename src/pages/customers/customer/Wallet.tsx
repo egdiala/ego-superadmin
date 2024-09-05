@@ -58,9 +58,9 @@ export const CustomerWalletPage: React.FC = () => {
 
     const trips = useMemo(() => {
       return [
-          { label: "Wallet balance", value: formattedNumber((countStatus as FetchedWalletTransactionCountStatus)?.balance), color: "bg-[#F8F9FB]" },
-          { label: "Inflow", value: formattedNumber(data?.credit_amount!), color: "bg-[#F6FBF6]" },
-          { label: "Outflow", value: formattedNumber(data?.debit_amount!), color: "bg-[#FDF2F2]" },
+          { label: "Wallet balance", value: formattedNumber((countStatus as FetchedWalletTransactionCountStatus)?.balance ?? 0), color: "bg-[#F8F9FB]" },
+          { label: "Inflow", value: formattedNumber(data?.credit_amount! ?? 0), color: "bg-[#F6FBF6]" },
+          { label: "Outflow", value: formattedNumber(data?.debit_amount! ?? 0), color: "bg-[#FDF2F2]" },
       ]
     }, [countStatus, data?.credit_amount, data?.debit_amount])
     

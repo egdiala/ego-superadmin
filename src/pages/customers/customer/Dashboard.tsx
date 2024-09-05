@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 import { FetchedVehicleCount } from "@/types/vehicles";
 import { FetchedTripCountStatus } from "@/types/trips";
 import { Loader } from "@/components/core/Button/Loader";
+import { cn } from "@/libs/cn";
 
 export const CustomerDashboardPage: React.FC = () => {
     const params = useParams()
@@ -27,18 +28,18 @@ export const CustomerDashboardPage: React.FC = () => {
             value: "₦0",
             icon: "mdi:naira"
         },
-        {
+        (PurchaseModel.StaffCommute !== customer?.purchase_model! && ({
             label: "Total Vehicles Assigned",
             value: (vehiclesCount as FetchedVehicleCount)?.total ?? "0",
             icon: "ri:car-fill"
-        },
+        }))
     ]
     const secondRowItems = [
-        {
+        (PurchaseModel.StaffCommute !== customer?.purchase_model! && ({
             label: "Total Completed Trips",
             value: (tripsCount as FetchedTripCountStatus)?.fulfilled ?? "0",
             icon: "bx:trip"
-        },
+        })),
         {
             label: "Total Distance Covered by all Vehicles",
             value: `${distCount?.total_dst ?? distCount?.distance}${distCount?.distance_value}`,
@@ -59,13 +60,13 @@ export const CustomerDashboardPage: React.FC = () => {
         <Fragment>
             <RenderIf condition={!isFetchingVehicles && !isFetchingTrips && !isFetchingDistance}>
                 <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-6">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className={cn("grid grid-cols-1 gap-4", PurchaseModel.StaffCommute !== customer?.purchase_model! ? "md:grid-cols-3" : "md:grid-cols-2")}>
                         {
-                            firstRowItems.map((item, id) =>
+                            firstRowItems.filter((item) => item !== false).map((item, id) =>
                                 <div key={id} className="grid gap-8 content-between first:bg-green-4 bg-[#FDF2F2] last:bg-portal-bg rounded-lg px-4 pt-4 pb-3">
                                     <div className="flex items-start justify-between">
-                                        <span className="text-xs text-grey-dark-2">{item.label}</span>
-                                        <RenderIf condition={!!item.icon}>
+                                        <span className="text-xs text-grey-dark-2">{item?.label}</span>
+                                        <RenderIf condition={!!item?.icon}>
                                             <Icon icon={item.icon as string} className="size-8 text-grey-dark-3/30" />
                                         </RenderIf>
                                     </div>

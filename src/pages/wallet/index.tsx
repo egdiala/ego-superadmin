@@ -96,7 +96,7 @@ export const WalletPage: React.FC = () => {
     const trips = useMemo(() => {
         return [
             { label: "Wallet balance", value: formattedNumber((count as FetchedWalletTransactionCount)?.balance || 0), color: "bg-[#F8F9FB]" },
-            { label: "Count", value: (count as FetchedWalletTransactionCount)?.total, color: "bg-green-4" },
+            { label: "Count", value: (count as FetchedWalletTransactionCount)?.total ?? 0, color: "bg-green-4" },
         ]
     },[])
   
