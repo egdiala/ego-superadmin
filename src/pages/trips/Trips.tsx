@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
+import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { useDebounce } from "@/hooks/useDebounce";
 import { format, formatRelative } from "date-fns";
 import type { FetchedTripType } from "@/types/trips";
+import { PurchaseModel } from "@/types/organizations";
 import { useGetTrips } from "@/services/hooks/queries";
 import { Loader } from "@/components/core/Button/Loader";
+import { pascalCaseToWords } from "@/utils/textFormatter";
 import { pageVariants } from "@/constants/animateVariants";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
-import { PurchaseModel } from "@/types/organizations";
-import { pascalCaseToWords } from "@/utils/textFormatter";
-import { cn } from "@/libs/cn";
+import { TripsFilter } from "@/components/pages/trips";
 
 export const TripsPage: React.FC = () => {
     const navigate = useNavigate();
@@ -123,14 +124,11 @@ export const TripsPage: React.FC = () => {
                     </div>
                 
                     <div className="flex items-center gap-2 w-full sm:w-auto">
-                    <TableAction theme="ghost" block onClick={() => component === "export" ? refetch() : setComponent("export")}>
-                        <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-                        Export
-                    </TableAction>
-                    <TableAction theme="grey" block>
-                        <Icon icon="mdi:funnel" className="size-4" />
-                        Filter
-                    </TableAction>
+                      <TableAction theme="ghost" block onClick={() => component === "export" ? refetch() : setComponent("export")}>
+                          <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
+                          Export
+                      </TableAction>
+                      <TripsFilter />
                     </div>
                 </div>
                 <RenderIf condition={!isFetching && !fetchingCount}>
