@@ -14,27 +14,27 @@ export const Vehicles: React.FC<VehiclesHomeProps> = ({ className, data }) => {
     const referrals = useMemo(() => {
         return [
             { label: "total", amount: data?.total },
-            { label: "assigned", amount: data?.org_assigned },
+            { label: "assigned", amount: data?.driver_assigned },
             { label: "unassigned", amount: data?.total - data?.driver_assigned },
             { label: "active", amount: data?.active_count },
         ]
-    },[data?.active_count, data?.driver_assigned, data?.org_assigned, data?.total])
+    },[data?.active_count, data?.driver_assigned, data?.total])
     const items = useMemo(() => {
         return [
             {
                 "label": "Unassigned",
-                "total": data?.total - data?.driver_assigned,
-                "totalColor": "hsla(206, 10%, 55%, 1)",
+                "unassigned": data?.total - data?.driver_assigned,
+                "unassignedColor": "hsla(206, 10%, 55%, 1)",
             },
             {
                 "label": "Assigned",
-                "confirmed": data?.driver_assigned,
-                "confirmedColor": "hsla(113, 43%, 50%, 1)",
+                "assigned": data?.driver_assigned,
+                "assignedColor": "hsla(113, 43%, 50%, 1)",
             },
             {
                 "label": "Active",
-                "pending": data?.active_count,
-                "pendingColor": "hsla(206, 10%, 55%, 1)",
+                "active": data?.active_count,
+                "activeColor": "hsla(206, 10%, 55%, 1)",
             },
         ]
     },[data?.active_count, data?.driver_assigned, data?.total])
@@ -79,11 +79,11 @@ export const Vehicles: React.FC<VehiclesHomeProps> = ({ className, data }) => {
             <BarChart
                 className="w-full h-80 flex justify-center"
                 keys={[
-                    "total",
-                    "confirmed",
-                    "pending",
+                    "unassigned",
+                    "assigned",
+                    "active",
                 ]}
-                colors={items.map((item) => item.totalColor ?? item?.confirmedColor ?? item?.pendingColor) as string[]}
+                colors={items.map((item) => item.unassignedColor ?? item?.assignedColor ?? item?.activeColor) as string[]}
                 indexBy="label"
                 margin={{ top: 25, right: 20, bottom: 25, left: 20 }}
                 padding={0.85}
