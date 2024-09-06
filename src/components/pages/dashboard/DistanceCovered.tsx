@@ -15,7 +15,7 @@ export const DistanceCovered: React.FC<DistanceCoveredDashboardProps> = ({ class
         { label: "Average kwh per kilometer", value: "0kwh" },
     ]
     const models2 = [
-        { label: "CO2 emissions saved ", value: "0kt" },
+        { label: "C°2 emissions saved ", value: "0kt" },
         { label: "Total emissions avoided", value: "0kt" },
     ]
     return (

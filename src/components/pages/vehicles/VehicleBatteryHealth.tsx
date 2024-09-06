@@ -10,13 +10,13 @@ interface VehicleBatteryHealthDashboardProps {
 
 export const VehicleBatteryHealth: React.FC<VehicleBatteryHealthDashboardProps> = ({ className }) => {
     const models1 = [
-        { label: "Total energy consumed", value: "2,936kw" },
-        { label: "Av. energy consumption", value: "5,936kw" },
-        { label: "Average kwh per kilometer", value: "5,936kwh" },
+        { label: "Total energy consumed", value: "0kw" },
+        { label: "Av. energy consumption", value: "0kw" },
+        { label: "Average kwh per kilometer", value: "0kwh" },
     ]
     const models2 = [
-        { label: "CO2 emissions saved ", value: "5,936kt" },
-        { label: "Total emissions avoided", value: "5,936kt" },
+        { label: "C°2 emissions saved ", value: "0kt" },
+        { label: "Total emissions avoided", value: "0kt" },
     ]
     return (
         <div className={cn("flex flex-col h-fit gap-6 p-4 rounded-lg border border-grey-dark-4", className)}>
@@ -33,9 +33,9 @@ export const VehicleBatteryHealth: React.FC<VehicleBatteryHealthDashboardProps> 
             <div className="grid gap-1">
                 <h4 className="font-semibold text-base text-grey-dark-1">State of Charge</h4>
                 <div className="relative flex-1 h-fit rounded-lg bg-green-4 px-3 py-4">
-                    <span className="text-2xl text-grey-dark-1">98%</span>
-                    <motion.div className="absolute inset-0 rounded-l-lg px-3 py-4 overflow-hidden" initial={{ width: 0 }} whileInView={{ width: "2.3%" }} transition={{ ease: "linear", duration: 0.8 }} style={{ background: "linear-gradient(90.01deg, #136207 0.01%, #55B648 106.72%)"}}>
-                        <span className="text-2xl text-white">98%</span>
+                    <span className="text-2xl text-grey-dark-1">0%</span>
+                    <motion.div className="absolute inset-0 rounded-l-lg py-4 overflow-hidden" initial={{ width: 0 }} whileInView={{ width: "0.0%" }} transition={{ ease: "linear", duration: 0.8 }} style={{ background: "linear-gradient(90.01deg, #136207 0.01%, #55B648 106.72%)"}}>
+                        <span className="text-2xl text-white ml-3">0%</span>
                     </motion.div>
                 </div>
             </div>
@@ -44,14 +44,14 @@ export const VehicleBatteryHealth: React.FC<VehicleBatteryHealthDashboardProps> 
                     <Icon icon="lucide:thermometer-sun" className="size-4 text-grey-dark-3 mt-1" />
                     <div className="grid gap-1 flex-1">
                         <h4 className="text-grey-dark-3 text-sm text-left">Temperature</h4>
-                        <span className="text-grey-dark-1 font-medium text-lg text-left">23°C</span>
+                        <span className="text-grey-dark-1 font-medium text-lg text-left">0°C</span>
                     </div>
                 </div>
                 <div className="bg-portal-bg rounded-lg max-w-32 w-full flex items-start gap-1 py-2 px-3">
                     <Icon icon="heroicons:bolt" className="size-4 text-grey-dark-3 mt-1" />
                     <div className="grid gap-1 flex-1">
                         <h4 className="text-grey-dark-3 text-sm text-left">Voltage</h4>
-                        <span className="text-grey-dark-1 font-medium text-lg text-left">24v</span>
+                        <span className="text-grey-dark-1 font-medium text-lg text-left">0v</span>
                     </div>
                 </div>
             </div>

@@ -7,7 +7,7 @@ export const TripSustainabilityMetrics: React.FC = () => {
         { label: "Average kwh per kilometer", value: "0kwh" },
         { label: "State of charge at the beginning of the trip", value: "0%" },
         { label: "State of charge at the end of the trip", value: "0%" },
-        { label: "CO2 emissions saved", value: "0kt" },
+        { label: "C°2 emissions saved", value: "0kt" },
         { label: "Battery Health at the beginning of the trip", value: "0%" },
         { label: "Battery Health at the end of the trip", value: "0%" },
         { label: "Total emissions avoided", value: "0kt" },
