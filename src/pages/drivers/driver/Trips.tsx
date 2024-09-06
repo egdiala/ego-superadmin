@@ -63,6 +63,16 @@ export const DriverTripsPage: React.FC = () => {
       {
         header: () => "Status",
         accessorKey: "ride_data.status",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedTripType
+          const black = ["ENROUTE_TO_DROPOFF",]
+          const blue = ["PICKED_RIDER",]
+          const green = ["REQUEST_ACCEPTED",  "ARRIVED_AT_PICKUP", "COMPLETED"]
+          const red = ["CANCELED"]
+          return (
+            <div className={cn("text-sm line-clamp-2 capitalize font-medium", green.includes(item?.ride_status) && "text-green-1", red.includes(item?.ride_status) && "text-semantics-error", blue.includes(item?.ride_status) && "text-[#0073C4]", black.includes(item?.ride_status) && "text-grey-dark-1" )}>{item?.ride_status.split("_").join(" ").toLowerCase()}</div>
+          )
+        }
       }
     ];
 

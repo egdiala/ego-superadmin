@@ -14,6 +14,8 @@ interface TripDriverAndVehicleProps {
         phone_number: string;
         email: string;
         name: string;
+        pickup_distance: number;
+        total_distance: number;
     } | undefined
 }
 
@@ -23,8 +25,8 @@ export const TripDriverAndVehicle: React.FC<TripDriverAndVehicleProps> = ({ data
         { label: "Phone Number", value: data?.phone_number },
     ]
     const information = [
-        { label: "Total Km covered by vehicle before the time of the trip", value: "124km" },
-        { label: "Total Km covered by vehicle as at the time of the trip", value: "124km" },
+        { label: "Total Km covered by vehicle before the time of the trip", value: `${data?.pickup_distance}km` },
+        { label: "Total Km covered by vehicle as at the time of the trip", value: `${data?.total_distance}km` },
     ]
     return (
         <div className="flex flex-col h-fit gap-6 py-4 px-5 rounded-lg border border-input-filled">
@@ -52,7 +54,7 @@ export const TripDriverAndVehicle: React.FC<TripDriverAndVehicleProps> = ({ data
                         </div>
                     )
                 }
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col items-start gap-2">
                     <img
                         alt={data?.plate_number}
                         className="h-9 w-20"

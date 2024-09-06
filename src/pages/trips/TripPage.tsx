@@ -104,7 +104,7 @@ export const TripPage: React.FC = () => {
                                 </div>
                                 <div className="grid gap-6 content-start">
                                     <TripRider data={trip!} />
-                                    <TripDriverAndVehicle data={trip?.driver_data} />
+                                    <TripDriverAndVehicle data={{ ...trip?.driver_data!, total_distance: trip?.ride_data?.total_distance!, pickup_distance: trip?.ride_data?.pickup_distance! }} />
                                     <TripSustainabilityMetrics />
                                 </div>
                             </div>

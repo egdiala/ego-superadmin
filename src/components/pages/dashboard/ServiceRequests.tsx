@@ -91,7 +91,7 @@ export const ServiceRequests: React.FC<ServiceRequestsHomeProps> = ({ className,
                 margin={{ top: 25, right: 20, bottom: 25, left: 20 }}
                 padding={0.7}
                 innerPadding={2}
-                valueScale={{ type: "linear" }}
+                valueScale={{ type: "linear", min: 0 }}
                 indexScale={{ type: "band", round: true }}
                 groupMode="grouped"
                 axisTop={null}
@@ -103,13 +103,15 @@ export const ServiceRequests: React.FC<ServiceRequestsHomeProps> = ({ className,
                     truncateTickAt: 0
                 }}
                 axisLeft={{
-                    tickSize: 0,
+                    tickValues: 3,
                     tickPadding: 5,
                     tickRotation: 0,
                     legendPosition: "middle",
                     legendOffset: 40,
                     truncateTickAt: 0
                 }}
+                enableGridY={true}
+                gridYValues={5} // Ensure grid lines match whole numbers
                 enableLabel={false}
                 labelSkipWidth={7}
                 labelSkipHeight={12}

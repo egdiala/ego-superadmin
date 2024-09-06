@@ -2,6 +2,8 @@ import React, { Fragment } from "react";
 import { Icon } from "@iconify/react";
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react"
 import type { FetchedSingleTrip } from "@/types/trips";
+import { PurchaseModel } from "@/types/organizations";
+import { pascalCaseToWords } from "@/utils/textFormatter";
 
 interface TripPaymentProps {
     data: FetchedSingleTrip
@@ -10,7 +12,7 @@ interface TripPaymentProps {
 
 export const TripPayment: React.FC<TripPaymentProps> = ({ data }) => {
     const infos = [
-        { label: "Trip payment Model", value: data?.ride_data?.payment_method },
+        { label: "Trip payment Model", value: pascalCaseToWords(PurchaseModel[data?.org_data?.purchase_model]) },
         { label: "Additional Km", value: "0km" },
         { label: "Addtional fee", value: "₦0" }
     ]
@@ -25,9 +27,9 @@ export const TripPayment: React.FC<TripPaymentProps> = ({ data }) => {
                         </PopoverButton>
                         <PopoverPanel
                             transition
-                            anchor="top"
+                            anchor="top" as="section"
                             style={{ boxShadow: "0px 7px 20.6px 0px rgba(0, 0, 0, 0.25)" }}
-                            className="bg-grey-dark-1 overflow-visible w-64 py-2 px-3.5 flex flex-col gap-1.5 rounded text-white transition duration-500 ease-in-out data-[closed]:-translate-y-5 -mt-3.5 ml-0.5 data-[closed]:opacity-0"
+                            className="scrollbar-hide bg-grey-dark-1 overflow-visible w-64 py-2 px-3.5 flex flex-col gap-1.5 rounded text-white transition duration-500 ease-in-out data-[closed]:-translate-y-5 -mt-3.5 ml-0.5 data-[closed]:opacity-0"
                         >
                             <span className="text-xs text-yellow-1 text-left">Lease Model Payment</span> 
                             <p className="text-sm text-white">For lease plan, 120km covered at ₦83,393.20. Additional km is priced at ₦694.94/km</p>

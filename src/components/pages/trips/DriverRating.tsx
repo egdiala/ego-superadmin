@@ -9,18 +9,19 @@ export const TripDriverRating: React.FC = () => {
                     <h2 className="text-sm text-grey-dark-3">Driver was rated</h2>
                     <div className="flex items-center gap-1">
                         <Icon icon="ph:star-fill" className="text-semantics-amber size-3.5" />
-                        <span className="font-medium text-sm text-grey-dark-1">4.7</span>
+                        <span className="font-medium text-sm text-grey-dark-1">0</span>
                     </div>
                 </div>
-                <div className="grid gap-1">
+                {/* <div className="grid gap-1">
                     <h3 className="text-grey-dark-3 text-sm">Rating ID</h3>
                     <p className="text-grey-dark-1 text-sm">39i439HIJD03</p>
-                </div>
+                </div> */}
             </div>
-            <div className="grid gap-1">
+            {/* <div className="grid gap-1">
                 <h3 className="text-grey-dark-3 text-sm">Rider's comment about the driver</h3>
                 <p className="text-grey-dark-2 text-sm">Lorem ipsum dolor sit amet consectetur. Duis ornare velit vitae lacus ipsum euismod. Nullam ultricies risus ut leo. Massa rhoncus mauris egestas duis nulla arcu in semper tortor. Sagittis suspendisse ultricies.Lorem ipsum dolor sit amet consectetur. Duis ornare velit vitae lacus ipsum euismod. Nullam </p>
-            </div>
+            </div> */}
+            <p className="text-grey-dark-2 text-sm">No comment</p>
         </div>
     )
 }

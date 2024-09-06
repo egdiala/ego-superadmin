@@ -2,16 +2,16 @@ import React from "react";
 
 export const TripSustainabilityMetrics: React.FC = () => {
     const infos = [
-        { label: "Total energy consumed across the trip", value: "2,936kw" },
-        { label: "Av. energy consumption", value: "5,936kw" },
-        { label: "Average kwh per kilometer", value: "5,936kwh" },
-        { label: "State of charge at the beginning of the trip", value: "56%" },
-        { label: "State of charge at the end of the trip", value: "50%" },
-        { label: "CO2 emissions saved", value: "5,936kt" },
-        { label: "Battery Health at the beginning of the trip", value: "56%" },
-        { label: "Battery Health at the end of the trip", value: "50%" },
-        { label: "Total emissions avoided", value: "5,936kt" },
-        { label: "Average Speed", value: "23mph" },
+        { label: "Total energy consumed across the trip", value: "0kw" },
+        { label: "Av. energy consumption", value: "0kw" },
+        { label: "Average kwh per kilometer", value: "0kwh" },
+        { label: "State of charge at the beginning of the trip", value: "0%" },
+        { label: "State of charge at the end of the trip", value: "0%" },
+        { label: "CO2 emissions saved", value: "0kt" },
+        { label: "Battery Health at the beginning of the trip", value: "0%" },
+        { label: "Battery Health at the end of the trip", value: "0%" },
+        { label: "Total emissions avoided", value: "0kt" },
+        { label: "Average Speed", value: "0mph" },
     ]
     return (
         <div className="flex flex-col h-fit row-span-2 gap-6 py-4 px-5 rounded-lg border border-input-filled">

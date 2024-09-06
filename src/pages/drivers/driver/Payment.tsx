@@ -1,13 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { pageVariants } from "@/constants/animateVariants";
 import { SearchInput, Table, TableAction } from "@/components/core";
-import { makeData } from "@/hooks/makeData";
 
 export const DriverPaymentPage: React.FC = () => {
-    const dummyData = makeData(50);
-    const [data, setData] = useState(dummyData);
 
     const columns = [
       {
@@ -28,21 +25,9 @@ export const DriverPaymentPage: React.FC = () => {
       }
     ];
 
-    const paginateData = (currentPage: number, rowsPerPage: number) => {
-      const startIndex = (currentPage - 1) * rowsPerPage;
-      const endIndex = startIndex + rowsPerPage;
-      const newData = dummyData.slice(startIndex, endIndex);
-      setData(newData);
-    };
-
-    const handlePageChange = (currentPage: number, rowsPerPage: number) => {
+    const handlePageChange = () => {
       // in a real page, this function would paginate the data from the backend
-      paginateData(currentPage, rowsPerPage);
-    };
-
-    const getData = (currentPage: number, rowsPerPage: number) => {
-      // in a real page, this function would paginate the data from the backend
-      paginateData(currentPage, rowsPerPage);
+      
     };
 
     return (
@@ -64,12 +49,12 @@ export const DriverPaymentPage: React.FC = () => {
             </div>
             <Table
                 columns={columns}
-                data={data}
-                getData={getData}
+                data={[]}
                 page={1}
                 perPage={10}
-                totalCount={dummyData.length}
+                totalCount={[].length}
                 onPageChange={handlePageChange}
+                emptyStateText="No payment has been made to this driver"
             />
         </motion.div>
     )

@@ -7,13 +7,13 @@ interface PaymentValueDashboardProps {
 
 export const PaymentValue: React.FC<PaymentValueDashboardProps> = ({ className }) => {
     const models = [
-        { label: "Lease Model", value: "₦5,630,936 (24)" },
-        { label: "Staff Plan Model", value: "₦6,660,936 (10)" },
-        { label: "E-hailing Model", value: "₦6,660,936 (10)" },
+        { label: "Lease Model", value: "₦0 (0)" },
+        { label: "Staff Plan Model", value: "₦0 (0)" },
+        { label: "E-hailing Model", value: "₦0 (0)" },
     ]
     const totals = [
-        { label: "Total value of payments", value: "₦54,936" },
-        { label: "Volume of payments", value: "34" },
+        { label: "Total value of payments", value: "₦0" },
+        { label: "Volume of payments", value: "0" },
     ]
     return (
         <div className={cn("grid gap-4", className)}>

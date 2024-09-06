@@ -213,7 +213,7 @@ export const TotalTrips: React.FC<TotalTripsHomeProps> = ({ className }) => {
             <div className="flex items-start justify-between">
                 <div className="p-2 grid gap-1 bg-portal-bg rounded-lg w-fit">
                     <h4 className="text-grey-dark-3 text-xs">Total Trip Request</h4>
-                    <span className="text-grey-dark-1 text-xl">4,535</span>
+                    <span className="text-grey-dark-1 text-xl">0</span>
                 </div>
                 <TableAction theme="ghost">
                     <Icon icon="mdi:funnel" className="size-4" />

@@ -27,7 +27,7 @@ export const TripRider: React.FC<TripRiderProps> = ({ data }) => {
                         <h2 className="font-medium text-sm text-grey-dark-1">{data?.ride_data?.name}</h2>
                         <div className="flex items-center gap-1">
                             <Icon icon="ph:star-fill" className="text-semantics-amber size-3.5" />
-                            <span className="text-sm text-grey-dark-3">{data?.ride_data?.rating}</span>
+                            <span className="text-sm text-grey-dark-3">{data?.ride_data?.rating?.toFixed(1)}</span>
                         </div>
                     </div>
                 </div>

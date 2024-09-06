@@ -9,7 +9,7 @@ interface TripRequestInfoProps {
 export const TripRequestInfo: React.FC<TripRequestInfoProps> = ({ data }) => {
     const infos = [
         { label: "Request Date & Time", value: `${formatRelative(data?.createdAt, new Date()).split("at")[0]} • ${format(data?.createdAt, "p")}` },
-        { label: "Request ID", value: data?.trip_ref },
+        { label: "Request ID", value: data?.trip_id },
         { label: "Approved by", value: "Gbemiro John" },
         { label: "Approval Date & Time", value: "Today • 12:34pm" },
         { label: "Driver Assigned Date", value: `${formatRelative(data?.ride_data?.accepted_at, new Date()).split("at")[0]} • ${format(data?.ride_data?.accepted_at, "p")}` },
@@ -28,7 +28,7 @@ export const TripRequestInfo: React.FC<TripRequestInfoProps> = ({ data }) => {
                 infos.map((info) =>
                     <div className="grid gap-1">
                         <h3 className="text-grey-dark-3 text-sm">{info.label}</h3>
-                        <p className="text-grey-dark-1 font-medium text-sm capitalize">{info.value}</p>
+                        <p className="text-grey-dark-1 font-medium text-sm capitalize text-ellipsis whitespace-nowrap overflow-hidden">{info.value}</p>
                     </div>
                 )
             }
