@@ -75,13 +75,145 @@ export const CustomerTotalTrips: React.FC<CustomerTotalTripsProps> = ({ classNam
             }
             ]
         },
+        {
+            "id": "pending",
+            "color": "hsla(41, 100%, 44%, 1)",
+            "data": [
+            {
+                "xFormatted": "January",
+                "x": "Jan",
+                "y": 37
+            },
+            {
+                "xFormatted": "February",
+                "x": "Feb",
+                "y": 39
+            },
+            {
+                "xFormatted": "March",
+                "x": "Mar",
+                "y": 51
+            },
+            {
+                "xFormatted": "April",
+                "x": "Apr",
+                "y": 327
+            },
+            {
+                "xFormatted": "May",
+                "x": "May",
+                "y": 50
+            },
+            {
+                "xFormatted": "June",
+                "x": "Jun",
+                "y": 57
+            },
+            {
+                "xFormatted": "July",
+                "x": "Jul",
+                "y": 42
+            },
+            {
+                "xFormatted": "August",
+                "x": "Aug",
+                "y": 369
+            },
+            {
+                "xFormatted": "September",
+                "x": "Sep",
+                "y": 43
+            },
+            {
+                "xFormatted": "October",
+                "x": "Oct",
+                "y": 66
+            },
+            {
+                "xFormatted": "November",
+                "x": "Nov",
+                "y": 122
+            },
+            {
+                "xFormatted": "December",
+                "x": "Dec",
+                "y": 219
+            }
+            ]
+        },
+        {
+            "id": "cancelled",
+            "color": "hsla(4, 80%, 48%, 1)",
+            "data": [
+            {
+                "xFormatted": "January",
+                "x": "Jan",
+                "y": 337
+            },
+            {
+                "xFormatted": "February",
+                "x": "Feb",
+                "y": 39
+            },
+            {
+                "xFormatted": "March",
+                "x": "Mar",
+                "y": 310
+            },
+            {
+                "xFormatted": "April",
+                "x": "Apr",
+                "y": 142
+            },
+            {
+                "xFormatted": "May",
+                "x": "May",
+                "y": 95
+            },
+            {
+                "xFormatted": "June",
+                "x": "Jun",
+                "y": 257
+            },
+            {
+                "xFormatted": "July",
+                "x": "Jul",
+                "y": 94
+            },
+            {
+                "xFormatted": "August",
+                "x": "Aug",
+                "y": 69
+            },
+            {
+                "xFormatted": "September",
+                "x": "Sep",
+                "y": 342
+            },
+            {
+                "xFormatted": "October",
+                "x": "Oct",
+                "y": 66
+            },
+            {
+                "xFormatted": "November",
+                "x": "Nov",
+                "y": 92
+            },
+            {
+                "xFormatted": "December",
+                "x": "Dec",
+                "y": 93
+            }
+            ]
+        }
     ]
     return (
         <div className={cn("flex flex-col p-4 gap-10 rounded-lg border border-[#E1E4E6]", className)}>
             <div className="flex items-start justify-between">
                 <div className="p-2 grid gap-1 bg-portal-bg rounded-lg w-fit">
                     <h4 className="text-grey-dark-3 text-xs">Total Trip Request</h4>
-                    <span className="text-grey-dark-1 text-xl">4,535</span>
+                    <span className="text-grey-dark-1 text-xl">0</span>
                 </div>
                 <TableAction theme="ghost">
                     <Icon icon="mdi:funnel" className="size-4" />
@@ -110,7 +242,7 @@ export const CustomerTotalTrips: React.FC<CustomerTotalTripsProps> = ({ classNam
                     
                     const colors = {
                         "completed": "bg-green-1",
-                        "approved": "bg-semantics-amber",
+                        "pending": "bg-semantics-amber",
                         "cancelled": "bg-semantics-error"
                     }
                     return (

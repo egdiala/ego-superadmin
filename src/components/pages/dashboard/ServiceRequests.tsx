@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { cn } from "@/libs/cn";
-import { BarChart } from "@/components/core";
+import { BarChart, EmptyState, RenderIf } from "@/components/core";
 import { FetchedServiceRequestsCountStatus } from "@/types/service-requests";
 
 interface ServiceRequestsHomeProps {
@@ -78,49 +78,54 @@ export const ServiceRequests: React.FC<ServiceRequestsHomeProps> = ({ className,
                 }
                 </div>
             </div>
-            <BarChart
-                className="w-full h-80 flex justify-center"
-                keys={[
-                    "total",
-                    "completed",
-                    "pending",
-                    "cancelled"
-                ]}
-                indexBy="label"
-                colors={["hsla(205, 92%, 10%, 1)", "hsla(113, 43%, 50%, 1)", "hsla(41, 100%, 44%, 1)", "hsla(4, 80%, 48%, 1)"]}
-                margin={{ top: 25, right: 20, bottom: 25, left: 20 }}
-                padding={0.7}
-                innerPadding={2}
-                valueScale={{ type: "linear", min: 0 }}
-                indexScale={{ type: "band", round: true }}
-                groupMode="grouped"
-                axisTop={null}
-                axisRight={null}
-                axisBottom={{
-                    tickSize: 0,
-                    tickRotation: 0,
-                    legendOffset: 32,
-                    truncateTickAt: 0
-                }}
-                axisLeft={{
-                    tickValues: 3,
-                    tickPadding: 5,
-                    tickRotation: 0,
-                    legendPosition: "middle",
-                    legendOffset: 40,
-                    truncateTickAt: 0
-                }}
-                enableGridY={true}
-                gridYValues={5} // Ensure grid lines match whole numbers
-                enableLabel={false}
-                labelSkipWidth={7}
-                labelSkipHeight={12}
-                labelTextColor="hsla(206, 10%, 55%, 1)"
-                legends={[]}
-                role="application"
-                ariaLabel="Service Requests Chart"
-                data={items}
-            />
+            <RenderIf condition={data?.total > 0}>
+                <BarChart
+                    className="w-full h-80 flex justify-center"
+                    keys={[
+                        "total",
+                        "completed",
+                        "pending",
+                        "cancelled"
+                    ]}
+                    indexBy="label"
+                    colors={["hsla(205, 92%, 10%, 1)", "hsla(113, 43%, 50%, 1)", "hsla(41, 100%, 44%, 1)", "hsla(4, 80%, 48%, 1)"]}
+                    margin={{ top: 25, right: 20, bottom: 25, left: 20 }}
+                    padding={0.7}
+                    innerPadding={2}
+                    valueScale={{ type: "linear", min: 0 }}
+                    indexScale={{ type: "band", round: true }}
+                    groupMode="grouped"
+                    axisTop={null}
+                    axisRight={null}
+                    axisBottom={{
+                        tickSize: 0,
+                        tickRotation: 0,
+                        legendOffset: 32,
+                        truncateTickAt: 0
+                    }}
+                    axisLeft={{
+                        tickValues: 3,
+                        tickPadding: 5,
+                        tickRotation: 0,
+                        legendPosition: "middle",
+                        legendOffset: 40,
+                        truncateTickAt: 0
+                    }}
+                    enableGridY={true}
+                    gridYValues={5} // Ensure grid lines match whole numbers
+                    enableLabel={false}
+                    labelSkipWidth={7}
+                    labelSkipHeight={12}
+                    labelTextColor="hsla(206, 10%, 55%, 1)"
+                    legends={[]}
+                    role="application"
+                    ariaLabel="Service Requests Chart"
+                    data={items}
+                />
+            </RenderIf>
+            <RenderIf condition={data?.total == 0}>
+                <EmptyState emptyStateText="No service request has been made" />
+            </RenderIf>
         </div>
     )
 }

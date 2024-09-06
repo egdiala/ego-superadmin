@@ -9,6 +9,10 @@ import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { FetchedTripType } from "@/types/trips";
+import { PurchaseModel } from "@/types/organizations";
+import { formattedNumber, pascalCaseToWords } from "@/utils/textFormatter";
+import { cn } from "@/libs/cn";
+import { format, formatRelative } from "date-fns";
 
 export const CustomerTripPaymentPage: React.FC = () => {
     const params = useParams();
@@ -26,6 +30,12 @@ export const CustomerTripPaymentPage: React.FC = () => {
       {
         header: () => "Date",
         accessorKey: "createdAt",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedTripType
+          return (
+            <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{formatRelative(item?.createdAt, new Date()).split("at")[0]}</span> • {format(item?.createdAt, "p")}</div>
+          )
+        }
       },
       {
         header: () => "Trip Reference",
@@ -37,15 +47,34 @@ export const CustomerTripPaymentPage: React.FC = () => {
       },
       {
         header: () => "Payment Method",
-        accessorKey: "ride_data.charge_data.method",
+        accessorKey: "org_data.purchase_model",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedTripType
+          return (
+            <div className="text-sm text-grey-dark-2 whitespace-nowrap">{pascalCaseToWords(PurchaseModel[item?.org_data?.purchase_model])}</div>
+          )
+        }
       },
       {
         header: () => "Amount",
         accessorKey: "ride_data.fare",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedTripType
+          return (
+            <div className="text-sm text-grey-dark-2 whitespace-nowrap">{formattedNumber(item?.ride_data?.fare)}</div>
+          )
+        }
       },
       {
         header: () => "Status",
         accessorKey: "ride_data.charge_data.status",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedTripType
+          const status = item?.ride_data?.charge_data?.status
+          return (
+            <div className={cn("text-sm font-medium capitalize whitespace-nowrap", status === "pending" && "text-semantics-amber", status !== "pending" && "text-grey-dark-2")}>{status}</div>
+          )
+        }
       },
     ];
 

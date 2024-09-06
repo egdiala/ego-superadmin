@@ -59,7 +59,7 @@ export const CustomersPage: React.FC = () => {
       cell: ({ row }: { row: any; }) => {
         const item = row?.original as FetchedOrgaizationType
         return (
-          <div className={cn(item?.status === 1 ? "text-green-1" : "text-grey-dark-1", "font-medium text-sm")}>{item?.status === 1 ? "Active" : "Suspended"}</div>
+          <div className={cn(item?.status === 1 ? "text-green-1" : "text-semantics-error", "font-medium text-sm")}>{item?.status === 1 ? "Active" : "Suspended"}</div>
         )
       }
     }

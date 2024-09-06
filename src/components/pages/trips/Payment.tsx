@@ -37,8 +37,8 @@ export const TripPayment: React.FC<TripPaymentProps> = ({ data }) => {
                         </PopoverPanel>
                     </Popover>
                 </div>
-                <div className="flex items-center justify-center w-fit bg-yellow-3 text-grey-dark-2 text-sm px-2 py-0.5 rounded">
-                    Pending
+                <div className="flex items-center justify-center w-fit bg-yellow-3 text-grey-dark-2 text-sm px-2 py-0.5 rounded capitalize">
+                    {data?.ride_data?.charge_data?.status}
                 </div>
             </div>
             <div className="grid grid-cols-2 gap-6">

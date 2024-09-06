@@ -4,20 +4,22 @@ import { pageVariants } from "@/constants/animateVariants";
 import { Icon } from "@iconify/react";
 import { RenderIf } from "@/components/core";
 import { CustomerBatteryDetails, CustomerServiceRequests, CustomerTotalTrips, CustomerTripDetails } from "@/components/pages/customers";
-import { useGetOrganization, useGetTrips, useGetVehicleDistanceForOrg, useGetVehicles } from "@/services/hooks/queries";
+import { useGetOrganization, useGetServiceRequests, useGetTrips, useGetVehicleDistanceForOrg, useGetVehicles } from "@/services/hooks/queries";
 import { PurchaseModel } from "@/types/organizations";
 import { useParams } from "react-router-dom";
 import { FetchedVehicleCount } from "@/types/vehicles";
 import { FetchedTripCountStatus } from "@/types/trips";
 import { Loader } from "@/components/core/Button/Loader";
 import { cn } from "@/libs/cn";
+import { FetchedServiceRequestsCountStatus } from "@/types/service-requests";
 
 export const CustomerDashboardPage: React.FC = () => {
     const params = useParams()
     const { data: customer, refetch } = useGetOrganization("")
+    const { data: distCount, isFetching: isFetchingDistance } = useGetVehicleDistanceForOrg({ organization_id: params?.id as string })
     const { data: vehiclesCount, isFetching: isFetchingVehicles } = useGetVehicles({ component: "count-status", organization_id: params?.id as string })
     const { data: tripsCount, isFetching: isFetchingTrips } = useGetTrips({ component: "count-status", user_type: "organization", auth_id: params?.id as string })
-    const { data: distCount, isFetching: isFetchingDistance } = useGetVehicleDistanceForOrg({ organization_id: params?.id as string })
+    const { data: serviceRequestCount, isFetching: fetchingServiceRequests } = useGetServiceRequests({ component: "count-status", organization_id: params?.id as string })
     const firstRowItems = [
         {
             label: "Total Amount Paid so far",
@@ -58,7 +60,7 @@ export const CustomerDashboardPage: React.FC = () => {
     },[customer, refetch])
     return (
         <Fragment>
-            <RenderIf condition={!isFetchingVehicles && !isFetchingTrips && !isFetchingDistance}>
+            <RenderIf condition={!isFetchingVehicles && !isFetchingTrips && !isFetchingDistance && !fetchingServiceRequests}>
                 <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-6">
                     <div className={cn("grid grid-cols-1 gap-4", PurchaseModel.StaffCommute !== customer?.purchase_model! ? "md:grid-cols-3" : "md:grid-cols-2")}>
                         {
@@ -99,7 +101,7 @@ export const CustomerDashboardPage: React.FC = () => {
                         </RenderIf>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <CustomerServiceRequests />
+                        <CustomerServiceRequests data={serviceRequestCount as FetchedServiceRequestsCountStatus} />
                         <CustomerTotalTrips />
                     </div>
                     <RenderIf condition={PurchaseModel.Lease === customer?.purchase_model!}>
@@ -110,7 +112,7 @@ export const CustomerDashboardPage: React.FC = () => {
                     </RenderIf>
                 </motion.div>
             </RenderIf>
-            <RenderIf condition={isFetchingVehicles || isFetchingTrips || isFetchingDistance}>
+            <RenderIf condition={isFetchingVehicles || isFetchingTrips || isFetchingDistance || fetchingServiceRequests}>
                 <div className="flex w-full h-dvh items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
             </RenderIf>
         </Fragment>

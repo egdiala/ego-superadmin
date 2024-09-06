@@ -81,7 +81,7 @@ export const CustomerStaffsPage: React.FC = () => {
         <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-4 pt-4">
             <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
                 <div className="w-full md:w-1/3 xl:w-1/4">
-                    <SearchInput placeholder="Search staff" onChange={onChangeHandler} disabled={isLoading || fetchingCount} />
+                    <SearchInput placeholder="Search staff" onChange={onChangeHandler} />
                 </div>
                 
                 <div className="flex items-center gap-2 flex-wrap">

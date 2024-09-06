@@ -34,11 +34,11 @@ export const RiderProfile: React.FC = () => {
                 label: "Trip Limit",
                 gauge: {
                     label: "Spend amount used",
-                    value: "(80%)",
-                    amount: "₦5,936"
+                    value: "(0%)",
+                    amount: "₦0"
                 },
                 lowerItems: [
-                    { label: "Spend Limit", value: "₦6,000" },
+                    { label: "Spend Limit", value: "₦0" },
                     { label: "Duration", value: "Weekly" }
                 ]
             },
@@ -46,11 +46,11 @@ export const RiderProfile: React.FC = () => {
                 label: "Free Trip",
                 gauge: {
                     label: "Trip limit used",
-                    value: "(86%)",
-                    amount: "13"
+                    value: "(%)",
+                    amount: "0"
                 },
                 lowerItems: [
-                    { label: "Free Trip Limit", value: "20" },
+                    { label: "Free Trip Limit", value: "0" },
                     { label: "Duration", value: "Weekly" }
                 ]
             }
@@ -100,7 +100,7 @@ export const RiderProfile: React.FC = () => {
                                         <span className="text-base text-grey-dark-1">{item?.gauge?.amount} {item?.gauge?.value}</span>
                                     </div>
                                     <div className="flex-1 h-2 rounded-full bg-green-3">
-                                        <motion.div className="h-2 rounded-full bg-green-1" initial={{ width: "0%" }} whileInView={{ width: "80%" }} transition={{ ease: "linear", duration: 1 }}  />
+                                        <motion.div className="h-2 rounded-full bg-green-1" initial={{ width: "0%" }} whileInView={{ width: "0%" }} transition={{ ease: "linear", duration: 1 }}  />
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-between">
