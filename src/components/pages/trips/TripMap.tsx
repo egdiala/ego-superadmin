@@ -1,11 +1,9 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import { FetchedSingleTrip } from "@/types/trips";
-// import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
 import axios from "axios";
 import mapboxgl from "mapbox-gl";
+import type { FetchedSingleTrip } from "@/types/trips";
 
-mapboxgl.accessToken = "pk.eyJ1IjoiZWdkaWFsYSIsImEiOiJjbTB1eGlyMHcwNmN2MmlzMjBqN2IzMXMxIn0.W1KYE8-biPgMoChmYFo4QA";
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 
 interface TripMapProps {
     data?: FetchedSingleTrip
