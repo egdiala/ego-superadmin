@@ -11,7 +11,7 @@ import { Loader } from "@/components/core/Button/Loader";
 import { pascalCaseToWords } from "@/utils/textFormatter";
 import { pageVariants } from "@/constants/animateVariants";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { EmptyState, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { TripsFilter } from "@/components/pages/trips";
 
@@ -22,9 +22,13 @@ export const TripsPage: React.FC = () => {
     const [page, setPage] = useState(1)
     const { value, onChangeHandler } = useDebounce(500)
     const [searchParams, setSearchParams] = useSearchParams();
+    const [filters, setFilters] = useState({
+      start_date: "",
+      end_date: ""
+    })
     const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
-    const { data: count, isFetching: fetchingCount, refetch } = useGetTrips({ component, q: value })
-    const { data: trips, isFetching } = useGetTrips({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value })
+    const { data: count, isFetching: fetchingCount, refetch } = useGetTrips({ component, q: value, ...filters })
+    const { data: trips, isFetching } = useGetTrips({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value, ...filters })
 
     const columns = [
       {
@@ -128,19 +132,25 @@ export const TripsPage: React.FC = () => {
                           <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
                           Export
                       </TableAction>
-                      <TripsFilter />
+                      <TripsFilter setFilters={setFilters} isLoading={isFetching || fetchingCount} />
                     </div>
                 </div>
                 <RenderIf condition={!isFetching && !fetchingCount}>
-                  <Table
-                      page={page}
-                      data={trips as FetchedTripType[]}
-                      columns={columns}
-                      perPage={itemsPerPage}
-                      totalCount={(count as any)?.total}
-                      onPageChange={handlePageChange}
-                      onClick={({ original }) => navigate(`/trips/${original?.trip_id}`)}
-                  />
+                  <RenderIf condition={trips !== undefined}>
+                    <Table
+                        page={page}
+                        data={trips as FetchedTripType[]}
+                        columns={columns}
+                        perPage={itemsPerPage}
+                        totalCount={(count as any)?.total}
+                        onPageChange={handlePageChange}
+                        emptyStateText="We couldn't find any trip in our system."
+                        onClick={({ original }) => navigate(`/trips/${original?.trip_id}`)}
+                    />
+                  </RenderIf>
+                  <RenderIf condition={trips === undefined}>
+                    <EmptyState emptyStateText="We couldn't find any trip in our system." />
+                  </RenderIf>
                 </RenderIf>
                 <RenderIf condition={isFetching || fetchingCount}>
                   <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>

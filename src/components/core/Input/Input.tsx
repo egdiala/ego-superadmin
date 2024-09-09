@@ -52,11 +52,11 @@ export const Input: React.FC<InputProps> = ({ label, error, optional, iconLeft, 
         <RenderIf condition={!!iconLeft}>
           <Icon
             icon={iconLeft as string | IconifyIcon}
-            className="size-5 left-3 text-neutral-base mt-[13px] inset-x-0 absolute"
+            className="size-5 left-3 text-grey-dark-3 peer-focus:text-green-1 mt-[13px] inset-x-0 absolute"
           />
         </RenderIf>
         <input
-          className={cn("ego-input peer", props?.iconLeft ? "pl-10" : "pl-2", props?.iconRight ? "pr-10" : "pr-2", className)}
+          className={cn("ego-input peer", iconLeft ? "pl-10" : "pl-2", iconRight ? "pr-10" : "pr-2", className)}
           {...props}
         />
         <RenderIf condition={!!iconRight}>

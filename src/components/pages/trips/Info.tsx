@@ -1,7 +1,7 @@
 import { cn } from "@/libs/cn";
 import { FetchedSingleTrip } from "@/types/trips";
 import { formatTime } from "@/utils/textFormatter";
-import { format, formatRelative } from "date-fns";
+import { differenceInSeconds, format, formatRelative } from "date-fns";
 import React from "react";
 
 interface TripInfoProps {
@@ -20,7 +20,7 @@ export const TripInfo: React.FC<TripInfoProps> = ({ data }) => {
         { label: "Trip Start Time", value: data?.ride_data?.start_trip_at ? `${formatRelative(data?.ride_data?.start_trip_at, new Date()).split("at")[0]} • ${format(data?.ride_data?.start_trip_at, "p")}` : "" },
         { label: "Trip End Time", value: data?.ride_data?.end_trip_at ? `${formatRelative(data?.ride_data?.end_trip_at, new Date()).split("at")[0]} • ${format(data?.ride_data?.end_trip_at, "p")}` : "" },
         { label: "Total Trip Distance", value: `${data?.ride_data?.total_distance}km` },
-        { label: "Actual Time Spent", value: formatTime(data?.ride_data?.est_time) },
+        { label: "Actual Time Spent", value: formatTime(differenceInSeconds(data?.ride_data?.end_trip_at as Date,  data?.ride_data?.start_trip_at as Date)) },
     ]
     return (
         <div className="flex flex-col h-fit gap-6 py-4 px-5 rounded-lg border border-input-filled">
