@@ -66,10 +66,10 @@ export const ServiceRequestsPage: React.FC = () => {
                           <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
                           Export
                       </TableAction>
-                        <TableAction theme="secondary" block>
-                            <Icon icon="mdi:funnel" className="size-4" />
-                            Filter
-                        </TableAction>
+                      <TableAction theme="secondary" block>
+                          <Icon icon="mdi:funnel" className="size-4" />
+                          Filter
+                      </TableAction>
                     </div>
                 </div>
                 <div className="grid grid-cols-4 gap-4">

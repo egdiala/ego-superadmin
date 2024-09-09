@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useMemo } from "react";
 import { motion } from "framer-motion";
 import { RenderIf } from "@/components/core";
 import { Loader } from "@/components/core/Button/Loader";
@@ -8,7 +8,7 @@ import type { FetchedDriverCountStatus } from "@/types/drivers";
 import type { FetchedVehicleCountStatus } from "@/types/vehicles";
 import type { FetchedOrganizationCountStatus } from "@/types/organizations";
 import type { FetchedServiceRequestsCountStatus } from "@/types/service-requests";
-import { useGetDrivers, useGetOrganizations, useGetRatings, useGetServiceRequests, useGetVehicles } from "@/services/hooks/queries";
+import { useGetDrivers, useGetOrganizations, useGetRanks, useGetRatings, useGetServiceRequests, useGetVehicles } from "@/services/hooks/queries";
 import { Customers, DistanceCovered, PaymentValue, Ratings, ServiceRequests, TopCommuters, TopDrivers, TopVehicles, TotalDrivers, TotalTrips, TripDetails, Vehicles } from "@/components/pages/dashboard";
 
 export const DashboardPage: React.FC = () => {
@@ -17,9 +17,18 @@ export const DashboardPage: React.FC = () => {
     const { data: serviceRequestCount, isFetching: fetchingServiceRequests } = useGetServiceRequests({ component: "count-status" })
     const { data: driversCount, isFetching: fetchingDrivers } = useGetDrivers({ component: "count-status" })
     const { data: ratingsCount, isFetching: fetchingRatings } = useGetRatings({ component: "count-one" })
+    const { data: topDrivers, isFetching: fetchingDriverRank } = useGetRanks({ user_type: "top-driver", request_type: "trip" })
+    const { data: topRiders, isFetching: fetchingRiderRank } = useGetRanks({ user_type: "top-rider", request_type: "trip" })
+    const { data: topVehicles, isFetching: fetchingVehicleRank } = useGetRanks({ user_type: "top-vehicles", request_type: "trip" })
+
+    const isFetchingAll = useMemo(() => {
+        const loadingStates = [fetchingCustomers, fetchingVehicles, fetchingServiceRequests, fetchingDrivers, fetchingRatings, fetchingDriverRank, fetchingRiderRank, fetchingVehicleRank]
+
+        return loadingStates.some((item) => item)
+    }, [fetchingCustomers, fetchingDriverRank, fetchingDrivers, fetchingRatings, fetchingRiderRank, fetchingServiceRequests, fetchingVehicleRank, fetchingVehicles])
     return (
         <Fragment>
-            <RenderIf condition={!fetchingCustomers && !fetchingVehicles && !fetchingServiceRequests && !fetchingDrivers && !fetchingRatings}>
+            <RenderIf condition={!isFetchingAll}>
                 <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">
                     <h1 className="text-grey-dark-1 font-bold text-2xl md:text-[2rem]">Dashboard</h1>
                     <div className="grid gap-6">
@@ -36,19 +45,19 @@ export const DashboardPage: React.FC = () => {
                         <div className="grid gap-6 content-start">
                             <TripDetails />
                             <TotalDrivers data={driversCount as FetchedDriverCountStatus} />
-                            <TopDrivers />
-                            <TopVehicles />
+                            <TopDrivers data={topDrivers as any[]} />
+                            <TopVehicles data={topVehicles as any[]} />
                         </div>
                         <div className="grid gap-6 content-start">
                             <ServiceRequests data={serviceRequestCount as FetchedServiceRequestsCountStatus} />
                             <DistanceCovered />
                             <Ratings data={ratingsCount as FetchedRatingCountOne} />
-                            <TopCommuters />
+                            <TopCommuters data={topRiders as any[]} />
                         </div>
                     </div>
                 </motion.div>
             </RenderIf>
-            <RenderIf condition={fetchingCustomers || fetchingVehicles || fetchingServiceRequests || fetchingDrivers || fetchingRatings}>
+            <RenderIf condition={isFetchingAll}>
                 <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
             </RenderIf>
         </Fragment>

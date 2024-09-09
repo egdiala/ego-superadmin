@@ -48,7 +48,7 @@ export const TripDriverAndVehicle: React.FC<TripDriverAndVehicleProps> = ({ data
                 </div>
                 {
                     infos.map((info) =>
-                        <div className="grid gap-1">
+                        <div key={info.label} className="grid gap-1">
                             <h3 className="text-grey-dark-3 text-sm">{info.label}</h3>
                             <p className="text-grey-dark-1 font-medium text-sm">{info.value}</p>
                         </div>
@@ -67,7 +67,7 @@ export const TripDriverAndVehicle: React.FC<TripDriverAndVehicleProps> = ({ data
                 </div>
                 {
                     information.map((info) =>
-                        <div className="grid gap-1">
+                        <div key={info.label} className="grid gap-1">
                             <h3 className="text-grey-dark-3 text-sm">{info.label}</h3>
                             <p className="text-grey-dark-1 font-medium text-sm">{info.value}</p>
                         </div>

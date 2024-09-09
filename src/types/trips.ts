@@ -9,6 +9,11 @@ export interface FetchTripsQuery {
     component?: "count" | "export" | "count-status";
 }
 
+export interface FetchRanksQuery {
+    request_type?: "trip" | "revenue" | "rating"
+    user_type?: "top-vehicles" | "top-driver" | "top-rider"
+}
+
 export interface FetchDistanceForOrgQuery {
     organization_id: string;
     vehicle_id?: string
@@ -215,6 +220,7 @@ export interface FetchedSingleTrip {
         journey_type: number;
         pickup_distance: number;
         status: string;
+        stop_location: any[];
         payment_method: string;
         cancel_data: {},
         charge_data: {

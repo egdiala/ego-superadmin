@@ -26,7 +26,7 @@ export const TripRequestInfo: React.FC<TripRequestInfoProps> = ({ data }) => {
             <div className="grid grid-cols-3 gap-6">
             {
                 infos.map((info) =>
-                    <div className="grid gap-1">
+                    <div key={info.label} className="grid gap-1">
                         <h3 className="text-grey-dark-3 text-sm">{info.label}</h3>
                         <p className="text-grey-dark-1 font-medium text-sm capitalize text-ellipsis whitespace-nowrap overflow-hidden">{info.value}</p>
                     </div>

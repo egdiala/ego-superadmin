@@ -23,3 +23,19 @@ export const formatTime = (seconds: number): string => {
         return minutesText;
     }
 }
+
+export const splitAddress = (address: string) => {
+  // Split the string by commas
+  const addressParts = address.split(",").map(part => part.trim());
+  
+  // The first element should be the first part of the address
+  const firstElement = addressParts[0];
+  
+  // The last element should contain the last two parts joined by a comma
+  const lastElement = addressParts.slice(-2).join(", ");
+  
+  // The middle element should contain everything between the first and last two parts
+  const middleElement = addressParts.slice(1, -2).join(", ");
+
+  return [firstElement, middleElement, lastElement];
+}

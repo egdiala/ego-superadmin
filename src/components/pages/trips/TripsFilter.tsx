@@ -44,7 +44,7 @@ export const TripsFilter: React.FC = () => {
                         <span className="uppercase text-grey-dark-3 text-xs">EV Purchase Model</span>
                         {
                             evFilters.map((item) =>
-                                <div role="button" onClick={() => setEnabled(item.value)} className={cn("flex items-center gap-2 cursor-pointer rounded bg-transparent py-2.5 px-2 transition duration-300 ease-out", enabled === item.value ? "bg-green-3 font-medium text-dark-green-1" : "text-grey-dark-2")}>
+                                <div key={item.label} role="button" onClick={() => setEnabled(item.value)} className={cn("flex items-center gap-2 cursor-pointer rounded bg-transparent py-2.5 px-2 transition duration-300 ease-out", enabled === item.value ? "bg-green-3 font-medium text-dark-green-1" : "text-grey-dark-2")}>
                                     <Checkbox name={item.label.toLowerCase()} value={item.value} checked={enabled === item.value} onChange={() => setEnabled(item.value)} />
                                     {item.label}
                                 </div>

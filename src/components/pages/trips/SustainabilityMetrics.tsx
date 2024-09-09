@@ -19,7 +19,7 @@ export const TripSustainabilityMetrics: React.FC = () => {
             <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
             {
                 infos.map((info) =>
-                    <div className="grid gap-1 content-start">
+                    <div key={info.label} className="grid gap-1 content-start">
                         <h3 className="text-grey-dark-3 text-sm">{info.label}</h3>
                         <p className="text-grey-dark-1 font-medium text-sm">{info.value}</p>
                     </div>

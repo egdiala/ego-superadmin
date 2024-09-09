@@ -8,9 +8,19 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css' rel='stylesheet' />
     <title>eGO Super Admin</title>
   </head>
   <body>
+    <script>
+      var mapboxgl = require('mapbox-gl/dist/mapbox-gl.js');
+
+      mapboxgl.accessToken = 'pk.eyJ1IjoiZWdkaWFsYSIsImEiOiJjbTB1eGlyMHcwNmN2MmlzMjBqN2IzMXMxIn0.W1KYE8-biPgMoChmYFo4QA';
+      var map = new mapboxgl.Map({
+        container: 'tripMapBox',
+        style: 'mapbox://styles/mapbox/streets-v11'
+      });
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
