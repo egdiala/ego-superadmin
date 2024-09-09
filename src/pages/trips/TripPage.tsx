@@ -16,14 +16,14 @@ export const TripPage: React.FC = () => {
     const { data: trip, isFetching } = useGetTrip(params?.id as string)
     const timeline = useMemo(() => {
         const stops = trip?.ride_data?.stop_location as any[]
-        const spreadStops = stops?.length > 0 ? stops?.map(() => ({
-                label: "Stop 1",
+        const spreadStops = stops?.length > 0 ? stops?.map((item, index) => ({
+                label: `Stop ${index + 1}`,
                 address: {
-                    name: "Sterling Towers,",
-                    street: "20 Marina Rd, Lagos Island, Lagos",
-                    location: "102273, Lagos"
+                    name: splitAddress(item?.address ?? "").at(0),
+                    street: splitAddress(item?.address ?? "").at(1),
+                    location: splitAddress(item?.address ?? "").at(2)
                 },
-                status: "ongoing"
+                status: trip?.ride_data?.status?.toLowerCase() === "completed" ? "done" : "ongoing"
             })) : []
         const timeline = [
             {
@@ -33,7 +33,7 @@ export const TripPage: React.FC = () => {
                     street: splitAddress(trip?.ride_data?.start_address ?? "").at(1),
                     location: splitAddress(trip?.ride_data?.start_address ?? "").at(2)
                 },
-                status: trip?.ride_data?.start_trip_at ? "done" : "ongoing"
+                status: trip?.ride_data?.status?.toLowerCase() === "completed" ? "done" : "ongoing"
             },
             ...spreadStops,
             {
@@ -43,11 +43,11 @@ export const TripPage: React.FC = () => {
                     street: splitAddress(trip?.ride_data?.end_address ?? "").at(1) || splitAddress(trip?.ride_data?.end_address ?? "").at(2),
                     location: !splitAddress(trip?.ride_data?.end_address ?? "").at(1) || splitAddress(trip?.ride_data?.end_address ?? "").at(2)
                 },
-                status: trip?.ride_data?.drop_off_data?.longitude === trip?.ride_data?.end_coord?.longitude ? "done" : "pending"
+                status: trip?.ride_data?.status?.toLowerCase() === "completed" ? "done" : "pending"
             }
         ]
         return { timeline, size: `grid-cols-${timeline.length}`}
-    },[trip?.ride_data?.drop_off_data?.longitude, trip?.ride_data?.end_address, trip?.ride_data?.end_coord?.longitude, trip?.ride_data?.start_address, trip?.ride_data?.start_trip_at, trip?.ride_data?.stop_location])
+    },[trip?.ride_data?.end_address, trip?.ride_data?.start_address, trip?.ride_data?.status, trip?.ride_data?.stop_location])
     return (
         <Fragment>
             <RenderIf condition={!isFetching}>
