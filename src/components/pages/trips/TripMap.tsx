@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef } from "react";
 import axios from "axios";
 import mapboxgl from "mapbox-gl";
 import type { FetchedSingleTrip } from "@/types/trips";
+import { errorToast } from "@/utils/createToast";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 
@@ -101,7 +102,7 @@ export const TripMap: React.FC<TripMapProps> = ({ data }) => {
                     .setPopup(destinationPopup) // Attach popup to the marker
                     .addTo(map.current);
             } catch (error) {
-                console.error("Error fetching route from Directions API", error);
+                errorToast({ message: "Error fetching route from Directions API" });
             }
         };
 

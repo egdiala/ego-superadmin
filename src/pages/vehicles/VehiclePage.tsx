@@ -25,7 +25,6 @@ export const VehiclePage: React.FC = () => {
             navigate(`/vehicles/${params?.id as string}/assign`)
         } else {
             setRevokeDriver(true)
-            console.log(revokeDriver)
         }
     }
     return (
