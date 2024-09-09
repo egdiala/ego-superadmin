@@ -73,8 +73,8 @@ export const TripMap: React.FC<TripMapProps> = ({ data }) => {
                 // Add custom green marker for pickup location
                 const pickupMarker = document.createElement("div");
                 pickupMarker.style.backgroundColor = "#55B648";
-                pickupMarker.style.width = "10px";
-                pickupMarker.style.height = "10px";
+                pickupMarker.style.width = "15px";
+                pickupMarker.style.height = "15px";
                 pickupMarker.style.border = "2px solid";
                 pickupMarker.style.borderColor = "white";
                 pickupMarker.style.borderRadius = "50%";
@@ -89,8 +89,8 @@ export const TripMap: React.FC<TripMapProps> = ({ data }) => {
                 // Add custom red marker for destination location
                 const destinationMarker = document.createElement("div");
                 destinationMarker.style.backgroundColor = "#DD2418";
-                destinationMarker.style.width = "10px";
-                destinationMarker.style.height = "10px";
+                destinationMarker.style.width = "15px";
+                destinationMarker.style.height = "15px";
                 destinationMarker.style.border = "2px solid";
                 destinationMarker.style.borderColor = "white";
                 destinationMarker.style.borderRadius = "50%";
