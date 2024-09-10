@@ -2,13 +2,10 @@ import React, { useState } from "react";
 import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
-import { makeData } from "@/hooks/makeData";
 import { pageVariants } from "@/constants/animateVariants";
 import { Breadcrumb, SearchInput, Table, TableAction } from "@/components/core";
 
 export const OutstandingPaymentPage: React.FC = () => {
-    const dummyData = makeData(50);
-    const [data, setData] = useState(dummyData);
     const itemsPerPage = 10;
     const [page] = useState(1)
 
@@ -39,21 +36,9 @@ export const OutstandingPaymentPage: React.FC = () => {
         },
     ];
 
-    const paginateData = (currentPage: number, rowsPerPage: number) => {
-      const startIndex = (currentPage - 1) * rowsPerPage;
-      const endIndex = startIndex + rowsPerPage;
-      const newData = dummyData.slice(startIndex, endIndex);
-      setData(newData);
-    };
-
-    const handlePageChange = (currentPage: number, rowsPerPage: number) => {
+    const handlePageChange = () => {
       // in a real page, this function would paginate the data from the backend
-      paginateData(currentPage, rowsPerPage);
-    };
-
-    const getData = (currentPage: number, rowsPerPage: number) => {
-      // in a real page, this function would paginate the data from the backend
-      paginateData(currentPage, rowsPerPage);
+      
     };
 
     const trips = [
@@ -93,12 +78,11 @@ export const OutstandingPaymentPage: React.FC = () => {
                     }
                 </div>
                 <Table
-                    data={data}
+                    data={[]}
                     page={page}
-                    getData={getData}
                     columns={columns}
                     perPage={itemsPerPage}
-                    totalCount={dummyData.length}
+                    totalCount={0}
                     onPageChange={handlePageChange}
                 />
             </div>

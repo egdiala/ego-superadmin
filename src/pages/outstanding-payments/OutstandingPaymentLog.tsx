@@ -3,14 +3,11 @@ import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { pageVariants } from "@/constants/animateVariants";
 import { SearchInput, Table, TableAction } from "@/components/core";
-import { makeData } from "@/hooks/makeData";
 import { cn } from "@/libs/cn";
 import { useNavigate } from "react-router-dom";
 
 export const OutstandingPaymentLogPage: React.FC = () => {
     const navigate = useNavigate()
-    const dummyData = makeData(50);
-    const [data, setData] = useState(dummyData);
     const itemsPerPage = 10;
     const [page] = useState(1)
 
@@ -37,26 +34,14 @@ export const OutstandingPaymentLogPage: React.FC = () => {
         },
     ];
 
-    const paginateData = (currentPage: number, rowsPerPage: number) => {
-      const startIndex = (currentPage - 1) * rowsPerPage;
-      const endIndex = startIndex + rowsPerPage;
-      const newData = dummyData.slice(startIndex, endIndex);
-      setData(newData);
-    };
-
-    const handlePageChange = (currentPage: number, rowsPerPage: number) => {
+    const handlePageChange = () => {
       // in a real page, this function would paginate the data from the backend
-      paginateData(currentPage, rowsPerPage);
-    };
-
-    const getData = (currentPage: number, rowsPerPage: number) => {
-      // in a real page, this function would paginate the data from the backend
-      paginateData(currentPage, rowsPerPage);
+      
     };
 
     const trips = [
-        { label: "Amount", value: "₦235,402,853", color: "bg-[#F8F9FB]" },
-        { label: "Count", value: "2,853", color: "bg-green-4" },
+        { label: "Amount", value: "₦0", color: "bg-[#F8F9FB]" },
+        { label: "Count", value: "0", color: "bg-green-4" },
     ]
   
     return (
@@ -91,12 +76,11 @@ export const OutstandingPaymentLogPage: React.FC = () => {
                     }
                 </div>
                 <Table
-                    data={data}
+                    data={[]}
                     page={page}
-                    getData={getData}
                     columns={columns}
                     perPage={itemsPerPage}
-                    totalCount={dummyData.length}
+                    totalCount={0}
                     onPageChange={handlePageChange}
                     onClick={() => navigate("/outstanding-payment-log/1")}
                 />
