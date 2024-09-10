@@ -1,7 +1,7 @@
 import { cn } from "@/libs/cn";
 import { FetchedSingleTrip } from "@/types/trips";
 import { formatTime } from "@/utils/textFormatter";
-import { differenceInSeconds, format, formatRelative } from "date-fns";
+import { differenceInSeconds, format } from "date-fns";
 import React from "react";
 
 interface TripInfoProps {
@@ -16,9 +16,9 @@ export const TripInfo: React.FC<TripInfoProps> = ({ data }) => {
         { label: "Trip Reference", value: data?.trip_ref },
         { label: "Est. Time", value: formatTime(data?.ride_data?.est_time) },
         { label: "Est. Distance", value: `${data?.ride_data?.est_dst}km` },
-        { label: "Accepted Time", value: `${formatRelative(data?.ride_data?.accepted_at, new Date()).split("at")[0]} • ${format(data?.ride_data?.accepted_at, "p")}` },
-        { label: "Trip Start Time", value: data?.ride_data?.start_trip_at ? `${formatRelative(data?.ride_data?.start_trip_at, new Date()).split("at")[0]} • ${format(data?.ride_data?.start_trip_at, "p")}` : "" },
-        { label: "Trip End Time", value: data?.ride_data?.end_trip_at ? `${formatRelative(data?.ride_data?.end_trip_at, new Date()).split("at")[0]} • ${format(data?.ride_data?.end_trip_at, "p")}` : "" },
+        { label: "Accepted Time", value: `${format(data?.ride_data?.accepted_at, "dd MMM, yyyy")} • ${format(data?.ride_data?.accepted_at, "p")}` },
+        { label: "Trip Start Time", value: data?.ride_data?.start_trip_at ? `${format(data?.ride_data?.start_trip_at, "dd MMM, yyyy")} • ${format(data?.ride_data?.start_trip_at, "p")}` : "" },
+        { label: "Trip End Time", value: data?.ride_data?.end_trip_at ? `${format(data?.ride_data?.end_trip_at, "dd MMM, yyyy")} • ${format(data?.ride_data?.end_trip_at, "p")}` : "" },
         { label: "Total Trip Distance", value: `${data?.ride_data?.total_distance}km` },
         { label: "Actual Time Spent", value: formatTime(differenceInSeconds(data?.ride_data?.end_trip_at as Date,  data?.ride_data?.start_trip_at as Date)) },
     ]

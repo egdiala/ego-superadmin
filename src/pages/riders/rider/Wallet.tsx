@@ -1,16 +1,16 @@
 import React, { Fragment, useEffect, useMemo, useState } from "react";
+import { cn } from "@/libs/cn";
+import { format } from "date-fns";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
+import { formattedNumber } from "@/utils/textFormatter";
+import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
-import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
-import { cn } from "@/libs/cn";
-import { useGetWalletStats, useGetWalletTransactions } from "@/services/hooks/queries";
 import { useLocation, useParams, useSearchParams } from "react-router-dom";
+import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { useGetWalletStats, useGetWalletTransactions } from "@/services/hooks/queries";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import type { FetchedWalletTransaction, FetchedWalletTransactionCount, FetchedWalletTransactionCountStatus } from "@/types/wallet";
-import { format, formatRelative } from "date-fns";
-import { Loader } from "@/components/core/Button/Loader";
-import { formattedNumber } from "@/utils/textFormatter";
 
 export const RiderWalletPage: React.FC = () => {
     const params = useParams();
@@ -31,7 +31,7 @@ export const RiderWalletPage: React.FC = () => {
         cell: ({ row }: { row: any; }) => {
           const item = row?.original as FetchedWalletTransaction
           return (
-            <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{formatRelative(item?.createdAt, new Date()).split("at")[0]}</span> • {format(item?.createdAt, "p")}</div>
+            <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{format(item?.createdAt, "dd MMM, yyyy")}</span> • {format(item?.createdAt, "p")}</div>
           )
         }
       },

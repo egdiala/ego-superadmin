@@ -1,18 +1,18 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { cn } from "@/libs/cn";
+import { format } from "date-fns";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { useDebounce } from "@/hooks/useDebounce";
-import { useGetTrips } from "@/services/hooks/queries";
-import { pageVariants } from "@/constants/animateVariants";
-import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
-import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
-import { Loader } from "@/components/core/Button/Loader";
-import type { FetchedTripCountStatus, FetchedTripType } from "@/types/trips";
-import { format, formatRelative } from "date-fns";
-import { pascalCaseToWords } from "@/utils/textFormatter";
 import { PurchaseModel } from "@/types/organizations";
+import { useGetTrips } from "@/services/hooks/queries";
+import { Loader } from "@/components/core/Button/Loader";
+import { pascalCaseToWords } from "@/utils/textFormatter";
+import { pageVariants } from "@/constants/animateVariants";
+import type { FetchedTripCountStatus, FetchedTripType } from "@/types/trips";
+import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 export const RiderTripsPage: React.FC = () => {
     const params = useParams();
@@ -34,7 +34,7 @@ export const RiderTripsPage: React.FC = () => {
         cell: ({ row }: { row: any; }) => {
           const item = row?.original as FetchedTripType
           return (
-            <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{formatRelative(item?.createdAt, new Date()).split("at")[0]}</span> • {format(item?.createdAt, "p")}</div>
+            <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{format(item?.createdAt, "dd MMM, yyyy")}</span> • {format(item?.createdAt, "p")}</div>
           )
         }
       },

@@ -1,16 +1,16 @@
 import React, { Fragment, useEffect, useMemo, useState } from "react"
 import { cn } from "@/libs/cn";
+import { format } from "date-fns";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
-import { format, formatRelative } from "date-fns";
-import { FetchedDriverCount, FetchedDriverType } from "@/types/drivers";
 import { Loader } from "@/components/core/Button/Loader";
-import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { pageVariants } from "@/constants/animateVariants";
-import { useGetDrivers, useGetVehicle } from "@/services/hooks/queries";
-import { Breadcrumb, Button, RadioButton, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { useAssignVehicle } from "@/services/hooks/mutations";
+import { useGetDrivers, useGetVehicle } from "@/services/hooks/queries";
+import { FetchedDriverCount, FetchedDriverType } from "@/types/drivers";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { Breadcrumb, Button, RadioButton, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 
 export const VehicleAssignPage: React.FC = () => {
     const params = useParams()
@@ -52,7 +52,7 @@ export const VehicleAssignPage: React.FC = () => {
                                 row.toggleSelected()
                             }}
                         />
-                        <span className="capitalize">{formatRelative(item?.createdAt, new Date()).split("at")[0]}</span> • {format(item?.createdAt, "p")}
+                        <span className="capitalize">{format(item?.createdAt, "dd MMM, yyyy")}</span> • {format(item?.createdAt, "p")}
                     </div>
                 )
             }

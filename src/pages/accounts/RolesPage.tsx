@@ -1,16 +1,16 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { format } from "date-fns";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import type { FetchedRolesCount, FetchedRolesType } from "@/types/roles";
+import { useDebounce } from "@/hooks/useDebounce";
 import { useGetRoles } from "@/services/hooks/queries";
 import { Loader } from "@/components/core/Button/Loader";
 import { DeleteRoleModal } from "@/components/pages/roles";
 import { pageVariants } from "@/constants/animateVariants";
+import type { FetchedRolesCount, FetchedRolesType } from "@/types/roles";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
-import { format, formatRelative } from "date-fns";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
-import { useDebounce } from "@/hooks/useDebounce";
 
 export const RolesPage: React.FC = () => {
     const navigate = useNavigate()
@@ -41,7 +41,7 @@ export const RolesPage: React.FC = () => {
         cell: ({ row }: { row: any; }) => {
           const item = row?.original
           return (
-            <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{formatRelative(item?.createdAt, new Date()).split("at")[0]}</span> • {format(item?.createdAt, "p")}</div>
+            <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{format(item?.createdAt, "dd MMM, yyyy")}</span> • {format(item?.createdAt, "p")}</div>
           )
         }
       },

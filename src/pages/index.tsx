@@ -14,7 +14,7 @@ import { Customers, DistanceCovered, PaymentValue, Ratings, ServiceRequests, Top
 export const DashboardPage: React.FC = () => {
     const { data: customerCount, isFetching: fetchingCustomers } = useGetOrganizations({ component: "count-status" })
     const { data: vehiclesCount, isFetching: fetchingVehicles } = useGetVehicles({ component: "count-status" })
-    const { data: serviceRequestCount, isFetching: fetchingServiceRequests } = useGetServiceRequests({ component: "count-status" })
+    const { data: serviceRequestCount, isFetching: fetchingServiceRequests } = useGetServiceRequests<FetchedServiceRequestsCountStatus>({ component: "count-status" })
     const { data: driversCount, isFetching: fetchingDrivers } = useGetDrivers({ component: "count-status" })
     const { data: ratingsCount, isFetching: fetchingRatings } = useGetRatings({ component: "count-one" })
     const { data: topDrivers, isFetching: fetchingDriverRank } = useGetRanks({ user_type: "top-driver", request_type: "trip" })

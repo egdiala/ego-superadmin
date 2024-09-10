@@ -1,16 +1,16 @@
 import React, { Fragment, useEffect, useMemo, useState } from "react";
+import { cn } from "@/libs/cn";
+import { format } from "date-fns";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
-import { pageVariants } from "@/constants/animateVariants";
-import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
-import { cn } from "@/libs/cn";
-import { useLocation, useSearchParams } from "react-router-dom";
-import { useGetWalletStats, useGetWalletTransactions } from "@/services/hooks/queries";
-import { FetchedWalletTransaction, FetchedWalletTransactionCount, WalletStatus } from "@/types/wallet";
-import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
-import { Loader } from "@/components/core/Button/Loader";
-import { format, formatRelative } from "date-fns";
 import { formattedNumber } from "@/utils/textFormatter";
+import { Loader } from "@/components/core/Button/Loader";
+import { pageVariants } from "@/constants/animateVariants";
+import { useLocation, useSearchParams } from "react-router-dom";
+import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { useGetWalletStats, useGetWalletTransactions } from "@/services/hooks/queries";
+import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
+import { FetchedWalletTransaction, FetchedWalletTransactionCount, WalletStatus } from "@/types/wallet";
 
 export const WalletPage: React.FC = () => {
     const location = useLocation();
@@ -31,7 +31,7 @@ export const WalletPage: React.FC = () => {
                 return (
                     <div className="flex items-center gap-2.5">
                         <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap">
-                            <span className="capitalize">{formatRelative(item?.updatedAt, new Date()).split("at")[0]}</span> • {format(item?.updatedAt, "p")}
+                            <span className="capitalize">{format(item?.createdAt, "dd MMM, yyyy")}</span> • {format(item?.updatedAt, "p")}
                         </div>
                     </div>
                 )

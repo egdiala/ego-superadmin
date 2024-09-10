@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { cn } from "@/libs/cn";
+import { format } from "date-fns";
 import { motion } from "framer-motion";
-import { format, formatRelative } from "date-fns";
 import { RenderIf, Table } from "@/components/core";
 import { Loader } from "@/components/core/Button/Loader";
 import { useGetVehicles } from "@/services/hooks/queries";
@@ -28,7 +28,7 @@ export const CustomerDriversPage: React.FC = () => {
           return (
             <div className="flex items-center gap-2.5">
               <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap">
-                <span className="capitalize">{formatRelative(item?.updatedAt, new Date()).split("at")[0]}</span> • {format(item?.updatedAt, "p")}
+                <span className="capitalize">{format(item?.createdAt, "dd MMM, yyyy")}</span> • {format(item?.updatedAt, "p")}
               </div>
             </div>
           )

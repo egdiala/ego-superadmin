@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { cn } from "@/libs/cn";
+import { format } from "date-fns";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
-import { format, formatRelative } from "date-fns";
 import { FetchedVehicleType } from "@/types/vehicles";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
@@ -59,7 +59,7 @@ export const RevokeOrganizationVehiclesPage: React.FC = () => {
                 }}
               />
               <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap">
-                <span className="capitalize">{formatRelative(item?.createdAt, new Date()).split("at")[0]}</span> • {format(item?.createdAt, "p")}
+                <span className="capitalize">{format(item?.createdAt, "dd MMM, yyyy")}</span> • {format(item?.createdAt, "p")}
               </div>
             </div>
           )

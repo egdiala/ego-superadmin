@@ -1,8 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { cn } from "@/libs/cn";
+import { format } from "date-fns";
 import { Icon } from "@iconify/react";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { format, formatRelative } from "date-fns";
 import { FetchedVehicleType } from "@/types/vehicles";
 import { PurchaseModel } from "@/types/organizations";
 import { AnimatePresence, motion } from "framer-motion";
@@ -10,10 +9,11 @@ import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { useGetIndustries, useGetVehicles } from "@/services/hooks/queries";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useAssignVehicle, useCreateOrganization } from "@/services/hooks/mutations";
+import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { assignVehicleToOrganisationSchema, createOrganizationSchema } from "@/validations/organizations";
 import { Breadcrumb, Button, Checkbox, Input, RenderIf, SearchInput, SelectInput, Table } from "@/components/core";
-import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 
 export const NewCustomersPage: React.FC = () => {
     const navigate = useNavigate()
@@ -107,7 +107,7 @@ export const NewCustomersPage: React.FC = () => {
                 }}
               />
               <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap">
-                <span className="capitalize">{formatRelative(item?.createdAt, new Date()).split("at")[0]}</span> • {format(item?.createdAt, "p")}
+                <span className="capitalize">{format(item?.createdAt, "dd MMM, yyyy")}</span> • {format(item?.createdAt, "p")}
               </div>
             </div>
           )

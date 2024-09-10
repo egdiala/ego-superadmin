@@ -1,16 +1,16 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { cn } from "@/libs/cn";
+import { format } from "date-fns";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
-import { format, formatRelative } from "date-fns";
+import { useDebounce } from "@/hooks/useDebounce";
 import { Loader } from "@/components/core/Button/Loader";
 import { useGetVehicles } from "@/services/hooks/queries";
 import { pageVariants } from "@/constants/animateVariants";
-import type { FetchedVehicleCount, FetchedVehicleType } from "@/types/vehicles";
 import { AddVehicleModal } from "@/components/pages/vehicles";
-import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { useDebounce } from "@/hooks/useDebounce";
+import type { FetchedVehicleCount, FetchedVehicleType } from "@/types/vehicles";
+import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 
 export const VehiclesPage: React.FC = () => {
@@ -35,7 +35,7 @@ export const VehiclesPage: React.FC = () => {
       cell: ({ row }: { row: any; }) => {
         const item = row?.original as FetchedVehicleType
         return (
-          <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{formatRelative(item?.createdAt, new Date()).split(" at ")[0]}</span> • {format(item?.createdAt, "p")}</div>
+          <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{format(item?.createdAt, "dd MMM, yyyy")}</span> • {format(item?.createdAt, "p")}</div>
         )
       }
     },

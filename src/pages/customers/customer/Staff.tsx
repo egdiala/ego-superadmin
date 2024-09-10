@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { format } from "date-fns";
 import { Icon } from "@iconify/react";
-import { SearchInput, Table, TableAction } from "@/components/core";
-import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { motion } from "framer-motion";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useGetRiders } from "@/services/hooks/queries";
-import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
-import { FetchedRider, FetchedRiderCount, FetchedRiders } from "@/types/riders";
-import { motion } from "framer-motion";
 import { pageVariants } from "@/constants/animateVariants";
-import { format, formatRelative } from "date-fns";
+import { SearchInput, Table, TableAction } from "@/components/core";
+import { FetchedRider, FetchedRiderCount, FetchedRiders } from "@/types/riders";
+import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 export const CustomerStaffsPage: React.FC = () => {
     const params = useParams();
@@ -29,7 +29,7 @@ export const CustomerStaffsPage: React.FC = () => {
         cell: ({ row }: { row: any; }) => {
           const item = row?.original as FetchedRider
           return (
-            <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{formatRelative(item?.createdAt, new Date()).split("at")[0]}</span> • {format(item?.createdAt, "p")}</div>
+            <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{format(item?.createdAt, "dd MMM, yyyy")}</span> • {format(item?.createdAt, "p")}</div>
           )
         }
       },

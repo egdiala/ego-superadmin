@@ -1,17 +1,17 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { cn } from "@/libs/cn";
+import { format } from "date-fns";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
+import { useDebounce } from "@/hooks/useDebounce";
 import { useGetAdmins } from "@/services/hooks/queries";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
-import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
-import { CreateAdminModal, DeactivateAdminModal, EditAdminModal } from "@/components/pages/accounts";
-import type { FetchedAdminsCount, FetchedAdminType } from "@/types/admin";
-import { cn } from "@/libs/cn";
-import { format, formatRelative } from "date-fns";
 import { useLocation, useSearchParams } from "react-router-dom";
+import type { FetchedAdminsCount, FetchedAdminType } from "@/types/admin";
+import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
-import { useDebounce } from "@/hooks/useDebounce";
+import { CreateAdminModal, DeactivateAdminModal, EditAdminModal } from "@/components/pages/accounts";
 
 export const AccountsPage: React.FC = () => {
     const location = useLocation();
@@ -57,7 +57,7 @@ export const AccountsPage: React.FC = () => {
         cell: ({ row }: { row: any; }) => {
           const item = row?.original as FetchedAdminType
           return (
-            <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{formatRelative(item?.createdAt, new Date()).split("at")[0]}</span> • {format(item?.createdAt, "p")}</div>
+            <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{format(item?.createdAt, "dd MMM, yyyy")}</span> • {format(item?.createdAt, "p")}</div>
           )
         }
       },

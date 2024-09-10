@@ -1,5 +1,5 @@
 import { FetchedSingleTrip } from "@/types/trips";
-import { format, formatRelative } from "date-fns";
+import { format } from "date-fns";
 import React from "react";
 
 interface TripRequestInfoProps {
@@ -8,11 +8,11 @@ interface TripRequestInfoProps {
 
 export const TripRequestInfo: React.FC<TripRequestInfoProps> = ({ data }) => {
     const infos = [
-        { label: "Request Date & Time", value: `${formatRelative(data?.createdAt, new Date()).split("at")[0]} • ${format(data?.createdAt, "p")}` },
+        { label: "Request Date & Time", value: `${format(data?.createdAt, "dd MMM, yyyy")} • ${format(data?.createdAt, "p")}` },
         { label: "Request ID", value: data?.trip_id },
         { label: "Approved by", value: "Gbemiro John" },
         { label: "Approval Date & Time", value: "Today • 12:34pm" },
-        { label: "Driver Assigned Date", value: `${formatRelative(data?.ride_data?.accepted_at, new Date()).split("at")[0]} • ${format(data?.ride_data?.accepted_at, "p")}` },
+        { label: "Driver Assigned Date", value: `${format(data?.ride_data?.accepted_at, "dd MMM, yyyy")} • ${format(data?.ride_data?.accepted_at, "p")}` },
         { label: "Driver Assigned by", value: "James Tori" },
     ]
     return (

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { cn } from "@/libs/cn";
+import { format } from "date-fns";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { useDebounce } from "@/hooks/useDebounce";
-import { format, formatRelative } from "date-fns";
 import type { FetchedTripType } from "@/types/trips";
 import { PurchaseModel } from "@/types/organizations";
 import { useGetTrips } from "@/services/hooks/queries";
@@ -37,7 +37,7 @@ export const TripsPage: React.FC = () => {
         cell: ({ row }: { row: any; }) => {
           const item = row?.original as FetchedTripType
           return (
-            <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{formatRelative(item?.createdAt, new Date()).split("at")[0]}</span> • {format(item?.createdAt, "p")}</div>
+            <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{format(item?.createdAt, "dd MMM, yyyy")}</span> • {format(item?.createdAt, "p")}</div>
           )
         }
       },

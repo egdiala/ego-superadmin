@@ -1,18 +1,18 @@
 import React, { Fragment, useEffect, useState } from "react";
+import { cn } from "@/libs/cn";
+import { format } from "date-fns";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
+import { FetchedTripType } from "@/types/trips";
 import { useDebounce } from "@/hooks/useDebounce";
+import { PurchaseModel } from "@/types/organizations";
 import { useGetTrips } from "@/services/hooks/queries";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
+import { formattedNumber, pascalCaseToWords } from "@/utils/textFormatter";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { FetchedTripType } from "@/types/trips";
-import { PurchaseModel } from "@/types/organizations";
-import { formattedNumber, pascalCaseToWords } from "@/utils/textFormatter";
-import { cn } from "@/libs/cn";
-import { format, formatRelative } from "date-fns";
 
 export const CustomerTripPaymentPage: React.FC = () => {
     const params = useParams();
@@ -33,7 +33,7 @@ export const CustomerTripPaymentPage: React.FC = () => {
         cell: ({ row }: { row: any; }) => {
           const item = row?.original as FetchedTripType
           return (
-            <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{formatRelative(item?.createdAt, new Date()).split("at")[0]}</span> • {format(item?.createdAt, "p")}</div>
+            <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{format(item?.createdAt, "dd MMM, yyyy")}</span> • {format(item?.createdAt, "p")}</div>
           )
         }
       },
