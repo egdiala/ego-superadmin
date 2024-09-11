@@ -42,8 +42,8 @@ export const OutstandingPaymentPage: React.FC = () => {
     };
 
     const trips = [
-        { label: "Amount", value: "₦235,402,853", color: "bg-[#F8F9FB]" },
-        { label: "Count", value: "2,853", color: "bg-green-4" },
+        { label: "Amount", value: "₦0", color: "bg-[#F8F9FB]" },
+        { label: "Count", value: "0", color: "bg-green-4" },
     ]
 
     return (
