@@ -7,7 +7,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { Loader } from "@/components/core/Button/Loader";
 import { useGetVehicles } from "@/services/hooks/queries";
 import { pageVariants } from "@/constants/animateVariants";
-import { AddVehicleModal } from "@/components/pages/vehicles";
+import { AddVehicleModal, VehiclesFilter } from "@/components/pages/vehicles";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import type { FetchedVehicleCount, FetchedVehicleType } from "@/types/vehicles";
 import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
@@ -20,9 +20,13 @@ export const VehiclesPage: React.FC = () => {
   const [page, setPage] = useState(1)
   const { value, onChangeHandler } = useDebounce(500)
   const [searchParams, setSearchParams] = useSearchParams();
+  const [filters, setFilters] = useState({
+    start_date: "",
+    end_date: "",
+  })
   const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
-  const { data: count, isFetching: fetchingCount, refetch } = useGetVehicles({ component, q: value })
-  const { data: vehicles, isFetching } = useGetVehicles({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value })
+  const { data: count, isFetching: fetchingCount, refetch } = useGetVehicles({ component, q: value, ...filters })
+  const { data: vehicles, isFetching } = useGetVehicles({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value, ...filters })
   const [toggleModals, setToggleModals] = useState({
     openFilterModal: false,
     openAddVehicleModal: false,
@@ -130,10 +134,7 @@ export const VehiclesPage: React.FC = () => {
                 <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
                 Export
               </TableAction>
-              <TableAction theme="grey" block>
-                <Icon icon="mdi:funnel" className="size-4" />
-                Filter
-              </TableAction>
+              <VehiclesFilter setFilters={setFilters} isLoading={isFetching || fetchingCount} />
             </div>
             <div className="w-full sm:w-auto">
               <Button theme="primary" onClick={toggleAddVehicle} block>

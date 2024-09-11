@@ -12,6 +12,7 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { FetchedOrganizationCount, PurchaseModel, type FetchedOrgaizationType } from "@/types/organizations";
+import { CustomersFilter } from "@/components/pages/customers";
 
 export const CustomersPage: React.FC = () => {
   const navigate = useNavigate();
@@ -20,9 +21,13 @@ export const CustomersPage: React.FC = () => {
   const [page, setPage] = useState(1)
   const { value, onChangeHandler } = useDebounce(500)
   const [searchParams, setSearchParams] = useSearchParams();
+  const [filters, setFilters] = useState({
+    start_date: "",
+    end_date: "",
+  })
   const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
-  const { data: count, isFetching: fetchingCount, refetch } = useGetOrganizations({ component, q: value })
-  const { data: drivers, isFetching } = useGetOrganizations({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value })
+  const { data: count, isFetching: fetchingCount, refetch } = useGetOrganizations({ component, q: value, ...filters })
+  const { data: drivers, isFetching } = useGetOrganizations({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value, ...filters })
 
   const columns = [
     {
@@ -94,6 +99,7 @@ export const CustomersPage: React.FC = () => {
                 <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
                 Export
               </TableAction>
+              <CustomersFilter setFilters={setFilters} isLoading={isFetching || fetchingCount} />
             </div>
             <div className="w-full sm:w-auto">
               <Button theme="primary" onClick={toggleCreateOrganization} block>

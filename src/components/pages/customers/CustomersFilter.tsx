@@ -9,16 +9,17 @@ import { CloseButton, Popover, PopoverBackdrop, PopoverButton, PopoverPanel, Rad
 interface Filters {
     start_date: string;
     end_date: string;
-    ride_status: string;
+    purchase_model?: string;
+    status?: string;
 }
 
-interface TripsFilterProps {
+interface CustomersFilterProps {
     // eslint-disable-next-line no-unused-vars
     setFilters: (v: Filters) => void;
     isLoading: boolean;
 }
 
-export const TripsFilter: React.FC<TripsFilterProps> = ({ isLoading, setFilters }) => {
+export const CustomersFilter: React.FC<CustomersFilterProps> = ({ isLoading, setFilters }) => {
     const today = startOfToday();
     const [dateFilters, setDateFilters] = useState([
         {
@@ -38,24 +39,20 @@ export const TripsFilter: React.FC<TripsFilterProps> = ({ isLoading, setFilters 
         { label: "Custom", name: "custom", value: { start: "", end: "" } },
     ]);
 
-    const tripStatus = [
-        { label: "Accepted", name: "accepted", value: "REQUEST_ACCEPTED" },
-        { label: "At Pickup", name: "at_pickup", value: "ARRIVED_AT_PICKUP" },
-        { label: "Picked Up", name: "picked_up", value: "PICKED_RIDER" },
-        { label: "To Drop Off", name: "drop_off", value: "ENROUTE_TO_DROPOFF" },
-        { label: "Completed", name: "completed", value: "COMPLETED" },
-        { label: "Canceled", name: "canceled", value: "CANCELED" },
-    ]
-
-    const evFilters = [
-        { label: "Lease", name: "lease" },
-        { label: "Staff Commute", name: "staff_commute" },
-        { label: "E-hailing", name: "e_hailing" },
+    const purchaseModel = [
+        { label: "Lease", name: "lease", value: "1" },
+        { label: "Staff Commute", name: "staff_commute", value: "2" },
+        { label: "E-hailing", name: "e_hailing", value: "3" },
     ];
 
-    const [selected, setSelected] = useState(dateFilters[2]);
-    const [statusFilters, setStatusFilters] = useState("");
-    const [enabled, setEnabled] = useState<string | null>(null);
+    const customerStatus = [
+        { label: "Active", name: "active", value: "1" },
+        { label: "Suspended", name: "suspended", value: "2" },
+    ];
+
+    const [selected, setSelected] = useState(dateFilters[2])
+    const [statusFilters, setStatusFilters] = useState("")
+    const [purchaseModelFilters, setPurchaseModelFilters] = useState("")
 
     const setCustomDate = (dates: { start: Date | string; end: Date | string }) => {
         const notCustom = dateFilters.filter((item) => item.name !== "custom") as any;
@@ -66,7 +63,8 @@ export const TripsFilter: React.FC<TripsFilterProps> = ({ isLoading, setFilters 
         setFilters({
             start_date: selected.value.start ? format(selected.value.start, "yyyy-MM-dd") : "",
             end_date: selected.value.end ? format(selected.value.end, "yyyy-MM-dd") : "",
-            ride_status: statusFilters
+            purchase_model: purchaseModelFilters,
+            status: statusFilters
         });
         fn?.();
     };
@@ -79,7 +77,7 @@ export const TripsFilter: React.FC<TripsFilterProps> = ({ isLoading, setFilters 
 
     return (
         <Popover className="relative">
-            <PopoverButton as={TableAction} theme="grey" block>
+            <PopoverButton as={TableAction} theme="secondary" block>
                 <Icon icon="mdi:funnel" className="size-4" /> Filter
             </PopoverButton>
             <PopoverBackdrop className="fixed inset-0 bg-black/15 z-10" />
@@ -87,11 +85,11 @@ export const TripsFilter: React.FC<TripsFilterProps> = ({ isLoading, setFilters 
                 as="section"
                 transition
                 anchor="bottom end"
-                className="bg-white p-6 rounded origin-top-right flex flex-col gap-5 w-96 md:w-[39.375rem] transition duration-300 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
+                className="bg-white p-6 rounded origin-top-right flex flex-col gap-5 w-96 md:w-[38rem] transition duration-300 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
             >
                 {({ close }) => (
                     <Fragment>
-                        <h1 className="font-bold text-xl text-grey-dark-1">Trip Filter</h1>
+                        <h1 className="font-bold text-xl text-grey-dark-1">Filter</h1>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-5 md:gap-8">
                             {/* Date Filters */}
                             <div className="flex flex-col gap-1">
@@ -139,34 +137,34 @@ export const TripsFilter: React.FC<TripsFilterProps> = ({ isLoading, setFilters 
                                 </RenderIf>
                             </div>
 
-                            {/* EV Purchase Model Filters */}
+                            {/* Purchase Model Filters */}
                             <div className="flex flex-col gap-1">
-                                <span className="uppercase text-grey-dark-3 text-xs">EV Purchase Model</span>
-                                {evFilters.map((item) => (
+                                <span className="uppercase text-grey-dark-3 text-xs">purchase model</span>
+                                {purchaseModel.map((item) => (
                                     <div
                                         key={item.label}
                                         role="button"
-                                        onClick={() => setEnabled(enabled !== item.name ? item.name : null)}
+                                        onClick={() => setPurchaseModelFilters(purchaseModelFilters !== item.value ? item.value : "")}
                                         className={cn(
                                             "flex whitespace-nowrap items-center gap-2 cursor-pointer rounded bg-transparent py-2.5 px-2 transition duration-300 ease-out",
-                                            enabled === item.name ? "bg-green-3 font-medium text-dark-green-1" : "text-grey-dark-2"
+                                            purchaseModelFilters === item.value ? "bg-green-3 font-medium text-dark-green-1" : "text-grey-dark-2"
                                         )}
                                     >
                                         <Checkbox
                                             name={item.label.toLowerCase()}
-                                            value={item.name}
-                                            checked={enabled === item.name}
-                                            onChange={() => setEnabled(enabled !== item.name ? item.name : null)}
+                                            value={item.value}
+                                            checked={purchaseModelFilters === item.value}
+                                            onChange={() => setPurchaseModelFilters(purchaseModelFilters !== item.value ? item.value : "")}
                                         />
                                         {item.label}
                                     </div>
                                 ))}
                             </div>
 
-                            {/* Trip Status Filters */}
+                            {/* status Filters */}
                             <div className="flex flex-col gap-1">
-                                <span className="uppercase text-grey-dark-3 text-xs">TRIP STATUS</span>
-                                {tripStatus.map((item) => (
+                                <span className="uppercase text-grey-dark-3 text-xs">status</span>
+                                {customerStatus.map((item) => (
                                     <div
                                         key={item.label}
                                         role="button"

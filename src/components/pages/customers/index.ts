@@ -1,4 +1,5 @@
 export * from "./BatteryDetails"
+export * from "./CustomersFilter"
 export * from "./ServiceRequests"
 export * from "./SuspendCustomer"
 export * from "./TotalTrips"

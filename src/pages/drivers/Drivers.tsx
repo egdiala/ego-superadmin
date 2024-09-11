@@ -7,7 +7,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { useGetDrivers } from "@/services/hooks/queries";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
-import { CreateDriverModal, FailedDriverUploadsModal } from "@/components/pages/drivers";
+import { CreateDriverModal, DriversFilter, FailedDriverUploadsModal } from "@/components/pages/drivers";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import type { FetchedDriverCount, FetchedDriverType } from "@/types/drivers";
 import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
@@ -21,9 +21,13 @@ export const DriversPage: React.FC = () => {
   const { value, onChangeHandler } = useDebounce(500)
   const [failedUploads, setFailedUploads] = useState([])
   const [searchParams, setSearchParams] = useSearchParams();
+  const [filters, setFilters] = useState({
+    start_date: "",
+    end_date: "",
+  })
   const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
-  const { data: count, isFetching: fetchingCount, refetch } = useGetDrivers({ component, q: value })
-  const { data: drivers, isFetching } = useGetDrivers({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value })
+  const { data: count, isFetching: fetchingCount, refetch } = useGetDrivers({ component, q: value, ...filters })
+  const { data: drivers, isFetching } = useGetDrivers({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value, ...filters })
   const [toggleModals, setToggleModals] = useState({
     openFilterModal: false,
     openCreateDriverModal: false,
@@ -130,10 +134,7 @@ export const DriversPage: React.FC = () => {
                 <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
                 Export
               </TableAction>
-              <TableAction theme="grey" block>
-                <Icon icon="mdi:funnel" className="size-4" />
-                Filter
-              </TableAction>
+              <DriversFilter setFilters={setFilters} isLoading={isFetching || fetchingCount} />
             </div>
             <div className="w-full sm:w-auto">
               <Button theme="primary" onClick={toggleCreateDriver} block>
