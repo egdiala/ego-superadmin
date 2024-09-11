@@ -22,6 +22,7 @@ export const GET_VEHICLE = "get-vehicle"
 
 // Service Requests
 export const GET_SERVICE_REQUESTS = "get-service-requests"
+export const GET_SERVICE_REQUEST = "get-service-request"
 
 // Organizations
 export const GET_ORGANIZATIONS = "get-organizations"

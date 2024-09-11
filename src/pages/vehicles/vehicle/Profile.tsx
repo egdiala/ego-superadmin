@@ -60,7 +60,7 @@ export const VehicleProfilePage: React.FC = () => {
                     <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 flex-1">
                         {
                             vehicleDetails?.map((item) => 
-                                <div className="grid gap-1">
+                                <div key={item.label} className="grid gap-1">
                                     <h4 className="text-sm text-grey-dark-3">{item?.label}</h4>
                                     <p className="text-sm text-grey-dark-1">{item?.value}</p>
                                 </div>
@@ -83,7 +83,7 @@ export const VehicleProfilePage: React.FC = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {
                             vehicleID?.map((item) =>
-                                <div className="grid gap-1">
+                                <div key={item.label} className="grid gap-1">
                                     <h4 className="text-sm text-grey-dark-3">{item?.label}</h4>
                                     <p className="text-sm text-grey-dark-1">{item?.value}</p>
                                 </div>
@@ -96,7 +96,7 @@ export const VehicleProfilePage: React.FC = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {
                             payment?.map((item) =>
-                                <div className="grid gap-1">
+                                <div key={item.label} className="grid gap-1">
                                     <h4 className="text-sm text-grey-dark-3">{item?.label}</h4>
                                     <p className="text-sm text-grey-dark-1">{item?.value}</p>
                                 </div>

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 export interface FetchServiceRequestsQuery {
     q?: string; // Search for plate number
     driver_id?: string;
@@ -27,7 +28,12 @@ export interface FetchedServiceRequest {
     request_type: number;
     status: number;
     mileage: number;
-    comment: string;
+    comment: {
+        status: number;
+        body: string;
+        _id: string;
+        createdAt: Date | string;
+    }[];
     createdAt: Date | string;
     updatedAt: Date | string;
     service_req_id: string;
@@ -36,4 +42,36 @@ export interface FetchedServiceRequest {
         first_name: string;
         last_name: string;
     }
+}
+
+export enum RequestType {
+    Maintenance = 1,
+    Repair = 2
+}
+
+export enum RequestStatus {
+    Pending = 0,
+    Scheduled = 1,
+    InProgress = 2,
+    Completed = 3,
+    Rejected = 4
+}
+
+export interface SingleServiceRequest extends Omit<FetchedServiceRequest, "driver_data"> {
+    data_mode: string;
+    driver_data: {
+        first_name: string;
+        last_name: string;
+    };
+    vehicle_data: {
+        plate_number: string;
+        car_color: string;
+        mileage: number;
+    };
+}
+
+export type UpdateRequestType = {
+    id: string;
+    status: string;
+    comment: string;
 }

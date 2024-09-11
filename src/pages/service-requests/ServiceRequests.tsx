@@ -8,9 +8,12 @@ import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useGetServiceRequests } from "@/services/hooks/queries";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
-import type { FetchedServiceRequest, FetchedServiceRequestsCount, FetchedServiceRequestsCountStatus } from "@/types/service-requests";
+import { RequestStatus, RequestType, type FetchedServiceRequest, type FetchedServiceRequestsCount, type FetchedServiceRequestsCountStatus } from "@/types/service-requests";
+import { pascalCaseToWords } from "@/utils/textFormatter";
+import { useNavigate } from "react-router-dom";
 
 export const ServiceRequestsPage: React.FC = () => {
+    const navigate = useNavigate()
     const itemsPerPage = 10;
     const [page, setPage] = useState(1)
     const { value, onChangeHandler } = useDebounce(500)
@@ -32,6 +35,12 @@ export const ServiceRequestsPage: React.FC = () => {
       {
         header: () => "Request Type",
         accessorKey: "request_type",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedServiceRequest
+          return (
+            <div className="text-sm text-grey-dark-2 capitalize whitespace-nowrap">{pascalCaseToWords(RequestType[item.request_type])}</div>
+          )
+        }
       },
       {
         header: () => "Vehicle Plate No.",
@@ -63,6 +72,12 @@ export const ServiceRequestsPage: React.FC = () => {
       {
         header: () => "Status",
         accessorKey: "status",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedServiceRequest
+          return (
+            <div className={cn("text-sm font-medium capitalize whitespace-nowrap", item.status == 0 && "text-semantics-amber", item.status == 4 && "text-semantics-error", item.status == 3 && "text-semantics-success", item.status == 1 && "text-blue-500", item.status == 2 && "text-grey-dark-1")}>{pascalCaseToWords(RequestStatus[item.status])}</div>
+          )
+        }
       },
     ];
 
@@ -114,11 +129,12 @@ export const ServiceRequestsPage: React.FC = () => {
                   <RenderIf condition={!fetchingServiceRequestCount && !fetchingServiceRequests}>
                     <Table
                         page={page}
-                        data={serviceRequests ?? []}
                         columns={columns}
                         perPage={itemsPerPage}
-                        totalCount={serviceRequestCount?.total}
+                        data={serviceRequests ?? []}
                         onPageChange={handlePageChange}
+                        onClick={({ original }) => navigate(`${original.service_req_id}?driver_id=${original.driver_data._id}`)}
+                        totalCount={serviceRequestCount?.total}
                         emptyStateText="No service request has been made."
                     />
                   </RenderIf>
