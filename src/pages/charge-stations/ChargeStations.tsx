@@ -1,13 +1,30 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { pageVariants } from "@/constants/animateVariants";
 import { Button, SearchInput, Table, TableAction } from "@/components/core";
-import { makeData } from "@/hooks/makeData";
+import { DeleteStationModal, EditStationModal } from "@/components/pages/charge-stations";
 
 export const ChargeStationsPage: React.FC = () => {
-    const dummyData = makeData(50);
-    const [data, setData] = React.useState(dummyData);
+    const [toggleModals, setToggleModals] = useState({
+        openDeleteStationModal: false,
+        openEditStationModal: false,
+    })
+  
+    const toggleDeleteStation = useCallback(() => {
+      setToggleModals((prev) => ({
+        ...prev,
+        openDeleteStationModal: !toggleModals.openDeleteStationModal,
+      }))
+    },[toggleModals.openDeleteStationModal])
+  
+    const toggleEditStation = useCallback(() => {
+      setToggleModals((prev) => ({
+        ...prev,
+        openEditStationModal: !toggleModals.openEditStationModal,
+      }))
+    },[toggleModals.openEditStationModal])
+    
 
     const columns = [
         {
@@ -36,8 +53,8 @@ export const ChargeStationsPage: React.FC = () => {
             cell: () => {
             return (
                 <div className="flex items-center gap-6">
-                    <button type="button" className="rounded bg-grey-dark-4 py-1 px-2 text-grey-dark-1 text-sm">Edit</button>
-                    <button type="button" className="rounded bg-semantics-error/10 py-1 px-2 text-semantics-error text-sm">
+                    <button type="button" className="rounded bg-grey-dark-4 py-1 px-2 text-grey-dark-1 text-sm" onClick={toggleEditStation}>Edit</button>
+                    <button type="button" className="rounded bg-semantics-error/10 py-1 px-2 text-semantics-error text-sm" onClick={toggleDeleteStation}>
                         Delete
                     </button>
                 </div>
@@ -46,21 +63,9 @@ export const ChargeStationsPage: React.FC = () => {
         }
     ];
 
-    const paginateData = (currentPage: number, rowsPerPage: number) => {
-      const startIndex = (currentPage - 1) * rowsPerPage;
-      const endIndex = startIndex + rowsPerPage;
-      const newData = dummyData.slice(startIndex, endIndex);
-      setData(newData);
-    };
-
-    const handlePageChange = (currentPage: number, rowsPerPage: number) => {
+    const handlePageChange = () => {
       // in a real page, this function would paginate the data from the backend
-      paginateData(currentPage, rowsPerPage);
-    };
-
-    const getData = (currentPage: number, rowsPerPage: number) => {
-      // in a real page, this function would paginate the data from the backend
-      paginateData(currentPage, rowsPerPage);
+      
     };
   
   return (
@@ -88,15 +93,16 @@ export const ChargeStationsPage: React.FC = () => {
           </div>
         </div>
           <Table
-            columns={columns}
-            data={data}
+            data={[]}
             page={1}
             perPage={10}
-            getData={getData}
-            totalCount={dummyData.length}
+            columns={columns}
+            totalCount={[].length}
             onPageChange={handlePageChange}
           />
       </div>
+      <DeleteStationModal isOpen={toggleModals.openDeleteStationModal} close={toggleDeleteStation} />
+      <EditStationModal isOpen={toggleModals.openEditStationModal} close={toggleEditStation} />
     </motion.div>
   )
 }
