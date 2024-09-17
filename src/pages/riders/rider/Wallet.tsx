@@ -54,6 +54,12 @@ export const RiderWalletPage: React.FC = () => {
       {
         header: () => "Amount",
         accessorKey: "amount",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedWalletTransaction
+          return (
+            <div className="text-sm text-grey-dark-2 whitespace-nowrap">{formattedNumber(item?.amount)}</div>
+          )
+        }
       },
       {
         header: () => "Status",

@@ -1,15 +1,15 @@
 import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
-import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { motion } from "framer-motion";
+import { formattedNumber } from "@/utils/textFormatter";
+import { Loader } from "@/components/core/Button/Loader";
+import { pageVariants } from "@/constants/animateVariants";
 import { useLocation, useParams, useSearchParams } from "react-router-dom";
+import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { useGetWalletStats, useGetWalletTransactions } from "@/services/hooks/queries";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
-import { formattedNumber } from "@/utils/textFormatter";
 import { FetchedWalletTransaction, FetchedWalletTransactionCount, FetchedWalletTransactionCountStatus } from "@/types/wallet";
-import { pageVariants } from "@/constants/animateVariants";
-import { motion } from "framer-motion";
-import { Loader } from "@/components/core/Button/Loader";
 
 export const CustomerWalletPage: React.FC = () => {
     const params = useParams();
@@ -39,10 +39,22 @@ export const CustomerWalletPage: React.FC = () => {
       {
         header: () => "Amount",
         accessorKey: "amount",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedWalletTransaction
+          return (
+            <div className="text-sm text-grey-dark-2 whitespace-nowrap">{formattedNumber(item?.amount)}</div>
+          )
+        }
       },
       {
         header: () => "Status",
         accessorKey: "status",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedWalletTransaction
+          return (
+            <div className={cn("text-sm font-medium capitalize whitespace-nowrap", item?.status === 1 ? "text-dark-green-1" : "text-semantics-error")}>{item?.status === 1 ? "Successful" : "Failed"}</div>
+          )
+        }
       },
     ];
 

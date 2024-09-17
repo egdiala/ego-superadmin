@@ -75,7 +75,7 @@ export const WalletPage: React.FC = () => {
             cell: ({ row }: { row: any; }) => {
                 const item = row?.original as FetchedWalletTransaction
                 return (
-                    <div className="flex items-center gap-2.5">
+                    <div className={cn("flex items-center gap-2.5 text-sm font-medium capitalize whitespace-nowrap", item?.status === 1 ? "text-dark-green-1" : "text-semantics-error")}>
                         {WalletStatus[item?.status]}
                     </div>
                 )
