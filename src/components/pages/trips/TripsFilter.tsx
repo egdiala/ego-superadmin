@@ -47,15 +47,15 @@ export const TripsFilter: React.FC<TripsFilterProps> = ({ isLoading, setFilters 
         { label: "Canceled", name: "canceled", value: "CANCELED" },
     ]
 
-    const evFilters = [
-        { label: "Lease", name: "lease" },
-        { label: "Staff Commute", name: "staff_commute" },
-        { label: "E-hailing", name: "e_hailing" },
-    ];
+    // const evFilters = [
+    //     { label: "Lease", name: "lease" },
+    //     { label: "Staff Commute", name: "staff_commute" },
+    //     { label: "E-hailing", name: "e_hailing" },
+    // ];
 
     const [selected, setSelected] = useState(dateFilters[2]);
     const [statusFilters, setStatusFilters] = useState("");
-    const [enabled, setEnabled] = useState<string | null>(null);
+    // const [enabled, setEnabled] = useState<string | null>(null);
 
     const setCustomDate = (dates: { start: Date | string; end: Date | string }) => {
         const notCustom = dateFilters.filter((item) => item.name !== "custom") as any;
@@ -87,12 +87,12 @@ export const TripsFilter: React.FC<TripsFilterProps> = ({ isLoading, setFilters 
                 as="section"
                 transition
                 anchor="bottom end"
-                className="bg-white p-6 rounded origin-top-right flex flex-col gap-5 w-96 md:w-[39.375rem] transition duration-300 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
+                className="bg-white p-6 rounded origin-top-right flex flex-col gap-5 w-96 md:w-lg transition duration-300 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
             >
                 {({ close }) => (
                     <Fragment>
                         <h1 className="font-bold text-xl text-grey-dark-1">Trip Filter</h1>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-5 md:gap-8">
+                        <div className="grid grid-cols-2 gap-5 md:gap-8">
                             {/* Date Filters */}
                             <div className="flex flex-col gap-1">
                                 <span className="uppercase text-grey-dark-3 text-xs">Date</span>
@@ -140,7 +140,7 @@ export const TripsFilter: React.FC<TripsFilterProps> = ({ isLoading, setFilters 
                             </div>
 
                             {/* EV Purchase Model Filters */}
-                            <div className="flex flex-col gap-1">
+                            {/* <div className="flex flex-col gap-1">
                                 <span className="uppercase text-grey-dark-3 text-xs">EV Purchase Model</span>
                                 {evFilters.map((item) => (
                                     <div
@@ -161,7 +161,7 @@ export const TripsFilter: React.FC<TripsFilterProps> = ({ isLoading, setFilters 
                                         {item.label}
                                     </div>
                                 ))}
-                            </div>
+                            </div> */}
 
                             {/* Trip Status Filters */}
                             <div className="flex flex-col gap-1">
