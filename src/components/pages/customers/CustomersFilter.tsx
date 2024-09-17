@@ -9,7 +9,7 @@ import { CloseButton, Popover, PopoverBackdrop, PopoverButton, PopoverPanel, Rad
 interface Filters {
     start_date: string;
     end_date: string;
-    purchase_model?: string;
+    model?: string;
     status?: string;
 }
 
@@ -63,7 +63,7 @@ export const CustomersFilter: React.FC<CustomersFilterProps> = ({ isLoading, set
         setFilters({
             start_date: selected.value.start ? format(selected.value.start, "yyyy-MM-dd") : "",
             end_date: selected.value.end ? format(selected.value.end, "yyyy-MM-dd") : "",
-            purchase_model: purchaseModelFilters,
+            model: purchaseModelFilters,
             status: statusFilters
         });
         fn?.();
