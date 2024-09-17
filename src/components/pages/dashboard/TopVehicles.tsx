@@ -2,10 +2,11 @@ import React from "react";
 import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
 import whiteCar from "@/assets/white_car.svg";
+import type { TopVehiclesType } from "@/types/vehicles";
 import { EmptyState, RenderIf, TableAction } from "@/components/core";
 
 interface TopVehiclesDashboardProps {
-    data: any[]
+    data: TopVehiclesType[]
     [key: PropertyKey]: any
 }
 
@@ -23,14 +24,14 @@ export const TopVehicles: React.FC<TopVehiclesDashboardProps> = ({ className, da
             <RenderIf condition={data.length > 0}>
             <div className="grid gap-5">
                 {
-                    data.map((_, id) =>
+                    data.map((vehicle, id) =>
                     <div key={id} className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                             <span className="text-sm text-grey-dark-1">{id + 1}.</span>
-                            <img src={whiteCar} alt="vehicle" className="object-cover object-center w-8 rounded-full" />
-                            <span className="text-sm text-grey-dark-2">ABC 123 DEF</span>
+                            <img src={whiteCar} alt={vehicle?.user_data?.plate_number} className="object-cover object-center w-8 rounded-full" />
+                            <span className="text-sm text-grey-dark-2">{vehicle?.user_data?.plate_number}</span>
                         </div>
-                        <span className="text-sm text-grey-dark-1">25</span>
+                        <span className="text-sm text-grey-dark-1">{vehicle?.total}</span>
                     </div>
                     )
                 }

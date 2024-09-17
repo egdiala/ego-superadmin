@@ -43,11 +43,11 @@ export const useGetVehicleDistanceForOrg = (query: FetchDistanceForOrgQuery) => 
   })
 }
 
-export const useGetRanks = (query: FetchRanksQuery) => {
+export const useGetRanks = <T>(query: FetchRanksQuery) => {
   return useQuery({
     queryKey: [GET_TRIPS, query],
     queryFn: () => getRanks(query),
-    select: (res) => res?.data as any[],
+    select: (res) => res?.data as T,
     retry: false,
     refetchOnWindowFocus: false,
     throwOnError(error) {

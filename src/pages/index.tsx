@@ -1,11 +1,12 @@
 import React, { Fragment, useMemo } from "react";
 import { motion } from "framer-motion";
 import { RenderIf } from "@/components/core";
+import type { TopRidersType } from "@/types/riders";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import type { FetchedRatingCountOne } from "@/types/ratings";
-import type { FetchedDriverCountStatus } from "@/types/drivers";
-import type { FetchedVehicleCountStatus } from "@/types/vehicles";
+import type { FetchedDriverCountStatus, TopDriversType } from "@/types/drivers";
+import type { FetchedVehicleCountStatus, TopVehiclesType } from "@/types/vehicles";
 import type { FetchedOrganizationCountStatus } from "@/types/organizations";
 import type { FetchedServiceRequestsCountStatus } from "@/types/service-requests";
 import { useGetDrivers, useGetOrganizations, useGetRanks, useGetRatings, useGetServiceRequests, useGetVehicles } from "@/services/hooks/queries";
@@ -17,9 +18,9 @@ export const DashboardPage: React.FC = () => {
     const { data: serviceRequestCount, isFetching: fetchingServiceRequests } = useGetServiceRequests<FetchedServiceRequestsCountStatus>({ component: "count-status" })
     const { data: driversCount, isFetching: fetchingDrivers } = useGetDrivers({ component: "count-status" })
     const { data: ratingsCount, isFetching: fetchingRatings } = useGetRatings({ component: "count-one" })
-    const { data: topDrivers, isFetching: fetchingDriverRank } = useGetRanks({ user_type: "top-driver", request_type: "trip" })
-    const { data: topRiders, isFetching: fetchingRiderRank } = useGetRanks({ user_type: "top-rider", request_type: "trip" })
-    const { data: topVehicles, isFetching: fetchingVehicleRank } = useGetRanks({ user_type: "top-vehicles", request_type: "trip" })
+    const { data: topDrivers, isFetching: fetchingDriverRank } = useGetRanks<TopDriversType[]>({ user_type: "top-driver", request_type: "trip" })
+    const { data: topRiders, isFetching: fetchingRiderRank } = useGetRanks<TopRidersType[]>({ user_type: "top-rider", request_type: "trip" })
+    const { data: topVehicles, isFetching: fetchingVehicleRank } = useGetRanks<TopVehiclesType[]>({ user_type: "top-vehicles", request_type: "trip" })
 
     const isFetchingAll = useMemo(() => {
         const loadingStates = [fetchingCustomers, fetchingVehicles, fetchingServiceRequests, fetchingDrivers, fetchingRatings, fetchingDriverRank, fetchingRiderRank, fetchingVehicleRank]
@@ -45,14 +46,14 @@ export const DashboardPage: React.FC = () => {
                         <div className="grid gap-6 content-start">
                             <TripDetails />
                             <TotalDrivers data={driversCount as FetchedDriverCountStatus} />
-                            <TopDrivers data={topDrivers as any[]} />
-                            <TopVehicles data={topVehicles as any[]} />
+                            <TopDrivers data={topDrivers as TopDriversType[]} />
+                            <TopVehicles data={topVehicles as TopVehiclesType[]} />
                         </div>
                         <div className="grid gap-6 content-start">
                             <ServiceRequests data={serviceRequestCount as FetchedServiceRequestsCountStatus} />
                             <DistanceCovered />
                             <Ratings data={ratingsCount as FetchedRatingCountOne} />
-                            <TopCommuters data={topRiders as any[]} />
+                            <TopCommuters data={topRiders as TopRidersType[]} />
                         </div>
                     </div>
                 </motion.div>

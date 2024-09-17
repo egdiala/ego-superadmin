@@ -62,7 +62,7 @@ export const RidersPage: React.FC = () => {
         }
     },
     {
-      header: () => "Supervisor",
+      header: () => "Business",
       accessorKey: "org_data.name",
     },
   ];

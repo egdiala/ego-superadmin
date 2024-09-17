@@ -101,3 +101,11 @@ export interface FetchedVehicleCountStatus {
     org_assigned: number
     active_count: number
 }
+
+export interface TopVehiclesType {
+    auth_id: string;
+    total: number;
+    user_data: {
+        plate_number: string;
+    }
+}

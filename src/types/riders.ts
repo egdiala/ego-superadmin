@@ -56,3 +56,13 @@ export interface FetchRidersQuery {
     component?: "count" | "export" | "count-status";
     organization_id?: string;
 }
+
+export interface TopRidersType {
+    auth_id: string;
+    total: number;
+    user_data: {
+        first_name: string;
+        last_name: string;
+        avatar: string;
+    }
+}

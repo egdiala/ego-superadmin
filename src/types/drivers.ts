@@ -98,3 +98,13 @@ export interface FetchDriversQuery {
     item_per_page?: string;
     component?: "count" | "export" | "count-status";
 }
+
+export interface TopDriversType {
+    auth_id: string;
+    total: number;
+    user_data: {
+        first_name: string;
+        last_name: string;
+        avatar: string;
+    }
+}
