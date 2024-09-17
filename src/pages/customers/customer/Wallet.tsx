@@ -30,15 +30,15 @@ export const CustomerWalletPage: React.FC = () => {
       },
       {
         header: () => "Transaction type",
-        accessorKey: "phone_number",
+        accessorKey: "transaction_type",
       },
       {
         header: () => "Description",
-        accessorKey: "first_name",
+        accessorKey: "description",
       },
       {
         header: () => "Amount",
-        accessorKey: "lastName",
+        accessorKey: "amount",
       },
       {
         header: () => "Status",
