@@ -26,8 +26,8 @@ export const TripsPage: React.FC = () => {
       start_date: "",
       end_date: ""
     })
-    const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
-    const { data: count, isFetching: fetchingCount, refetch } = useGetTrips({ component, q: value, ...filters })
+    const [component] = useState<"count" | "count-status" | "count-status-rider" | "count-status-driver" | "count-monthly">("count")
+    const { data: count, isFetching: fetchingCount } = useGetTrips({ component, q: value, ...filters })
     const { data: trips, isFetching } = useGetTrips({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value, ...filters })
 
     const columns = [
@@ -128,7 +128,7 @@ export const TripsPage: React.FC = () => {
                     </div>
                 
                     <div className="flex items-center gap-2 w-full sm:w-auto">
-                      <TableAction theme="ghost" block onClick={() => component === "export" ? refetch() : setComponent("export")}>
+                      <TableAction theme="ghost" block>
                           <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
                           Export
                       </TableAction>

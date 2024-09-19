@@ -22,8 +22,8 @@ export const CustomerTripPaymentPage: React.FC = () => {
     const [page, setPage] = useState(1)
     const { value, onChangeHandler } = useDebounce(500)
     const [searchParams, setSearchParams] = useSearchParams();
-    const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
-    const { data: count, isFetching: fetchingCount, refetch } = useGetTrips({ component, user_type: "organization", auth_id: params?.id as string })
+    const [component] = useState<"count" | "count-status" | "count-status-rider" | "count-status-driver" | "count-monthly">("count")
+    const { data: count, isFetching: fetchingCount } = useGetTrips({ component, user_type: "organization", auth_id: params?.id as string })
     const { data: driverTrips, isFetching } = useGetTrips({ user_type: "organization", auth_id: params?.id as string, page: page.toString(), item_per_page: itemsPerPage.toString(), q: value })
 
     const columns = [
@@ -99,7 +99,7 @@ export const CustomerTripPaymentPage: React.FC = () => {
                 
                 <div className="flex items-center gap-2 flex-wrap">
                     <div className="flex items-center gap-2 w-full sm:w-auto">
-                        <TableAction type="button" theme="ghost" block onClick={() => component === "export" ? refetch() : setComponent("export")}>
+                        <TableAction type="button" theme="ghost" block>
                             <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
                             Export
                         </TableAction>

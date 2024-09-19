@@ -19,7 +19,7 @@ export const ServiceRequestPage: React.FC = () => {
     const params = useParams()
     const [searchParams] = useSearchParams()
     const { data: serviceRequest, isFetching } = useGetServiceRequest(params?.id as string)
-    const { data: countStatus, isFetching: fetchingCountStatus } = useGetRatings({ component: "count-status", user_type: "driver", auth_id: searchParams.get("driver_id") as string })
+    const { data: countStatus, isFetching: fetchingCountStatus } = useGetRatings({ component: "count", user_type: "driver", auth_id: searchParams.get("driver_id") as string })
     const [toggleModals, setToggleModals] = useState({
         openUpdateRequestModal: false,
         openViewImageModal: false,
