@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo } from "react";
+import React, { Fragment, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { RenderIf } from "@/components/core";
 import { getAdminData } from "@/utils/authUtil";
@@ -15,12 +15,13 @@ import { Customers, DistanceCovered, PaymentValue, Ratings, ServiceRequests, Top
 
 export const DashboardPage: React.FC = () => {
     const adminData = getAdminData()
+    const [ratingsFilter, setRatingsFilter] = useState<{ user_type: "driver" | "rider" | "organization";  }>({ user_type: "driver" })
     
     const { data: customerCount, isFetching: fetchingCustomers } = useGetOrganizations({ component: "count-status" })
     const { data: vehiclesCount, isFetching: fetchingVehicles } = useGetVehicles({ component: "count-status" })
     const { data: serviceRequestCount, isFetching: fetchingServiceRequests } = useGetServiceRequests<FetchedServiceRequestsCountStatus>({ component: "count-status" })
     const { data: driversCount, isFetching: fetchingDrivers } = useGetDrivers({ component: "count-status" })
-    const { data: ratingsCount, isFetching: fetchingRatings } = useGetRatings({ component: "dashboard-stat", auth_id: adminData?.auth_id, user_type: "driver" })
+    const { data: ratingsCount, isFetching: fetchingRatings } = useGetRatings({ component: "dashboard-stat", auth_id: adminData?.auth_id, ...ratingsFilter })
     const { data: topDrivers, isFetching: fetchingDriverRank } = useGetRanks<TopDriversType[]>({ user_type: "top-driver", request_type: "trip" })
     const { data: topRiders, isFetching: fetchingRiderRank } = useGetRanks<TopRidersType[]>({ user_type: "top-rider", request_type: "trip" })
     const { data: topVehicles, isFetching: fetchingVehicleRank } = useGetRanks<TopVehiclesType[]>({ user_type: "top-vehicles", request_type: "trip" })
@@ -55,7 +56,7 @@ export const DashboardPage: React.FC = () => {
                         <div className="grid gap-6 content-start">
                             <ServiceRequests data={serviceRequestCount as FetchedServiceRequestsCountStatus} />
                             <DistanceCovered />
-                            <Ratings data={ratingsCount as FetchedRatingCountOne[]} />
+                            <Ratings filters={ratingsFilter} setFilters={setRatingsFilter} data={ratingsCount as FetchedRatingCountOne[]} />
                             <TopCommuters data={topRiders as TopRidersType[]} />
                         </div>
                     </div>
