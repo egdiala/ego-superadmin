@@ -6,7 +6,9 @@ export interface FetchTripsQuery {
     auth_id?: string;
     page?: string;
     item_per_page?: string;
-    component?: "count" | "export" | "count-status";
+    start_date?: string;
+    end_date?: string;
+    component?: "count" | "count-status" | "count-status-rider" | "count-status-driver" | "count-monthly";
 }
 
 export interface FetchRanksQuery {
@@ -15,8 +17,11 @@ export interface FetchRanksQuery {
 }
 
 export interface FetchDistanceForOrgQuery {
-    organization_id: string;
-    vehicle_id?: string
+    organization_id?: string;
+    vehicle_id?: string;
+    start_date?: string;
+    end_date?: string;
+    component: "org-dashboard-stat" | "trip-stat";
 }
 
 export interface FetchedTripType {
@@ -148,19 +153,30 @@ export interface FetchedTripType {
 }
 
 export interface FetchedTripCountStatus {
-    total: number;
-    fulfilled: number;
-    ongoing: number;
-    rejected: number
+    total_count_trip: number;
+    total_completed: number;
+    total_cancel: number;
+    total_accepted: number;
+    total_assigned: number;
+    total_rejected: number;
+}
+
+export interface FetchedRiderTripCountStatus {
+    total_count_trip: number;
+    total_completed: number;
+    total_cancel: number;
+    total_count_sch: number;
+    total_approved: number;
+    total_rejected: number;
 }
 
 export interface FetchedVehicleDistanceForOrganization {
-    total_dst: number;
-    distance?: number;
-    total_time: number;
-    time?: number;
-    time_value: string;
-    distance_value: string;
+    total_amount_paid: number;
+    total_amount_outstanding: number;
+    total_vehicle: number;
+    total_trip_completed: number;
+    total_dst_cov: number;
+    total_dst_avg: number;
 }
 
 export interface FetchedSingleTrip {

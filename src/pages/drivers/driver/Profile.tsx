@@ -16,7 +16,7 @@ import { Loader } from "@/components/core/Button/Loader";
 export const DriverProfilePage: React.FC = () => {
     const params = useParams();
     const { data: driver, refetch } = useGetDriver("")
-    const { data: countStatus, isFetching: fetchingCountStatus } = useGetRatings({ component: "count-status", user_type: "driver", auth_id: params?.id as string })
+    const { data: countStatus, isFetching: fetchingCountStatus } = useGetRatings({ component: "count", user_type: "driver", auth_id: params?.id as string })
     const gridItems = useMemo(() => {
         return [
             { label: "Email", value: driver?.email },

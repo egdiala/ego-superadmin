@@ -4,11 +4,9 @@ import { pageVariants } from "@/constants/animateVariants";
 import { Icon } from "@iconify/react";
 import { RenderIf } from "@/components/core";
 import { CustomerBatteryDetails, CustomerServiceRequests, CustomerTotalTrips, CustomerTripDetails } from "@/components/pages/customers";
-import { useGetOrganization, useGetServiceRequests, useGetTrips, useGetVehicleDistanceForOrg, useGetVehicles } from "@/services/hooks/queries";
+import { useGetOrganization, useGetServiceRequests, useGetTripStats } from "@/services/hooks/queries";
 import { PurchaseModel } from "@/types/organizations";
 import { useParams } from "react-router-dom";
-import { FetchedVehicleCount } from "@/types/vehicles";
-import { FetchedTripCountStatus } from "@/types/trips";
 import { Loader } from "@/components/core/Button/Loader";
 import { cn } from "@/libs/cn";
 import { FetchedServiceRequestsCountStatus } from "@/types/service-requests";
@@ -16,40 +14,38 @@ import { FetchedServiceRequestsCountStatus } from "@/types/service-requests";
 export const CustomerDashboardPage: React.FC = () => {
     const params = useParams()
     const { data: customer, refetch } = useGetOrganization("")
-    const { data: distCount, isFetching: isFetchingDistance } = useGetVehicleDistanceForOrg({ organization_id: params?.id as string })
-    const { data: vehiclesCount, isFetching: isFetchingVehicles } = useGetVehicles({ component: "count-status", organization_id: params?.id as string })
-    const { data: tripsCount, isFetching: isFetchingTrips } = useGetTrips({ component: "count-status", user_type: "organization", auth_id: params?.id as string })
+    const { data: tripStat, isFetching: isFetchingDistance } = useGetTripStats({ component: "org-dashboard-stat", organization_id: params?.id as string })
     const { data: serviceRequestCount, isFetching: fetchingServiceRequests } = useGetServiceRequests({ component: "count-status", organization_id: params?.id as string })
     const firstRowItems = [
         {
             label: "Total Amount Paid so far",
-            value: "₦0"
+            value: `₦${tripStat?.total_amount_paid}`
         },
         {
             label: "Total Outstanding Payment",
-            value: "₦0",
+            value: `₦${tripStat?.total_amount_outstanding}`,
             icon: "mdi:naira"
         },
         (PurchaseModel.StaffCommute !== customer?.purchase_model! && ({
             label: "Total Vehicles Assigned",
-            value: (vehiclesCount as FetchedVehicleCount)?.total ?? "0",
+            value: tripStat?.total_vehicle,
             icon: "ri:car-fill"
         }))
     ]
     const secondRowItems = [
         (PurchaseModel.StaffCommute !== customer?.purchase_model! && ({
             label: "Total Completed Trips",
-            value: (tripsCount as FetchedTripCountStatus)?.fulfilled ?? "0",
+            value: tripStat?.total_trip_completed,
             icon: "bx:trip"
         })),
         {
             label: "Total Distance Covered by all Vehicles",
-            value: `${distCount?.total_dst ?? distCount?.distance}${distCount?.distance_value}`,
+            value: `${tripStat?.total_dst_cov}km`,
             icon: "ion:speedometer"
         },
         (PurchaseModel.Lease !== customer?.purchase_model! && ({
             label: "Average kilometers covered by the vehicle",
-            value: "0km",
+            value: `${tripStat?.total_dst_avg}km`,
             icon: "ion:speedometer"
         })),
     ]
@@ -60,7 +56,7 @@ export const CustomerDashboardPage: React.FC = () => {
     },[customer, refetch])
     return (
         <Fragment>
-            <RenderIf condition={!isFetchingVehicles && !isFetchingTrips && !isFetchingDistance && !fetchingServiceRequests}>
+            <RenderIf condition={!isFetchingDistance && !fetchingServiceRequests}>
                 <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-6">
                     <div className={cn("grid grid-cols-1 gap-4", PurchaseModel.StaffCommute !== customer?.purchase_model! ? "md:grid-cols-3" : "md:grid-cols-2")}>
                         {
@@ -112,7 +108,7 @@ export const CustomerDashboardPage: React.FC = () => {
                     </RenderIf>
                 </motion.div>
             </RenderIf>
-            <RenderIf condition={isFetchingVehicles || isFetchingTrips || isFetchingDistance || fetchingServiceRequests}>
+            <RenderIf condition={isFetchingDistance || fetchingServiceRequests}>
                 <div className="flex w-full h-dvh items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
             </RenderIf>
         </Fragment>

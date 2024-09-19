@@ -17,10 +17,9 @@ export const DriverRatingsPage: React.FC = () => {
     const itemsPerPage = 10;
     const [page, setPage] = useState(1)
     const [searchParams, setSearchParams] = useSearchParams();
-    const [component] = useState<"count" | "count-status">("count")
-    const { data: countStatus, isFetching: fetchingCountStatus } = useGetRatings({ component: "count-status", user_type: "driver", auth_id: params?.id as string })
-    const { data: count, isFetching: fetchingCount } = useGetRatings({ component, user_type: "driver", auth_id: params?.id as string })
-    const { data: ratings, isFetching } = useGetRatings({ user_type: "driver", auth_id: params?.id as string })
+    const [component] = useState<"count" | "dashboard-stat">("count")
+    const { data: count, isFetching: fetchingCount } = useGetRatings({ component, user_type: "driver", auth_id: params?.id as string, page: page.toString(), item_per_page: itemsPerPage.toString() })
+    const { data: ratings, isFetching } = useGetRatings({ user_type: "driver", auth_id: params?.id as string, page: page.toString(), item_per_page: itemsPerPage.toString() })
 
     const columns = [
       {
@@ -69,14 +68,14 @@ export const DriverRatingsPage: React.FC = () => {
 
     const trips = useMemo(() => {
       return [
-          { label: "Total ratings", value: (countStatus as FetchedRatingCountStatus)?.total, color: "bg-[#F8F9FB]" },
-          { label: "Av. ratings", value: (countStatus as FetchedRatingCountStatus)?.rating?.toFixed(1) ?? "0", color: "bg-[#F6FBF6]" },
+          { label: "Total ratings", value: (count as FetchedRatingCountStatus)?.total, color: "bg-[#F8F9FB]" },
+          { label: "Av. ratings", value: (count as FetchedRatingCountStatus)?.rating?.toFixed(1) ?? "0", color: "bg-[#F6FBF6]" },
       ]
-    },[countStatus])
+    },[count])
 
     return (
       <Fragment>
-        <RenderIf condition={!isFetching && !fetchingCount && !fetchingCountStatus}>
+        <RenderIf condition={!isFetching && !fetchingCount}>
           <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-2 pt-2">
               <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
                   {
@@ -114,7 +113,7 @@ export const DriverRatingsPage: React.FC = () => {
               />
           </motion.div>
         </RenderIf>
-        <RenderIf condition={isFetching || fetchingCount || fetchingCountStatus}>
+        <RenderIf condition={isFetching || fetchingCount}>
           <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
         </RenderIf>
       </Fragment>

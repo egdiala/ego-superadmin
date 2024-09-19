@@ -17,8 +17,8 @@ export const CustomerRatingsPage: React.FC = () => {
     const itemsPerPage = 10;
     const [page, setPage] = useState(1)
     const [searchParams, setSearchParams] = useSearchParams();
-    const [component] = useState<"count" | "count-status">("count")
-    const { data: countStatus, isFetching: fetchingCountStatus } = useGetRatings({ component: "count-status", user_type: "organization", auth_id: params?.id as string })
+    const [component] = useState<"count" | "dashboard-stat">("count")
+    const { data: countStatus, isFetching: fetchingCountStatus } = useGetRatings({ component: "dashboard-stat", user_type: "organization", auth_id: params?.id as string })
     const { data: count, isFetching: fetchingCount } = useGetRatings({ component, user_type: "organization", auth_id: params?.id as string })
     const { data: ratings, isFetching } = useGetRatings({ user_type: "organization", auth_id: params?.id as string })
 
@@ -69,10 +69,10 @@ export const CustomerRatingsPage: React.FC = () => {
 
     const trips = useMemo(() => {
       return [
-        { label: "Total ratings", value: (countStatus as FetchedRatingCountStatus)?.total, color: "bg-[#F8F9FB]" },
+        { label: "Total ratings", value: (count as FetchedRatingCountStatus)?.total, color: "bg-[#F8F9FB]" },
         { label: "Av. ratings", value: (countStatus as FetchedRatingCountStatus)?.rating?.toFixed(1) ?? "0", color: "bg-[#F6FBF6]" },
       ]
-    },[countStatus])
+    },[count, countStatus])
     
     return (
       <Fragment>

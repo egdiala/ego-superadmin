@@ -17,10 +17,10 @@ export const RiderRatingsPage: React.FC = () => {
     const itemsPerPage = 10;
     const [page, setPage] = useState(1)
     const [searchParams, setSearchParams] = useSearchParams();
-    const [component] = useState<"count" | "count-status">("count")
-    const { data: countStatus, isFetching: fetchingCountStatus } = useGetRatings({ component: "count-status", user_type: "rider", auth_id: params?.id as string })
-    const { data: count, isFetching: fetchingCount } = useGetRatings({ component, user_type: "rider", auth_id: params?.id as string })
-    const { data: ratings, isFetching } = useGetRatings({ user_type: "rider", auth_id: params?.id as string })
+    const [component] = useState<"count" | "dashboard-stat">("count")
+    const { data: countStatus, isFetching: fetchingCountStatus } = useGetRatings({ component, user_type: "rider", auth_id: params?.id as string })
+    const { data: count, isFetching: fetchingCount } = useGetRatings({ component, user_type: "rider", auth_id: params?.id as string, page: page.toString(), item_per_page: itemsPerPage.toString() })
+    const { data: ratings, isFetching } = useGetRatings({ user_type: "rider", auth_id: params?.id as string, page: page.toString(), item_per_page: itemsPerPage.toString() })
 
     const columns = [
       {

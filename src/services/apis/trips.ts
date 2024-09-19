@@ -1,4 +1,4 @@
-import { GET_RANKS_API, GET_TRIPS_API, GET_VEHICLE_DISTANCE_FOR_ORG_API } from "@/constants/api";
+import { GET_RANKS_API, GET_TRIP_DATA_STATS_API, GET_TRIPS_API } from "@/constants/api";
 import { axiosTripReportInstance } from "../axiosInstance";
 import { createQueryString } from "@/utils/createQuery";
 import type { FetchDistanceForOrgQuery, FetchRanksQuery, FetchTripsQuery } from "@/types/trips";
@@ -13,8 +13,8 @@ export const getTrip = async (id: string) => {
   return res.data;
 };
 
-export const getVehicleDistanceForOrg = async (query: FetchDistanceForOrgQuery) => {
-  const res = await axiosTripReportInstance.get(`${GET_VEHICLE_DISTANCE_FOR_ORG_API}${createQueryString(query)}`)
+export const getTripDataStats = async (query: FetchDistanceForOrgQuery) => {
+  const res = await axiosTripReportInstance.get(`${GET_TRIP_DATA_STATS_API}${createQueryString(query)}`)
   return res.data;
 }
 

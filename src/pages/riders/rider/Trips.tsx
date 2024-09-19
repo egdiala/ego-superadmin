@@ -9,7 +9,7 @@ import { useGetTrips } from "@/services/hooks/queries";
 import { Loader } from "@/components/core/Button/Loader";
 import { pascalCaseToWords } from "@/utils/textFormatter";
 import { pageVariants } from "@/constants/animateVariants";
-import type { FetchedTripCountStatus, FetchedTripType } from "@/types/trips";
+import type { FetchedRiderTripCountStatus, FetchedTripType } from "@/types/trips";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
@@ -22,9 +22,9 @@ export const RiderTripsPage: React.FC = () => {
     const [page, setPage] = useState(1)
     const { value, onChangeHandler } = useDebounce(500)
     const [searchParams, setSearchParams] = useSearchParams();
-    const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
-    const { data: countStatus, isFetching: fetchingCountStatus } = useGetTrips({ component: "count-status", user_type: "rider", auth_id: params?.id as string })
-    const { data: count, isFetching: fetchingCount, refetch } = useGetTrips({ component, user_type: "rider", auth_id: params?.id as string })
+    const [component] = useState<"count" | "count-status-rider" | "count-status">("count")
+    const { data: countStatus, isFetching: fetchingCountStatus } = useGetTrips({ component: "count-status-rider", user_type: "rider", auth_id: params?.id as string })
+    const { data: count, isFetching: fetchingCount } = useGetTrips({ component, user_type: "rider", auth_id: params?.id as string })
     const { data: riderTrips, isFetching } = useGetTrips({ user_type: "rider", auth_id: params?.id as string, page: page.toString(), item_per_page: itemsPerPage.toString(), q: value })
 
     const columns = [
@@ -109,12 +109,12 @@ export const RiderTripsPage: React.FC = () => {
 
     const trips = useMemo(() => {
       return [
-          { label: "Total Requests Made", value: (countStatus as FetchedTripCountStatus)?.total, color: "bg-[#F8F9FB]" },
-          { label: "Approved Trips", value: "0", color: "bg-[#F8F9FB]" },
-          { label: "Ongoing Trips", value: (countStatus as FetchedTripCountStatus)?.ongoing, color: "bg-yellow-4" },
-          { label: "Fulfilled Trips", value: (countStatus as FetchedTripCountStatus)?.fulfilled, color: "bg-[#F6FBF6]" },
-          { label: "Unfulfilled Trips", value: "0", color: "bg-[#FDF2F2]" },
-          { label: "Rejected Trips", value: (countStatus as FetchedTripCountStatus)?.rejected, color: "bg-[#FDF2F2]" },
+          { label: "Total Requests Made", value: (countStatus as FetchedRiderTripCountStatus)?.total_count_trip, color: "bg-[#F8F9FB]" },
+          { label: "Approved Trips", value: (countStatus as FetchedRiderTripCountStatus)?.total_approved, color: "bg-[#F8F9FB]" },
+          { label: "Ongoing Trips", value: (countStatus as FetchedRiderTripCountStatus)?.total_count_sch, color: "bg-yellow-4" },
+          { label: "Fulfilled Trips", value: (countStatus as FetchedRiderTripCountStatus)?.total_count_trip, color: "bg-[#F6FBF6]" },
+          { label: "Unfulfilled Trips", value: (countStatus as FetchedRiderTripCountStatus)?.total_rejected, color: "bg-[#FDF2F2]" },
+          { label: "Rejected Trips", value: (countStatus as FetchedRiderTripCountStatus)?.total_rejected, color: "bg-[#FDF2F2]" },
       ]
     },[countStatus])
     return (
@@ -135,7 +135,7 @@ export const RiderTripsPage: React.FC = () => {
               <SearchInput placeholder="Search name, ref etc" onChange={onChangeHandler} />
           </div>
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <TableAction type="button" theme="ghost" block onClick={() => component === "export" ? refetch() : setComponent("export")}>
+            <TableAction type="button" theme="ghost" block>
               <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
               Export
             </TableAction>

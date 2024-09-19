@@ -20,9 +20,9 @@ export const DriverTripsPage: React.FC = () => {
     const [page, setPage] = useState(1)
     const { value, onChangeHandler } = useDebounce(500)
     const [searchParams, setSearchParams] = useSearchParams();
-    const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
-    const { data: countStatus, isFetching: fetchingCountStatus } = useGetTrips({ component: "count-status", user_type: "driver", auth_id: params?.id as string })
-    const { data: count, isFetching: fetchingCount, refetch } = useGetTrips({ component, user_type: "driver", auth_id: params?.id as string })
+    const [component] = useState<"count" | "count-status-driver" | "count-status">("count")
+    const { data: countStatus, isFetching: fetchingCountStatus } = useGetTrips({ component: "count-status-driver", user_type: "driver", auth_id: params?.id as string })
+    const { data: count, isFetching: fetchingCount } = useGetTrips({ component, user_type: "driver", auth_id: params?.id as string })
     const { data: driverTrips, isFetching } = useGetTrips({ user_type: "driver", auth_id: params?.id as string, page: page.toString(), item_per_page: itemsPerPage.toString(), q: value })
 
     const columns = [
@@ -88,10 +88,10 @@ export const DriverTripsPage: React.FC = () => {
 
     const trips = useMemo(() => {
       return [
-          { label: "Total Assigned Trips", value: (countStatus as FetchedTripCountStatus)?.total, color: "bg-[#F8F9FB]" },
-          { label: "Fulfilled Trips", value: (countStatus as FetchedTripCountStatus)?.fulfilled || "0", color: "bg-[#F6FBF6]" },
-          { label: "Ongoing Trips", value: (countStatus as FetchedTripCountStatus)?.ongoing || "0", color: "bg-yellow-4" },
-          { label: "Rejected Trips", value: (countStatus as FetchedTripCountStatus)?.rejected || "0", color: "bg-[#FDF2F2]" },
+          { label: "Total Assigned Trips", value: (countStatus as FetchedTripCountStatus)?.total_assigned, color: "bg-[#F8F9FB]" },
+          { label: "Fulfilled Trips", value: (countStatus as FetchedTripCountStatus)?.total_completed, color: "bg-[#F6FBF6]" },
+          { label: "Ongoing Trips", value: (countStatus as FetchedTripCountStatus)?.total_accepted, color: "bg-yellow-4" },
+          { label: "Rejected Trips", value: (countStatus as FetchedTripCountStatus)?.total_rejected, color: "bg-[#FDF2F2]" },
       ]
     },[countStatus])
     return (
@@ -114,7 +114,7 @@ export const DriverTripsPage: React.FC = () => {
                   <SearchInput placeholder="Search name, ref etc" onChange={onChangeHandler} />
               </div>
               <div className="flex items-center gap-2 w-full sm:w-auto">
-                <TableAction type="button" theme="ghost" block onClick={() => component === "export" ? refetch() : setComponent("export")}>
+                <TableAction type="button" theme="ghost" block>
                   <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
                   Export
                 </TableAction>

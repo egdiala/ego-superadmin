@@ -8,7 +8,7 @@ export const useGetRatings = (query: FetchRatingsQuery) => {
   return useQuery({
     queryKey: [GET_RATINGS, query],
     queryFn: () => getRatings(query),
-    select: (res) => res?.data as FetchedRating[] | FetchedRatingCountStatus | FetchedRatingCountOne,
+    select: (res) => res?.data as FetchedRating[] | FetchedRatingCountStatus | FetchedRatingCountOne[],
     retry: false,
     refetchOnWindowFocus: false,
     throwOnError(error) {

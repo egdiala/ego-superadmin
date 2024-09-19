@@ -15,7 +15,7 @@ import { Loader } from "@/components/core/Button/Loader";
 export const RiderProfile: React.FC = () => {
     const params = useParams()
     const { data: rider, refetch } = useGetRider("")
-    const { data: countStatus, isFetching: fetchingCountStatus } = useGetRatings({ component: "count-status", user_type: "rider", auth_id: params?.id as string })
+    const { data: countStatus, isFetching: fetchingCountStatus } = useGetRatings({ component: "count", user_type: "rider", auth_id: params?.id as string })
 
     const gridItems = useMemo(() => {
         return [

@@ -147,4 +147,5 @@ export enum WalletStatus {
     Abandoned = 3, // 3 = Abandoned
     Refunded = 4, // 4 = refunded
     Suspended = 5, // 5 = suspend
+    Debited = -1
 }
