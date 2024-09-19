@@ -2,9 +2,10 @@ import React, { Fragment, useMemo, useState } from "react";
 import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
-import { Button, RadioButton, TableAction } from "@/components/core";
+import { Button, RadioButton, RenderIf, TableAction } from "@/components/core";
 import type { FetchedRatingCountOne } from "@/types/ratings";
 import { CloseButton, Popover, PopoverBackdrop, PopoverButton, PopoverPanel, Radio, RadioGroup } from "@headlessui/react";
+import { Loader } from "@/components/core/Button/Loader";
 
 interface RatingsDashboardProps {
     data: FetchedRatingCountOne[];
@@ -23,7 +24,7 @@ export const Ratings: React.FC<RatingsDashboardProps> = ({ className, data, filt
         ]);
 
         // Update the map with the existing ratings data
-        data.forEach(item => {
+        data?.forEach(item => {
             ratingsMap.set(item.rating, item.total);
         });
 
@@ -34,20 +35,20 @@ export const Ratings: React.FC<RatingsDashboardProps> = ({ className, data, filt
         }));
     },[data])
     const computeWidth = (value: number) => {
-        const totalRating = data.reduce((sum, rating) => sum + rating.total, 0)
+        const totalRating = data?.reduce((sum, rating) => sum + rating?.total, 0)
         return (value/totalRating) * 100
     }
 
     const userTypeFilters = [
         {
-            label: "Driver",
+            label: "Drivers",
             value: "driver",
         },
         {
-            label: "Rider",
+            label: "Riders",
             value: "rider",
         },
-        { label: "Organization", value: "organization" },
+        { label: "Organizations", value: "organization" },
     ];
 
     const [selected, setSelected] = useState(userTypeFilters.find((item) => item?.value === filters?.user_type))
@@ -65,14 +66,16 @@ export const Ratings: React.FC<RatingsDashboardProps> = ({ className, data, filt
                 <h1 className="text-grey-dark-1 font-semibold text-xl">Ratings</h1>
                 <Popover className="relative">
                     <PopoverButton as={TableAction} theme="ghost" block>
-                        <Icon icon="mdi:funnel" className="size-4" /> {selected?.label}
+                        <Icon icon="mdi:funnel" className="size-4" />
+                        {selected?.label}
+                        <Icon icon="ph:caret-down" className="size-4" />
                     </PopoverButton>
                     <PopoverBackdrop className="fixed inset-0 bg-black/15 z-10" />
                     <PopoverPanel
                         as="section"
                         transition
                         anchor="bottom end"
-                        className="bg-white p-6 rounded origin-top-right flex flex-col gap-5 w-64 transition duration-300 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
+                        className="bg-white p-6 rounded origin-top-right flex flex-col gap-5 w-[26rem] transition duration-300 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
                     >
                         {({ close }) => (
                             <Fragment>
@@ -81,12 +84,12 @@ export const Ratings: React.FC<RatingsDashboardProps> = ({ className, data, filt
                                     {/* Date Filters */}
                                     <div className="flex flex-col gap-1">
                                         <span className="uppercase text-grey-dark-3 text-xs">User Type</span>
-                                        <RadioGroup by={"value" as any} value={selected} onChange={setSelected} className="space-y-2">
+                                        <RadioGroup by={"value" as any} value={selected} onChange={setSelected} className="flex items-center gap-2">
                                             {userTypeFilters.map((item) => (
                                                 <Radio
                                                     value={item}
                                                     key={item.value}
-                                                    className="group relative flex whitespace-nowrap items-center gap-2 cursor-pointer rounded bg-transparent py-2.5 px-2 text-grey-dark-2 transition duration-300 ease-out focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[checked]:bg-green-3 data-[checked]:font-medium data-[checked]:text-dark-green-1"
+                                                    className="group relative flex flex-1 whitespace-nowrap items-center gap-2 cursor-pointer rounded bg-transparent py-2.5 px-2 text-grey-dark-2 transition duration-300 ease-out focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[checked]:bg-green-3 data-[checked]:font-medium data-[checked]:text-dark-green-1"
                                                 >
                                                     <RadioButton name="date" checked={selected?.value === item.value} />
                                                     {item.label}
@@ -95,7 +98,7 @@ export const Ratings: React.FC<RatingsDashboardProps> = ({ className, data, filt
                                         </RadioGroup>
                                     </div>
                                 </div>
-                                <div className="w-full max-w-80 ml-auto pt-10 flex items-center justify-end gap-4">
+                                <div className="pt-5 flex items-center gap-4">
                                     <CloseButton as={Button} theme="tertiary" block onClick={() => close()}>
                                         Close
                                     </CloseButton>
@@ -113,19 +116,24 @@ export const Ratings: React.FC<RatingsDashboardProps> = ({ className, data, filt
                     </PopoverPanel>
                 </Popover>
             </div>
-            <div className="grid gap-4">
-                {
-                    ratings.map((rating, id) =>
-                    <div key={id} className="flex items-center gap-3">
-                        <span className="text-sm text-grey-dark-2">{rating.rating}</span>
-                        <div className="flex-1 h-2 rounded-full bg-green-4">
-                            <motion.div className="h-2 rounded-full bg-green-1" initial={{ width: "0%" }} whileInView={{ width: `${computeWidth(rating.total)}%` }} transition={{ ease: "linear", duration: 1 }}  />
+            <RenderIf condition={data !== undefined}>
+                <div className="grid gap-4">
+                    {
+                        ratings?.map((rating, id) =>
+                        <div key={id} className="flex items-center gap-3">
+                            <span className="text-sm text-grey-dark-2">{rating?.rating}</span>
+                            <div className="flex-1 h-2 rounded-full bg-green-4">
+                                <motion.div className="h-2 rounded-full bg-green-1" initial={{ width: "0%" }} whileInView={{ width: `${computeWidth(rating?.total)}%` }} transition={{ ease: "linear", duration: 1 }}  />
+                            </div>
+                            <span className="text-base text-grey-dark-1">{rating?.total}</span>
                         </div>
-                        <span className="text-base text-grey-dark-1">{rating.total}</span>
-                    </div>
-                    )
-                }
-            </div>
+                        )
+                    }
+                </div>
+            </RenderIf>
+            <RenderIf condition={data === undefined}>
+                <div className="flex w-full h-48 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
+            </RenderIf>
         </div>
     )
 }
