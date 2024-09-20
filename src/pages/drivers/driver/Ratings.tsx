@@ -39,10 +39,22 @@ export const DriverRatingsPage: React.FC = () => {
       {
         header: () => "Sender's Name",
         accessorKey: "sender_auth_id",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedRating
+          return (
+            <div>{item?.sender_data?.first_name} {item?.sender_data?.last_name}</div>
+          )
+        }
       },
       {
         header: () => "Rating",
         accessorKey: "rating",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedRating
+          return (
+            <div className="flex items-center gap-1"><Icon icon="ph:star-fill" className="text-semantics-amber size-3.5" />{item?.rating?.toFixed(1)}</div>
+          )
+        }
       },
       {
         header: () => "Comment",

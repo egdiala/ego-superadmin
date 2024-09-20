@@ -12,13 +12,20 @@ export interface FetchedRating {
     trip_id: string;
     receiver_auth_id: string;
     sender_auth_id: string;
-    organization_id: string;
+    organization_id?: string;
     receiver_user_type: string;
     comment: string;
     rating: number;
     createdAt: Date | string;
     updatedAt: Date | string;
     rating_id: string;
+    sender_data: {
+        _id: string;
+        first_name: string;
+        last_name: string;
+        email: string;
+        avatar: string;
+    }
 }
 
 export interface FetchedRatingCountStatus {
