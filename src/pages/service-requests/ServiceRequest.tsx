@@ -176,7 +176,7 @@ export const ServiceRequestPage: React.FC = () => {
                                     <h2 className="font-semibold text-base text-grey-dark-1">Uploaded Images</h2>
                                     <div className="flex items-center gap-4 flex-wrap">
                                         {
-                                            Array.from({ length: 8 }).map((_, idx) =>
+                                            Array.from({ length: 4 }).map((_, idx) =>
                                                 <div key={idx} className="size-28 rounded-lg overflow-hidden relative">
                                                     <img src="https://images.pexels.com/photos/515674/pexels-photo-515674.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="engine" className="object-cover object-center size-28" />
                                                     <button type="button" onClick={toggleViewRequestImage} className="absolute p-0.5 bottom-1.5 right-1.5 size-3.5 bg-white rounded-sm grid place-content-center" style={{ boxShadow: "0px 0px 5.85px -0.93px rgba(10, 75, 75, 0.2)" }}>
@@ -190,29 +190,25 @@ export const ServiceRequestPage: React.FC = () => {
                                 <div className="flex flex-col gap-6 rounded-lg border border-input-filled py-4 px-5">
                                     <h2 className="text-sm text-grey-dark-3">Request Description</h2>
                                     <div className="test-sm text-grey-dark-2">
-                                        Lorem ipsum dolor sit amet consectetur. Duis ornare velit vitae lacus ipsum euismod. Nullam ultricies risus ut leo. Massa rhoncus mauris egestas duis nulla arcu in semper tortor. Sagittis suspendisse ultricies.Lorem ipsum dolor sit amet consectetur. Duis ornare velit vitae lacus ipsum euismod. Nullam 
-                                        Lorem ipsum dolor sit amet consectetur. Duis ornare velit vitae lacus ipsum euismod. Nullam ultricies risus ut leo. Massa rhoncus mauris egestas duis nulla arcu in semper tortor. Sagittis suspendisse ultricies.Lorem ipsum dolor 
-                                        Lorem ipsum dolor sit amet consectetur. Duis ornare velit vitae lacus ipsum euismod. Nullam ultricies risus ut leo. Massa rhoncus mauris egestas duis nulla arcu in semper tortor. Sagittis suspendisse ultricies.Lorem ipsum dolor sit amet consectetur. Duis ornare velit vitae lacus ipsum euismod. Nullam 
-                                        Lorem ipsum dolor sit amet consectetur. Duis ornare velit vitae lacus ipsum euismod. Nullam ultricies risus ut leo. Massa rhoncus mauris egestas duis 
+                                        {serviceRequest?.description}
                                     </div>
                                 </div>
                             </div>
-                            <div className="grid grid-cols-2 gap-6">
-                                <div className="flex flex-col gap-2 rounded-lg border border-input-filled py-4 px-5">
-                                    <h2 className="text-sm text-grey-dark-3">Schedule info</h2>
-                                    <p className="test-sm text-grey-dark-2">Today • 12:34pm</p>
-                                    <div className="test-sm text-grey-dark-2">
-                                        Lorem ipsum dolor sit amet consectetur. Duis ornare velit vitae lacus ipsum euismod. Nullam ultricies risus ut leo. Massa rhoncus mauris egestas duis nulla arcu in semper tortor. Sagittis suspendisse ultricies.Lorem ipsum dolor sit amet consectetur. Duis ornare velit vitae lacus ipsum euismod. Nullam 
-                                    </div>
+                            <RenderIf condition={serviceRequest !== undefined && serviceRequest?.comment?.length > 0}>
+                                <div className="grid grid-cols-2 gap-6">
+                                    {
+                                        serviceRequest?.comment?.map((item) => 
+                                            <div key={item?._id} className="flex flex-col gap-2 rounded-lg border border-input-filled py-4 px-5">
+                                                <h2 className="text-sm text-grey-dark-3">{pascalCaseToWords(RequestStatus[item?.status])} Info</h2>
+                                                <p className="test-sm text-grey-dark-2"><span className="capitalize">{format(item?.createdAt, "dd MMM, yyyy")}</span> • {format(item?.createdAt, "p")}</p>
+                                                <div className="test-sm text-grey-dark-2">
+                                                    {item?.body}
+                                                </div>
+                                            </div>
+                                        )
+                                    }
                                 </div>
-                                <div className="flex flex-col gap-2 rounded-lg border border-input-filled py-4 px-5">
-                                    <h2 className="text-sm text-grey-dark-3">In-progress info</h2>
-                                    <p className="test-sm text-grey-dark-2">Today • 12:34pm</p>
-                                    <div className="test-sm text-grey-dark-2">
-                                        Lorem ipsum dolor sit amet consectetur. Duis ornare velit vitae lacus ipsum euismod. Nullam ultricies risus ut leo. Massa rhoncus mauris egestas duis nulla arcu in semper tortor. Sagittis suspendisse ultricies.Lorem ipsum dolor sit amet consectetur. Duis ornare velit vitae lacus ipsum euismod. Nullam 
-                                    </div>
-                                </div>
-                            </div>
+                            </RenderIf>
                         </div>
                     </div>
                     <UpdateRequestModal isOpen={toggleModals.openUpdateRequestModal} close={toggleUpdateRequestStation} request={serviceRequest!} />

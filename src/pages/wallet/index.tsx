@@ -10,7 +10,7 @@ import { useLocation, useSearchParams } from "react-router-dom";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { useGetWalletStats, useGetWalletTransactions } from "@/services/hooks/queries";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
-import { FetchedWalletTransaction, FetchedWalletTransactionCount, WalletStatus } from "@/types/wallet";
+import { FetchedWalletStatsCount, FetchedWalletTransaction, FetchedWalletTransactionCount, WalletStatus } from "@/types/wallet";
 
 export const WalletPage: React.FC = () => {
     const location = useLocation();
@@ -18,7 +18,7 @@ export const WalletPage: React.FC = () => {
     const [page, setPage] = useState(1)
     const [searchParams, setSearchParams] = useSearchParams();
     const [component] = useState<"count" | "count-status">("count")
-    const { isFetching: fetchingStats } = useGetWalletStats({ user_type: "organization" })
+    const { data: walletInfo, isFetching: fetchingStats } = useGetWalletStats({ user_type: "organization" })
     const { data: count, isFetching: fetchingCount } = useGetWalletTransactions({ component, wallet_type: "organization-wallet" })
     const { data: transactions, isFetching } = useGetWalletTransactions({ wallet_type: "organization-wallet" })
 
@@ -95,7 +95,7 @@ export const WalletPage: React.FC = () => {
 
     const trips = useMemo(() => {
         return [
-            { label: "Wallet balance", value: formattedNumber((count as FetchedWalletTransactionCount)?.balance || 0), color: "bg-[#F8F9FB]" },
+            { label: "Wallet balance", value: formattedNumber((walletInfo as FetchedWalletStatsCount)?.credit_amount - (walletInfo as FetchedWalletStatsCount)?.debit_amount), color: "bg-[#F8F9FB]" },
             { label: "Count", value: (count as FetchedWalletTransactionCount)?.total ?? 0, color: "bg-green-4" },
         ]
     },[])
