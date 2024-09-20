@@ -65,7 +65,7 @@ export const TopVehicles: React.FC<TopVehiclesDashboardProps> = ({ className, da
                                                     key={item.value}
                                                     className="group relative flex flex-1 whitespace-nowrap items-center gap-2 cursor-pointer rounded bg-transparent py-2.5 px-2 text-grey-dark-2 transition duration-300 ease-out focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[checked]:bg-green-3 data-[checked]:font-medium data-[checked]:text-dark-green-1"
                                                 >
-                                                    <RadioButton name="date" checked={selected?.value === item.value} />
+                                                    <RadioButton name="date" checked={selected?.value === item.value} value={item} onChange={() => setSelected(item)} />
                                                     {item.label}
                                                 </Radio>
                                             ))}

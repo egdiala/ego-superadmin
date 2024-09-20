@@ -2,10 +2,10 @@ import React, { Fragment, useMemo, useState } from "react";
 import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
-import { Button, RadioButton, RenderIf, TableAction } from "@/components/core";
-import type { FetchedRatingCountOne } from "@/types/ratings";
-import { CloseButton, Popover, PopoverBackdrop, PopoverButton, PopoverPanel, Radio, RadioGroup } from "@headlessui/react";
 import { Loader } from "@/components/core/Button/Loader";
+import type { FetchedRatingCountOne } from "@/types/ratings";
+import { Button, RadioButton, RenderIf, TableAction } from "@/components/core";
+import { CloseButton, Popover, PopoverBackdrop, PopoverButton, PopoverPanel, Radio, RadioGroup } from "@headlessui/react";
 
 interface RatingsDashboardProps {
     data: FetchedRatingCountOne[];
@@ -33,9 +33,10 @@ export const Ratings: React.FC<RatingsDashboardProps> = ({ className, data, filt
             rating,
             total,
         }));
-    },[data])
+    }, [data])
+
     const computeWidth = (value: number) => {
-        const totalRating = data?.reduce((sum, rating) => sum + rating?.total, 0)
+        const totalRating = ratings?.reduce((sum, rating) => sum + rating?.total, 0)
         return (value/totalRating) * 100
     }
 
@@ -91,7 +92,7 @@ export const Ratings: React.FC<RatingsDashboardProps> = ({ className, data, filt
                                                     key={item.value}
                                                     className="group relative flex flex-1 whitespace-nowrap items-center gap-2 cursor-pointer rounded bg-transparent py-2.5 px-2 text-grey-dark-2 transition duration-300 ease-out focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[checked]:bg-green-3 data-[checked]:font-medium data-[checked]:text-dark-green-1"
                                                 >
-                                                    <RadioButton name="date" checked={selected?.value === item.value} />
+                                                    <RadioButton name="date" checked={selected?.value === item.value} value={item} onChange={() => setSelected(item)} />
                                                     {item.label}
                                                 </Radio>
                                             ))}
@@ -123,7 +124,7 @@ export const Ratings: React.FC<RatingsDashboardProps> = ({ className, data, filt
                         <div key={id} className="flex items-center gap-3">
                             <span className="text-sm text-grey-dark-2">{rating?.rating}</span>
                             <div className="flex-1 h-2 rounded-full bg-green-4">
-                                <motion.div className="h-2 rounded-full bg-green-1" initial={{ width: "0%" }} whileInView={{ width: `${computeWidth(rating?.total)}%` }} transition={{ ease: "linear", duration: 1 }}  />
+                                <motion.div className="h-2 rounded-full bg-green-1" initial={{ width: "0%" }} whileInView={{ width: `${computeWidth(rating?.total) || 0}%` }} transition={{ ease: "linear", duration: 1 }}  />
                             </div>
                             <span className="text-base text-grey-dark-1">{rating?.total}</span>
                         </div>
