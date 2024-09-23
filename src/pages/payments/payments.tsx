@@ -1,45 +1,21 @@
-import React, { useState } from "react";
+import React, { Fragment } from "react";
+import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
+import { NavLink, Outlet } from "react-router-dom";
 import { pageVariants } from "@/constants/animateVariants";
-import { SearchInput, Table, TableAction } from "@/components/core";
-import { cn } from "@/libs/cn";
+import { RenderIf, SearchInput, TableAction } from "@/components/core";
 
 export const PaymentLogPage: React.FC = () => {
-    const itemsPerPage = 10;
-    const [page] = useState(1)
-
-    const columns = [
-        {
-            header: () => "Date & Time",
-            accessorKey: "createdAt",
-        },
-        {
-            header: () => "Business Name",
-            accessorKey: "firstName",
-        },
-        {
-            header: () => "Model",
-            accessorKey: "model",
-        },
-        {
-            header: () => "Amount",
-            accessorKey: "amount",
-        },
-        {
-            header: () => "Status",
-            accessorKey: "status",
-        },
-    ];
-
-    const handlePageChange = () => {
-      // in a real page, this function would paginate the data from the backend
-      
-    };
 
     const trips = [
         { label: "Amount", value: "₦0", color: "bg-[#F8F9FB]" },
         { label: "Count", value: "0", color: "bg-green-4" },
+    ]
+  
+    const subRoutes = [
+        { name: "Lease Model", link: "/payment-log/lease" },
+        { name: "Staff Commute Model", link: "/payment-log/staff-commute" },
     ]
   
     return (
@@ -73,14 +49,23 @@ export const PaymentLogPage: React.FC = () => {
                         )
                     }
                 </div>
-                <Table
-                    data={[]}
-                    page={page}
-                    columns={columns}
-                    perPage={itemsPerPage}
-                    totalCount={[].length}
-                    onPageChange={handlePageChange}
-                />
+                <div className="rounded border-2 border-grey-dark-4 p-1 flex items-center gap-2 w-full overflow-scroll scrollbar-hide">
+                    {
+                        subRoutes.map((route, idx) => 
+                            <Fragment key={route.link}>
+                                <NavLink to={route.link} className="flex w-full">
+                                {({ isActive }) => (
+                                    <div className={cn("text-center py-1 px-5 flex-1 rounded whitespace-nowrap text-sm", isActive ? "bg-green-1 text-white font-semibold" : "hover:bg-light-green")}>
+                                        {route.name}
+                                    </div>
+                                )}
+                                </NavLink>
+                                <RenderIf condition={(subRoutes.length - 1) !== idx}><div className="h-full rounded w-0 block border-r border-r-input-filled" /></RenderIf>
+                            </Fragment>
+                        )
+                    }
+                </div>
+                <Outlet />
             </div>
         </motion.div>
     )
