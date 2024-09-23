@@ -98,7 +98,7 @@ export const WalletPage: React.FC = () => {
             { label: "Wallet balance", value: formattedNumber((walletInfo as FetchedWalletStatsCount)?.credit_amount - (walletInfo as FetchedWalletStatsCount)?.debit_amount), color: "bg-[#F8F9FB]" },
             { label: "Count", value: (count as FetchedWalletTransactionCount)?.total ?? 0, color: "bg-green-4" },
         ]
-    },[])
+    },[count, walletInfo])
   
     return (
         <Fragment>

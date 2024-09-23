@@ -7,6 +7,8 @@ import { ModuleListItem, RenderIf } from "@/components/core";
 import { appRoutes, financeRoutes, setupRoutes } from "@/constants/routes";
 import "./sidebar.css";
 import { cn } from "@/libs/cn";
+import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/react";
+import { Icon } from "@iconify/react";
 
 interface SidebarProps {
     showSidebar: boolean;
@@ -54,34 +56,54 @@ export const Sidebar: React.FC<SidebarProps> = ({ showSidebar }) => {
                         </div>
                     </RenderIf>
                     <RenderIf condition={useHasAnyPermission(financeRoutes)}>
-                        <div data-slot="section" className="grid gap-1">
-                            <div className="text-dark-green-1 pl-3 font-medium uppercase text-[0.625rem]/3">Finance</div>
-                            {
-                                financePermissions.map((route) => {
-                                    const { hasPermission, route: { ...rest } } = route;
-                                    return (
-                                        <RenderIf key={rest?.to} condition={hasPermission}>
-                                            <ModuleListItem {...rest} />
-                                        </RenderIf>
-                                    )
-                                })
-                            }
-                        </div>
+                        <Disclosure>
+                            <DisclosureButton className="flex items-center py-2.5 px-3 group">
+                                <div className="flex flex-1 items-center gap-2">
+                                    <Icon icon="lucide:badge-dollar-sign" className="text-grey-dark-2 hover:text-grey-dark-1 group-data-[open]:text-grey-dark-1 size-4" />
+                                    <span className="font-medium text-sm text-grey-dark-2 hover:text-grey-dark-1 group-data-[open]:text-grey-dark-1">Finance</span>
+                                </div>
+                                <Icon icon="lucide:chevron-right" className="size-4 transition transform ease-out duration-500 group-data-[open]:-rotate-90 text-grey-dark-3 hover:text-dark-green-1 group-data-[open]:text-dark-green-1" />
+                            </DisclosureButton>
+                            <DisclosurePanel transition className="origin-top transition duration-500 ease-out data-[closed]:-translate-y-6 data-[closed]:opacity-0 text-gray-500">
+                                <div data-slot="section" className="grid gap-1 pt-1">
+                                    {
+                                        financePermissions.map((route) => {
+                                            const { hasPermission, route: { ...rest } } = route;
+                                            return (
+                                                <RenderIf key={rest?.to} condition={hasPermission}>
+                                                    <ModuleListItem {...rest} />
+                                                </RenderIf>
+                                            )
+                                        })
+                                    }
+                                </div>
+                            </DisclosurePanel>
+                        </Disclosure>
                     </RenderIf>
                     <RenderIf condition={useHasAnyPermission(setupRoutes)}>
-                        <div data-slot="section" className="grid gap-1">
-                            <div className="text-dark-green-1 pl-3 font-medium uppercase text-[0.625rem]/3">Setup</div>
-                            {
-                                setupPermissions.map((route) => {
-                                    const { hasPermission, route: { ...rest } } = route;
-                                    return (
-                                        <RenderIf key={rest?.to} condition={hasPermission}>
-                                            <ModuleListItem {...rest} />
-                                        </RenderIf>
-                                    )
-                                })
-                            }
-                        </div>
+                        <Disclosure>
+                            <DisclosureButton className="flex items-center py-2.5 px-3 group">
+                                <div className="flex flex-1 items-center gap-2">
+                                    <Icon icon="lucide:bolt" className="text-grey-dark-2 hover:text-grey-dark-1 group-data-[open]:text-grey-dark-1 size-4" />
+                                    <span className="font-medium text-sm text-grey-dark-2 hover:text-grey-dark-1 group-data-[open]:text-grey-dark-1">Setup</span>
+                                </div>
+                                <Icon icon="lucide:chevron-right" className="size-4 transition transform ease-out duration-500 group-data-[open]:-rotate-90 text-grey-dark-3 hover:text-dark-green-1 group-data-[open]:text-dark-green-1" />
+                            </DisclosureButton>
+                            <DisclosurePanel transition className="origin-top transition duration-500 ease-out data-[closed]:-translate-y-6 data-[closed]:opacity-0 text-gray-500">
+                                <div data-slot="section" className="grid gap-1 pt-1">
+                                    {
+                                        setupPermissions.map((route) => {
+                                            const { hasPermission, route: { ...rest } } = route;
+                                            return (
+                                                <RenderIf key={rest?.to} condition={hasPermission}>
+                                                    <ModuleListItem {...rest} />
+                                                </RenderIf>
+                                            )
+                                        })
+                                    }
+                                </div>
+                            </DisclosurePanel>
+                        </Disclosure>
                     </RenderIf>
                 </div>
                 <Link to="/profile" className="flex items-center gap-2">
