@@ -1,13 +1,14 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { pageVariants } from "@/constants/animateVariants";
 import { RenderIf, SearchInput, TableAction } from "@/components/core";
 
 export const PaymentLogPage: React.FC = () => {
-
+    const location = useLocation();
+    const navigate = useNavigate();
     const trips = [
         { label: "Amount", value: "₦0", color: "bg-[#F8F9FB]" },
         { label: "Count", value: "0", color: "bg-green-4" },
@@ -18,6 +19,11 @@ export const PaymentLogPage: React.FC = () => {
         { name: "Staff Commute Model", link: "/payment-log/staff-commute" },
     ]
   
+    useEffect(() => {
+        if (location.pathname === "/payment-log") {
+            navigate("/payment-log/lease")
+        }
+    },[location.pathname])
     return (
         <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">
             <h1 className="text-grey-dark-1 font-bold text-2xl md:text-[2rem]">Payment Log</h1>
