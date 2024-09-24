@@ -18,3 +18,11 @@ export interface FetchCommutePaymentsQuery {
     item_per_page?: string;
     component?: "count"
 }
+
+export interface FetchedLeaseReceivable {
+    total_invoice: number;
+    total_expected: number;
+    total_remitted: number;
+    created: string;
+    total_org: number;
+}

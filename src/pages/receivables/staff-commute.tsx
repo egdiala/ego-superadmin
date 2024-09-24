@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
+import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
-import { SearchInput, Table, TableAction } from "@/components/core";
+import { useGetCommutePayments } from "@/services/hooks/queries";
+import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 
 export const StaffCommuteReceivablesPage: React.FC = () => {
     const itemsPerPage = 10;
     const [page] = useState(1)
+    const { data: receivables, isFetching: fetchingReceivables } = useGetCommutePayments<any[]>({ request_type: "1", status: "0" })
 
     const columns = [
         {
@@ -50,14 +53,19 @@ export const StaffCommuteReceivablesPage: React.FC = () => {
                     </TableAction>
                 </div>
             </div>
-            <Table
-                data={[]}
-                page={page}
-                columns={columns}
-                perPage={itemsPerPage}
-                totalCount={[].length}
-                onPageChange={handlePageChange}
-            />
+            <RenderIf condition={!fetchingReceivables}>
+                <Table
+                    data={receivables ?? []}
+                    page={page}
+                    columns={columns}
+                    perPage={itemsPerPage}
+                    totalCount={[].length}
+                    onPageChange={handlePageChange}
+                />
+            </RenderIf>
+            <RenderIf condition={fetchingReceivables}>
+                <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
+            </RenderIf>
         </motion.div>
     )
 }

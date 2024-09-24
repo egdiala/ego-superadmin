@@ -4,11 +4,11 @@ import { getCommutePayments, getLeasePayments } from "@/services/apis/payment";
 import { GET_COMMUTE_PAYMENTS, GET_LEASE_PAYMENTS } from "@/constants/queryKeys";
 import type { FetchCommutePaymentsQuery, FetchLeasePaymentsQuery } from "@/types/payment";
 
-export const useGetLeasePayments = (query: FetchLeasePaymentsQuery) => {
+export const useGetLeasePayments = <T>(query: FetchLeasePaymentsQuery) => {
   return useQuery({
     queryKey: [GET_LEASE_PAYMENTS, query],
     queryFn: () => getLeasePayments(query),
-    select: (res) => res?.data as any,
+    select: (res) => res?.data as T,
     retry: false,
     refetchOnWindowFocus: false,
     throwOnError(error) {
@@ -18,11 +18,11 @@ export const useGetLeasePayments = (query: FetchLeasePaymentsQuery) => {
   });
 };
 
-export const useGetCommutePayments = (query: FetchCommutePaymentsQuery) => {
+export const useGetCommutePayments = <T>(query: FetchCommutePaymentsQuery) => {
   return useQuery({
     queryKey: [GET_COMMUTE_PAYMENTS, query],
     queryFn: () => getCommutePayments(query),
-    select: (res) => res?.data as any,
+    select: (res) => res?.data as T,
     retry: false,
     refetchOnWindowFocus: false,
     throwOnError(error) {
