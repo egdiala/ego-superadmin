@@ -28,6 +28,10 @@ export const GET_SERVICE_REQUEST = "get-service-request"
 export const GET_ORGANIZATIONS = "get-organizations"
 export const GET_ORGANIZATION = "get-organization"
 
+// Payments
+export const GET_LEASE_PAYMENTS = "get-lease-payments"
+export const GET_COMMUTE_PAYMENTS = "get-commute-payments"
+
 // Trips
 export const GET_TRIPS = "get-trips"
 export const GET_TRIP = "get-trip"

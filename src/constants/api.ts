@@ -35,6 +35,10 @@ export const BULK_UPLOAD_VEHICLES_API = "admin/vehicles/bulk-vehicle-upload"
 export const GET_ORGANIZATIONS_API = "admin/organizations"
 export const SUSPEND_ORGANIZATION_API = "admin/organizations/suspend-account"
 
+// Payments
+export const GET_LEASE_SERVICE_PAYMENT_API = "admin/payments/service-payment-lease"
+export const GET_COMMUTE_SERVICE_PAYMENT_API = "admin/payments/service-payment-staffcommute"
+
 // Trips
 export const GET_TRIPS_API = "admin/trips"
 export const GET_TRIP_DATA_STATS_API = "admin/trips/data-stats"
