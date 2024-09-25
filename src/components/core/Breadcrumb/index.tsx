@@ -30,7 +30,7 @@ export const Breadcrumb = ({ items, showBack = false }: BreadcrumbProps) => {
   // Determine the items to display based on the length of the items array
   let displayItems: BreadcrumbItem[];
   if (items.length >= 4) {
-    displayItems = items.slice(-2); // Display the last two items
+    displayItems = items.slice(-3); // Display the last two items
   } else {
     displayItems = items;
   }

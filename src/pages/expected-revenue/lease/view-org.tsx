@@ -5,28 +5,29 @@ import { motion } from "framer-motion";
 import { formattedNumber } from "@/utils/textFormatter";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
-import { useGetCommutePayments } from "@/services/hooks/queries";
-import { Link, useLocation, useParams, useSearchParams } from "react-router-dom";
-import { FetchedReceivableCount, SingleCommuteReceivable } from "@/types/payment";
+import { useGetLeasePayments, useGetOrganization } from "@/services/hooks/queries";
+import { useLocation, useParams, useSearchParams } from "react-router-dom";
+import { FetchedReceivableCount, SingleLeaseOrg } from "@/types/payment";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { Breadcrumb, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 
 
-export const ViewStaffCommuteExpectedRevenuePage: React.FC = () => {
+export const LeaseExpectedRevenueOrgPage: React.FC = () => {
     const location = useLocation();
-    const { id } = useParams()
+    const { id, orgId } = useParams()
     const itemsPerPage = 10;
     const [page, setPage] = useState(1)
     const [searchParams, setSearchParams] = useSearchParams();
-    const { data: count, isFetching: fetchingReceivablesCount } = useGetCommutePayments<FetchedReceivableCount>({ request_type: "2", start_date: id, end_date: id, component: "count" })
-    const { data: receivables, isFetching: fetchingReceivables } = useGetCommutePayments<SingleCommuteReceivable[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), request_type: "2", start_date: id, end_date: id })
+    const { data: organization, isFetching: fetchingOrg } = useGetOrganization(orgId as string)
+    const { data: count, isFetching: fetchingReceivablesCount } = useGetLeasePayments<FetchedReceivableCount>({ request_type: "3", start_date: id, end_date: id, organization_id: orgId, component: "count" })
+    const { data: receivables, isFetching: fetchingReceivables } = useGetLeasePayments<SingleLeaseOrg[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), request_type: "3", start_date: id, end_date: id, organization_id: orgId })
 
     const columns = [
         {
             header: () => "Date & Time",
             accessorKey: "created",
             cell: ({ row }: { row: any; }) => {
-                const item = row?.original as SingleCommuteReceivable
+                const item = row?.original as SingleLeaseOrg
                 return (
                     <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{format(item?.created, "dd MMM, yyyy")}</span> • 11:59 pm</div>
                 )
@@ -34,15 +35,15 @@ export const ViewStaffCommuteExpectedRevenuePage: React.FC = () => {
         },
         {
             header: () => "Plate Number",
-            accessorKey: "vehicle_data.plate_number",
+            accessorKey: "plate_number",
         },
         {
-            header: () => "Total Km Covered",
-            accessorKey: "total_km",
+            header: () => "Daily Service Obligation",
+            accessorKey: "total_obligation",
             cell: ({ row }: { row: any; }) => {
-                const item = row?.original as SingleCommuteReceivable
+                const item = row?.original as SingleLeaseOrg
                 return (
-                    <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap">{item?.total_km.toLocaleString("en-US")} Km</div>
+                    <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap">{formattedNumber(item?.total_obligation)}</div>
                 )
             }
         },
@@ -50,42 +51,22 @@ export const ViewStaffCommuteExpectedRevenuePage: React.FC = () => {
             header: () => "Additional Km (if any)",
             accessorKey: "excess_km",
             cell: ({ row }: { row: any; }) => {
-                const item = row?.original as SingleCommuteReceivable
+                const item = row?.original as SingleLeaseOrg
                 return (
                     <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap">{item?.excess_km.toLocaleString("en-US")} Km</div>
                 )
             }
         },
         {
-            header: () => "Expected Revenue",
+            header: () => "Total Amount due",
             accessorKey: "total_expected",
             cell: ({ row }: { row: any; }) => {
-                const item = row?.original as SingleCommuteReceivable
+                const item = row?.original as SingleLeaseOrg
                 return (
                     <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap">{formattedNumber(item?.total_expected)}</div>
                 )
             }
-        },
-        {
-            header: () => "Remitted Revenue",
-            accessorKey: "total_remitted",
-            cell: ({ row }: { row: any; }) => {
-                const item = row?.original as SingleCommuteReceivable
-                return (
-                    <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap">{formattedNumber(item?.total_remitted)}</div>
-                )
-            }
-        },
-        {
-            header: () => "Action",
-            accessorKey: "action",
-            cell: ({ row }: { row: any; }) => {
-                const item = row?.original as SingleCommuteReceivable
-                return (
-                    <Link className="text-dark-green-1 font-medium text-sm underline underline-offset-2" to={`/revenue/staff-commute/${item?.created}/${item?.vehicle_data?._id}`}>View</Link>
-                )
-            }
-        },
+        }
     ];
 
     const handlePageChange = (page: number) => {
@@ -100,7 +81,7 @@ export const ViewStaffCommuteExpectedRevenuePage: React.FC = () => {
 
     return (
         <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">
-            <Breadcrumb items={[{ label: "Expected Revenue", link: "/revenue/staff-commute" }, { label: "Staff Commute", link: "/revenue/staff-commute" }, { label: `${formatRelative(id as string, new Date()).split(" at ").at(0)} • 11:59 PM invoices`, link: `/revenue/staff-commute/${id}` }]} showBack />
+            <Breadcrumb items={[{ label: "Expected Revenue", link: "/revenue/lease" }, { label: "Lease", link: "/revenue/lease" }, { label: `${formatRelative(id as string, new Date()).split(" at ").at(0)} • 11:59 PM invoices`, link: `/revenue/lease/${id}` }, { label: organization?.name!, link: `/revenue/lease/${id}/${orgId}` }]} showBack />
             <div className="grid content-start gap-4 py-6 px-4 bg-white rounded-lg">
                 <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
                     <div className="w-full md:w-1/3 xl:w-1/4">
@@ -118,7 +99,7 @@ export const ViewStaffCommuteExpectedRevenuePage: React.FC = () => {
                         </TableAction>
                     </div>
                 </div>
-                <RenderIf condition={!fetchingReceivables && !fetchingReceivablesCount}>
+                <RenderIf condition={!fetchingReceivables && !fetchingReceivablesCount && !fetchingOrg}>
                     <Table
                         data={receivables ?? []}
                         page={page}
@@ -128,7 +109,7 @@ export const ViewStaffCommuteExpectedRevenuePage: React.FC = () => {
                         onPageChange={handlePageChange}
                     />
                 </RenderIf>
-                <RenderIf condition={fetchingReceivables || fetchingReceivablesCount}>
+                <RenderIf condition={fetchingReceivables || fetchingReceivablesCount || fetchingOrg}>
                     <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
                 </RenderIf>
             </div>

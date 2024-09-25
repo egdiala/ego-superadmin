@@ -50,6 +50,17 @@ export interface SingleCommuteReceivable extends Omit<SingleLeaseReceivable, "us
     }
 }
 
+export interface SingleLeaseOrg {
+    vehicle_id: string;
+    status: number;
+    total_expected: number;
+    total_obligation: number;
+    created: string;
+    excess_km: number;
+    total_km: number;
+    plate_number: string;
+}
+
 export interface FetchedReceivableCount {
     total: number;
 }
