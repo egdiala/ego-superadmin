@@ -26,3 +26,16 @@ export interface FetchedLeaseReceivable {
     created: string;
     total_org: number;
 }
+
+export interface SingleLeaseReceivable extends Omit<FetchedLeaseReceivable, "total_org"> {
+    excess_km: number;
+    total_km: number;
+    user_orgs: {
+        name: string;
+        auth_id: string;
+    }
+}
+
+export interface FetchedReceivableCount {
+    total: number;
+}
