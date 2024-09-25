@@ -2,11 +2,11 @@ export const pascalCaseToWords = (pascalCaseString: string): string => {
     return pascalCaseString.replace(/([A-Z])/g, " $1").trim();
 }
 
-export const formattedNumber = (number: number) => {
+export const formattedNumber = (number: number, options?: Intl.NumberFormatOptions) => {
     return new Intl.NumberFormat("en-NG", {
         style: "currency",
         currency: "NGN",
-        minimumFractionDigits: 0, // Optional: remove decimals if you don't want cents
+        ...options
     }).format(number);
 }
 

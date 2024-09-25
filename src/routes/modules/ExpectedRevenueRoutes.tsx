@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { ExpectedRevenuePage, LeaseExpectedRevenuePage, StaffCommuteExpectedRevenuePage } from "@/pages/expected-revenue";
+import { ExpectedRevenuePage, LeaseExpectedRevenuePage, StaffCommuteExpectedRevenuePage, ViewLeaseExpectedRevenuePage, ViewStaffCommuteExpectedRevenuePage } from "@/pages/expected-revenue";
 
 const ExpectedRevenueRoutes = () => {
     return (
@@ -8,6 +8,8 @@ const ExpectedRevenueRoutes = () => {
                 <Route path="lease" element={<LeaseExpectedRevenuePage />} />
                 <Route path="staff-commute" element={<StaffCommuteExpectedRevenuePage />} />
             </Route>
+            <Route path="lease/:id" element={<ViewLeaseExpectedRevenuePage />} />
+            <Route path="staff-commute/:id" element={<ViewStaffCommuteExpectedRevenuePage />} />
         </Routes>
     );
 };

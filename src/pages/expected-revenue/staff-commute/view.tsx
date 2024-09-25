@@ -6,43 +6,83 @@ import { formattedNumber } from "@/utils/textFormatter";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useGetCommutePayments } from "@/services/hooks/queries";
-import { useLocation, useParams, useSearchParams } from "react-router-dom";
-import { FetchedReceivableCount, SingleLeaseReceivable } from "@/types/payment";
+import { Link, useLocation, useParams, useSearchParams } from "react-router-dom";
+import { FetchedReceivableCount, SingleCommuteReceivable } from "@/types/payment";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { Breadcrumb, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 
 
-export const ViewStaffCommuteReceivablesPage: React.FC = () => {
+export const ViewStaffCommuteExpectedRevenuePage: React.FC = () => {
     const location = useLocation();
     const { id } = useParams()
     const itemsPerPage = 10;
     const [page, setPage] = useState(1)
     const [searchParams, setSearchParams] = useSearchParams();
-    const { data: count, isFetching: fetchingReceivablesCount } = useGetCommutePayments<FetchedReceivableCount>({ request_type: "2", status: "0", start_date: id, end_date: id, component: "count" })
-    const { data: receivables, isFetching: fetchingReceivables } = useGetCommutePayments<SingleLeaseReceivable[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), request_type: "2", status: "0", start_date: id, end_date: id })
+    const { data: count, isFetching: fetchingReceivablesCount } = useGetCommutePayments<FetchedReceivableCount>({ request_type: "2", start_date: id, end_date: id, component: "count" })
+    const { data: receivables, isFetching: fetchingReceivables } = useGetCommutePayments<SingleCommuteReceivable[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), request_type: "2", start_date: id, end_date: id })
 
     const columns = [
         {
             header: () => "Date & Time",
             accessorKey: "created",
             cell: ({ row }: { row: any; }) => {
-                const item = row?.original as SingleLeaseReceivable
+                const item = row?.original as SingleCommuteReceivable
                 return (
                     <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{format(item?.created, "dd MMM, yyyy")}</span> • 11:59 pm</div>
                 )
             }
         },
         {
-            header: () => "Business / Staff name",
-            accessorKey: "user_orgs.name",
+            header: () => "Plate Number",
+            accessorKey: "vehicle_data.plate_number",
         },
         {
-            header: () => "Total amount being owed",
+            header: () => "Total Km Covered",
+            accessorKey: "total_km",
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as SingleCommuteReceivable
+                return (
+                    <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap">{item?.total_km.toLocaleString("en-US")} Km</div>
+                )
+            }
+        },
+        {
+            header: () => "Additional Km (if any)",
+            accessorKey: "excess_km",
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as SingleCommuteReceivable
+                return (
+                    <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap">{item?.excess_km.toLocaleString("en-US")} Km</div>
+                )
+            }
+        },
+        {
+            header: () => "Expected Revenue",
             accessorKey: "total_expected",
             cell: ({ row }: { row: any; }) => {
-                const item = row?.original as SingleLeaseReceivable
+                const item = row?.original as SingleCommuteReceivable
                 return (
-                    <div className="text-sm text-grey-dark-2 whitespace-nowrap">{formattedNumber(item?.total_expected)}</div>
+                    <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap">{formattedNumber(item?.total_expected)}</div>
+                )
+            }
+        },
+        {
+            header: () => "Remitted Revenue",
+            accessorKey: "total_remitted",
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as SingleCommuteReceivable
+                return (
+                    <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap">{formattedNumber(item?.total_remitted)}</div>
+                )
+            }
+        },
+        {
+            header: () => "Action",
+            accessorKey: "action",
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as SingleCommuteReceivable
+                return (
+                    <Link className="text-dark-green-1 font-medium text-sm underline underline-offset-2" to={`/revenue/lease/${item?.created}/${item?.vehicle_data?._id}`}>View</Link>
                 )
             }
         },
@@ -60,7 +100,7 @@ export const ViewStaffCommuteReceivablesPage: React.FC = () => {
 
     return (
         <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">
-            <Breadcrumb items={[{ label: "Receivables", link: "/receivables" }, { label: "Staff Commute", link: "/receivables/staff-commute" }, { label: `${formatRelative(id as string, new Date()).split(" at ").at(0)} • 11:59 PM invoices`, link: `/receivables/staff-commute/${id}` }]} showBack />
+            <Breadcrumb items={[{ label: "Expected Revenue", link: "/revenue/staff-commute" }, { label: "Staff Commute", link: "/revenue/staff-commute" }, { label: `${formatRelative(id as string, new Date()).split(" at ").at(0)} • 11:59 PM invoices`, link: `/revenue/staff-commute/${id}` }]} showBack />
             <div className="grid content-start gap-4 py-6 px-4 bg-white rounded-lg">
                 <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
                     <div className="w-full md:w-1/3 xl:w-1/4">

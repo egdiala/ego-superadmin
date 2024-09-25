@@ -1,3 +1,5 @@
 export * from "./expected-revenue"
 export * from "./lease"
+export * from "./lease/view"
 export * from "./staff-commute"
+export * from "./staff-commute/view"

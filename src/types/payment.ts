@@ -27,12 +27,26 @@ export interface FetchedLeaseReceivable {
     total_org: number;
 }
 
+export interface FetchedCommuteRevenue {
+    total_trip: number;
+    total_expected: number;
+    total_remitted: number;
+    created: string;
+}
+
 export interface SingleLeaseReceivable extends Omit<FetchedLeaseReceivable, "total_org"> {
     excess_km: number;
     total_km: number;
     user_orgs: {
         name: string;
         auth_id: string;
+    }
+}
+
+export interface SingleCommuteReceivable extends Omit<SingleLeaseReceivable, "user_orgs"> {
+    vehicle_data: {
+        _id: string;
+        plate_number: string;
     }
 }
 
