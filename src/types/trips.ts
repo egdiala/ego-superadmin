@@ -3,6 +3,7 @@ import type { Coordinate } from "./vehicles";
 export interface FetchTripsQuery {
     q?: string; // Search for plate number
     user_type?: "rider" | "driver" | "organization"
+    charge_status?: "1" | "2" | "5" // 1=successful, 2=unsuccessful, 5=invalid
     auth_id?: string;
     page?: string;
     item_per_page?: string;
@@ -36,6 +37,7 @@ export interface FetchedTripType {
         driver_id: string;
         avatar: string;
         car_number_plate: string;
+        plate_number: string;
         car_model: string;
         rating: number;
         phone_number: string;

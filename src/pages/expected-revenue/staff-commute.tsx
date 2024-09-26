@@ -32,7 +32,7 @@ export const StaffCommuteExpectedRevenuePage: React.FC = () => {
             }
         },
         {
-            header: () => "Total No. of Trips",
+            header: () => "Total No. of Vehicles",
             accessorKey: "total_trip",
         },
         {

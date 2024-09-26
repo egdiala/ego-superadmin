@@ -37,24 +37,8 @@ export const ViewStaffCommuteExpectedRevenuePage: React.FC = () => {
             accessorKey: "vehicle_data.plate_number",
         },
         {
-            header: () => "Total Km Covered",
-            accessorKey: "total_km",
-            cell: ({ row }: { row: any; }) => {
-                const item = row?.original as SingleCommuteReceivable
-                return (
-                    <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap">{item?.total_km.toLocaleString("en-US")} Km</div>
-                )
-            }
-        },
-        {
-            header: () => "Additional Km (if any)",
-            accessorKey: "excess_km",
-            cell: ({ row }: { row: any; }) => {
-                const item = row?.original as SingleCommuteReceivable
-                return (
-                    <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap">{item?.excess_km.toLocaleString("en-US")} Km</div>
-                )
-            }
+            header: () => "Total Trips",
+            accessorKey: "total_trip"
         },
         {
             header: () => "Expected Revenue",
