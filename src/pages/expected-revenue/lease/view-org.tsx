@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { format, formatRelative } from "date-fns";
-import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
+import { format, formatRelative } from "date-fns";
 import { formattedNumber } from "@/utils/textFormatter";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
-import { useGetLeasePayments, useGetOrganization } from "@/services/hooks/queries";
-import { useLocation, useParams, useSearchParams } from "react-router-dom";
+import { Breadcrumb, RenderIf, Table } from "@/components/core";
 import { FetchedReceivableCount, SingleLeaseOrg } from "@/types/payment";
+import { useLocation, useParams, useSearchParams } from "react-router-dom";
+import { useGetLeasePayments, useGetOrganization } from "@/services/hooks/queries";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
-import { Breadcrumb, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 
 
 export const LeaseExpectedRevenueOrgPage: React.FC = () => {
@@ -83,22 +82,7 @@ export const LeaseExpectedRevenueOrgPage: React.FC = () => {
         <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">
             <Breadcrumb items={[{ label: "Expected Revenue", link: "/revenue/lease" }, { label: "Lease", link: "/revenue/lease" }, { label: `${formatRelative(id as string, new Date()).split(" at ").at(0)} • 11:59 PM invoices`, link: `/revenue/lease/${id}` }, { label: organization?.name!, link: `/revenue/lease/${id}/${orgId}` }]} showBack />
             <div className="grid content-start gap-4 py-6 px-4 bg-white rounded-lg">
-                <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
-                    <div className="w-full md:w-1/3 xl:w-1/4">
-                        <SearchInput placeholder="Search reference" />
-                    </div>
-                
-                    <div className="flex items-center gap-2 w-full sm:w-auto">
-                        <TableAction type="button" theme="ghost" block>
-                            <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-                            Export
-                        </TableAction>
-                        <TableAction type="button" theme="secondary" block>
-                            <Icon icon="mdi:funnel" className="size-4" />
-                            Filter
-                        </TableAction>
-                    </div>
-                </div>
+                <h1 className="font-bold text-xl text-grey-dark-1">{organization?.name}</h1>
                 <RenderIf condition={!fetchingReceivables && !fetchingReceivablesCount && !fetchingOrg}>
                     <Table
                         data={receivables ?? []}

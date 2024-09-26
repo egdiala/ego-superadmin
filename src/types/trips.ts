@@ -8,6 +8,7 @@ export interface FetchTripsQuery {
     item_per_page?: string;
     start_date?: string;
     end_date?: string;
+    vehicle_id?: string;
     component?: "count" | "count-status" | "count-status-rider" | "count-status-driver" | "count-monthly";
 }
 

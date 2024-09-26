@@ -3,11 +3,11 @@ import { cn } from "@/libs/cn";
 import { LineChart, TableAction } from "@/components/core";
 import { Icon } from "@iconify/react";
 
-interface CustomerTotalTripsProps {
+interface CustomerTotalPaymentsProps {
     [key: PropertyKey]: any
 }
 
-export const CustomerTotalTrips: React.FC<CustomerTotalTripsProps> = ({ className }) => {
+export const CustomerTotalPayments: React.FC<CustomerTotalPaymentsProps> = ({ className }) => {
     const data = [
         {
             "id": "completed",
@@ -212,7 +212,7 @@ export const CustomerTotalTrips: React.FC<CustomerTotalTripsProps> = ({ classNam
         <div className={cn("flex flex-col p-4 gap-10 rounded-lg border border-[#E1E4E6] min-h-96", className)}>
             <div className="flex items-start justify-between">
                 <div className="p-2 grid gap-1 bg-portal-bg rounded-lg w-fit">
-                    <h4 className="text-grey-dark-3 text-xs">Total Trip Request</h4>
+                    <h4 className="text-grey-dark-3 text-xs">Total Trip Payments</h4>
                     <span className="text-grey-dark-1 text-xl">0</span>
                 </div>
                 <TableAction theme="ghost">

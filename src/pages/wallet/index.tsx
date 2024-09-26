@@ -20,7 +20,7 @@ export const WalletPage: React.FC = () => {
     const [component] = useState<"count" | "count-status">("count")
     const { data: walletInfo, isFetching: fetchingStats } = useGetWalletStats({ user_type: "organization" })
     const { data: count, isFetching: fetchingCount } = useGetWalletTransactions({ component, wallet_type: "organization-wallet" })
-    const { data: transactions, isFetching } = useGetWalletTransactions({ wallet_type: "organization-wallet" })
+    const { data: transactions, isFetching } = useGetWalletTransactions({ page: page.toString(), item_per_page: itemsPerPage.toString(), wallet_type: "organization-wallet" })
 
     const columns = [
         {
