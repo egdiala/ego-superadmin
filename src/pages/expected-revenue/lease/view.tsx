@@ -67,7 +67,7 @@ export const ViewLeaseExpectedRevenuePage: React.FC = () => {
             }
         },
         {
-            header: () => "Remitted Revenue",
+            header: () => "Amount Paid (Remitted)",
             accessorKey: "total_remitted",
             cell: ({ row }: { row: any; }) => {
                 const item = row?.original as SingleLeaseReceivable

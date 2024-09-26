@@ -46,7 +46,7 @@ export const StaffCommuteExpectedRevenuePage: React.FC = () => {
             }
         },
         {
-            header: () => "Remitted amount or Paid amount",
+            header: () => "Amount Paid (Remitted)",
             accessorKey: "total_remitted",
             cell: ({ row }: { row: any; }) => {
                 const item = row?.original as FetchedCommuteRevenue

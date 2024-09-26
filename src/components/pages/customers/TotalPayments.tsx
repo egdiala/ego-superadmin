@@ -10,7 +10,7 @@ interface CustomerTotalPaymentsProps {
 export const CustomerTotalPayments: React.FC<CustomerTotalPaymentsProps> = ({ className }) => {
     const data = [
         {
-            "id": "completed",
+            "id": "successful",
             "color": "hsla(93, 100%, 29%, 1)",
             "data": [
             {
@@ -76,73 +76,7 @@ export const CustomerTotalPayments: React.FC<CustomerTotalPaymentsProps> = ({ cl
             ]
         },
         {
-            "id": "pending",
-            "color": "hsla(41, 100%, 44%, 1)",
-            "data": [
-            {
-                "xFormatted": "January",
-                "x": "Jan",
-                "y": 37
-            },
-            {
-                "xFormatted": "February",
-                "x": "Feb",
-                "y": 39
-            },
-            {
-                "xFormatted": "March",
-                "x": "Mar",
-                "y": 51
-            },
-            {
-                "xFormatted": "April",
-                "x": "Apr",
-                "y": 327
-            },
-            {
-                "xFormatted": "May",
-                "x": "May",
-                "y": 50
-            },
-            {
-                "xFormatted": "June",
-                "x": "Jun",
-                "y": 57
-            },
-            {
-                "xFormatted": "July",
-                "x": "Jul",
-                "y": 42
-            },
-            {
-                "xFormatted": "August",
-                "x": "Aug",
-                "y": 369
-            },
-            {
-                "xFormatted": "September",
-                "x": "Sep",
-                "y": 43
-            },
-            {
-                "xFormatted": "October",
-                "x": "Oct",
-                "y": 66
-            },
-            {
-                "xFormatted": "November",
-                "x": "Nov",
-                "y": 122
-            },
-            {
-                "xFormatted": "December",
-                "x": "Dec",
-                "y": 219
-            }
-            ]
-        },
-        {
-            "id": "cancelled",
+            "id": "unsuccessful",
             "color": "hsla(4, 80%, 48%, 1)",
             "data": [
             {
@@ -241,9 +175,8 @@ export const CustomerTotalPayments: React.FC<CustomerTotalPaymentsProps> = ({ cl
                     }, [point.data.x, point.serieId])
                     
                     const colors = {
-                        "completed": "bg-green-1",
-                        "pending": "bg-semantics-amber",
-                        "cancelled": "bg-semantics-error"
+                        "successful": "bg-green-1",
+                        "unsuccessful": "bg-semantics-error"
                     }
                     return (
                         <div className="relative bg-grey-dark-1 py-2 px-3.5 flex flex-col gap-1.5 rounded text-white">
