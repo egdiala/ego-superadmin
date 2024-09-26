@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { format } from "date-fns";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
+import { formattedNumber } from "@/utils/textFormatter";
+import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
-import { useLocation, useSearchParams } from "react-router-dom";
-import { SearchInput, Table, TableAction } from "@/components/core";
+import { useGetLeasePayments } from "@/services/hooks/queries";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { FetchedLeasePayment, FetchedReceivableCount } from "@/types/payment";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 
 export const InvoicesPage: React.FC = () => {
@@ -11,32 +16,52 @@ export const InvoicesPage: React.FC = () => {
     const itemsPerPage = 10;
     const [page, setPage] = useState(1)
     const [searchParams, setSearchParams] = useSearchParams();
-    // const [component] = useState<"count" | "count-status">("count")
+    const { data: count, isFetching: fetchingInvoicesCount } = useGetLeasePayments<FetchedReceivableCount>({ request_type: "2", component: "count" })
+    const { data: invoices, isFetching: fetchingInvoices } = useGetLeasePayments<FetchedLeasePayment[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), request_type: "2" })
 
     const columns = [
         {
             header: () => "Date & Time",
-            accessorKey: "createdAt",
+            accessorKey: "created",
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as FetchedLeasePayment
+                return (
+                    <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{format(item?.created, "dd MMM, yyyy")}</span> • 11:59 pm</div>
+                )
+            }
         },
         {
-            header: () => "Business name/staff name",
-            accessorKey: "transaction_id",
+            header: () => "Business name",
+            accessorKey: "user_orgs.name",
         },
         {
             header: () => "Business model",
-            accessorKey: "description",
+            accessorKey: "model",
+            cell: () => {
+                return (
+                    <div className="text-sm text-grey-dark-2 whitespace-nowrap">Lease</div>
+                )
+            }
         },
         {
             header: () => "Invoiced amount",
-            accessorKey: "business_name",
-        },
-        {
-            header: () => "Status",
-            accessorKey: "transaction_type",
+            accessorKey: "total_expected",
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as FetchedLeasePayment
+                return (
+                    <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap">{formattedNumber(item?.total_expected)}</div>
+                )
+            }
         },
         {
             header: () => "Action",
-            accessorKey: "payment_method",
+            accessorKey: "action",
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as FetchedLeasePayment
+                return (
+                    <Link className="text-dark-green-1 font-medium text-sm underline underline-offset-2" to={`/revenue/lease/${item?.created}/${item?.user_orgs?.auth_id}`}>View</Link>
+                )
+            }
         },
     ];
 
@@ -70,15 +95,20 @@ export const InvoicesPage: React.FC = () => {
                         </TableAction>
                     </div>
                 </div>
-                <Table
-                    columns={columns}
-                    data={[]}
-                    page={page}
-                    perPage={itemsPerPage}
-                    totalCount={[].length}
-                    onPageChange={handlePageChange}
-                    emptyStateText="We couldn't find any invoices."
-                />
+                <RenderIf condition={!fetchingInvoices && !fetchingInvoicesCount}>
+                    <Table
+                        columns={columns}
+                        data={invoices ?? []}
+                        page={page}
+                        perPage={itemsPerPage}
+                        totalCount={count?.total}
+                        onPageChange={handlePageChange}
+                        emptyStateText="We couldn't find any invoices."
+                    />
+                </RenderIf>
+                <RenderIf condition={fetchingInvoices || fetchingInvoicesCount}>
+                    <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
+                </RenderIf>
             </div>
         </motion.div>
     )
