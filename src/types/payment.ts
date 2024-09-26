@@ -6,7 +6,7 @@ export interface FetchLeasePaymentsQuery {
     end_date?: string;
     page?: string;
     item_per_page?: string;
-    component?: "count"
+    component?: "count" | "count-status"
 }
 
 export interface FetchCommutePaymentsQuery {
@@ -16,7 +16,13 @@ export interface FetchCommutePaymentsQuery {
     end_date?: string;
     page?: string;
     item_per_page?: string;
-    component?: "count"
+    component?: "count" | "count-status"
+}
+
+export interface PaymentCountStatus {
+    _id: string | null;
+    total_amount: number;
+    total_count: number;
 }
 
 export interface FetchedLeaseReceivable {
@@ -59,6 +65,31 @@ export interface SingleLeaseOrg {
     excess_km: number;
     total_km: number;
     plate_number: string;
+}
+
+export interface FetchedLeasePayment {
+    total_invoice: number;
+    total_expected: number;
+    created: string;
+    excess_km: number;
+    total_km: number;
+    total_remitted: number;
+    user_orgs: {
+        name: string;
+        auth_id: string;
+    }
+}
+
+export interface FetchedCommutePayment {
+    vehicle_id: string;
+    total_trip: number;
+    total_expected: number;
+    created: string;
+    total_remitted: number;
+    vehicle_data: {
+        _id: string;
+        plate_number: string;
+    }
 }
 
 export interface FetchedReceivableCount {
