@@ -15,7 +15,6 @@ export const financeRoutes = [
     { to:"/invoices", name:"Invoices", icon:"" },
     { to:"/payment-log", name:"Payment Log", icon:"" },
     { to:"/receivables", name:"Receivables", icon:"" },
-    { to:"/outstanding-payment-log", name:"Outstanding Payment Log", icon:"" },
 ]
 
 export const setupRoutes = [

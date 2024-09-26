@@ -7,7 +7,6 @@ import ProtectedLayout from "@/layouts/ProtectedLayout";
 import { AccountsLayout } from "@/pages/accounts/Accounts";
 import { AccountsPage, RolesPage } from "@/pages/accounts";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import { OutstandingPaymentLogPage, OutstandingPaymentPage } from "@/pages/outstanding-payments";
 import { AuthRoutes, ChargeStationsRoutes, CustomersRoutes, DashboardRoutes, DriversRoutes, ExpectedRevenueRoutes, FeesRoutes, PaymentLogRoutes, ReceivablesRoutes, RevenueSplitRoutes, RidersRoutes, RolesRoutes, ServiceRequestsRoutes, TripsRoutes, VehiclesRoutes } from "./modules";
 import { InvoicesPage } from "@/pages/invoices";
 
@@ -39,8 +38,6 @@ const Router = () => {
                 <Route path="payment-log/*" element={<ProtectedLayout><LocationProvider><PaymentLogRoutes /></LocationProvider></ProtectedLayout>} />
                 <Route path="receivables/*" element={<ProtectedLayout><LocationProvider><ReceivablesRoutes /></LocationProvider></ProtectedLayout>} />
                 <Route path="revenue/*" element={<ProtectedLayout><LocationProvider><ExpectedRevenueRoutes /></LocationProvider></ProtectedLayout>} />
-                <Route path="outstanding-payment-log" element={<ProtectedLayout><LocationProvider><OutstandingPaymentLogPage /></LocationProvider></ProtectedLayout>} />
-                <Route path="outstanding-payment-log/:id" element={<ProtectedLayout><LocationProvider><OutstandingPaymentPage /></LocationProvider></ProtectedLayout>} />
                 <Route path="revenue-split/*" element={<ProtectedLayout><LocationProvider><RevenueSplitRoutes /></LocationProvider></ProtectedLayout>} />
                 <Route path="fees/*" element={<ProtectedLayout><LocationProvider><FeesRoutes /></LocationProvider></ProtectedLayout>} />
                 <Route path="service-request/*" element={<ProtectedLayout><LocationProvider><ServiceRequestsRoutes /></LocationProvider></ProtectedLayout>} />
