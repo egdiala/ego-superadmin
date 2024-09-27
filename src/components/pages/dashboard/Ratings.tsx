@@ -49,7 +49,6 @@ export const Ratings: React.FC<RatingsDashboardProps> = ({ className, data, filt
             label: "Riders",
             value: "rider",
         },
-        { label: "Organizations", value: "organization" },
     ];
 
     const [selected, setSelected] = useState(userTypeFilters.find((item) => item?.value === filters?.user_type))
@@ -76,7 +75,7 @@ export const Ratings: React.FC<RatingsDashboardProps> = ({ className, data, filt
                         as="section"
                         transition
                         anchor="bottom end"
-                        className="bg-white p-6 rounded origin-top-right flex flex-col gap-5 w-[26rem] transition duration-300 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
+                        className="bg-white p-6 rounded origin-top-right flex flex-col gap-5 w-96 transition duration-300 ease-out data-[closed]:scale-95 data-[closed]:opacity-0"
                     >
                         {({ close }) => (
                             <Fragment>

@@ -73,8 +73,8 @@ export const TripMap: React.FC<TripMapProps> = ({ data }) => {
                 // Add custom green marker for pickup location
                 const pickupMarker = document.createElement("div");
                 pickupMarker.style.backgroundColor = "#55B648";
-                pickupMarker.style.width = "15px";
-                pickupMarker.style.height = "15px";
+                pickupMarker.style.width = "13px";
+                pickupMarker.style.height = "13px";
                 pickupMarker.style.border = "2px solid";
                 pickupMarker.style.borderColor = "white";
                 pickupMarker.style.borderRadius = "50%";
@@ -89,8 +89,8 @@ export const TripMap: React.FC<TripMapProps> = ({ data }) => {
                 // Add custom red marker for destination location
                 const destinationMarker = document.createElement("div");
                 destinationMarker.style.backgroundColor = "#DD2418";
-                destinationMarker.style.width = "15px";
-                destinationMarker.style.height = "15px";
+                destinationMarker.style.width = "13px";
+                destinationMarker.style.height = "13px";
                 destinationMarker.style.border = "2px solid";
                 destinationMarker.style.borderColor = "white";
                 destinationMarker.style.borderRadius = "50%";
@@ -110,8 +110,19 @@ export const TripMap: React.FC<TripMapProps> = ({ data }) => {
     },[data?.ride_data?.end_address, data?.ride_data?.start_address, destinationLocation, pickupLocation]);
 
     return (
-        <div ref={mapContainer} id="tripMapBox" className="flex justify-center items-center overflow-hidden rounded-lg h-52 w-full">
-
+        <div className="flex relative justify-center items-center overflow-hidden rounded-lg h-52 w-full">
+            <div ref={mapContainer} id="tripMapBox" className="flex h-52 w-full">
+            </div>
+            <div className="bg-white absolute grid gap-2 top-2 left-2 p-3 rounded-lg">
+                <div className="flex items-center gap-2">
+                    <span className="size-1.5 bg-[#55B648] rounded-full" />
+                    <span className="text-xs text-grey-dark-2 w-60 line-clamp-1">{data?.ride_data?.start_address}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className="size-1.5 bg-semantics-error rounded-full" />
+                    <span className="text-xs text-grey-dark-2 w-60 line-clamp-1">{data?.ride_data?.end_address}</span>
+                </div>
+            </div>
         </div>
     );
 };

@@ -7,6 +7,7 @@ import { formattedNumber } from "@/utils/textFormatter";
 import { Loader } from "@/components/core/Button/Loader";
 import { Button, EmptyState, RadioButton, RenderIf, TableAction } from "@/components/core";
 import { CloseButton, Popover, PopoverBackdrop, PopoverButton, PopoverPanel, Radio, RadioGroup } from "@headlessui/react";
+import { Link } from "react-router-dom";
 
 interface TopCommutersDashboardProps {
     data: TopRidersType[]
@@ -94,14 +95,14 @@ export const TopCommuters: React.FC<TopCommutersDashboardProps> = ({ className, 
             <div className="grid gap-6">
                 {
                     data?.map((rider, id) =>
-                    <div key={id} className="flex items-center justify-between">
+                    <Link key={id} className="flex items-center justify-between" to={`/riders/${rider?.auth_id}/profile`}>
                         <div className="flex items-center gap-1">
                             <span className="text-sm text-grey-dark-1">{id + 1}.</span>
                             <img src={rider?.user_data?.avatar || blankImg} alt={rider?.user_data?.first_name ?? `user-${id}`} className="object-cover object-center size-7 rounded-full" />
                             <span className="text-sm text-grey-dark-2">{rider?.user_data?.first_name ?? ""} {rider?.user_data?.last_name ?? ""}</span>
                         </div>
                         <span className="text-sm text-grey-dark-1">{filters?.request_type === "trip" ? rider?.total : formattedNumber(rider?.total)}</span>
-                    </div>
+                    </Link>
                     )
                 }
             </div>

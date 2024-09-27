@@ -1,7 +1,6 @@
 import React, { useMemo } from "react";
 import { cn } from "@/libs/cn";
-import { PieChart, TableAction } from "@/components/core";
-import { Icon } from "@iconify/react";
+import { PieChart } from "@/components/core";
 import { FetchedDriverCountStatus } from "@/types/drivers";
 
 interface TotalDriversDashboardProps {
@@ -26,10 +25,6 @@ export const TotalDrivers: React.FC<TotalDriversDashboardProps> = ({ className, 
                     <h4 className="text-grey-dark-2 text-xs">Total Drivers</h4>
                     <span className="text-grey-dark-1 text-xl">{data?.total}</span>
                 </div>
-                <TableAction theme="ghost">
-                    <Icon icon="mdi:funnel" className="size-4" />
-                    Filter
-                </TableAction>
             </div>
             <div className="grid content-center md:grid-cols-2 gap-6">
                 <PieChart

@@ -7,6 +7,7 @@ import { formattedNumber } from "@/utils/textFormatter";
 import { Loader } from "@/components/core/Button/Loader";
 import { Button, EmptyState, RadioButton, RenderIf, TableAction } from "@/components/core";
 import { CloseButton, Popover, PopoverBackdrop, PopoverButton, PopoverPanel, Radio, RadioGroup } from "@headlessui/react";
+import { Link } from "react-router-dom";
 
 interface TopVehiclesDashboardProps {
     data: TopVehiclesType[]
@@ -94,14 +95,14 @@ export const TopVehicles: React.FC<TopVehiclesDashboardProps> = ({ className, da
             <div className="grid gap-5">
                 {
                     data?.map((vehicle, id) =>
-                    <div key={id} className="flex items-center justify-between">
+                    <Link key={id} className="flex items-center justify-between" to={`/vehicles/${vehicle?.auth_id}/profile`}>
                         <div className="flex items-center gap-2">
                             <span className="text-sm text-grey-dark-1">{id + 1}.</span>
                             <img src={whiteCar} alt={vehicle?.user_data?.plate_number} className="object-cover object-center w-8 rounded-full" />
                             <span className="text-sm text-grey-dark-2">{vehicle?.user_data?.plate_number}</span>
                         </div>
                         <span className="text-sm text-grey-dark-1">{filters?.request_type === "trip" ? vehicle?.total : formattedNumber(vehicle?.total)}</span>
-                    </div>
+                    </Link>
                     )
                 }
             </div>
