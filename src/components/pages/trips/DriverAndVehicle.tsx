@@ -1,6 +1,9 @@
 import React from "react";
 import { Icon } from "@iconify/react";
 import vehicleSvg from "@/assets/vehicle.svg"
+import { PurchaseModel } from "@/types/organizations";
+import { RenderIf } from "@/components/core";
+import { cn } from "@/libs/cn";
 
 interface TripDriverAndVehicleProps {
     data: {
@@ -12,6 +15,7 @@ interface TripDriverAndVehicleProps {
         car_model: string;
         rating: number;
         phone_number: string;
+        purchase_model: number;
         email: string;
         name: string;
         pickup_distance: number;
@@ -31,7 +35,7 @@ export const TripDriverAndVehicle: React.FC<TripDriverAndVehicleProps> = ({ data
     return (
         <div className="flex flex-col h-fit gap-6 py-4 px-5 rounded-lg border border-input-filled">
             <h1 className="text-grey-dark-1 text-base font-semibold">Driver & Vehicle</h1>
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className={cn("grid gap-6", data?.purchase_model === PurchaseModel.Lease ? "grid-cols-2 lg:grid-cols-3" : "grid-cols-1 lg:grid-cols-2")}>
                 <div className="flex items-center gap-2">
                     <img
                         alt={data?.name}
@@ -48,13 +52,13 @@ export const TripDriverAndVehicle: React.FC<TripDriverAndVehicleProps> = ({ data
                 </div>
                 {
                     infos.map((info) =>
-                        <div key={info.label} className="grid gap-1">
+                        <div key={info.label} className="grid gap-1 content-start">
                             <h3 className="text-grey-dark-3 text-sm">{info.label}</h3>
                             <p className="text-grey-dark-1 font-medium text-sm">{info.value}</p>
                         </div>
                     )
                 }
-                <div className="flex flex-col items-start gap-2">
+                <div className="flex items-start gap-2">
                     <img
                         alt={data?.plate_number}
                         className="h-9 w-20"
@@ -65,6 +69,7 @@ export const TripDriverAndVehicle: React.FC<TripDriverAndVehicleProps> = ({ data
                         <p className="text-sm text-grey-dark-2">{data?.car_model}</p>
                     </div>
                 </div>
+                <RenderIf condition={data?.purchase_model === PurchaseModel.Lease}>
                 {
                     information.map((info) =>
                         <div key={info.label} className="grid gap-1">
@@ -73,6 +78,7 @@ export const TripDriverAndVehicle: React.FC<TripDriverAndVehicleProps> = ({ data
                         </div>
                     )
                 }
+                </RenderIf>
             </div>
         </div>
     )

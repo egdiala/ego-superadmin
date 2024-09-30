@@ -20,6 +20,7 @@ export const DashboardPage: React.FC = () => {
     const [topDriversFilter, setTopDriversFilter] = useState<{ request_type: "trip" | "revenue";  }>({ request_type: "trip" })
     const [topRidersFilter, setTopRidersFilter] = useState<{ request_type: "trip" | "revenue";  }>({ request_type: "trip" })
     const [topVehiclesFilter, setTopVehiclesFilter] = useState<{ request_type: "trip" | "revenue";  }>({ request_type: "trip" })
+    // const [tripStatsFilter, setTripStatsFilter] = useState<{ start_date: string; end_date: string;  }>({ start_date: "2024-01-01", end_date: "2024-09-26" })
     
     const { data: customerCount, isFetching: fetchingCustomers } = useGetOrganizations({ component: "count-status" })
     const { data: vehiclesCount, isFetching: fetchingVehicles } = useGetVehicles({ component: "count-status" })
@@ -29,6 +30,7 @@ export const DashboardPage: React.FC = () => {
     const { data: topDrivers, isFetching: fetchingDriverRank } = useGetRanks<TopDriversType[]>({ user_type: "top-driver", ...topDriversFilter })
     const { data: topRiders, isFetching: fetchingRiderRank } = useGetRanks<TopRidersType[]>({ user_type: "top-rider", ...topRidersFilter })
     const { data: topVehicles, isFetching: fetchingVehicleRank } = useGetRanks<TopVehiclesType[]>({ user_type: "top-vehicles", ...topVehiclesFilter })
+    // const { data: tripStats, isFetching: fetchingTripStats } = useGetTrips({ component: "count-monthly", ...tripStatsFilter })
 
     const isFetchingAll = useMemo(() => {
         const loadingStates = [fetchingCustomers, fetchingVehicles, fetchingServiceRequests, fetchingDrivers, fetchingRatings, fetchingDriverRank, fetchingRiderRank, fetchingVehicleRank]

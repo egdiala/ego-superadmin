@@ -1,5 +1,6 @@
 import { RenderIf } from "@/components/core";
 import { cn } from "@/libs/cn";
+import { PurchaseModel } from "@/types/organizations";
 import { FetchedSingleTrip } from "@/types/trips";
 import { formatTime } from "@/utils/textFormatter";
 import { differenceInSeconds, format } from "date-fns";
@@ -22,6 +23,7 @@ export const TripInfo: React.FC<TripInfoProps> = ({ data }) => {
         { label: "Trip End Time", value: data?.ride_data?.end_trip_at ? `${format(data?.ride_data?.end_trip_at, "dd MMM, yyyy")} • ${format(data?.ride_data?.end_trip_at, "p")}` : "" },
         { label: "Total Trip Distance", value: `${data?.ride_data?.total_distance}km` },
         { label: "Actual Time Spent", value: formatTime(differenceInSeconds(data?.ride_data?.end_trip_at as Date,  data?.ride_data?.start_trip_at as Date) || 0) },
+        (data?.org_data?.purchase_model === PurchaseModel.StaffCommute && ({ label: "Waiting Time", value: formatTime(data?.ride_data?.waiting_time) })),
     ]
     return (
         <div className="flex flex-col h-fit gap-6 py-4 px-5 rounded-lg border border-input-filled">
@@ -33,7 +35,7 @@ export const TripInfo: React.FC<TripInfoProps> = ({ data }) => {
             </div>
             <div className="grid grid-cols-3 gap-6">
             {
-                infos.map((info) =>
+                infos.filter((item) => item !== false).map((info) =>
                     <RenderIf condition={!!info.value}>
                         <div key={info.label} className="grid gap-1">
                             <h3 className="text-grey-dark-3 text-sm">{info.label}</h3>

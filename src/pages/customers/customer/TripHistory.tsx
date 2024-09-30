@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
@@ -11,6 +11,7 @@ import { pageVariants } from "@/constants/animateVariants";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { cn } from "@/libs/cn";
 
 export const CustomerTripHistoryPage: React.FC = () => {
     const params = useParams();
@@ -64,6 +65,12 @@ export const CustomerTripHistoryPage: React.FC = () => {
       {
         header: () => "Pickup",
         accessorKey: "ride_data.start_address",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedTripType
+          return (
+            <div className="text-sm text-grey-dark-2 capitalize whitespace-nowrap">{item?.ride_data?.start_address}</div>
+          )
+        }
       },
       {
         header: () => "Drop off",
@@ -71,13 +78,23 @@ export const CustomerTripHistoryPage: React.FC = () => {
         cell: ({ row }: { row: any; }) => {
           const item = row?.original as FetchedTripType
           return (
-            <div className="text-sm text-grey-dark-2 capitalize whitespace-nowrap">{item?.ride_data?.stop_location?.at(item?.ride_data?.stop_location?.length - 1)?.address}</div>
+            <div className="text-sm text-grey-dark-2 capitalize whitespace-nowrap">{item?.ride_data?.stop_location?.at(item?.ride_data?.stop_location?.length - 1)?.address || item?.ride_data?.end_address}</div>
           )
         }
       },
       {
         header: () => "Status",
         accessorKey: "ride_data.status",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedTripType
+          const black = ["ENROUTE_TO_DROPOFF",]
+          const blue = ["PICKED_RIDER",]
+          const green = ["REQUEST_ACCEPTED",  "ARRIVED_AT_PICKUP", "COMPLETED"]
+          const red = ["CANCELED"]
+          return (
+            <div className={cn("text-sm line-clamp-2 capitalize font-medium", green.includes(item?.ride_status) && "text-green-1", red.includes(item?.ride_status) && "text-semantics-error", blue.includes(item?.ride_status) && "text-[#0073C4]", black.includes(item?.ride_status) && "text-grey-dark-1" )}>{item?.ride_status.split("_").join(" ").toLowerCase()}</div>
+          )
+        }
       },
     ];
 
@@ -92,8 +109,6 @@ export const CustomerTripHistoryPage: React.FC = () => {
     }, [location])
     
     return (
-      <Fragment>
-        <RenderIf condition={!isFetching && !fetchingCount}>
           <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-4 pt-4">
               <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
                   <div className="w-full md:w-1/3 xl:w-1/4">
@@ -113,22 +128,21 @@ export const CustomerTripHistoryPage: React.FC = () => {
                       </div>
                   </div>
               </div>
-              <Table
-                page={page}
-                columns={columns}
-                perPage={itemsPerPage}
-                data={(driverTrips as FetchedTripType[]) ?? []}
-                onPageChange={handlePageChange}
-                totalCount={(count as any)?.total}
-                emptyStateText="There are no trips for this customer."
-                onClick={({ original }) => navigate(`/trips/${original?.trip_id}`)}
-              />
+              <RenderIf condition={!isFetching && !fetchingCount}>
+                <Table
+                  page={page}
+                  columns={columns}
+                  perPage={itemsPerPage}
+                  data={(driverTrips as FetchedTripType[]) ?? []}
+                  onPageChange={handlePageChange}
+                  totalCount={(count as any)?.total}
+                  emptyStateText="There are no trips for this customer."
+                  onClick={({ original }) => navigate(`/trips/${original?.trip_id}`)}
+                />
+              </RenderIf>
+            <RenderIf condition={isFetching || fetchingCount}>
+              <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
+            </RenderIf>
           </motion.div>
-        </RenderIf>
-
-        <RenderIf condition={isFetching || fetchingCount}>
-          <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
-        </RenderIf>
-      </Fragment>
     )
 }

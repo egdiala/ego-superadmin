@@ -11,6 +11,8 @@ import type { FetchedTripCountStatus, FetchedTripType } from "@/types/trips";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { pascalCaseToWords } from "@/utils/textFormatter";
+import { PurchaseModel } from "@/types/organizations";
 
 export const DriverTripsPage: React.FC = () => {
     const params = useParams();
@@ -41,24 +43,49 @@ export const DriverTripsPage: React.FC = () => {
         accessorKey: "trip_ref",
       },
       {
-        header: () => "Trip Req. ID.",
-        accessorKey: "trip_id",
-      },
-      {
-        header: () => "Payment Model",
-        accessorKey: "ride_data.payment_method",
-      },
-      {
-        header: () => "Payment Status",
-        accessorKey: "ride_data.charge_data.status",
-      },
-      {
         header: () => "Business Name",
         accessorKey: "org_data.name",
       },
       {
+        header: () => "Model",
+        accessorKey: "org_data.purchase_model",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedTripType
+          return (
+            <div className="text-sm text-grey-dark-2 whitespace-nowrap">{pascalCaseToWords(PurchaseModel[item?.org_data?.purchase_model] ?? "-") ?? "-"}</div>
+          )
+        }
+      },
+      {
         header: () => "Requester",
         accessorKey: "ride_data.name",
+      },
+      {
+        header: () => "Payment Mode",
+        accessorKey: "ride_data.payment_method",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedTripType
+          return (
+            <div className="capitalize">{item?.ride_data?.payment_method}</div>
+          )
+        }
+      },
+      {
+        header: () => "Payment Status",
+        accessorKey: "ride_data.charge_data.status",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedTripType
+          return (
+            <div className={cn("text-sm text-grey-dark-2 capitalize whitespace-nowrap", item?.ride_data?.charge_data?.status === "pending" && "text-semantics-amber", item?.ride_data?.charge_data?.status === "yes" && "text-semantics-success")}>
+              <RenderIf condition={item?.ride_data?.charge_data?.status === "pending"}>
+                {item?.ride_data?.charge_data?.status}
+              </RenderIf>
+              <RenderIf condition={item?.ride_data?.charge_data?.status === "yes"}>
+                Successful
+              </RenderIf>
+            </div>
+          )
+        }
       },
       {
         header: () => "Status",

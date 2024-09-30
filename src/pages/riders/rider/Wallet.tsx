@@ -39,16 +39,28 @@ export const RiderWalletPage: React.FC = () => {
         accessorKey: "transaction_id",
       },
       {
-        header: () => "Transaction type",
+        header: () => "Transaction Type",
         accessorKey: "transaction_type",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedWalletTransaction
+          return (
+            <div className={cn("text-sm whitespace-nowrap", item?.status === 1 ? "text-dark-green-1" : "text-semantics-error")}>{item?.status === 1 ? "Credit" : "Debit"}</div>
+          )
+        }
       },
       {
         header: () => "Description",
         accessorKey: "description",
       },
       {
-        header: () => "Model",
+        header: () => "Mode",
         accessorKey: "payment_method",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedWalletTransaction
+          return (
+            <div className="capitalize">{item?.payment_method}</div>
+          )
+        }
       },
       {
         header: () => "Amount",

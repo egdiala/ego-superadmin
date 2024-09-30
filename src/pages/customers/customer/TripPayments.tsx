@@ -72,7 +72,14 @@ export const CustomerTripPaymentPage: React.FC = () => {
           const item = row?.original as FetchedTripType
           const status = item?.ride_data?.charge_data?.status
           return (
-            <div className={cn("text-sm font-medium capitalize whitespace-nowrap", status === "pending" && "text-semantics-amber", status !== "pending" && "text-grey-dark-2")}>{status}</div>
+            <div className={cn("text-sm text-grey-dark-2 capitalize whitespace-nowrap", status === "pending" && "text-semantics-amber", status === "yes" && "text-semantics-success")}>
+              <RenderIf condition={status === "pending"}>
+                {status}
+              </RenderIf>
+              <RenderIf condition={status === "yes"}>
+                Successful
+              </RenderIf>
+            </div>
           )
         }
       },

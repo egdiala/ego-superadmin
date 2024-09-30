@@ -9,7 +9,7 @@ import { useLocation, useParams, useSearchParams } from "react-router-dom";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { useGetWalletStats, useGetWalletTransactions } from "@/services/hooks/queries";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
-import { FetchedWalletTransaction, FetchedWalletTransactionCount, FetchedWalletTransactionCountStatus } from "@/types/wallet";
+import { FetchedWalletTransaction, FetchedWalletTransactionCount } from "@/types/wallet";
 
 export const CustomerWalletPage: React.FC = () => {
     const params = useParams();
@@ -19,7 +19,6 @@ export const CustomerWalletPage: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [component] = useState<"count" | "count-status">("count")
     const { data, isFetching: fetchingStats } = useGetWalletStats({ user_type: "organization", auth_id: params?.id as string })
-    const { data: countStatus, isFetching: fetchingCountStatus } = useGetWalletTransactions({ component: "balance", wallet_type: "organization-wallet", auth_id: params?.id as string })
     const { data: count, isFetching: fetchingCount } = useGetWalletTransactions({ component, wallet_type: "organization-wallet", auth_id: params?.id as string })
     const { data: transactions, isFetching } = useGetWalletTransactions({ wallet_type: "organization-wallet", auth_id: params?.id as string })
 
@@ -29,8 +28,14 @@ export const CustomerWalletPage: React.FC = () => {
         accessorKey: "createdAt",
       },
       {
-        header: () => "Transaction type",
+        header: () => "Transaction Type",
         accessorKey: "transaction_type",
+        cell: ({ row }: { row: any; }) => {
+          const item = row?.original as FetchedWalletTransaction
+          return (
+            <div className={cn("text-sm whitespace-nowrap", item?.status === 1 ? "text-dark-green-1" : "text-semantics-error")}>{item?.status === 1 ? "Credit" : "Debit"}</div>
+          )
+        }
       },
       {
         header: () => "Description",
@@ -70,15 +75,15 @@ export const CustomerWalletPage: React.FC = () => {
 
     const trips = useMemo(() => {
       return [
-          { label: "Wallet balance", value: formattedNumber((countStatus as FetchedWalletTransactionCountStatus)?.balance ?? 0), color: "bg-[#F8F9FB]" },
+          { label: "Wallet balance", value: formattedNumber((data?.credit_amount ?? 0) - (data?.debit_amount ?? 0)), color: "bg-[#F8F9FB]" },
           { label: "Inflow", value: formattedNumber(data?.credit_amount! ?? 0), color: "bg-[#F6FBF6]" },
           { label: "Outflow", value: formattedNumber(data?.debit_amount! ?? 0), color: "bg-[#FDF2F2]" },
       ]
-    }, [countStatus, data?.credit_amount, data?.debit_amount])
+    }, [data?.credit_amount, data?.debit_amount])
     
     return (
       <Fragment>
-        <RenderIf condition={!isFetching && !fetchingCount && !fetchingCountStatus && !fetchingStats}>
+        <RenderIf condition={!isFetching && !fetchingCount && !fetchingStats}>
           <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-4">
               <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
                   {
@@ -120,7 +125,7 @@ export const CustomerWalletPage: React.FC = () => {
               />
           </motion.div>
         </RenderIf>
-        <RenderIf condition={isFetching || fetchingCount || fetchingCountStatus || fetchingStats}>
+        <RenderIf condition={isFetching || fetchingCount || fetchingStats}>
           <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
         </RenderIf>
       </Fragment>
