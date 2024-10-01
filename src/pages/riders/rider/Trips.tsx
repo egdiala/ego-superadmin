@@ -13,6 +13,7 @@ import type { FetchedRiderTripCountStatus, FetchedTripType } from "@/types/trips
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { TripsFilter } from "@/components/pages/trips";
 
 export const RiderTripsPage: React.FC = () => {
     const params = useParams();
@@ -22,10 +23,14 @@ export const RiderTripsPage: React.FC = () => {
     const [page, setPage] = useState(1)
     const { value, onChangeHandler } = useDebounce(500)
     const [searchParams, setSearchParams] = useSearchParams();
+    const [filters, setFilters] = useState({
+      start_date: "",
+      end_date: ""
+    })
     const [component] = useState<"count" | "count-status-rider" | "count-status">("count")
     const { data: countStatus, isFetching: fetchingCountStatus } = useGetTrips({ component: "count-status-rider", user_type: "rider", auth_id: params?.id as string })
-    const { data: count, isFetching: fetchingCount } = useGetTrips({ component, user_type: "rider", auth_id: params?.id as string })
-    const { data: riderTrips, isFetching } = useGetTrips({ user_type: "rider", auth_id: params?.id as string, page: page.toString(), item_per_page: itemsPerPage.toString(), q: value })
+    const { data: count, isFetching: fetchingCount } = useGetTrips({ component, user_type: "rider", auth_id: params?.id as string, ...filters })
+    const { data: riderTrips, isFetching } = useGetTrips({ user_type: "rider", auth_id: params?.id as string, page: page.toString(), item_per_page: itemsPerPage.toString(), q: value, ...filters })
 
     const columns = [
       {
@@ -146,10 +151,7 @@ export const RiderTripsPage: React.FC = () => {
               <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
               Export
             </TableAction>
-            <TableAction theme="secondary" block>
-              <Icon icon="mdi:funnel" className="size-4" />
-              Filter
-            </TableAction>
+            <TripsFilter setFilters={setFilters} isLoading={isFetching || fetchingCount} theme="secondary" />
           </div>
         </div>
         <RenderIf condition={!isFetching && !fetchingCount && !fetchingCountStatus}>

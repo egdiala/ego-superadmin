@@ -9,17 +9,17 @@ import { CloseButton, Popover, PopoverBackdrop, PopoverButton, PopoverPanel, Rad
 interface Filters {
     start_date: string;
     end_date: string;
-    ride_status: string;
+    status: string;
 }
 
-interface TripsFilterProps {
+interface ServiceRequestsFilterProps {
     // eslint-disable-next-line no-unused-vars
     setFilters: (v: Filters) => void;
     isLoading: boolean;
     theme?: string;
 }
 
-export const TripsFilter: React.FC<TripsFilterProps> = ({ isLoading, setFilters, theme = "grey" }) => {
+export const ServiceRequestsFilter: React.FC<ServiceRequestsFilterProps> = ({ isLoading, setFilters, theme = "secondary" }) => {
     const today = startOfToday();
     const [dateFilters, setDateFilters] = useState([
         {
@@ -40,12 +40,11 @@ export const TripsFilter: React.FC<TripsFilterProps> = ({ isLoading, setFilters,
     ]);
 
     const tripStatus = [
-        { label: "Accepted", name: "accepted", value: "REQUEST_ACCEPTED" },
-        { label: "At Pickup", name: "at_pickup", value: "ARRIVED_AT_PICKUP" },
-        { label: "Picked Up", name: "picked_up", value: "PICKED_RIDER" },
-        { label: "To Drop Off", name: "drop_off", value: "ENROUTE_TO_DROPOFF" },
-        { label: "Completed", name: "completed", value: "COMPLETED" },
-        { label: "Canceled", name: "canceled", value: "CANCELED" },
+        { label: "Pending", name: "pending", value: "0" },
+        { label: "Scheduled", name: "scheduled", value: "1" },
+        { label: "In Progress", name: "in_progress", value: "2" },
+        { label: "Completed", name: "completed", value: "3" },
+        { label: "Rejected", name: "rejected", value: "4" },
     ]
 
     // const evFilters = [
@@ -67,7 +66,7 @@ export const TripsFilter: React.FC<TripsFilterProps> = ({ isLoading, setFilters,
         setFilters({
             start_date: selected.value.start ? format(selected.value.start, "yyyy-MM-dd") : "",
             end_date: selected.value.end ? format(selected.value.end, "yyyy-MM-dd") : "",
-            ride_status: statusFilters
+            status: statusFilters
         });
         fn?.();
     };
@@ -140,31 +139,7 @@ export const TripsFilter: React.FC<TripsFilterProps> = ({ isLoading, setFilters,
                                 </RenderIf>
                             </div>
 
-                            {/* EV Purchase Model Filters */}
-                            {/* <div className="flex flex-col gap-1">
-                                <span className="uppercase text-grey-dark-3 text-xs">EV Purchase Model</span>
-                                {evFilters.map((item) => (
-                                    <div
-                                        key={item.label}
-                                        role="button"
-                                        onClick={() => setEnabled(enabled !== item.name ? item.name : null)}
-                                        className={cn(
-                                            "flex whitespace-nowrap items-center gap-2 cursor-pointer rounded bg-transparent py-2.5 px-2 transition duration-300 ease-out",
-                                            enabled === item.name ? "bg-green-3 font-medium text-dark-green-1" : "text-grey-dark-2"
-                                        )}
-                                    >
-                                        <Checkbox
-                                            name={item.label.toLowerCase()}
-                                            value={item.name}
-                                            checked={enabled === item.name}
-                                            onChange={() => setEnabled(enabled !== item.name ? item.name : null)}
-                                        />
-                                        {item.label}
-                                    </div>
-                                ))}
-                            </div> */}
-
-                            {/* Trip Status Filters */}
+                            {/* Service Request Status Filters */}
                             <div className="flex flex-col gap-1">
                                 <span className="uppercase text-grey-dark-3 text-xs">TRIP STATUS</span>
                                 {tripStatus.map((item) => (

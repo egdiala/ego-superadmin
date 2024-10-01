@@ -11,15 +11,21 @@ import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { RequestStatus, RequestType, type FetchedServiceRequest, type FetchedServiceRequestsCount, type FetchedServiceRequestsCountStatus } from "@/types/service-requests";
 import { pascalCaseToWords } from "@/utils/textFormatter";
 import { useNavigate } from "react-router-dom";
+import { ServiceRequestsFilter } from "@/components/pages/service-request";
 
 export const ServiceRequestsPage: React.FC = () => {
     const navigate = useNavigate()
     const itemsPerPage = 10;
     const [page, setPage] = useState(1)
     const { value, onChangeHandler } = useDebounce(500)
+    const [filters, setFilters] = useState({
+      start_date: "",
+      end_date: "",
+      status: ""
+    })
     const { data: serviceRequestCountStatus, isFetching: fetchingServiceRequestStatus } = useGetServiceRequests<FetchedServiceRequestsCountStatus>({ component: "count-status" })
-    const { data: serviceRequestCount, isFetching: fetchingServiceRequestCount } = useGetServiceRequests<FetchedServiceRequestsCount>({ component: "count" })
-    const { data: serviceRequests, isFetching: fetchingServiceRequests } = useGetServiceRequests<FetchedServiceRequest[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value })
+    const { data: serviceRequestCount, isFetching: fetchingServiceRequestCount } = useGetServiceRequests<FetchedServiceRequestsCount>({ component: "count", q: value, ...filters })
+    const { data: serviceRequests, isFetching: fetchingServiceRequests } = useGetServiceRequests<FetchedServiceRequest[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value, ...filters })
 
     const columns = [
       {
@@ -109,10 +115,7 @@ export const ServiceRequestsPage: React.FC = () => {
                             <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
                             Export
                         </TableAction>
-                        <TableAction theme="secondary" block>
-                            <Icon icon="mdi:funnel" className="size-4" />
-                            Filter
-                        </TableAction>
+                        <ServiceRequestsFilter setFilters={setFilters} isLoading={fetchingServiceRequestCount || fetchingServiceRequests}  />
                       </div>
                   </div>
                   <div className="grid grid-cols-4 gap-4">
