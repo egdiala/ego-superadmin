@@ -1,14 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { getRanks, getTrip, getTripDataStats, getTrips } from "@/services/apis/trips";
 import { GET_TRIP, GET_TRIPS, GET_VEHICLE_DISTANCE_FOR_ORG } from "@/constants/queryKeys";
-import type { FetchDistanceForOrgQuery, FetchedRiderTripCountStatus, FetchedSingleTrip, FetchedTripCountStatus, FetchedTripType, FetchedVehicleDistanceForOrganization, FetchRanksQuery, FetchTripsQuery } from "@/types/trips";
+import type { FetchDistanceForOrgQuery, FetchedMonthlyTrip, FetchedRiderTripCountStatus, FetchedSingleTrip, FetchedTripCountStatus, FetchedTripType, FetchedVehicleDistanceForOrganization, FetchRanksQuery, FetchTripsQuery } from "@/types/trips";
 import { errorToast } from "@/utils/createToast";
 
 export const useGetTrips = (query: FetchTripsQuery) => {
   return useQuery({
     queryKey: [GET_TRIPS, query],
     queryFn: () => getTrips(query),
-    select: (res) => res?.data as FetchedTripType[] | FetchedTripCountStatus | FetchedRiderTripCountStatus,
+    select: (res) => res?.data as FetchedTripType[] | FetchedTripCountStatus | FetchedRiderTripCountStatus | FetchedMonthlyTrip[],
     retry: false,
     refetchOnWindowFocus: false,
     throwOnError(error) {

@@ -67,7 +67,7 @@ body {
   @apply max-w-52 !important;
 }
 
-div[tabindex="-1"]:hover {
+div[tabindex="-1"]:not(.react-datepicker__year-text--disabled):hover {
   @apply bg-light-green text-green-base !important;
 }
 
@@ -93,4 +93,8 @@ div[tabindex="-1"]:hover {
 
 .react-datepicker__year--container > .react-datepicker-year-header {
   @apply font-semibold text-xl text-grey-dark-1 !important;
+}
+
+div[tabindex="-1"]:has(.react-datepicker__year-text--disabled) {
+  @apply text-grey-dark-2 cursor-not-allowed !important;
 }

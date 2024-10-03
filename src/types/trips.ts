@@ -173,6 +173,15 @@ export interface FetchedRiderTripCountStatus {
     total_rejected: number;
 }
 
+export interface FetchedMonthlyTrip {
+    month: number;
+    createdAt: Date | string;
+    total_completed: number;
+    total_cancel: number;
+    total_approved: number;
+    total_count: number;
+}
+
 export interface FetchedVehicleDistanceForOrganization {
     total_amount_paid: number;
     total_amount_outstanding: number;
