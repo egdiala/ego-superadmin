@@ -6,7 +6,7 @@ export interface FetchLeasePaymentsQuery {
     end_date?: string;
     page?: string;
     item_per_page?: string;
-    component?: "count" | "count-status"
+    component?: "count" | "count-status" | "dashboard-count"
 }
 
 export interface FetchCommutePaymentsQuery {

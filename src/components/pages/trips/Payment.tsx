@@ -35,17 +35,17 @@ export const TripPayment: React.FC<TripPaymentProps> = ({ data }) => {
 
     const fareBreakdown = useMemo(() => {
         return [
-            { label: "Base Fare", value: formattedNumber(parseInt(data?.ride_data?.fare_params?.charge_base)) },
-            { label: "State Tax", value: formattedNumber(parseInt(data?.ride_data?.fare_params?.charge_tax)) },
+            { label: "Base Fare", value: formattedNumber(parseInt(data?.ride_data?.fare_params?.charge_base ?? 0)) },
+            { label: "State Tax", value: formattedNumber(parseInt(data?.ride_data?.fare_params?.charge_tax ?? 0)) },
             {
                 label: "Trip Time",
-                value: <div className="grid justify-items-end"><span>{formattedNumber(parseInt(data?.ride_data?.fare_params?.charge_time))}</span><span className="text-xs text-grey-dark-3">{formatTime(differenceInSeconds(data?.ride_data?.end_trip_at as Date,  data?.ride_data?.start_trip_at as Date) || 0)}</span></div>
+                value: <div className="grid justify-items-end"><span>{formattedNumber(parseInt(data?.ride_data?.fare_params?.charge_time ?? 0))}</span><span className="text-xs text-grey-dark-3">{formatTime(differenceInSeconds(data?.ride_data?.end_trip_at as Date,  data?.ride_data?.start_trip_at as Date) || 0)}</span></div>
             },
             {
                 label: "Distance Covered",
-                value: <div className="grid justify-items-end"><span>{formattedNumber(parseInt(data?.ride_data?.fare_params?.charge_distance))}</span><span className="text-xs text-grey-dark-3">{data?.ride_data?.total_distance}km</span></div>
+                value: <div className="grid justify-items-end"><span>{formattedNumber(parseInt(data?.ride_data?.fare_params?.charge_distance ?? 0))}</span><span className="text-xs text-grey-dark-3">{data?.ride_data?.total_distance}km</span></div>
             },
-            { label: "Waiting Fee", value: formattedNumber(parseInt(data?.ride_data?.fare_params?.charge_delay)) },
+            { label: "Waiting Fee", value: formattedNumber(parseInt(data?.ride_data?.fare_params?.charge_delay ?? 0)) },
             { label: "Discount", value: formattedNumber(parseInt(data?.ride_data?.fare_params?.discount_value || "0")) },
         ]
     }, [data?.ride_data?.end_trip_at, data?.ride_data?.fare_params?.charge_base, data?.ride_data?.fare_params?.charge_delay, data?.ride_data?.fare_params?.charge_distance, data?.ride_data?.fare_params?.charge_tax, data?.ride_data?.fare_params?.charge_time, data?.ride_data?.fare_params?.discount_value, data?.ride_data?.start_trip_at, data?.ride_data?.total_distance])
@@ -111,7 +111,7 @@ export const TripPayment: React.FC<TripPaymentProps> = ({ data }) => {
                             <div className="flex flex-col gap-1 pt-6 text-center">
                                 <span className="text-xs text-grey-dark-3">Total</span>
                                 <h4 className="text-3xl text-grey-dark-1 font-normal">{formattedNumber(data?.ride_data?.fare)}</h4>
-                                <span className="capitalize text-green-1 font-semibold text-sm">
+                                <span className={cn("capitalize font-semibold text-sm", data?.ride_data?.charge_data?.status === "yes" ? "text-green-1" : "text-semantics-amber")}>
                                     <RenderIf condition={data?.ride_data?.charge_data?.status === "pending"}>
                                         {data?.ride_data?.charge_data?.status}
                                     </RenderIf>
