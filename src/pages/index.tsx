@@ -10,8 +10,9 @@ import type { FetchedOrganizationCountStatus } from "@/types/organizations";
 import type { FetchedDriverCountStatus, TopDriversType } from "@/types/drivers";
 import type { FetchedServiceRequestsCountStatus } from "@/types/service-requests";
 import type { FetchedVehicleCountStatus, TopVehiclesType } from "@/types/vehicles";
-import { useGetDrivers, useGetOrganizations, useGetRanks, useGetRatings, useGetServiceRequests, useGetVehicles } from "@/services/hooks/queries";
+import { useGetDrivers, useGetLeasePayments, useGetOrganizations, useGetRanks, useGetRatings, useGetServiceRequests, useGetVehicles } from "@/services/hooks/queries";
 import { Customers, DistanceCovered, PaymentValue, Ratings, ServiceRequests, TopCommuters, TopDrivers, TopVehicles, TotalDrivers, TotalTrips, TripDetails, Vehicles } from "@/components/pages/dashboard";
+import { FetchedDashboardPayments } from "@/types/payment";
 
 export const DashboardPage: React.FC = () => {
     const adminData = getAdminData()
@@ -30,13 +31,15 @@ export const DashboardPage: React.FC = () => {
     const { data: topDrivers, isFetching: fetchingDriverRank } = useGetRanks<TopDriversType[]>({ user_type: "top-driver", ...topDriversFilter })
     const { data: topRiders, isFetching: fetchingRiderRank } = useGetRanks<TopRidersType[]>({ user_type: "top-rider", ...topRidersFilter })
     const { data: topVehicles, isFetching: fetchingVehicleRank } = useGetRanks<TopVehiclesType[]>({ user_type: "top-vehicles", ...topVehiclesFilter })
+    const { data: paymentCount, isFetching: fetchingPaymentCount } = useGetLeasePayments<FetchedDashboardPayments>({ component: "dashboard-count", request_type: "1", status: "1" })
+    const { data: duesCount, isFetching: fetchingDuesCount } = useGetLeasePayments<FetchedDashboardPayments>({ component: "dashboard-count", request_type: "1", status: "0" })
     // const { data: tripStats, isFetching: fetchingTripStats } = useGetTrips({ component: "count-monthly", ...tripStatsFilter })
 
     const isFetchingAll = useMemo(() => {
-        const loadingStates = [fetchingCustomers, fetchingVehicles, fetchingServiceRequests, fetchingDrivers, fetchingRatings, fetchingDriverRank, fetchingRiderRank, fetchingVehicleRank]
+        const loadingStates = [fetchingCustomers, fetchingVehicles, fetchingServiceRequests, fetchingDrivers, fetchingRatings, fetchingDriverRank, fetchingRiderRank, fetchingVehicleRank, fetchingPaymentCount, fetchingDuesCount]
 
         return loadingStates.some((item) => item)
-    }, [fetchingCustomers, fetchingDriverRank, fetchingDrivers, fetchingRatings, fetchingRiderRank, fetchingServiceRequests, fetchingVehicleRank, fetchingVehicles])
+    }, [fetchingCustomers, fetchingDriverRank, fetchingDrivers, fetchingDuesCount, fetchingPaymentCount, fetchingRatings, fetchingRiderRank, fetchingServiceRequests, fetchingVehicleRank, fetchingVehicles])
 
     useEffect(() => {
         if (!isFetchingAll) {
@@ -51,7 +54,7 @@ export const DashboardPage: React.FC = () => {
                     <div className="grid gap-6">
                         <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
                             <Customers data={customerCount as FetchedOrganizationCountStatus} />
-                            <PaymentValue className="xl:col-span-3" />
+                            <PaymentValue paid={paymentCount as FetchedDashboardPayments} dues={duesCount as FetchedDashboardPayments} className="xl:col-span-3" />
                         </div>
                     </div>
                     <div className="grid gap-6 xl:grid-cols-7">

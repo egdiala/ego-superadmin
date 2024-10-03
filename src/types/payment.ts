@@ -95,3 +95,13 @@ export interface FetchedCommutePayment {
 export interface FetchedReceivableCount {
     total: number;
 }
+
+export interface FetchedDashboardPayments {
+    _id: null;
+    total_amount: number;
+    total_count: number;
+    total_lease_amount: number;
+    total_commute_amount: number;
+    total_lease_count: number;
+    total_commute_count: number;
+}
