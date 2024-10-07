@@ -39,6 +39,9 @@ export const SUSPEND_ORGANIZATION_API = "admin/organizations/suspend-account"
 export const GET_LEASE_SERVICE_PAYMENT_API = "admin/payments/service-payment-lease"
 export const GET_COMMUTE_SERVICE_PAYMENT_API = "admin/payments/service-payment-staffcommute"
 
+// Fees
+export const GET_FEES_API = "admin/operations/fees"
+
 // Trips
 export const GET_TRIPS_API = "admin/trips"
 export const GET_TRIP_DATA_STATS_API = "admin/trips/data-stats"

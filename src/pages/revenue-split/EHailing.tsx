@@ -1,13 +1,17 @@
 import React, { useCallback, useState } from "react"
 import { Icon } from "@iconify/react"
 import { motion } from "framer-motion"
-import { Table, TableAction } from "@/components/core"
+import { useGetFees } from "@/services/hooks/queries"
+import { Loader } from "@/components/core/Button/Loader"
 import { pageVariants } from "@/constants/animateVariants"
+import { RenderIf, Table, TableAction } from "@/components/core"
 import { AddNewParameter, DeleteParameter, EditParameter } from "@/components/pages/revenue-split"
 
 export const RevenueSplitEHailingPage: React.FC = () => {
     const itemsPerPage = 10;
     const [page] = useState(1)
+    const { data: eHailingRevenue, isFetching } = useGetFees<any[]>({ screen_name: "e_hailing_revenue_split" })
+    
     const [toggleModals, setToggleModals] = useState({
         openAddNewParameterModal: false,
         openDeleteParameterModal: false,
@@ -86,15 +90,20 @@ export const RevenueSplitEHailingPage: React.FC = () => {
                     Add New Parameter
                 </TableAction>
             </div>
-            <Table
-                data={[]}
-                page={page}
-                columns={columns}
-                perPage={itemsPerPage}
-                totalCount={[].length}
-                onPageChange={handlePageChange}
-            />
-            <AddNewParameter isOpen={toggleModals.openAddNewParameterModal} close={toggleNewParameter} />
+            <RenderIf condition={!isFetching}>
+                <Table
+                    data={eHailingRevenue ?? []}
+                    page={page}
+                    columns={columns}
+                    perPage={itemsPerPage}
+                    totalCount={eHailingRevenue?.length}
+                    onPageChange={handlePageChange}
+                />
+            </RenderIf>
+            <RenderIf condition={isFetching}>
+                <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
+            </RenderIf>
+            <AddNewParameter isOpen={toggleModals.openAddNewParameterModal} close={toggleNewParameter} msg="e-Hailing revenue split created successfully!" screenName="e_hailing_revenue_split" />
             <EditParameter isOpen={toggleModals.openEditParameterModal} close={toggleEditParameter} />
             <DeleteParameter isOpen={toggleModals.openDeleteParameterModal} close={toggleDeleteParameter} />
         </motion.div>

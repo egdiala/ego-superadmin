@@ -4,23 +4,36 @@ import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { Button, Input, SelectInput } from "@/components/core";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { addNewParameterSchema } from "@/validations/revenue-split";
+import { useCreateFee } from "@/services/hooks/mutations";
+import { AnimatePresence } from "framer-motion";
+import type { FetchFeesQuery } from "@/types/fees";
 
 interface AddNewParameterProps {
     isOpen: boolean;
     // eslint-disable-next-line no-unused-vars
     close: (value: boolean) => void
+    msg: string;
+    screenName: FetchFeesQuery["screen_name"]
 }
 
-export const AddNewParameter: React.FC<AddNewParameterProps> = ({ isOpen, close }) => {
-    const { handleSubmit, isValid, register, resetForm } = useFormikWrapper({
+export const AddNewParameter: React.FC<AddNewParameterProps> = ({ isOpen, close, msg, screenName }) => {
+    const { mutate, isPending } = useCreateFee(msg, () => closeModal())
+    const { handleSubmit, isValid, register, resetForm, values } = useFormikWrapper({
         initialValues: {
             name: "",
-            select_value: "",
+            amount_sufix: "" as "flat" | "percent",
             amount: "",
-            percentage: ""
         },
         validationSchema: addNewParameterSchema,
         onSubmit: () => {
+            const { amount, ...rest } = values
+            const payload = {
+                ...rest,
+                amount: amount.toString(),
+                tag: values?.amount_sufix === "flat" ? "₦" : "%",
+                screen_name: screenName
+            }
+            mutate(payload)
         },
     })
 
@@ -30,9 +43,9 @@ export const AddNewParameter: React.FC<AddNewParameterProps> = ({ isOpen, close 
     }, [close, resetForm])
     
     const selectValue = [
-        { label: "Amount (₦)", value: "amount" },
-        { label: "Percentage (%)", value: "percentage" },
-        { label: "Amount + Percentage", value: "amount_percentage" },
+        { label: "Amount (₦)", value: "flat" },
+        { label: "Percentage (%)", value: "percent" },
+        // { label: "Amount + Percentage", value: "flat_percent" },
     ]
 
     return (
@@ -48,13 +61,25 @@ export const AddNewParameter: React.FC<AddNewParameterProps> = ({ isOpen, close 
                         </div>
                         <div className="grid gap-6">
                             <Input type="text" label="Name" {...register("name")} />
-                            <SelectInput label="Select Value" options={selectValue} {...register("select_value")} />
-                            <Input type="number" className="hide-number-input-arrows" label="Amount (₦)" {...register("amount")} />
-                            <Input type="number" className="hide-number-input-arrows" label="Percentage (%)" {...register("percentage")} />
+                            <SelectInput label="Select Value" options={selectValue} {...register("amount_sufix")} />
+                            <AnimatePresence>
+                                {
+                                    values?.amount_sufix === "flat" && (
+                                        <Input type="number" className="hide-number-input-arrows" label="Amount (₦)" {...register("amount")} />
+                                    )
+                                }
+                            </AnimatePresence>
+                            <AnimatePresence>
+                                {
+                                    values?.amount_sufix === "percent" && (
+                                        <Input type="number" className="hide-number-input-arrows" label="Percentage (%)" {...register("amount")} />
+                                    )
+                                }
+                            </AnimatePresence>
                         </div>
                         <div className="flex items-center justify-end w-full md:w-1/2 ml-auto pt-10 gap-2 md:gap-4">
                             <Button type="button" theme="tertiary" onClick={closeModal} block>Cancel</Button>
-                            <Button type="submit" theme="primary" disabled={!isValid} block>Add Parameter</Button>
+                            <Button type="submit" theme="primary" disabled={isPending || !isValid} loading={isPending} block>Add Parameter</Button>
                         </div>
                     </DialogPanel>
                 </div>

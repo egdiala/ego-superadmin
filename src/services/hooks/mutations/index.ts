@@ -1,6 +1,7 @@
 export * from "./useAdmin"
 export * from "./useAuth"
 export * from "./useDrivers"
+export * from "./useFees"
 export * from "./useOrganizations"
 export * from "./useRiders"
 export * from "./useRoles"

@@ -32,6 +32,9 @@ export const GET_ORGANIZATION = "get-organization"
 export const GET_LEASE_PAYMENTS = "get-lease-payments"
 export const GET_COMMUTE_PAYMENTS = "get-commute-payments"
 
+// Fees
+export const GET_FEES = "get-fees"
+
 // Trips
 export const GET_TRIPS = "get-trips"
 export const GET_TRIP = "get-trip"
