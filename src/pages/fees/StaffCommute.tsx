@@ -2,6 +2,8 @@ import React, { useCallback, useState } from "react"
 import { Icon } from "@iconify/react"
 import { motion } from "framer-motion"
 import { useGetFees } from "@/services/hooks/queries"
+import type { FetchedRevenueSplit } from "@/types/fees"
+import { formattedNumber } from "@/utils/textFormatter"
 import { Loader } from "@/components/core/Button/Loader"
 import { pageVariants } from "@/constants/animateVariants"
 import { RenderIf, Table, TableAction } from "@/components/core"
@@ -10,12 +12,13 @@ import { AddNewParameter, DeleteParameter, EditParameter } from "@/components/pa
 export const FeesStaffCommutePage: React.FC = () => {
     const itemsPerPage = 10;
     const [page] = useState(1)
-    const { data: staffFees, isFetching } = useGetFees<any[]>({ screen_name: "staff_commute_fee" })
+    const { data: staffFees, isFetching } = useGetFees<FetchedRevenueSplit[]>({ screen_name: "staff_commute_fee" })
 
     const [toggleModals, setToggleModals] = useState({
         openAddNewParameterModal: false,
         openDeleteParameterModal: false,
-        openEditParameterModal: false
+        openEditParameterModal: false,
+        activeItem: null as FetchedRevenueSplit | null
     })
 
     const toggleNewParameter = useCallback(() => {
@@ -25,46 +28,57 @@ export const FeesStaffCommutePage: React.FC = () => {
         }))
     }, [toggleModals.openAddNewParameterModal])
 
-    const toggleEditParameter = useCallback(() => {
+    const toggleEditParameter = useCallback((item: FetchedRevenueSplit | null) => {
         setToggleModals((prev) => ({
-        ...prev,
-        openEditParameterModal: !toggleModals.openEditParameterModal,
+            ...prev,
+            activeItem: item,
+            openEditParameterModal: !toggleModals.openEditParameterModal,
         }))
     }, [toggleModals.openEditParameterModal])
 
-    const toggleDeleteParameter = useCallback(() => {
+    const toggleDeleteParameter = useCallback((item: FetchedRevenueSplit | null) => {
         setToggleModals((prev) => ({
-        ...prev,
-        openDeleteParameterModal: !toggleModals.openDeleteParameterModal,
+            ...prev,
+            activeItem: item,
+            openDeleteParameterModal: !toggleModals.openDeleteParameterModal,
         }))
     }, [toggleModals.openDeleteParameterModal])
 
     const columns = [
         {
             header: () => "Parameter",
-            accessorKey: "createdAt",
+            accessorKey: "name",
         },
         {
             header: () => "Value",
-            accessorKey: "firstName",
+            accessorKey: "amount",
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as FetchedRevenueSplit
+                return (
+                    <div className="flex items-center gap-6">
+                        { item?.amount_type === "fixed" ? formattedNumber(item?.amount) : `${item?.amount}%` }
+                    </div>
+                )
+            }
         },
         {
             header: () => "Actions",
             accessorKey: "actions",
-            cell: () => {
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as FetchedRevenueSplit
                 return (
                     <div className="flex items-center gap-6">
                         <button
                             type="button"
                             className="rounded bg-grey-dark-4 py-1 px-2 text-grey-dark-1 text-sm"
-                            onClick={toggleEditParameter}
+                            onClick={() => toggleEditParameter(item)}
                         >
                             Edit
                         </button>
                         <button
                             type="button"
                             className="text-semantics-error bg-semantics-error/10 rounded py-1 px-2  text-sm"
-                            onClick={toggleDeleteParameter}
+                            onClick={() => toggleDeleteParameter(item)}
                         >
                             Delete
                         </button>
@@ -104,8 +118,8 @@ export const FeesStaffCommutePage: React.FC = () => {
                 <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
             </RenderIf>
             <AddNewParameter isOpen={toggleModals.openAddNewParameterModal} close={toggleNewParameter} msg="Staff commute fee created successfully!" screenName="staff_commute_fee" />
-            <EditParameter isOpen={toggleModals.openEditParameterModal} close={toggleEditParameter} />
-            <DeleteParameter isOpen={toggleModals.openDeleteParameterModal} close={toggleDeleteParameter} />
+            <EditParameter isOpen={toggleModals.openEditParameterModal} close={() => toggleEditParameter(null)} parameter={toggleModals.activeItem as FetchedRevenueSplit} />
+            <DeleteParameter isOpen={toggleModals.openDeleteParameterModal} close={() => toggleDeleteParameter(null)} parameter={toggleModals.activeItem as FetchedRevenueSplit} />
         </motion.div>
     )
 }
