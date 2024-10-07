@@ -94,7 +94,7 @@ export const FeesStaffCommutePage: React.FC = () => {
                 totalCount={[].length}
                 onPageChange={handlePageChange}
             />
-            <AddNewParameter isOpen={toggleModals.openAddNewParameterModal} close={toggleNewParameter} />
+            <AddNewParameter isOpen={toggleModals.openAddNewParameterModal} close={toggleNewParameter} msg={""} screenName={undefined} />
             <EditParameter isOpen={toggleModals.openEditParameterModal} close={toggleEditParameter} />
             <DeleteParameter isOpen={toggleModals.openDeleteParameterModal} close={toggleDeleteParameter} />
         </motion.div>
