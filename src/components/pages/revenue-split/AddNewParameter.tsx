@@ -1,12 +1,13 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { Icon } from "@iconify/react";
+import { AnimatePresence } from "framer-motion";
+import { useGetFees } from "@/services/hooks/queries";
+import { useCreateFee } from "@/services/hooks/mutations";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { Button, Input, SelectInput } from "@/components/core";
-import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { addNewParameterSchema } from "@/validations/revenue-split";
-import { useCreateFee } from "@/services/hooks/mutations";
-import { AnimatePresence } from "framer-motion";
-import type { FetchFeesQuery } from "@/types/fees";
+import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
+import type { FetchedFeeVariable, FetchFeesQuery } from "@/types/fees";
 
 interface AddNewParameterProps {
     isOpen: boolean;
@@ -18,10 +19,11 @@ interface AddNewParameterProps {
 
 export const AddNewParameter: React.FC<AddNewParameterProps> = ({ isOpen, close, msg, screenName }) => {
     const { mutate, isPending } = useCreateFee(msg, () => closeModal())
+    const { data: fetchedParameters, isFetching } = useGetFees<FetchedFeeVariable[]>({ screen_name: screenName, component: "fee_variables" })
     const { handleSubmit, isValid, register, resetForm, values } = useFormikWrapper({
         initialValues: {
-            name: "",
-            amount_sufix: "" as "flat" | "percent",
+            tag: "",
+            amount_type: "" as "fixed" | "percent",
             amount: "",
         },
         validationSchema: addNewParameterSchema,
@@ -30,12 +32,18 @@ export const AddNewParameter: React.FC<AddNewParameterProps> = ({ isOpen, close,
             const payload = {
                 ...rest,
                 amount: amount.toString(),
-                tag: values?.amount_sufix === "flat" ? "₦" : "%",
                 screen_name: screenName
             }
             mutate(payload)
         },
     })
+
+    const parameters = useMemo(() => {
+        if (fetchedParameters === undefined) {
+            return []
+        }
+        return fetchedParameters?.map((item) => ({ label: item?.name, value: item?.tag }))
+    }, [fetchedParameters])
 
     const closeModal = useCallback(() => {
         resetForm()
@@ -43,9 +51,8 @@ export const AddNewParameter: React.FC<AddNewParameterProps> = ({ isOpen, close,
     }, [close, resetForm])
     
     const selectValue = [
-        { label: "Amount (₦)", value: "flat" },
+        { label: "Amount (₦)", value: "fixed" },
         { label: "Percentage (%)", value: "percent" },
-        // { label: "Amount + Percentage", value: "flat_percent" },
     ]
 
     return (
@@ -60,18 +67,18 @@ export const AddNewParameter: React.FC<AddNewParameterProps> = ({ isOpen, close,
                             <button type="button" onClick={closeModal} className="size-8 p-2 grid place-content-center text-grey-dark-3 hover:text-grey-dark-1 hover:bg-light-green rounded-full ease-out duration-300 transition-all"><Icon icon="ph:x-bold" /></button>
                         </div>
                         <div className="grid gap-6">
-                            <Input type="text" label="Name" {...register("name")} />
-                            <SelectInput label="Select Value" options={selectValue} {...register("amount_sufix")} />
+                            <SelectInput label="Name" options={parameters} disabled={isFetching} {...register("tag")} />
+                            <SelectInput label="Select Value" options={selectValue} {...register("amount_type")} />
                             <AnimatePresence>
                                 {
-                                    values?.amount_sufix === "flat" && (
+                                    values?.amount_type === "fixed" && (
                                         <Input type="number" className="hide-number-input-arrows" label="Amount (₦)" {...register("amount")} />
                                     )
                                 }
                             </AnimatePresence>
                             <AnimatePresence>
                                 {
-                                    values?.amount_sufix === "percent" && (
+                                    values?.amount_type === "percent" && (
                                         <Input type="number" className="hide-number-input-arrows" label="Percentage (%)" {...register("amount")} />
                                     )
                                 }

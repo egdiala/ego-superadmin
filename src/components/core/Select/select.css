@@ -9,5 +9,5 @@
 }
 
 .ego-input {
-  @apply rounded-md text-base w-full block py-2.5 border border-input-filled bg-grey-dark-4 focus:border-green-base focus:bg-light-green text-grey-dark-1 placeholder:text-grey-dark-3 focus:ring focus:ring-green-base/[0.24] disabled:bg-white disabled:border-grey-dark-3 disabled:text-grey-dark-3 caret-grey-dark-1 transition-all duration-300 ease-out !important;
+  @apply rounded-md text-base w-full block py-2.5 border border-input-filled bg-grey-dark-4 focus:border-green-base focus:bg-light-green text-grey-dark-1 placeholder:text-grey-dark-3 focus:ring focus:ring-green-base/[0.24] disabled:bg-white disabled:cursor-not-allowed disabled:border-grey-dark-3 disabled:text-grey-dark-3 caret-grey-dark-1 transition-all duration-300 ease-out !important;
 }

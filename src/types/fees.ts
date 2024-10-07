@@ -5,10 +5,24 @@ export interface FetchFeesQuery {
 }
 
 export type CreateFeeType = {
-    name: string;
     amount: string;
-    amount_sufix: "flat" | "percent";
+    amount_type: "fixed" | "percent";
     tag: string;
-    screen_name: FetchFeesQuery["screen_name"];
-    desc?: string;
+}
+
+export interface FetchedFeeVariable {
+    slug: string;
+    tag: string;
+    name: string;
+    screen_name: string;
+}
+
+export interface FetchedRevenueSplit extends FetchedFeeVariable {
+    amount: number;
+    amount_type: "fixed" | "percent";
+    system_generated: boolean;
+    data: any[];
+    createdAt: Date | string;
+    updatedAt: Date | string;
+    fee_id: string;
 }

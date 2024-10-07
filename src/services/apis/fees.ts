@@ -12,3 +12,14 @@ export const createFee = async (payload: CreateFeeType) => {
   const res = await axiosSettingsInstance.post(GET_FEES_API, payload);
   return res.data;
 };
+
+export const editFee = async (payload: CreateFeeType & { fee_id: string; }) => {
+  const { fee_id, ...rest } = payload
+  const res = await axiosSettingsInstance.put(`${GET_FEES_API}/${fee_id}`, rest);
+  return res.data;
+};
+
+export const deleteFee = async (id: string) => {
+  const res = await axiosSettingsInstance.delete(`${GET_FEES_API}/${id}`);
+  return res.data;
+};

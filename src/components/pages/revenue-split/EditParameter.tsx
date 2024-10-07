@@ -1,28 +1,50 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { Icon } from "@iconify/react";
+import { useGetFees } from "@/services/hooks/queries";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { Button, Input, SelectInput } from "@/components/core";
-import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { addNewParameterSchema } from "@/validations/revenue-split";
+import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
+import type { FetchedFeeVariable, FetchedRevenueSplit } from "@/types/fees";
+import { AnimatePresence } from "framer-motion";
+import { useEditFee } from "@/services/hooks/mutations";
 
 interface EditParameterProps {
     isOpen: boolean;
     // eslint-disable-next-line no-unused-vars
     close: (value: boolean) => void
+    parameter: FetchedRevenueSplit
 }
 
-export const EditParameter: React.FC<EditParameterProps> = ({ isOpen, close }) => {
-    const { handleSubmit, isValid, register, resetForm } = useFormikWrapper({
+export const EditParameter: React.FC<EditParameterProps> = ({ isOpen, close, parameter }) => {
+    const { mutate, isPending } = useEditFee(`${parameter?.name} edited successfully!`, () => closeModal())
+    const { data: fetchedParameters } = useGetFees<FetchedFeeVariable[]>({ screen_name: parameter?.screen_name as any, component: "fee_variables" })
+    const { handleSubmit, isValid, register, resetForm, values } = useFormikWrapper({
         initialValues: {
-            name: "",
-            select_value: "",
-            amount: "",
-            percentage: ""
+            tag: parameter?.tag || "",
+            amount_type: parameter?.amount_type || "" as "fixed" | "percent",
+            amount: parameter?.amount || ""
         },
+        enableReinitialize: true,
         validationSchema: addNewParameterSchema,
         onSubmit: () => {
+            const { amount, ...rest } = values
+            const payload = {
+                ...rest,
+                amount: amount.toString(),
+                screen_name: parameter?.screen_name,
+                fee_id: parameter?.fee_id
+            }
+            mutate(payload)
         },
     })
+
+    const parameters = useMemo(() => {
+        if (fetchedParameters === undefined) {
+            return []
+        }
+        return fetchedParameters?.map((item) => ({ label: item?.name, value: item?.tag }))
+    }, [fetchedParameters])
 
     const closeModal = useCallback(() => {
         resetForm()
@@ -30,9 +52,8 @@ export const EditParameter: React.FC<EditParameterProps> = ({ isOpen, close }) =
     }, [close, resetForm])
     
     const selectValue = [
-        { label: "Amount (₦)", value: "amount" },
-        { label: "Percentage (%)", value: "percentage" },
-        { label: "Amount + Percentage", value: "amount_percentage" },
+        { label: "Amount (₦)", value: "fixed" },
+        { label: "Percentage (%)", value: "percent" },
     ]
 
     return (
@@ -47,14 +68,26 @@ export const EditParameter: React.FC<EditParameterProps> = ({ isOpen, close }) =
                             <button type="button" onClick={closeModal} className="size-8 p-2 grid place-content-center text-grey-dark-3 hover:text-grey-dark-1 hover:bg-light-green rounded-full ease-out duration-300 transition-all"><Icon icon="ph:x-bold" /></button>
                         </div>
                         <div className="grid gap-6">
-                            <Input type="text" label="Name" {...register("name")} />
-                            <SelectInput label="Select Value" options={selectValue} {...register("select_value")} />
-                            <Input type="number" className="hide-number-input-arrows" label="Amount (₦)" {...register("amount")} />
-                            <Input type="number" className="hide-number-input-arrows" label="Percentage (%)" {...register("percentage")} />
+                            <SelectInput label="Name" options={parameters} disabled {...register("tag")} />
+                            <SelectInput label="Select Value" options={selectValue} {...register("amount_type")} />
+                            <AnimatePresence>
+                                {
+                                    values?.amount_type === "fixed" && (
+                                        <Input type="number" className="hide-number-input-arrows" label="Amount (₦)" {...register("amount")} />
+                                    )
+                                }
+                            </AnimatePresence>
+                            <AnimatePresence>
+                                {
+                                    values?.amount_type === "percent" && (
+                                        <Input type="number" className="hide-number-input-arrows" label="Percentage (%)" {...register("amount")} />
+                                    )
+                                }
+                            </AnimatePresence>
                         </div>
                         <div className="flex items-center justify-end w-full md:w-1/2 ml-auto pt-10 gap-2 md:gap-4">
                             <Button type="button" theme="tertiary" onClick={closeModal} block>Cancel</Button>
-                            <Button type="submit" theme="primary" disabled={!isValid} block>Update Parameter</Button>
+                            <Button type="submit" theme="primary" disabled={isPending || !isValid} loading={isPending} block>Update Parameter</Button>
                         </div>
                     </DialogPanel>
                 </div>
