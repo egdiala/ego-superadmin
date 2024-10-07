@@ -1,13 +1,17 @@
 import React, { useCallback, useState } from "react"
 import { Icon } from "@iconify/react"
 import { motion } from "framer-motion"
-import { Table, TableAction } from "@/components/core"
+import { useGetFees } from "@/services/hooks/queries"
+import { Loader } from "@/components/core/Button/Loader"
 import { pageVariants } from "@/constants/animateVariants"
+import { RenderIf, Table, TableAction } from "@/components/core"
 import { AddNewParameter, DeleteParameter, EditParameter } from "@/components/pages/revenue-split"
 
 export const FeesLeasePage: React.FC = () => {
     const itemsPerPage = 10;
     const [page] = useState(1)
+    const { data: leaseFees, isFetching } = useGetFees<any[]>({ screen_name: "lease_model_fee" })
+    
     const [toggleModals, setToggleModals] = useState({
         openAddNewParameterModal: false,
         openDeleteParameterModal: false,
@@ -86,15 +90,20 @@ export const FeesLeasePage: React.FC = () => {
                     Add New Parameter
                 </TableAction>
             </div>
-            <Table
-                data={[]}
-                page={page}
-                columns={columns}
-                perPage={itemsPerPage}
-                totalCount={[].length}
-                onPageChange={handlePageChange}
-            />
-            <AddNewParameter isOpen={toggleModals.openAddNewParameterModal} close={toggleNewParameter} msg={""} screenName={undefined} />
+            <RenderIf condition={!isFetching}>
+                <Table
+                    data={leaseFees ?? []}
+                    page={page}
+                    columns={columns}
+                    perPage={itemsPerPage}
+                    totalCount={leaseFees?.length}
+                    onPageChange={handlePageChange}
+                />
+            </RenderIf>
+            <RenderIf condition={isFetching}>
+                <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
+            </RenderIf>
+            <AddNewParameter isOpen={toggleModals.openAddNewParameterModal} close={toggleNewParameter} msg="Lease fee created successfully!" screenName="lease_model_fee" />
             <EditParameter isOpen={toggleModals.openEditParameterModal} close={toggleEditParameter} />
             <DeleteParameter isOpen={toggleModals.openDeleteParameterModal} close={toggleDeleteParameter} />
         </motion.div>

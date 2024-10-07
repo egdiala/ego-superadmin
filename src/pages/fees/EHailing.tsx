@@ -1,13 +1,17 @@
 import React, { useCallback, useState } from "react"
 import { Icon } from "@iconify/react"
 import { motion } from "framer-motion"
-import { Table, TableAction } from "@/components/core"
+import { RenderIf, Table, TableAction } from "@/components/core"
 import { pageVariants } from "@/constants/animateVariants"
 import { AddNewParameter, DeleteParameter, EditParameter } from "@/components/pages/revenue-split"
+import { useGetFees } from "@/services/hooks/queries"
+import { Loader } from "@/components/core/Button/Loader"
 
 export const FeesEHailingPage: React.FC = () => {
     const itemsPerPage = 10;
     const [page] = useState(1)
+    const { data: eHailingFees, isFetching } = useGetFees<any[]>({ screen_name: "e_hailing_fee" })
+
     const [toggleModals, setToggleModals] = useState({
         openAddNewParameterModal: false,
         openDeleteParameterModal: false,
@@ -86,15 +90,20 @@ export const FeesEHailingPage: React.FC = () => {
                     Add New Parameter
                 </TableAction>
             </div>
-            <Table
-                data={[]}
-                page={page}
-                columns={columns}
-                perPage={itemsPerPage}
-                totalCount={[].length}
-                onPageChange={handlePageChange}
-            />
-            <AddNewParameter isOpen={toggleModals.openAddNewParameterModal} close={toggleNewParameter} msg={""} screenName={undefined} />
+            <RenderIf condition={!isFetching}>
+                <Table
+                    data={eHailingFees ?? []}
+                    page={page}
+                    columns={columns}
+                    perPage={itemsPerPage}
+                    totalCount={eHailingFees?.length}
+                    onPageChange={handlePageChange}
+                />
+            </RenderIf>
+            <RenderIf condition={isFetching}>
+                <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
+            </RenderIf>
+            <AddNewParameter isOpen={toggleModals.openAddNewParameterModal} close={toggleNewParameter} msg="eHailing fee created successfully!" screenName="e_hailing_fee" />
             <EditParameter isOpen={toggleModals.openEditParameterModal} close={toggleEditParameter} />
             <DeleteParameter isOpen={toggleModals.openDeleteParameterModal} close={toggleDeleteParameter} />
         </motion.div>
