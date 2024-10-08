@@ -229,6 +229,19 @@ export interface FetchedSingleTrip {
             longitude: number;
             latitude: number;
         };
+        approval_data: {
+            auth_id: string;
+            user_type: string;
+            name: string;
+            created: Date | string;
+            requested_at: Date | string;
+        };
+        assigned_data: {
+            auth_id: string;
+            name: string;
+            user_type: string;
+            created: Date | string;
+        };
         est_dst: number;
         est_time: number;
         min_fare: number;

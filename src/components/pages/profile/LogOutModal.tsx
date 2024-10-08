@@ -28,7 +28,7 @@ export const LogOutModal: React.FC<LogOutModalProps> = ({ isOpen, close }) => {
                     <img src={questionMark} alt="caution" className="size-12" />
                     <div className="grid gap-1">
                         <DialogTitle as="h1" className="text-xl font-bold text-grey-dark-1">
-                            Log out of eGO?
+                            Log out of CabZero?
                         </DialogTitle>
                         <p className="text-grey-dark-2 text-sm">This action will log you out and , you will need to sign in again to gain access</p>
                     </div>

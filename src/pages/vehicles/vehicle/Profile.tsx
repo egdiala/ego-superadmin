@@ -139,7 +139,7 @@ export const VehicleProfilePage: React.FC = () => {
                         </div>
                         <div className="grid gap-1 content-start">
                             <h4 className="text-sm text-grey-dark-3">Business Assigned To</h4>
-                            <p className="text-sm text-grey-dark-1">{vehicle?.org_data?.name ?? "eGO Business"}</p>
+                            <p className="text-sm text-grey-dark-1">{vehicle?.org_data?.name ?? "CabZero Business"}</p>
                         </div>
                     </div>
                 </div>

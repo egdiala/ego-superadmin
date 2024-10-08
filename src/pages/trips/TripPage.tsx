@@ -26,7 +26,7 @@ export const TripPage: React.FC = () => {
                     street: splitAddress(item?.address ?? "").at(1),
                     location: splitAddress(item?.address ?? "").at(2)
                 },
-                status: trip?.ride_data?.status?.toLowerCase() === "completed" ? "done" : "ongoing"
+                status: (stops.length - 1) > index ? "done" : "ongoing"
             })) : []
         const timeline = [
             {
@@ -36,7 +36,7 @@ export const TripPage: React.FC = () => {
                     street: splitAddress(trip?.ride_data?.start_address ?? "").at(1),
                     location: splitAddress(trip?.ride_data?.start_address ?? "").at(2)
                 },
-                status: trip?.ride_data?.status?.toLowerCase() === "completed" ? "done" : "ongoing"
+                status: trip?.ride_data?.status?.toLowerCase() === "completed" ? "done" : spreadStops.at(-1)?.address !== trip?.ride_data?.start_address ? "done" : "ongoing"
             },
             ...spreadStops,
             {

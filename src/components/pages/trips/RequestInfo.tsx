@@ -11,10 +11,10 @@ export const TripRequestInfo: React.FC<TripRequestInfoProps> = ({ data }) => {
     const infos = [
         { label: "Request Date & Time", value: `${format(data?.createdAt, "d/M/yy")} • ${format(data?.createdAt, "p")}` },
         { label: "Request ID", value: data?.trip_id },
-        { label: "Approved by", value: "Gbemiro John" },
-        (data?.org_data?.purchase_model !== PurchaseModel.EHailing && ({ label: "Approval Date & Time", value: "Today • 12:34pm" })),
-        (data?.org_data?.purchase_model !== PurchaseModel.EHailing && ({ label: "Driver Assigned Date", value: `${format(data?.ride_data?.accepted_at, "d/M/yy")} • ${format(data?.ride_data?.accepted_at, "p")}` })),
-        (data?.org_data?.purchase_model !== PurchaseModel.EHailing && ({ label: "Driver Assigned by", value: "James Tori" })),
+        { label: "Approved by", value: data?.ride_data?.approval_data?.name || "-" },
+        (data?.org_data?.purchase_model !== PurchaseModel.EHailing && ({ label: "Approval Date & Time", value: `${format(data?.ride_data?.approval_data?.created || data?.ride_data?.accepted_at, "d/M/yy")} • ${format(data?.ride_data?.approval_data?.created || data?.ride_data?.accepted_at, "p")}` })),
+        (data?.org_data?.purchase_model !== PurchaseModel.EHailing && ({ label: "Driver Assigned Date", value: `${format(data?.ride_data?.assigned_data?.created || data?.ride_data?.accepted_at, "d/M/yy")} • ${format(data?.ride_data?.assigned_data?.created || data?.ride_data?.accepted_at, "p")}` })),
+        (data?.org_data?.purchase_model !== PurchaseModel.EHailing && ({ label: "Driver Assigned by", value: data?.ride_data?.assigned_data?.name || "-" })),
     ]
     return (
         <div className="flex flex-col h-fit gap-6 py-4 px-5 rounded-lg border border-input-filled">
