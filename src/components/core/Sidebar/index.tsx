@@ -39,7 +39,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ showSidebar }) => {
         <Fragment>
             <nav className={cn("bg-white flex flex-col gap-8 px-5 pt-6 pb-[3.125rem] h-screen max-h-screen w-full max-w-60 lg:fixed inset-y-0 left-0 z-20", showSidebar ? "max-lg:absolute transition transform translate-x-0 ease-out duration-500" : "max-lg:hidden")}>
                 
-                <img src="/eGO_logo_green.svg" className="w-32" alt="eGO_green_logo" />
+                <img src="/CZ_logo.svg" className="w-48" alt="eGO_green_logo" />
                 <div className="pb-4 flex flex-1 flex-col overflow-y-auto scrollbar-hide [&>[data-slot=section]+[data-slot=section]]:mt-6">
                     <RenderIf condition={useHasAnyPermission(appRoutes)}>
                         <div data-slot="section" className="grid gap-1">

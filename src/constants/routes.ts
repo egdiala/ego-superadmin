@@ -1,5 +1,5 @@
 export const appRoutes = [
-    { to:"/", name:"Home", icon:"lucide:layout-dashboard" },
+    { to:"/", name:"Dashboard", icon:"lucide:layout-dashboard" },
     { to:"/trips", name:"All Trips", icon:"lucide:route" },
     { to:"/drivers", name:"Drivers", icon:"mdi:steering" },
     { to:"/riders", name:"Riders", icon:"lucide:users" },
