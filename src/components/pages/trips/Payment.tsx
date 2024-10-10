@@ -23,15 +23,15 @@ export const TripPayment: React.FC<TripPaymentProps> = ({ data }) => {
         return [
             { label: "Trip payment Model", value: pascalCaseToWords(PurchaseModel[data?.org_data?.purchase_model]) },
             (data?.org_data?.purchase_model === PurchaseModel.Lease && ({ label: "Trip Fare", value: <div className="flex items-center justify-center w-fit bg-green-3 text-dark-green-1 text-sm px-2 py-0.5 rounded">Covered by Plan</div> })),
-            (data?.org_data?.purchase_model === PurchaseModel.Lease && ({ label: "Additional Km", value: "0km" })),
-            (data?.org_data?.purchase_model === PurchaseModel.Lease && ({ label: "Addtional fee", value: "₦0" })),
+            (data?.org_data?.purchase_model === PurchaseModel.Lease && ({ label: "Additional Km", value: `${data?.ride_data?.end_distance}km` })),
+            (data?.org_data?.purchase_model === PurchaseModel.Lease && ({ label: "Additional fee", value: formattedNumber(parseInt(data?.ride_data?.fare_params?.charge_delay)) })),
             (data?.org_data?.purchase_model !== PurchaseModel.Lease && ({ label: "Estimated Fare", value: `${formattedNumber(data?.ride_data?.min_fare, { maximumFractionDigits: 0 })} - ${formattedNumber(data?.ride_data?.max_fare, { maximumFractionDigits: 0 })}` })),
             (data?.org_data?.purchase_model === PurchaseModel.StaffCommute && ({ label: <div className="flex">Actual Trip Fare<button type="button" onClick={toggleIsOpen}><sup><Icon icon="ph:info-fill" className="text-grey-dark-3 size-3" /></sup></button></div>, value: formattedNumber(data?.ride_data?.fare) })),
             (data?.org_data?.purchase_model === PurchaseModel.EHailing && ({ label: "Actual Amount Paid", value: formattedNumber(data?.ride_data?.fare) })),
             (data?.org_data?.purchase_model !== PurchaseModel.Lease && ({ label: "Discount", value: formattedNumber(parseInt(data?.ride_data?.fare_params?.discount_value || "0")) })),
-            (data?.org_data?.purchase_model === PurchaseModel.EHailing && ({ label: "Additional Fee", value: "0" })),
+            (data?.org_data?.purchase_model === PurchaseModel.EHailing && ({ label: "Additional Fee", value: formattedNumber(parseInt(data?.ride_data?.fare_params?.charge_delay)) })),
         ]
-    },[data?.org_data?.purchase_model, data?.ride_data?.fare, data?.ride_data?.fare_params?.discount_value, data?.ride_data?.max_fare, data?.ride_data?.min_fare, toggleIsOpen])
+    },[data?.org_data?.purchase_model, data?.ride_data?.end_distance, data?.ride_data?.fare, data?.ride_data?.fare_params?.charge_delay, data?.ride_data?.fare_params?.discount_value, data?.ride_data?.max_fare, data?.ride_data?.min_fare, toggleIsOpen])
 
     const fareBreakdown = useMemo(() => {
         return [
