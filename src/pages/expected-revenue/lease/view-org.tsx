@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { format, formatRelative } from "date-fns";
 import { formattedNumber } from "@/utils/textFormatter";
@@ -63,6 +63,24 @@ export const LeaseExpectedRevenueOrgPage: React.FC = () => {
                 const item = row?.original as SingleLeaseOrg
                 return (
                     <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap">{formattedNumber(item?.total_expected)}</div>
+                )
+            }
+        },
+        {
+            header: () => "Payment Status",
+            accessorKey: "status",
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as SingleLeaseOrg
+                return (
+                    <Fragment>
+                        <RenderIf condition={item?.status === 1}>
+                            <div className="text-sm text-semantics-success whitespace-nowrap">Remitted</div>
+                        </RenderIf>
+                        <RenderIf condition={item?.status === 0}>
+                            <div className="text-sm text-semantics-error whitespace-nowrap">Not Remitted</div>
+                        </RenderIf>
+                    </Fragment>
+                    
                 )
             }
         }
