@@ -23,6 +23,7 @@ export const ServiceRequestPage: React.FC = () => {
     const [toggleModals, setToggleModals] = useState({
         openUpdateRequestModal: false,
         openViewImageModal: false,
+        imageToView: "",
     })
   
     const toggleUpdateRequestStation = useCallback(() => {
@@ -32,9 +33,10 @@ export const ServiceRequestPage: React.FC = () => {
       }))
     }, [toggleModals.openUpdateRequestModal])
   
-    const toggleViewRequestImage = useCallback(() => {
+    const toggleViewRequestImage = useCallback((image: string) => {
       setToggleModals((prev) => ({
         ...prev,
+        imageToView: image,
         openViewImageModal: !toggleModals.openViewImageModal,
       }))
     }, [toggleModals.openViewImageModal])
@@ -95,7 +97,7 @@ export const ServiceRequestPage: React.FC = () => {
                 <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">
                     <Breadcrumb items={[{ label: "Service Request", link: "/service-request" }, { label: "ABC 123 DEF", link: "/service-request/1" }]} showBack />
                     <div className="grid content-start gap-5 p-4 bg-white rounded-lg">
-                        <div className="flex items-center justify-between">
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                             <h1 className="text-grey-dark-1 font-bold text-xl">ABC 123 DEF</h1>
                             <div className="flex items-center gap-2 pb-4 w-full sm:w-auto">
                                 <TableAction type="button" theme="primary" block onClick={toggleUpdateRequestStation}>
@@ -130,7 +132,7 @@ export const ServiceRequestPage: React.FC = () => {
                                     )
                                 }
                             </div>
-                            <div className="flex items-center gap-12 py-4 px-5 rounded-xl border border-input-filled">
+                            <div className="flex flex-col md:flex-row md:items-center gap-12 py-4 px-5 rounded-xl border border-input-filled">
                                 <div className="grid gap-2 pr-8 md:border-r md:border-r-input-filled">
                                     <img src={vehicleImg} alt="vehicle" className="md:w-auto w-56" />
                                     <div className="grid gap-1 md:text-center">
@@ -138,7 +140,7 @@ export const ServiceRequestPage: React.FC = () => {
                                         <p className="text-sm text-grey-dark-1">{serviceRequest?.vehicle_data?.car_color}</p>
                                     </div>
                                 </div>
-                                <div className="grid grid-cols-3 gap-8 flex-1">
+                                <div className="grid grid-cols-2 md:grid-cols-3 gap-8 flex-1">
                                     {
                                         details?.map((item) => 
                                             <div key={item.label} className="grid gap-1">
@@ -171,22 +173,24 @@ export const ServiceRequestPage: React.FC = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="grid grid-cols-2 gap-6">
-                                <div className="flex flex-col gap-6 rounded-lg border border-input-filled py-4 px-5">
-                                    <h2 className="font-semibold text-base text-grey-dark-1">Uploaded Images</h2>
-                                    <div className="flex items-center gap-4 flex-wrap">
-                                        {
-                                            Array.from({ length: 4 }).map((_, idx) =>
-                                                <div key={idx} className="size-28 rounded-lg overflow-hidden relative">
-                                                    <img src="https://images.pexels.com/photos/515674/pexels-photo-515674.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="engine" className="object-cover object-center size-28" />
-                                                    <button type="button" onClick={toggleViewRequestImage} className="absolute p-0.5 bottom-1.5 right-1.5 size-3.5 bg-white rounded-sm grid place-content-center" style={{ boxShadow: "0px 0px 5.85px -0.93px rgba(10, 75, 75, 0.2)" }}>
-                                                        <Icon icon="lucide:scan" className="text-green-1 size-2.5" />
-                                                    </button>
-                                                </div>
-                                            )
-                                        }
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <RenderIf condition={serviceRequest !== undefined && serviceRequest?.img_data?.length > 0}>
+                                    <div className="flex flex-col gap-6 rounded-lg border border-input-filled py-4 px-5">
+                                        <h2 className="font-semibold text-base text-grey-dark-1">Uploaded Images</h2>
+                                        <div className="flex items-center gap-4 flex-wrap">
+                                            {
+                                                serviceRequest?.img_data.map((image) =>
+                                                    <div key={image?._id} className="size-28 rounded-lg overflow-hidden relative">
+                                                        <img src={image?.url} alt="engine" className="object-cover object-center size-28" />
+                                                        <button type="button" onClick={() => toggleViewRequestImage(image?.url)} className="absolute p-0.5 bottom-1.5 right-1.5 size-3.5 bg-white rounded-sm grid place-content-center" style={{ boxShadow: "0px 0px 5.85px -0.93px rgba(10, 75, 75, 0.2)" }}>
+                                                            <Icon icon="lucide:scan" className="text-green-1 size-2.5" />
+                                                        </button>
+                                                    </div>
+                                                )
+                                            }
+                                        </div>
                                     </div>
-                                </div>
+                                </RenderIf>
                                 <div className="flex flex-col gap-6 rounded-lg border border-input-filled py-4 px-5">
                                     <h2 className="text-sm text-grey-dark-3">Request Description</h2>
                                     <div className="test-sm text-grey-dark-2">
@@ -212,7 +216,7 @@ export const ServiceRequestPage: React.FC = () => {
                         </div>
                     </div>
                     <UpdateRequestModal isOpen={toggleModals.openUpdateRequestModal} close={toggleUpdateRequestStation} request={serviceRequest!} />
-                    <ViewRequestImageModal isOpen={toggleModals.openViewImageModal} close={toggleViewRequestImage} />
+                    <ViewRequestImageModal image={toggleModals.imageToView} isOpen={toggleModals.openViewImageModal} close={() => toggleViewRequestImage("")} />
                 </motion.div>
             </RenderIf>
             <RenderIf condition={isFetching || fetchingCountStatus}>

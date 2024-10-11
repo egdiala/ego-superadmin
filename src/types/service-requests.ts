@@ -63,6 +63,10 @@ export interface SingleServiceRequest extends Omit<FetchedServiceRequest, "drive
         first_name: string;
         last_name: string;
     };
+    img_data: {
+        _id: string;
+        url: string;
+    }[];
     vehicle_data: {
         plate_number: string;
         car_color: string;
