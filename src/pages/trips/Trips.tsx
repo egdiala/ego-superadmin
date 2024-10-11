@@ -24,8 +24,8 @@ export const TripsPage: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const [filters, setFilters] = useState({
-      start_date: "",
-      end_date: "",
+      start_date: searchParams.get("start_date") || "",
+      end_date: searchParams.get("end_date") || "",
       vehicle_id: searchParams.get("vehicle_id") || ""
     })
     const [component] = useState<"count" | "count-status" | "count-status-rider" | "count-status-driver" | "count-monthly">("count")

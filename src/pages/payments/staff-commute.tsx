@@ -6,13 +6,14 @@ import { motion } from "framer-motion";
 import { formattedNumber } from "@/utils/textFormatter";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
-import { useLocation, useSearchParams } from "react-router-dom";
 import { useGetCommutePayments } from "@/services/hooks/queries";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import type { FetchedCommutePayment, FetchedReceivableCount, PaymentCountStatus } from "@/types/payment";
 
 export const StaffCommutePaymentLogPage: React.FC = () => {
+    const navigate = useNavigate()
     const location = useLocation();
     const itemsPerPage = 10;
     const [page, setPage] = useState(1);
@@ -115,6 +116,7 @@ export const StaffCommutePaymentLogPage: React.FC = () => {
                     perPage={itemsPerPage}
                     totalCount={count?.total}
                     onPageChange={handlePageChange}
+                    onClick={({ original }: { original: FetchedCommutePayment }) => navigate(`/trips?vehicle_id=${original?.vehicle_id}&start_date=${original.created}&end_date=${original.created}`)}
                 />
             </RenderIf>
             <RenderIf condition={fetchingPayments || fetchingPaymentsCount || fetchingPaymentsCountStatus}>
