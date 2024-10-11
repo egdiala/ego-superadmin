@@ -22,9 +22,11 @@ export const TripsPage: React.FC = () => {
     const [page, setPage] = useState(1)
     const { value, onChangeHandler } = useDebounce(500)
     const [searchParams, setSearchParams] = useSearchParams();
+
     const [filters, setFilters] = useState({
       start_date: "",
-      end_date: ""
+      end_date: "",
+      vehicle_id: searchParams.get("vehicle_id") || ""
     })
     const [component] = useState<"count" | "count-status" | "count-status-rider" | "count-status-driver" | "count-monthly">("count")
     const { data: count, isFetching: fetchingCount } = useGetTrips({ component, q: value, ...filters })
@@ -56,14 +58,6 @@ export const TripsPage: React.FC = () => {
         }
       },
       {
-        header: () => "Rider",
-        accessorKey: "ride_data.name",
-      },
-      {
-        header: () => "Driver",
-        accessorKey: "driver_data.name",
-      },
-      {
         header: () => "Model",
         accessorKey: "org_data.purchase_model",
         cell: ({ row }: { row: any; }) => {
@@ -74,24 +68,16 @@ export const TripsPage: React.FC = () => {
         }
       },
       {
-        header: () => "Pickup",
-        accessorKey: "ride_data.start_address",
-        cell: ({ row }: { row: any; }) => {
-          const item = row?.original as FetchedTripType
-          return (
-            <div className="text-sm text-grey-dark-2 line-clamp-2">{item?.ride_data?.start_address}</div>
-          )
-        }
+        header: () => "Rider",
+        accessorKey: "ride_data.name",
       },
       {
-        header: () => "Drop off",
-        accessorKey: "ride_data.end_address",
-        cell: ({ row }: { row: any; }) => {
-          const item = row?.original as FetchedTripType
-          return (
-            <div className="text-sm text-grey-dark-2 line-clamp-2">{item?.ride_data?.stop_location?.[item?.ride_data?.stop_location?.length - 1]?.address || item?.ride_data?.end_address}</div>
-          )
-        }
+        header: () => "Driver",
+        accessorKey: "driver_data.name",
+      },
+      {
+        header: () => "Vehicle",
+        accessorKey: "driver_data.plate_number",
       },
       {
         header: () => "Status",

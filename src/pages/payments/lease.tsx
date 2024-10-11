@@ -7,42 +7,43 @@ import { formattedNumber } from "@/utils/textFormatter";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useGetLeasePayments } from "@/services/hooks/queries";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
-import type { FetchedLeasePayment, FetchedReceivableCount, PaymentCountStatus } from "@/types/payment";
+import type { FetchedLeaseVehiclePayment, FetchedReceivableCount, PaymentCountStatus } from "@/types/payment";
 
 export const LeasePaymentLogPage: React.FC = () => {
+    const navigate = useNavigate()
     const location = useLocation();
     const itemsPerPage = 10;
     const [page, setPage] = useState(1);
     const [searchParams, setSearchParams] = useSearchParams();
-    const { data: count, isFetching: fetchingPaymentsCount } = useGetLeasePayments<FetchedReceivableCount>({ request_type: "2", status: "1", component: "count" })
-    const { data: countStatus, isFetching: fetchingPaymentsCountStatus } = useGetLeasePayments<PaymentCountStatus>({ request_type: "2", status: "1", component: "count-status" })
-    const { data: payments, isFetching: fetchingPayments } = useGetLeasePayments<FetchedLeasePayment[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), request_type: "2", status: "1" })
+    const { data: count, isFetching: fetchingPaymentsCount } = useGetLeasePayments<FetchedReceivableCount>({ request_type: "3", status: "1", component: "count" })
+    const { data: countStatus, isFetching: fetchingPaymentsCountStatus } = useGetLeasePayments<PaymentCountStatus>({ request_type: "3", status: "1", component: "count-status" })
+    const { data: payments, isFetching: fetchingPayments } = useGetLeasePayments<FetchedLeaseVehiclePayment[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), request_type: "3", status: "1" })
 
     const columns = [
         {
             header: () => "Date & Time",
             accessorKey: "created",
             cell: ({ row }: { row: any; }) => {
-                const item = row?.original as FetchedLeasePayment
+                const item = row?.original as FetchedLeaseVehiclePayment
                 return (
                     <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{format(item?.created, "dd MMM, yyyy")}</span> • 11:59 pm</div>
                 )
             }
         },
         {
-            header: () => "Business Name",
-            accessorKey: "user_orgs.name",
+            header: () => "Vehicle",
+            accessorKey: "plate_number",
         },
         {
             header: () => "Amount",
-            accessorKey: "total_remitted",
+            accessorKey: "total_expected",
             cell: ({ row }: { row: any; }) => {
-                const item = row?.original as FetchedLeasePayment
+                const item = row?.original as FetchedLeaseVehiclePayment
                 return (
-                    <div className="text-sm text-grey-dark-2 whitespace-nowrap">{formattedNumber(item?.total_remitted)}</div>
+                    <div className="text-sm text-grey-dark-2 whitespace-nowrap">{formattedNumber(item?.total_expected)}</div>
                 )
             }
         },
@@ -111,6 +112,7 @@ export const LeasePaymentLogPage: React.FC = () => {
                     perPage={itemsPerPage}
                     totalCount={count?.total}
                     onPageChange={handlePageChange}
+                    onClick={({ original }: { original: FetchedLeaseVehiclePayment }) => navigate(`/trips?vehicle_id=${original?.vehicle_id}`)}
                 />
             </RenderIf>
             <RenderIf condition={fetchingPayments || fetchingPaymentsCount || fetchingPaymentsCountStatus}>

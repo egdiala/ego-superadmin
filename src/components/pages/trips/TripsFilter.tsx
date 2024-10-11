@@ -10,6 +10,8 @@ interface Filters {
     start_date: string;
     end_date: string;
     ride_status: string;
+    vehicle_id: string;
+    [x: string]: any;
 }
 
 interface TripsFilterProps {
@@ -67,7 +69,8 @@ export const TripsFilter: React.FC<TripsFilterProps> = ({ isLoading, setFilters,
         setFilters({
             start_date: selected.value.start ? format(selected.value.start, "yyyy-MM-dd") : "",
             end_date: selected.value.end ? format(selected.value.end, "yyyy-MM-dd") : "",
-            ride_status: statusFilters
+            ride_status: statusFilters,
+            vehicle_id: ""
         });
         fn?.();
     };

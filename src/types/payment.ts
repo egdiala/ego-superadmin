@@ -80,6 +80,17 @@ export interface FetchedLeasePayment {
     }
 }
 
+export interface FetchedLeaseVehiclePayment {
+    plate_number: string;
+    status: number;
+    created: string;
+    excess_km: number;
+    total_km: number;
+    total_expected: number;
+    total_obligation: number;
+    vehicle_id: string;
+}
+
 export interface FetchedCommutePayment {
     vehicle_id: string;
     total_trip: number;
