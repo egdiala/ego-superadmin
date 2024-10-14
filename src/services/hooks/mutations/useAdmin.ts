@@ -20,7 +20,7 @@ export const useCreateAdmin = (fn?: (v: any) => void) => {
 };
 
 // eslint-disable-next-line no-unused-vars
-export const useUploadProfilePhoto = (fn?: (v: any) => void, mode: string = "Edited") => {
+export const useUploadProfilePhoto = (fn?: (v: any) => void) => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: uploadProfilePhoto,
