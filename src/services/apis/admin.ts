@@ -1,6 +1,6 @@
 import { axiosInstance } from "../axiosInstance";
 import type { CreateAdminType, FetchAdminsQuery, UpdateAdminType } from "@/types/admin";
-import { CREATE_ADMIN_API, GET_ADMIN_PROFILE_API } from "@/constants/api";
+import { CREATE_ADMIN_API, GET_ADMIN_PROFILE_API, UPLOAD_PROFILE_PHOTO_API } from "@/constants/api";
 import { createQueryString } from "@/utils/createQuery";
 
 export const createAdmin = async (data: CreateAdminType) => {
@@ -11,6 +11,16 @@ export const createAdmin = async (data: CreateAdminType) => {
 export const editAdmin = async (data: Partial<UpdateAdminType> & { id: string; }) => {
     const { id, ...rest } = data
     const res = await axiosInstance.put(`${CREATE_ADMIN_API}/${id}`, rest);
+    return res.data;
+};
+
+export const uploadProfilePhoto = async (data: FormData) => {
+    const res = await axiosInstance.post(UPLOAD_PROFILE_PHOTO_API, data, {
+        headers: {
+        "Accept": "application/form-data",
+        "Content-Type": "multipart/form-data"
+        },
+    });
     return res.data;
 };
 

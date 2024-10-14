@@ -1,11 +1,11 @@
 import React, { useCallback } from "react";
-import { Button, Input } from "@/components/core";
+import { Button, FileUpload, Input } from "@/components/core";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { Icon } from "@iconify/react";
 import type { FetchedAdminProfile } from "@/types/admin";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { editAdminProfileSchema } from "@/validations/admin";
-import { useEditAdmin } from "@/services/hooks/mutations";
+import { useEditAdmin, useUploadProfilePhoto } from "@/services/hooks/mutations";
 
 interface EditProfileModalProps {
     isOpen: boolean;
@@ -15,16 +15,25 @@ interface EditProfileModalProps {
 }
 
 export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, close, user }) => {
+    const { mutate: upload, isPending: isUploading } = useUploadProfilePhoto(() => closeModal())
     const { mutate: edit, isPending } = useEditAdmin(() => closeModal())
 
-    const { handleSubmit, isValid, register, resetForm } = useFormikWrapper({
+    const { handleSubmit, dirty, isValid, register, resetForm, setFieldValue, values } = useFormikWrapper({
         initialValues: {
             phone_number: user?.phone_number || "",
+            file: null as File | null
         },
         enableReinitialize: true,
         validationSchema: editAdminProfileSchema,
-        onSubmit(values) {
-            edit({ id: user?.auth_id, ...values })
+        onSubmit: () => {
+            if (values?.file !== null) {
+                const formData = new FormData();
+                formData.append("file", values.file);
+                upload(formData)
+            } 
+            if (values?.phone_number !== user?.phone_number) {
+                edit({ id: user?.auth_id, phone_number: values?.phone_number }) 
+            }
         },
     })
 
@@ -46,11 +55,11 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, clos
                     </div>
                     <div className="grid gap-6">
                         <Input type="text" label="Phone Number" {...register("phone_number")} />
-                        <Input type="text" label="Upload Profile Image" />
+                        <FileUpload label="Upload Profile Image" accept="image/*" value={values?.file?.name} onChange={(v) => setFieldValue("file", v)} />
                     </div>
                     <div className="flex items-center justify-end w-full md:w-1/2 ml-auto pt-10 gap-2 md:gap-4">
                         <Button type="button" theme="tertiary" onClick={closeModal} block>Cancel</Button>
-                        <Button type="submit" theme="primary" loading={isPending} disabled={isPending || !isValid} block>Update Profile</Button>
+                        <Button type="submit" theme="primary" loading={isPending || isUploading} disabled={isPending || isUploading || !isValid || !dirty} block>Update Profile</Button>
                     </div>
                 </DialogPanel>
             </div>
