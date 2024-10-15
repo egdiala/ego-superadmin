@@ -34,8 +34,22 @@ export const LeasePaymentLogPage: React.FC = () => {
             }
         },
         {
+            header: () => "Business Name",
+            accessorKey: "user_orgs.name",
+        },
+        {
             header: () => "Vehicle",
             accessorKey: "plate_number",
+        },
+        {
+            header: () => "Total KM",
+            accessorKey: "total_km",
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as FetchedLeaseVehiclePayment
+                return (
+                    <div className="text-sm text-grey-dark-2 whitespace-nowrap">{item?.total_km} KM</div>
+                )
+            }
         },
         {
             header: () => "Amount",

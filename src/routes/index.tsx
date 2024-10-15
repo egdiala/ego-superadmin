@@ -3,7 +3,7 @@ import { WalletPage } from "@/pages/wallet";
 import AuthLayout from "@/layouts/AuthLayout";
 import { ProfilePage } from "@/pages/profile";
 import { AnimatePresence } from "framer-motion";
-import { InvoicesPage } from "@/pages/invoices";
+// import { InvoicesPage } from "@/pages/invoices";
 import { ActivityLogPage } from "@/pages/activity-log";
 import ProtectedLayout from "@/layouts/ProtectedLayout";
 import { NotificationsPage } from "@/pages/notifications";
@@ -38,7 +38,7 @@ const Router = () => {
                 <Route path="trips/*" element={<ProtectedLayout><LocationProvider><TripsRoutes /></LocationProvider></ProtectedLayout>} />
                 <Route path="wallet" element={<ProtectedLayout><LocationProvider><WalletPage /></LocationProvider></ProtectedLayout>} />
                 <Route path="notifications" element={<ProtectedLayout><LocationProvider><NotificationsPage /></LocationProvider></ProtectedLayout>} />
-                <Route path="invoices" element={<ProtectedLayout><LocationProvider><InvoicesPage /></LocationProvider></ProtectedLayout>} />
+                {/* <Route path="invoices" element={<ProtectedLayout><LocationProvider><InvoicesPage /></LocationProvider></ProtectedLayout>} /> */}
                 <Route path="payment-log/*" element={<ProtectedLayout><LocationProvider><PaymentLogRoutes /></LocationProvider></ProtectedLayout>} />
                 <Route path="receivables/*" element={<ProtectedLayout><LocationProvider><ReceivablesRoutes /></LocationProvider></ProtectedLayout>} />
                 <Route path="revenue/*" element={<ProtectedLayout><LocationProvider><ExpectedRevenueRoutes /></LocationProvider></ProtectedLayout>} />

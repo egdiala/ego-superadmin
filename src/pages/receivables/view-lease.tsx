@@ -6,8 +6,8 @@ import { formattedNumber } from "@/utils/textFormatter";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useGetLeasePayments } from "@/services/hooks/queries";
-import { useLocation, useParams, useSearchParams } from "react-router-dom";
-import { FetchedReceivableCount, SingleLeaseReceivable } from "@/types/payment";
+import { Link, useLocation, useParams, useSearchParams } from "react-router-dom";
+import { FetchedLeasePayment, FetchedReceivableCount } from "@/types/payment";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { Breadcrumb, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 
@@ -18,31 +18,50 @@ export const ViewLeaseReceivablesPage: React.FC = () => {
     const itemsPerPage = 10;
     const [page, setPage] = useState(1)
     const [searchParams, setSearchParams] = useSearchParams();
-    const { data: count, isFetching: fetchingReceivablesCount } = useGetLeasePayments<FetchedReceivableCount>({ request_type: "2", status: "0", start_date: id, end_date: id, component: "count" })
-    const { data: receivables, isFetching: fetchingReceivables } = useGetLeasePayments<SingleLeaseReceivable[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), request_type: "2", status: "0", start_date: id, end_date: id })
+    const { data: count, isFetching: fetchingReceivablesCount } = useGetLeasePayments<FetchedReceivableCount>({ request_type: "2", start_date: id, end_date: id, component: "count" })
+    const { data: receivables, isFetching: fetchingReceivables } = useGetLeasePayments<FetchedLeasePayment[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), request_type: "2", start_date: id, end_date: id })
 
-    const columns = [
+        const columns = [
         {
             header: () => "Date & Time",
             accessorKey: "created",
             cell: ({ row }: { row: any; }) => {
-                const item = row?.original as SingleLeaseReceivable
+                const item = row?.original as FetchedLeasePayment
                 return (
                     <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{format(item?.created, "dd MMM, yyyy")}</span> • 11:59 pm</div>
                 )
             }
         },
         {
-            header: () => "Business / Staff name",
+            header: () => "Business name",
             accessorKey: "user_orgs.name",
         },
         {
-            header: () => "Total amount being owed",
+            header: () => "Business model",
+            accessorKey: "model",
+            cell: () => {
+                return (
+                    <div className="text-sm text-grey-dark-2 whitespace-nowrap">Lease</div>
+                )
+            }
+        },
+        {
+            header: () => "Invoiced amount",
             accessorKey: "total_expected",
             cell: ({ row }: { row: any; }) => {
-                const item = row?.original as SingleLeaseReceivable
+                const item = row?.original as FetchedLeasePayment
                 return (
-                    <div className="text-sm text-grey-dark-2 whitespace-nowrap">{formattedNumber(item?.total_expected)}</div>
+                    <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap">{formattedNumber(item?.total_expected)}</div>
+                )
+            }
+        },
+        {
+            header: () => "Action",
+            accessorKey: "action",
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as FetchedLeasePayment
+                return (
+                    <Link className="text-dark-green-1 font-medium text-sm underline underline-offset-2" to={`/revenue/lease/${item?.created}/${item?.user_orgs?.auth_id}`}>View</Link>
                 )
             }
         },

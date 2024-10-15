@@ -13,7 +13,7 @@ export const GET_ROLES_API = "admin/operations/roles"
 // Admins
 export const CREATE_ADMIN_API = "admin/accounts"
 export const GET_ADMIN_PROFILE_API = "admin/accounts/profile"
-export const UPLOAD_PROFILE_PHOTO_API = "user/files/profile-picture"
+export const UPLOAD_PROFILE_PHOTO_API = "admin/files/profile-picture"
 
 // Drivers
 export const CREATE_DRIVER_API = "admin/users/drivers"

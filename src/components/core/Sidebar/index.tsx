@@ -9,6 +9,7 @@ import "./sidebar.css";
 import { cn } from "@/libs/cn";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/react";
 import { Icon } from "@iconify/react";
+import { useGetAdminProfile } from "@/services/hooks/queries";
 
 interface SidebarProps {
     showSidebar: boolean;
@@ -16,6 +17,7 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ showSidebar }) => {
     const admin = getAdminData()
+    const { data } = useGetAdminProfile()
 
     const appPermissions = appRoutes.map(route => ({
         route,
@@ -107,9 +109,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ showSidebar }) => {
                     </RenderIf>
                 </div>
                 <Link to="/profile" className="flex items-center gap-2">
-                    <img src={admin?.avatar || blankImg} className="size-10 rounded-full object-cover" alt="user" />
+                    <img src={(data?.avatar) || blankImg} className="size-10 rounded-full object-cover" alt="user" />
                     <div className="flex-1 grid gap-0.5">
-                        <h3 className="font-medium text-sm/4 text-grey-dark-1 line-clamp-1 capitalize">{admin?.first_name} {admin?.last_name}</h3>
+                        <h3 className="font-medium text-sm/4 text-grey-dark-1 line-clamp-1 capitalize">{admin?.first_name.toLowerCase()} {admin?.last_name.toLowerCase()}</h3>
                         <span className="font-medium text-xs text-grey-dark-3 line-clamp-1 capitalize">{admin?.user_type}</span>
                     </div>
                 </Link>

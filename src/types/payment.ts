@@ -89,6 +89,11 @@ export interface FetchedLeaseVehiclePayment {
     total_expected: number;
     total_obligation: number;
     vehicle_id: string;
+    organization_id: string;
+    user_orgs: {
+        name: string;
+        auth_id: string;
+    },
 }
 
 export interface FetchedCommutePayment {
@@ -100,6 +105,11 @@ export interface FetchedCommutePayment {
     vehicle_data: {
         _id: string;
         plate_number: string;
+    }
+    driver_data: {
+        _id: string;
+        first_name: string;
+        last_name: string;
     }
 }
 

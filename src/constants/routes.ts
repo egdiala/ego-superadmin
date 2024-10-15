@@ -12,7 +12,7 @@ export const appRoutes = [
 export const financeRoutes = [
     { to:"/wallet", name:"Wallet", icon:"" },
     { to:"/revenue", name:"Expected Revenue", icon:"" },
-    { to:"/invoices", name:"Invoices", icon:"" },
+    // { to:"/invoices", name:"Invoices", icon:"" },
     { to:"/payment-log", name:"Payment Log", icon:"" },
     { to:"/receivables", name:"Receivables", icon:"" },
 ]

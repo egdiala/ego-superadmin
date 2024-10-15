@@ -34,6 +34,16 @@ export const StaffCommutePaymentLogPage: React.FC = () => {
             }
         },
         {
+            header: () => "Driver Name",
+            accessorKey: "driver_data._id",
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as FetchedCommutePayment
+                return (
+                    <div className="text-sm text-grey-dark-2 capitalize whitespace-nowrap">{item?.driver_data?.first_name} {item?.driver_data?.last_name}</div>
+                )
+            }
+        },
+        {
             header: () => "Plate Number",
             accessorKey: "vehicle_data.plate_number",
         },

@@ -80,6 +80,10 @@ export const TripsPage: React.FC = () => {
         accessorKey: "driver_data.plate_number",
       },
       {
+        header: () => "Pickup",
+        accessorKey: "ride_data.start_address",
+      },
+      {
         header: () => "Status",
         accessorKey: "ride_status",
         cell: ({ row }: { row: any; }) => {
