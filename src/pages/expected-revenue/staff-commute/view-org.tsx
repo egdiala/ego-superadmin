@@ -10,6 +10,7 @@ import { pageVariants } from "@/constants/animateVariants";
 import { useLocation, useParams, useSearchParams } from "react-router-dom";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { Breadcrumb, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { formattedNumber } from "@/utils/textFormatter";
 
 
 export const StaffCommuteExpectedRevenueOrgPage: React.FC = () => {
@@ -45,8 +46,14 @@ export const StaffCommuteExpectedRevenueOrgPage: React.FC = () => {
             accessorKey: "ride_data.start_address",
         },
         {
-            header: () => "Drop off",
-            accessorKey: "ride_data.end_address",
+            header: () => "Trip Amount",
+            accessorKey: "ride_data.fare",
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as FetchedTripType
+                return (
+                    <div className="text-sm text-grey-dark-2 capitalize whitespace-nowrap">{formattedNumber(item?.ride_data?.fare)}</div>
+                )
+            }
         },
         {
             header: () => "Payment Method",
