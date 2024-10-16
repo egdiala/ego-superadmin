@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import { WalletPage } from "@/pages/wallet";
 import AuthLayout from "@/layouts/AuthLayout";
 import { ProfilePage } from "@/pages/profile";
 import { AnimatePresence } from "framer-motion";
@@ -10,7 +9,7 @@ import { NotificationsPage } from "@/pages/notifications";
 import { AccountsLayout } from "@/pages/accounts/Accounts";
 import { AccountsPage, RolesPage } from "@/pages/accounts";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import { AuthRoutes, ChargeStationsRoutes, CustomersRoutes, DashboardRoutes, DriversRoutes, ExpectedRevenueRoutes, FeesRoutes, PaymentLogRoutes, ReceivablesRoutes, RevenueSplitRoutes, RidersRoutes, RolesRoutes, ServiceRequestsRoutes, TripsRoutes, VehiclesRoutes } from "./modules";
+import { AuthRoutes, ChargeStationsRoutes, CustomersRoutes, DashboardRoutes, DriversRoutes, ExpectedRevenueRoutes, FeesRoutes, PaymentLogRoutes, ReceivablesRoutes, RevenueSplitRoutes, RidersRoutes, RolesRoutes, ServiceRequestsRoutes, TripsRoutes, VehiclesRoutes, WalletRoutes } from "./modules";
 
 
 function LocationProvider({ children }: { children: ReactNode }) {
@@ -36,7 +35,7 @@ const Router = () => {
                 <Route path="riders/*" element={<ProtectedLayout><LocationProvider><RidersRoutes /></LocationProvider></ProtectedLayout>} />
                 <Route path="charge-stations/*" element={<ProtectedLayout><LocationProvider><ChargeStationsRoutes /></LocationProvider></ProtectedLayout>} />
                 <Route path="trips/*" element={<ProtectedLayout><LocationProvider><TripsRoutes /></LocationProvider></ProtectedLayout>} />
-                <Route path="wallet" element={<ProtectedLayout><LocationProvider><WalletPage /></LocationProvider></ProtectedLayout>} />
+                <Route path="wallet/*" element={<ProtectedLayout><LocationProvider><WalletRoutes /></LocationProvider></ProtectedLayout>} />
                 <Route path="notifications" element={<ProtectedLayout><LocationProvider><NotificationsPage /></LocationProvider></ProtectedLayout>} />
                 {/* <Route path="invoices" element={<ProtectedLayout><LocationProvider><InvoicesPage /></LocationProvider></ProtectedLayout>} /> */}
                 <Route path="payment-log/*" element={<ProtectedLayout><LocationProvider><PaymentLogRoutes /></LocationProvider></ProtectedLayout>} />
