@@ -56,7 +56,7 @@ export const StaffCommuteExpectedRevenueOrgPage: React.FC = () => {
             }
         },
         {
-            header: () => "Payment Method",
+            header: () => "Mode",
             accessorKey: "ride_data.charge_data.method",
             cell: ({ row }: { row: any; }) => {
                 const item = row?.original as FetchedTripType
@@ -66,7 +66,7 @@ export const StaffCommuteExpectedRevenueOrgPage: React.FC = () => {
             }
         },
         {
-            header: () => "Payment Status",
+            header: () => "Status",
             accessorKey: "ride_data.charge_data.status",
             cell: ({ row }: { row: any; }) => {
                 const item = row?.original as FetchedTripType
