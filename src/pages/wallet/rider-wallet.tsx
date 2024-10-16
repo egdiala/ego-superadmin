@@ -38,8 +38,8 @@ export const RiderWalletPage: React.FC = () => {
             }
         },
         {
-            header: () => "Transaction ID",
-            accessorKey: "transaction_id",
+            header: () => "Type",
+            accessorKey: "transaction_type",
         },
         {
             header: () => "Description",
@@ -50,12 +50,20 @@ export const RiderWalletPage: React.FC = () => {
             accessorKey: "business_name",
         },
         {
-            header: () => "Type",
-            accessorKey: "transaction_type",
-        },
-        {
             header: () => "Model",
             accessorKey: "payment_method",
+        },
+        {
+            header: () => "Mode",
+            accessorKey: "payment_method",
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as FetchedWalletTransaction
+                return (
+                    <div className="text-sm text-grey-dark-2 capitalize whitespace-nowrap">
+                        {item?.payment_method}
+                    </div>
+                )
+            }
         },
         {
             header: () => "Amount",
@@ -95,7 +103,7 @@ export const RiderWalletPage: React.FC = () => {
 
     const trips = useMemo(() => {
         return [
-            { label: "Wallet balance", value: formattedNumber((walletInfo as FetchedWalletStatsCount)?.credit_amount - (walletInfo as FetchedWalletStatsCount)?.debit_amount), color: "bg-[#F8F9FB]" },
+            { label: "Value", value: formattedNumber((walletInfo as FetchedWalletStatsCount)?.credit_amount - (walletInfo as FetchedWalletStatsCount)?.debit_amount), color: "bg-[#F8F9FB]" },
             { label: "Count", value: (count as FetchedWalletTransactionCount)?.total ?? 0, color: "bg-green-4" },
         ]
     },[count, walletInfo])
