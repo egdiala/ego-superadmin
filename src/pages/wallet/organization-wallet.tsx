@@ -46,7 +46,7 @@ export const OrganizationWalletPage: React.FC = () => {
             accessorKey: "description",
         },
         {
-            header: () => "Business/Staff Name",
+            header: () => "Business Name",
             accessorKey: "business_name",
         },
         {

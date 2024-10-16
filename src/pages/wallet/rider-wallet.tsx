@@ -46,8 +46,16 @@ export const RiderWalletPage: React.FC = () => {
             accessorKey: "description",
         },
         {
-            header: () => "Business/Staff Name",
-            accessorKey: "business_name",
+            header: () => "Staff Name",
+            accessorKey: "first_name",
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as FetchedWalletTransaction
+                return (
+                    <div className="text-sm text-grey-dark-2 capitalize whitespace-nowrap">
+                        {item?.first_name} {item?.last_name}
+                    </div>
+                )
+            }
         },
         {
             header: () => "Model",
