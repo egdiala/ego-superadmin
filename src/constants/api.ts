@@ -15,6 +15,10 @@ export const CREATE_ADMIN_API = "admin/accounts"
 export const GET_ADMIN_PROFILE_API = "admin/accounts/profile"
 export const UPLOAD_PROFILE_PHOTO_API = "admin/files/profile-picture"
 
+// Charge Stations
+export const GET_CHARGE_STATIONS_API = "admin/vehicles/charge-stations"
+export const BULK_UPLOAD_CHARGE_STATIONS_API = "admin/vehicles/bulk-charge-station-upload"
+
 // Drivers
 export const CREATE_DRIVER_API = "admin/users/drivers"
 export const BULK_UPLOAD_DRIVERS_API = "admin/users/bulk-driver-upload"

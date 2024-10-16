@@ -2,34 +2,37 @@ import React from "react";
 import { Button, Input } from "@/components/core";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
+import type { FetchedChargeStations } from "@/types/charge-stations";
+import { useEditStation } from "@/services/hooks/mutations/useChargeStations";
 
 
 interface EditStationModalProps {
     isOpen: boolean;
-    // eslint-disable-next-line no-unused-vars
-    close: (value: boolean) => void
+    close: () => void
+    station: FetchedChargeStations | null
 }
 
-export const EditStationModal: React.FC<EditStationModalProps> = ({ isOpen, close }) => {
+export const EditStationModal: React.FC<EditStationModalProps> = ({ isOpen, close, station }) => {
+    const { mutate, isPending } = useEditStation(`${station?.station_name} edited successfully`, () => onClose())
 
-    const { handleSubmit, register, resetForm } = useFormikWrapper({
+    const { handleSubmit, isValid, register, resetForm, values } = useFormikWrapper({
         initialValues: {
-            first_name: "",
-            last_name: "",
-            email: "",
-            phone_number: "",
-            opening_time: "",
-            closing_time: ""
+            station_name: station?.station_name || "",
+            contact_address: station?.full_address || "",
+            contact_number: station?.contact_number || "",
+            lga_address: station?.lga_address || "",
+            open_time: station?.opening_time || "",
+            close_time: station?.closing_time || "",
         },
         enableReinitialize: true,
         onSubmit: () => {
-            
+            mutate({ id: station?.station_id as string, ...values })
         },
     })
 
     const onClose = () => {
         resetForm();
-        close(false);
+        close();
     }
 
     return (
@@ -41,18 +44,18 @@ export const EditStationModal: React.FC<EditStationModalProps> = ({ isOpen, clos
                         Edit Charge Station
                     </DialogTitle>
                     <div className="grid gap-6">
-                        <Input type="text" label="Station Name" {...register("first_name")} />
-                        <Input type="text" label="Full Address" {...register("last_name")} />
-                        <Input type="text" label="Address LGA" {...register("email")} />
-                        <Input type="text" label="Contact Phone" {...register("phone_number")} />
+                        <Input type="text" label="Station Name" {...register("station_name")} />
+                        <Input type="text" label="Full Address" {...register("contact_address")} />
+                        <Input type="text" label="Address LGA" {...register("lga_address")} />
+                        <Input type="text" label="Contact Phone" {...register("contact_number")} />
                         <div className="grid grid-cols-2 gap-6">
-                            <Input type="text" label="Opening Time" iconRight="ph:timer-fill" {...register("opening_time")} />
-                            <Input type="text" label="Closing Time" iconRight="ph:timer-fill" {...register("closing_time")} />     
+                            <Input type="text" label="Opening Time" iconRight="ph:timer-fill" {...register("open_time")} />
+                            <Input type="text" label="Closing Time" iconRight="ph:timer-fill" {...register("close_time")} />     
                         </div>
                     </div>
                     <div className="flex items-center justify-end w-full md:w-1/2 ml-auto pt-10 gap-2 md:gap-4">
                         <Button type="button" theme="tertiary" onClick={onClose} block>Cancel</Button>
-                        <Button type="submit" theme="primary" block>Update</Button>
+                        <Button type="submit" theme="primary" loading={isPending} disabled={isPending || !isValid} block>Update</Button>
                     </div>
                 </DialogPanel>
             </div>
