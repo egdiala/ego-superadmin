@@ -6,13 +6,12 @@ import { formattedNumber } from "@/utils/textFormatter";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useGetCommutePayments } from "@/services/hooks/queries";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import type { FetchedReceivableCount, FetchedCommuteRevenue } from "@/types/payment";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 
 export const StaffCommuteExpectedRevenuePage: React.FC = () => {
-    const navigate = useNavigate();
     const location = useLocation();
     const itemsPerPage = 10;
     const [page, setPage] = useState(1);
@@ -55,6 +54,16 @@ export const StaffCommuteExpectedRevenuePage: React.FC = () => {
                 )
             }
         },
+        {
+            header: () => "Action",
+            accessorKey: "action",
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as FetchedCommuteRevenue
+                return (
+                    <Link className="text-dark-green-1 font-medium text-sm underline underline-offset-2" to={`/revenue/staff-commute/${item.created}`}>View</Link>
+                )
+            }
+        },
     ];
 
     const handlePageChange = (page: number) => {
@@ -93,7 +102,6 @@ export const StaffCommuteExpectedRevenuePage: React.FC = () => {
                     perPage={itemsPerPage}
                     totalCount={count?.total}
                     onPageChange={handlePageChange}
-                    onClick={({ original }: { original: FetchedCommuteRevenue }) => navigate(`/revenue/staff-commute/${original.created}`)}
                 />
             </RenderIf>
             <RenderIf condition={fetchingRevenues || fetchingRevenuesCount}>

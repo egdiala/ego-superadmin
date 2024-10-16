@@ -6,13 +6,12 @@ import { formattedNumber } from "@/utils/textFormatter";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useGetLeasePayments } from "@/services/hooks/queries";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import type { FetchedReceivableCount, FetchedLeaseReceivable } from "@/types/payment";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 
 export const LeaseExpectedRevenuePage: React.FC = () => {
-    const navigate = useNavigate();
     const location = useLocation();
     const itemsPerPage = 10;
     const [page, setPage] = useState(1);
@@ -59,6 +58,16 @@ export const LeaseExpectedRevenuePage: React.FC = () => {
                 )
             }
         },
+        {
+            header: () => "Action",
+            accessorKey: "action",
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as FetchedLeaseReceivable
+                return (
+                    <Link className="text-dark-green-1 font-medium text-sm underline underline-offset-2" to={`/revenue/lease/${item.created}`}>View</Link>
+                )
+            }
+        },
     ];
 
     const handlePageChange = (page: number) => {
@@ -97,7 +106,6 @@ export const LeaseExpectedRevenuePage: React.FC = () => {
                     perPage={itemsPerPage}
                     totalCount={count?.total}
                     onPageChange={handlePageChange}
-                    onClick={({ original }: { original: FetchedLeaseReceivable }) => navigate(`/revenue/lease/${original.created}`)}
                 />
             </RenderIf>
             <RenderIf condition={fetchingRevenues || fetchingRevenuesCount}>
