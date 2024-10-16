@@ -4,6 +4,7 @@ import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import type { FetchedChargeStations } from "@/types/charge-stations";
 import { useEditStation } from "@/services/hooks/mutations/useChargeStations";
+import { createStationSchema } from "@/validations/charge-station";
 
 
 interface EditStationModalProps {
@@ -25,6 +26,7 @@ export const EditStationModal: React.FC<EditStationModalProps> = ({ isOpen, clos
             close_time: station?.closing_time || "",
         },
         enableReinitialize: true,
+        validationSchema: createStationSchema,
         onSubmit: () => {
             mutate({ id: station?.station_id as string, ...values })
         },
