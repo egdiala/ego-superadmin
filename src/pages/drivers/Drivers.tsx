@@ -89,7 +89,10 @@ export const DriversPage: React.FC = () => {
       cell: ({ row }: { row: any; }) => {
         const item = row?.original as FetchedDriverType
         return (
-          <div className={cn(item?.status === 1 ? "text-dark-green-1" : "text-grey-dark-1", "font-medium text-sm")}>{item?.status === 1 ? "Active" : "Suspended"}</div>
+          <div className={cn(item?.status === 1 ? "text-dark-green-1" : "text-grey-dark-1", "font-medium text-sm")}>
+            <RenderIf condition={item?.status === 1}>Active</RenderIf>
+            <RenderIf condition={item?.status === 2}>Suspended</RenderIf>
+          </div>
         )
       }
     }

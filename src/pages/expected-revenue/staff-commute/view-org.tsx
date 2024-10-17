@@ -24,7 +24,17 @@ export const StaffCommuteExpectedRevenueOrgPage: React.FC = () => {
 
     const columns = [
         {
-            header: () => "Date & Time",
+            header: () => "Charge Date & Time",
+            accessorKey: "createdAt",
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as FetchedTripType
+                return (
+                    <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{format(item?.charge_at, "dd MMM, yyyy")}</span> • {format(item?.charge_at, "p")}</div>
+                )
+            }
+        },
+        {
+            header: () => "Trip Date & Time",
             accessorKey: "createdAt",
             cell: ({ row }: { row: any; }) => {
                 const item = row?.original as FetchedTripType

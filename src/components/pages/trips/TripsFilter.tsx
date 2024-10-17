@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react";
 import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
 import DatePicker from "react-datepicker";
@@ -9,14 +9,14 @@ import { CloseButton, Popover, PopoverBackdrop, PopoverButton, PopoverPanel, Rad
 interface Filters {
     start_date: string;
     end_date: string;
-    ride_status: string;
     vehicle_id: string;
-    [x: string]: any;
+    ride_status?: string;
+    charge_status: "1" | "2" | "5";
 }
 
 interface TripsFilterProps {
     // eslint-disable-next-line no-unused-vars
-    setFilters: (v: Filters) => void;
+    setFilters: Dispatch<SetStateAction<Filters>>;
     isLoading: boolean;
     theme?: string;
 }
@@ -70,7 +70,8 @@ export const TripsFilter: React.FC<TripsFilterProps> = ({ isLoading, setFilters,
             start_date: selected.value.start ? format(selected.value.start, "yyyy-MM-dd") : "",
             end_date: selected.value.end ? format(selected.value.end, "yyyy-MM-dd") : "",
             ride_status: statusFilters,
-            vehicle_id: ""
+            vehicle_id: "",
+            charge_status: "" as "1" | "2" | "5" 
         });
         fn?.();
     };

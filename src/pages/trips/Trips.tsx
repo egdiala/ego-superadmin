@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { cn } from "@/libs/cn";
 import { format } from "date-fns";
 import { Icon } from "@iconify/react";
@@ -8,7 +8,7 @@ import type { FetchedTripType } from "@/types/trips";
 import { PurchaseModel } from "@/types/organizations";
 import { useGetTrips } from "@/services/hooks/queries";
 import { Loader } from "@/components/core/Button/Loader";
-import { pascalCaseToWords } from "@/utils/textFormatter";
+import { formattedNumber, pascalCaseToWords } from "@/utils/textFormatter";
 import { pageVariants } from "@/constants/animateVariants";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { EmptyState, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
@@ -22,82 +22,98 @@ export const TripsPage: React.FC = () => {
     const [page, setPage] = useState(1)
     const { value, onChangeHandler } = useDebounce(500)
     const [searchParams, setSearchParams] = useSearchParams();
+    const vehicleId = searchParams.get("vehicle_id")
+    const chargeStatus = searchParams.get("charge_status") as "1" | "2" | "5"
+    
 
     const [filters, setFilters] = useState({
       start_date: searchParams.get("start_date") || "",
       end_date: searchParams.get("end_date") || "",
-      vehicle_id: searchParams.get("vehicle_id") || ""
+      vehicle_id: vehicleId || "",
+      charge_status: chargeStatus || ""
     })
     const [component] = useState<"count" | "count-status" | "count-status-rider" | "count-status-driver" | "count-monthly">("count")
     const { data: count, isFetching: fetchingCount } = useGetTrips({ component, q: value, ...filters })
     const { data: trips, isFetching } = useGetTrips({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value, ...filters })
 
-    const columns = [
-      {
-        header: () => "Date & Time",
-        accessorKey: "createdAt",
-        cell: ({ row }: { row: any; }) => {
-          const item = row?.original as FetchedTripType
-          return (
-            <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{format(item?.createdAt, "dd MMM, yyyy")}</span> • {format(item?.createdAt, "p")}</div>
-          )
-        }
-      },
-      {
-        header: () => "Trip Ref.",
-        accessorKey: "trip_ref",
-      },
-      {
-        header: () => "Business",
-        accessorKey: "org_data.name",
-        cell: ({ row }: { row: any; }) => {
-          const item = row?.original as FetchedTripType
-          return (
-            <div className="text-sm text-grey-dark-2 whitespace-nowrap">{item?.org_data?.name}</div>
-          )
-        }
-      },
-      {
-        header: () => "Model",
-        accessorKey: "org_data.purchase_model",
-        cell: ({ row }: { row: any; }) => {
-          const item = row?.original as FetchedTripType
-          return (
-            <div className="text-sm text-grey-dark-2 whitespace-nowrap">{pascalCaseToWords(PurchaseModel[item?.org_data?.purchase_model] ?? "-") ?? "-"}</div>
-          )
-        }
-      },
-      {
-        header: () => "Rider",
-        accessorKey: "ride_data.name",
-      },
-      {
-        header: () => "Driver",
-        accessorKey: "driver_data.name",
-      },
-      {
-        header: () => "Vehicle",
-        accessorKey: "driver_data.plate_number",
-      },
-      {
-        header: () => "Pickup",
-        accessorKey: "ride_data.start_address",
-      },
-      {
-        header: () => "Status",
-        accessorKey: "ride_status",
-        cell: ({ row }: { row: any; }) => {
-          const item = row?.original as FetchedTripType
-          const black = ["ENROUTE_TO_DROPOFF",]
-          const blue = ["PICKED_RIDER",]
-          const green = ["REQUEST_ACCEPTED",  "ARRIVED_AT_PICKUP", "COMPLETED"]
-          const red = ["CANCELED"]
-          return (
-            <div className={cn("text-sm line-clamp-2 capitalize font-medium", green.includes(item?.ride_status) && "text-green-1", red.includes(item?.ride_status) && "text-semantics-error", blue.includes(item?.ride_status) && "text-[#0073C4]", black.includes(item?.ride_status) && "text-grey-dark-1" )}>{item?.ride_status.split("_").join(" ").toLowerCase()}</div>
-          )
-        }
-      },
-    ];
+    const columns = useMemo(() => {
+      return [
+        {
+          header: () => "Date & Time",
+          accessorKey: "createdAt",
+          cell: ({ row }: { row: any; }) => {
+            const item = row?.original as FetchedTripType
+            return (
+              <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{format(item?.createdAt, "dd MMM, yyyy")}</span> • {format(item?.createdAt, "p")}</div>
+            )
+          }
+        },
+        {
+          header: () => "Trip Ref.",
+          accessorKey: "trip_ref",
+        },
+        {
+          header: () => "Business",
+          accessorKey: "org_data.name",
+          cell: ({ row }: { row: any; }) => {
+            const item = row?.original as FetchedTripType
+            return (
+              <div className="text-sm text-grey-dark-2 whitespace-nowrap">{item?.org_data?.name}</div>
+            )
+          }
+        },
+        {
+          header: () => "Model",
+          accessorKey: "org_data.purchase_model",
+          cell: ({ row }: { row: any; }) => {
+            const item = row?.original as FetchedTripType
+            return (
+              <div className="text-sm text-grey-dark-2 whitespace-nowrap">{pascalCaseToWords(PurchaseModel[item?.org_data?.purchase_model] ?? "-") ?? "-"}</div>
+            )
+          }
+        },
+        {
+          header: () => "Rider",
+          accessorKey: "ride_data.name",
+        },
+        {
+          header: () => "Driver",
+          accessorKey: "driver_data.name",
+        },
+        {
+          header: () => "Vehicle",
+          accessorKey: "driver_data.plate_number",
+        },
+        (!vehicleId && {
+          header: () => "Pickup",
+          accessorKey: "ride_data.start_address",
+        }),
+        (vehicleId && {
+          header: () => "Amount",
+          accessorKey: "ride_data.fare",
+          cell: ({ row }: { row: any; }) => {
+            const item = row?.original as FetchedTripType
+            return (
+              <div className="text-sm text-grey-dark-2 whitespace-nowrap">{formattedNumber(item?.ride_data?.fare)}</div>
+            )
+          }
+        }),
+        {
+          header: () => "Status",
+          accessorKey: "ride_status",
+          cell: ({ row }: { row: any; }) => {
+            const item = row?.original as FetchedTripType
+            const black = ["ENROUTE_TO_DROPOFF",]
+            const blue = ["PICKED_RIDER",]
+            const green = ["REQUEST_ACCEPTED",  "ARRIVED_AT_PICKUP", "COMPLETED"]
+            const red = ["CANCELED"]
+            return (
+              <div className={cn("text-sm line-clamp-2 capitalize font-medium", green.includes(item?.ride_status) && "text-green-1", red.includes(item?.ride_status) && "text-semantics-error", blue.includes(item?.ride_status) && "text-[#0073C4]", black.includes(item?.ride_status) && "text-grey-dark-1" )}>{item?.ride_status.split("_").join(" ").toLowerCase()}</div>
+            )
+          }
+        },
+      ].filter((item) => (item !== false) && (item !== null))
+    }, [vehicleId]);
 
     const handlePageChange = (page: number) => {
       // in a real page, this function would paginate the data from the backend
@@ -136,7 +152,7 @@ export const TripsPage: React.FC = () => {
                     <Table
                         page={page}
                         data={trips as FetchedTripType[]}
-                        columns={columns}
+                        columns={columns as any[]}
                         perPage={itemsPerPage}
                         totalCount={(count as any)?.total}
                         onPageChange={handlePageChange}

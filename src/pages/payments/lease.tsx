@@ -47,7 +47,7 @@ export const LeasePaymentLogPage: React.FC = () => {
             cell: ({ row }: { row: any; }) => {
                 const item = row?.original as FetchedLeaseVehiclePayment
                 return (
-                    <div className="text-sm text-grey-dark-2 whitespace-nowrap">{item?.total_km} KM</div>
+                    <div className="text-sm text-grey-dark-2 whitespace-nowrap">{item?.total_km?.toFixed(1)} KM</div>
                 )
             }
         },

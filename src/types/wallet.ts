@@ -31,6 +31,7 @@ export interface FetchedWalletTransaction {
     transaction_type: string;
     payment_method: string;
     description: string;
+    purchase_model: number;
     transaction: {
         id: number;
         domain: string;
@@ -123,6 +124,7 @@ export interface FetchedWalletTransactionCount {
     _id: null;
     total: number;
     balance?: number;
+    total_amount: number;
 }
 
 export interface FetchedWalletTransactionCountStatus {

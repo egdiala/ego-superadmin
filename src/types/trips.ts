@@ -31,6 +31,7 @@ export interface FetchedTripType {
     trip_ref: string;
     vehicle_id: string;
     driver_id: string;
+    charge_at: Date | string;
     driver_data: {
         latitude: number;
         longitude: number;

@@ -18,8 +18,8 @@ export const ViewLeaseReceivablesPage: React.FC = () => {
     const itemsPerPage = 10;
     const [page, setPage] = useState(1)
     const [searchParams, setSearchParams] = useSearchParams();
-    const { data: count, isFetching: fetchingReceivablesCount } = useGetLeasePayments<FetchedReceivableCount>({ request_type: "2", start_date: id, end_date: id, component: "count" })
-    const { data: receivables, isFetching: fetchingReceivables } = useGetLeasePayments<FetchedLeasePayment[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), request_type: "2", start_date: id, end_date: id })
+    const { data: count, isFetching: fetchingReceivablesCount } = useGetLeasePayments<FetchedReceivableCount>({ request_type: "2", status: "0", start_date: id, end_date: id, component: "count" })
+    const { data: receivables, isFetching: fetchingReceivables } = useGetLeasePayments<FetchedLeasePayment[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), request_type: "2", status: "0", start_date: id, end_date: id })
 
         const columns = [
         {

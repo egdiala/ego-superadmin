@@ -8,9 +8,9 @@ import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
-import { useGetWalletStats, useGetWalletTransactions } from "@/services/hooks/queries";
+import { useGetWalletTransactions } from "@/services/hooks/queries";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
-import { FetchedWalletStatsCount, FetchedWalletTransaction, FetchedWalletTransactionCount, WalletStatus } from "@/types/wallet";
+import { FetchedWalletTransaction, FetchedWalletTransactionCount, WalletStatus } from "@/types/wallet";
 
 export const RiderWalletPage: React.FC = () => {
     const location = useLocation();
@@ -18,7 +18,6 @@ export const RiderWalletPage: React.FC = () => {
     const [page, setPage] = useState(1)
     const [searchParams, setSearchParams] = useSearchParams();
     const [component] = useState<"count" | "count-status">("count")
-    const { data: walletInfo, isFetching: fetchingStats } = useGetWalletStats({ user_type: "rider" })
     const { data: count, isFetching: fetchingCount } = useGetWalletTransactions({ component, wallet_type: "user-wallet" })
     const { data: transactions, isFetching } = useGetWalletTransactions({ page: page.toString(), item_per_page: itemsPerPage.toString(), wallet_type: "user-wallet" })
 
@@ -39,7 +38,15 @@ export const RiderWalletPage: React.FC = () => {
         },
         {
             header: () => "Type",
-            accessorKey: "transaction_type",
+            accessorKey: "status",
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as FetchedWalletTransaction
+                return (
+                    <div className={cn("text-sm capitalize whitespace-nowrap", item?.status === -1 ? "text-semantics-error" : "text-semantics-success")}>
+                        { item?.status === -1 ? "Debit" : "Credit" }
+                    </div>
+                )
+            }
         },
         {
             header: () => "Description",
@@ -56,10 +63,6 @@ export const RiderWalletPage: React.FC = () => {
                     </div>
                 )
             }
-        },
-        {
-            header: () => "Model",
-            accessorKey: "payment_method",
         },
         {
             header: () => "Mode",
@@ -111,14 +114,14 @@ export const RiderWalletPage: React.FC = () => {
 
     const trips = useMemo(() => {
         return [
-            { label: "Value", value: formattedNumber((walletInfo as FetchedWalletStatsCount)?.credit_amount - (walletInfo as FetchedWalletStatsCount)?.debit_amount), color: "bg-[#F8F9FB]" },
+            { label: "Value", value: formattedNumber((count as FetchedWalletTransactionCount)?.total_amount), color: "bg-[#F8F9FB]" },
             { label: "Count", value: (count as FetchedWalletTransactionCount)?.total ?? 0, color: "bg-green-4" },
         ]
-    },[count, walletInfo])
+    },[count])
   
     return (
         <Fragment>
-            <RenderIf condition={!isFetching && !fetchingCount && !fetchingStats}>
+            <RenderIf condition={!isFetching && !fetchingCount}>
                 <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">
                     <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
                         {
@@ -158,7 +161,7 @@ export const RiderWalletPage: React.FC = () => {
                     />
                 </motion.div>
             </RenderIf>
-            <RenderIf condition={isFetching || fetchingCount || fetchingStats}>
+            <RenderIf condition={isFetching || fetchingCount}>
             <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
             </RenderIf>
         </Fragment>
