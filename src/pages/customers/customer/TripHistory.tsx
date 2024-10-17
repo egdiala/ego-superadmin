@@ -24,7 +24,9 @@ export const CustomerTripHistoryPage: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [filters, setFilters] = useState({
       start_date: "",
-      end_date: ""
+      end_date: "",
+      vehicle_id: "",
+      charge_status: "" as any
     })
     const [component] = useState<"count" | "count-status" | "count-status-rider" | "count-status-driver" | "count-monthly">("count")
     const { data: count, isFetching: fetchingCount } = useGetTrips({ component, user_type: "organization", auth_id: params?.id as string, ...filters })
