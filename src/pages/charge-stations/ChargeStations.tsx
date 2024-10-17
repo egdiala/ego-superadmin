@@ -5,7 +5,7 @@ import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useGetChargeStations } from "@/services/hooks/queries";
 import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
-import { CreateStationModal, DeleteStationModal, EditStationModal } from "@/components/pages/charge-stations";
+import { CreateStationModal, DeleteStationModal, EditStationModal, FailedStationUploadsModal } from "@/components/pages/charge-stations";
 import type { FetchedChargeStations, FetchedChargeStationsCount } from "@/types/charge-stations";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useLocation, useSearchParams } from "react-router-dom";
@@ -18,6 +18,7 @@ export const ChargeStationsPage: React.FC = () => {
   const [page, setPage] = useState(1)
   const { value, onChangeHandler } = useDebounce(500)
   const [searchParams, setSearchParams] = useSearchParams();
+  const [failedUploads, setFailedUploads] = useState([])
   const [filters] = useState({
     start_date: "",
     end_date: "",
@@ -30,6 +31,7 @@ export const ChargeStationsPage: React.FC = () => {
         openCreateStationModal: false,
         openDeleteStationModal: false,
         openEditStationModal: false,
+        openFailedUploadsModal: false,
         activeStation: null as null | FetchedChargeStations
     })
   
@@ -54,7 +56,14 @@ export const ChargeStationsPage: React.FC = () => {
         activeStation: activeStation,
         openEditStationModal: !toggleModals.openEditStationModal,
       }))
-    },[toggleModals.openEditStationModal])
+    }, [toggleModals.openEditStationModal])
+  
+    const toggleFailedUploads = useCallback(() => {
+      setToggleModals((prev) => ({
+        ...prev,
+        openFailedUploadsModal: !toggleModals.openFailedUploadsModal,
+      }))
+    }, [toggleModals.openFailedUploadsModal])
     
 
     const columns = [
@@ -89,12 +98,10 @@ export const ChargeStationsPage: React.FC = () => {
       {
         header: () => "Opening Hours",
         accessorKey: "opening_time",
-        // cell: ({ row }: { row: any; }) => {
-        //   const item = row?.original as FetchedChargeStations
-        //   return (
-        //     <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap">{format(item?.opening_time, "p")}</div>
-        //   )
-        // }
+      },
+      {
+        header: () => "Closing Hours",
+        accessorKey: "closing_time",
       },
       {
         header: () => "Action",
@@ -161,9 +168,16 @@ export const ChargeStationsPage: React.FC = () => {
           <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
         </RenderIf>
       </div>
-      <CreateStationModal isOpen={toggleModals.openCreateStationModal} close={toggleCreateStation} />
+      <CreateStationModal isOpen={toggleModals.openCreateStationModal} close={(v) => {
+        toggleCreateStation()
+        if (v?.length > 0) {
+          setFailedUploads(v)
+          toggleFailedUploads()
+        }
+      }} />
       <DeleteStationModal isOpen={toggleModals.openDeleteStationModal} station={toggleModals.activeStation} close={() => toggleDeleteStation(null)} />
       <EditStationModal isOpen={toggleModals.openEditStationModal} station={toggleModals.activeStation} close={() => toggleEditStation(null)} />
+      <FailedStationUploadsModal isOpen={toggleModals.openFailedUploadsModal} data={failedUploads} close={toggleFailedUploads} />
     </motion.div>
   )
 }

@@ -1,10 +1,11 @@
 import React from "react";
+import DatePicker from "react-datepicker";
 import { Button, Input } from "@/components/core";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
+import { createStationSchema } from "@/validations/charge-station";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import type { FetchedChargeStations } from "@/types/charge-stations";
 import { useEditStation } from "@/services/hooks/mutations/useChargeStations";
-import { createStationSchema } from "@/validations/charge-station";
 
 
 interface EditStationModalProps {
@@ -16,7 +17,7 @@ interface EditStationModalProps {
 export const EditStationModal: React.FC<EditStationModalProps> = ({ isOpen, close, station }) => {
     const { mutate, isPending } = useEditStation(`${station?.station_name} edited successfully`, () => onClose())
 
-    const { handleSubmit, isValid, register, resetForm, values } = useFormikWrapper({
+    const { handleSubmit, isValid, register, resetForm, setFieldValue, values } = useFormikWrapper({
         initialValues: {
             station_name: station?.station_name || "",
             contact_address: station?.full_address || "",
@@ -51,8 +52,31 @@ export const EditStationModal: React.FC<EditStationModalProps> = ({ isOpen, clos
                         <Input type="text" label="Address LGA" {...register("lga_address")} />
                         <Input type="text" label="Contact Phone" {...register("contact_number")} />
                         <div className="grid grid-cols-2 gap-6">
-                            <Input type="text" label="Opening Time" iconRight="ph:timer-fill" {...register("open_time")} />
-                            <Input type="text" label="Closing Time" iconRight="ph:timer-fill" {...register("close_time")} />     
+                            <div className="grid">
+                                <DatePicker
+                                    selected={values?.open_time as any}
+                                    onChange={(date) => setFieldValue("open_time", date)}
+                                    customInput={<Input type="text" iconRight="ph:timer-fill" label="Opening Time" />}
+                                    showTimeSelect
+                                    showTimeSelectOnly
+                                    timeIntervals={15}
+                                    timeFormat="p"
+                                    dateFormat="hh:mm"
+                                    required
+                                />
+                            </div>
+                            <div className="grid">
+                                <DatePicker
+                                    selected={values?.close_time as any}
+                                    onChange={(date) => setFieldValue("close_time", date)}
+                                    customInput={<Input type="text" iconRight="ph:timer-fill" label="Closing Time" />}
+                                    showTimeSelect
+                                    showTimeSelectOnly
+                                    timeIntervals={15}
+                                    dateFormat="hh:mm"
+                                    required
+                                />
+                            </div>  
                         </div>
                     </div>
                     <div className="flex items-center justify-end w-full md:w-1/2 ml-auto pt-10 gap-2 md:gap-4">

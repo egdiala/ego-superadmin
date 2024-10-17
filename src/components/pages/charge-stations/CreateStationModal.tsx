@@ -9,6 +9,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import type { AxiosProgressEvent } from "axios";
 import { createStationSchema } from "@/validations/charge-station";
 import { useBulkUploadStations, useCreateStation } from "@/services/hooks/mutations/useChargeStations";
+import DatePicker from "react-datepicker";
 
 interface CreateStationModalProps {
     isOpen: boolean;
@@ -19,7 +20,7 @@ interface CreateStationModalProps {
 const SingleStation: React.FC<CreateStationModalProps> = ({ close }) => {
     const { mutate: create, isPending } = useCreateStation(() => onClose())
 
-    const { handleSubmit, isValid, register, resetForm } = useFormikWrapper({
+    const { handleSubmit, isValid, register, resetForm, setFieldValue, values } = useFormikWrapper({
         initialValues: {
             station_name: "",
             contact_address: "",
@@ -46,9 +47,32 @@ const SingleStation: React.FC<CreateStationModalProps> = ({ close }) => {
                 <Input type="text" label="Full Address" {...register("contact_address")} />
                 <Input type="text" label="Address LGA" {...register("lga_address")} />
                 <Input type="text" label="Contact Phone" {...register("contact_number")} />
-                <div className="flex flex-col md:flex-row md:items-start gap-6">
-                    <Input type="text" iconRight="ph:timer-fill" label="Opening Time" {...register("open_time")} />
-                    <Input type="text" iconRight="ph:timer-fill" label="Closing Time" {...register("close_time")} />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid">
+                        <DatePicker
+                            selected={values?.open_time as any}
+                            onChange={(date) => setFieldValue("open_time", date)}
+                            customInput={<Input type="text" iconRight="ph:timer-fill" label="Opening Time" />}
+                            showTimeSelect
+                            showTimeSelectOnly
+                            timeIntervals={15}
+                            timeFormat="p"
+                            dateFormat="hh:mm"
+                            required
+                        />
+                    </div>
+                    <div className="grid">
+                        <DatePicker
+                            selected={values?.close_time as any}
+                            onChange={(date) => setFieldValue("close_time", date)}
+                            customInput={<Input type="text" iconRight="ph:timer-fill" label="Closing Time" />}
+                            showTimeSelect
+                            showTimeSelectOnly
+                            timeIntervals={15}
+                            dateFormat="hh:mm"
+                            required
+                        />
+                    </div>
                 </div>
             </div>
             <div className="flex items-center justify-end w-full md:w-1/2 ml-auto pt-10 gap-2 md:gap-4">
@@ -123,7 +147,7 @@ const MultipleStations: React.FC<CreateStationModalProps> = ({ close }) => {
     return (
         <form className="grid gap-6" onSubmit={handleSubmit}>
             <div className="grid gap-4">
-                <div className="text-sm text-grey-dark-2">Please be sure to use the template document meant for this information.  <a download="bulk_create_drivers_template.csv" href="/bulk_create_drivers_template.csv" className="font-bold text-green-base underline underline-offset-1">Download here</a></div>
+                <div className="text-sm text-grey-dark-2">Please be sure to use the template document meant for this information.  <a download="bulk_create_charge_stations_template.csv" href="/bulk_create_charge_stations_template.csv" className="font-bold text-green-base underline underline-offset-1">Download here</a></div>
                 <label onDrop={handleDrop} onDragOver={handleDragOver} htmlFor="files" className='w-full cursor-pointer py-12 border border-dashed border-[#D7D8D8] rounded-lg bg-green-4'>
                     <div className='grid gap-6 content-center justify-items-center w-full text-center mx-auto max-w-sm'>
                         <Icon icon="solar:cloud-upload-linear" className="size-14 text-grey-dark-3" />
