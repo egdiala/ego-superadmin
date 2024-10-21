@@ -1,14 +1,14 @@
 import React, { useState } from "react";
+import { format } from "date-fns";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { useSearchParams } from "react-router-dom";
-import { pageVariants } from "@/constants/animateVariants";
-import { setPaginationParams } from "@/hooks/usePaginationParams";
-import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
-import { useGetActivityLogs } from "@/services/hooks/queries";
-import type { FetchedActivityLog, FetchedAdminsCount } from "@/types/admin";
 import { Loader } from "@/components/core/Button/Loader";
-import { format } from "date-fns";
+import { pageVariants } from "@/constants/animateVariants";
+import { useGetActivityLogs } from "@/services/hooks/queries";
+import { setPaginationParams } from "@/hooks/usePaginationParams";
+import type { FetchedActivityLog, FetchedAdminsCount } from "@/types/admin";
+import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 
 export const ActivityLogPage: React.FC = () => {  
   const itemsPerPage = 10;

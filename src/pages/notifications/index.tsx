@@ -1,35 +1,46 @@
 import React, { useState } from "react";
+import { format } from "date-fns";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { useSearchParams } from "react-router-dom";
+import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
+import { useGetNotifications } from "@/services/hooks/queries";
 import { setPaginationParams } from "@/hooks/usePaginationParams";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
-import { useGetNotifications } from "@/services/hooks/queries";
-import { Loader } from "@/components/core/Button/Loader";
+import type { FetchedNotification, FetchedNotificationsCount } from "@/types/notifications";
 
 export const NotificationsPage: React.FC = () => {  
   const itemsPerPage = 10;
   const [page, setPage] = useState(1)
   const [searchParams, setSearchParams] = useSearchParams();
-  const { data: notifications, isFetching } = useGetNotifications<any[]>({ page: page.toString(), item_per_page: itemsPerPage.toString() })
-  const { data: notificationsCount, isFetching: fetchingCount } = useGetNotifications<{ total: number; }>({ component: "count" })
+  const { data: notifications, isFetching } = useGetNotifications<FetchedNotification[]>({ page: page.toString(), item_per_page: itemsPerPage.toString() })
+  const { data: notificationsCount, isFetching: fetchingCount } = useGetNotifications<FetchedNotificationsCount>({ component: "count" })
 
   const columns = [
     {
       header: () => "Date",
       accessorKey: "createdAt",
+      cell: ({ row }: { row: any; }) => {
+        const item = row?.original as FetchedNotification
+        return (
+          <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{format(item?.createdAt, "dd MMM, yyyy")}</span> • {format(item?.createdAt, "p")}</div>
+        )
+      }
     },
     {
       header: () => "Message",
-      accessorKey: "fullName",
+      accessorKey: "message",
     },
     {
       header: () => "",
-      accessorKey: "email",
-      cell: () => {
+      accessorKey: "status",
+      cell: ({ row }: { row: any; }) => {
+        const item = row?.original as FetchedNotification
         return (
-          <div className="size-1.5 rounded-full bg-semantics-error" />
+          <RenderIf condition={item?.status === 0}>
+            <div className="size-1.5 rounded-full bg-semantics-error" />
+          </RenderIf>
         )
       }
     },
