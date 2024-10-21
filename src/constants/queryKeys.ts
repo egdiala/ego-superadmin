@@ -24,6 +24,9 @@ export const GET_RIDER = "get-rider"
 export const GET_VEHICLES = "get-vehicles"
 export const GET_VEHICLE = "get-vehicle"
 
+// Notifications
+export const GET_NOTIFICATIONS = "get-notifications"
+
 // Service Requests
 export const GET_SERVICE_REQUESTS = "get-service-requests"
 export const GET_SERVICE_REQUEST = "get-service-request"

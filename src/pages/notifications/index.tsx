@@ -4,12 +4,16 @@ import { motion } from "framer-motion";
 import { useSearchParams } from "react-router-dom";
 import { pageVariants } from "@/constants/animateVariants";
 import { setPaginationParams } from "@/hooks/usePaginationParams";
-import { SearchInput, Table, TableAction } from "@/components/core";
+import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { useGetNotifications } from "@/services/hooks/queries";
+import { Loader } from "@/components/core/Button/Loader";
 
 export const NotificationsPage: React.FC = () => {  
-    const itemsPerPage = 10;
-    const [page, setPage] = useState(1)
-    const [searchParams, setSearchParams] = useSearchParams();
+  const itemsPerPage = 10;
+  const [page, setPage] = useState(1)
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { data: notifications, isFetching } = useGetNotifications<any[]>({ page: page.toString(), item_per_page: itemsPerPage.toString() })
+  const { data: notificationsCount, isFetching: fetchingCount } = useGetNotifications<{ total: number; }>({ component: "count" })
 
   const columns = [
     {
@@ -52,14 +56,20 @@ export const NotificationsPage: React.FC = () => {
                         </TableAction>
                     </div>
                 </div>
-                <Table
-                    page={page}
-                    columns={columns}
-                    perPage={itemsPerPage}
-                    onPageChange={handlePageChange}
-                    data={[]}
-                    totalCount={0}
-                />
+                <RenderIf condition={!isFetching && !fetchingCount}>
+                  <Table
+                      page={page}
+                      columns={columns}
+                      perPage={itemsPerPage}
+                      onPageChange={handlePageChange}
+                      data={notifications ?? []}
+                      totalCount={notificationsCount?.total}
+                      emptyStateText="We couldn't find any notifications"
+                  />
+                </RenderIf>
+                <RenderIf condition={isFetching || fetchingCount}>
+                  <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
+                </RenderIf>
             </div>
         </motion.div>
     )

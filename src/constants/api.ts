@@ -30,6 +30,9 @@ export const GET_RIDERS_API = "admin/users/riders"
 // Service Requests
 export const GET_SERVICE_REQUESTS_API = "admin/maintenance/service-request"
 
+// Notification
+export const GET_NOTIFICATIONS_API = "admin/messages/notification"
+
 // Vehicles
 export const GET_VEHICLES_API = "admin/vehicles"
 export const ASSIGN_VEHICLES_API = "admin/vehicles/assign"
