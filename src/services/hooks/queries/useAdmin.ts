@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAdmin, getAdminProfile, getAdmins } from "@/services/apis/admin";
-import { GET_ADMIN, GET_ADMIN_PROFILE, GET_ADMINS } from "@/constants/queryKeys";
-import type { FetchAdminsQuery, FetchedAdminProfile, FetchedAdminsCount, FetchedAdminType } from "@/types/admin";
 import { errorToast } from "@/utils/createToast";
+import { getActivityLogs, getAdmin, getAdminProfile, getAdmins } from "@/services/apis/admin";
+import { GET_ACTIVITY_LOGS, GET_ADMIN, GET_ADMIN_PROFILE, GET_ADMINS } from "@/constants/queryKeys";
+import type { FetchActivityLogQuery, FetchAdminsQuery, FetchedAdminProfile, FetchedAdminsCount, FetchedAdminType } from "@/types/admin";
 
 export const useGetAdmins = (query: FetchAdminsQuery) => {
   return useQuery({
@@ -33,5 +33,18 @@ export const useGetAdminProfile = () => {
     queryFn: getAdminProfile,
     select: (res) => res?.data as FetchedAdminProfile,
     retry: false,
+  });
+};
+
+export const useGetActivityLogs = <T>(query: FetchActivityLogQuery) => {
+  return useQuery({
+    queryKey: [GET_ACTIVITY_LOGS, query],
+    queryFn: () => getActivityLogs(query),
+    select: (res) => res?.data as T,
+    retry: false,
+    throwOnError(error) {
+      errorToast(error)
+      return false;
+    },
   });
 };

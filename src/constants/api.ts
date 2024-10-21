@@ -14,6 +14,7 @@ export const GET_ROLES_API = "admin/operations/roles"
 export const CREATE_ADMIN_API = "admin/accounts"
 export const GET_ADMIN_PROFILE_API = "admin/accounts/profile"
 export const UPLOAD_PROFILE_PHOTO_API = "admin/files/profile-picture"
+export const GET_ACTIVITY_LOGS_API = "admin/accounts/activity-log"
 
 // Charge Stations
 export const GET_CHARGE_STATIONS_API = "admin/vehicles/charge-stations"

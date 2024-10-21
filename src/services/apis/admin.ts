@@ -1,7 +1,7 @@
 import { axiosInstance, axiosSettingsInstance } from "../axiosInstance";
-import type { CreateAdminType, FetchAdminsQuery, UpdateAdminType } from "@/types/admin";
-import { CREATE_ADMIN_API, GET_ADMIN_PROFILE_API, UPLOAD_PROFILE_PHOTO_API } from "@/constants/api";
 import { createQueryString } from "@/utils/createQuery";
+import type { CreateAdminType, FetchActivityLogQuery, FetchAdminsQuery, UpdateAdminType } from "@/types/admin";
+import { CREATE_ADMIN_API, GET_ACTIVITY_LOGS_API, GET_ADMIN_PROFILE_API, UPLOAD_PROFILE_PHOTO_API } from "@/constants/api";
 
 export const createAdmin = async (data: CreateAdminType) => {
     const res = await axiosInstance.post(CREATE_ADMIN_API, data);
@@ -36,5 +36,10 @@ export const getAdmin = async (id: string) => {
 
 export const getAdminProfile = async () => {
     const res = await axiosInstance.get(GET_ADMIN_PROFILE_API);
+    return res.data;
+};
+
+export const getActivityLogs = async (query: FetchActivityLogQuery) => {
+    const res = await axiosInstance.get(`${GET_ACTIVITY_LOGS_API}${createQueryString(query)}`);
     return res.data;
 };

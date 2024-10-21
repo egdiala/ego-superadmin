@@ -59,6 +59,35 @@ export interface FetchAdminsQuery {
     component?: "count" | "export" | "count-status";
 }
 
+export interface FetchActivityLogQuery {
+    auth_id?: string; // Use to retrieve personalized logs for a user
+    start_date?: string;
+    end_date?: string;
+    page?: string;
+    item_per_page?: string;
+    component?: "count";
+}
+
+export interface FetchedActivityLog {
+    auth_id: string;
+    service: string;
+    operation: string;
+    body: string;
+    data: {
+        auth_id: string;
+        email: string;
+    },
+    createdAt: Date | string;
+    updatedAt: Date | string;
+    user_data: {
+        _id: string;
+        first_name: string;
+        last_name: string;
+        email: string;
+        avatar: string;
+    }
+}
+
 export interface FetchedAdminsCount {
     total: number
 }

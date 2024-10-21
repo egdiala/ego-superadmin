@@ -7,6 +7,7 @@ export const GET_ROLE_LISTS = "get-role-lists"
 export const GET_ADMINS = "get-admins"
 export const GET_ADMIN = "get-admin"
 export const GET_ADMIN_PROFILE = "get-admin-profile"
+export const GET_ACTIVITY_LOGS = "get-activity-logs"
 
 // Charge Stations
 export const GET_CHARGE_STATIONS = "get-charge-stations"
