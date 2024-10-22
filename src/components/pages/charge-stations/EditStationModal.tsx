@@ -6,6 +6,7 @@ import { createStationSchema } from "@/validations/charge-station";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import type { FetchedChargeStations } from "@/types/charge-stations";
 import { useEditStation } from "@/services/hooks/mutations/useChargeStations";
+import { format, parse } from "date-fns";
 
 
 interface EditStationModalProps {
@@ -23,13 +24,14 @@ export const EditStationModal: React.FC<EditStationModalProps> = ({ isOpen, clos
             contact_address: station?.full_address || "",
             contact_number: station?.contact_number || "",
             lga_address: station?.lga_address || "",
-            open_time: station?.opening_time || "",
-            close_time: station?.closing_time || "",
+            open_time: station?.opening_time ? parse(station.opening_time, "HH:mm", new Date()) : "",
+            close_time: station?.closing_time ? parse(station.closing_time, "HH:mm", new Date()) : "",
         },
         enableReinitialize: true,
         validationSchema: createStationSchema,
         onSubmit: () => {
-            mutate({ id: station?.station_id as string, ...values })
+            const { open_time, close_time, ...rest } = values
+            mutate({ id: station?.station_id as string, ...rest, open_time: format(open_time, "HH:mm"), close_time: format(close_time, "HH:mm") })
         },
     })
 

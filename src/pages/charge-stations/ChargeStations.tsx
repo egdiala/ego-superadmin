@@ -1,18 +1,19 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { format } from "date-fns";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
+import { useDebounce } from "@/hooks/useDebounce";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useGetChargeStations } from "@/services/hooks/queries";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
-import { CreateStationModal, DeleteStationModal, EditStationModal, FailedStationUploadsModal } from "@/components/pages/charge-stations";
-import type { FetchedChargeStations, FetchedChargeStationsCount } from "@/types/charge-stations";
-import { useDebounce } from "@/hooks/useDebounce";
-import { useLocation, useSearchParams } from "react-router-dom";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
-import { format } from "date-fns";
+import type { FetchedChargeStations, FetchedChargeStationsCount } from "@/types/charge-stations";
+import { CreateStationModal, DeleteStationModal, EditStationModal, FailedStationUploadsModal } from "@/components/pages/charge-stations";
 
 export const ChargeStationsPage: React.FC = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const itemsPerPage = 10;
   const [page, setPage] = useState(1)
@@ -162,6 +163,7 @@ export const ChargeStationsPage: React.FC = () => {
             columns={columns}
             totalCount={count?.total}
             onPageChange={handlePageChange}
+            onClick={({ original }) => navigate(`/charge-stations/${original?.station_id}`)}
           />
         </RenderIf>
         <RenderIf condition={isFetching || fetchingCount}>
