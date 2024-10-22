@@ -16,4 +16,5 @@ export interface FetchedNotification {
 
 export interface FetchedNotificationsCount {
     total: number
+    pending: number
 }

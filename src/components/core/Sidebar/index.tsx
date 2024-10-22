@@ -1,15 +1,16 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useMemo } from "react";
+import "./sidebar.css";
+import { cn } from "@/libs/cn";
+import { Icon } from "@iconify/react";
 import { Link } from "react-router-dom";
 import blankImg from "@/assets/blank.svg";
 import { getAdminData } from "@/utils/authUtil";
-import { useHasAnyPermission, useHasPermission } from "@/hooks/useHasPermission";
 import { ModuleListItem, RenderIf } from "@/components/core";
+import type { FetchedNotificationsCount } from "@/types/notifications";
 import { appRoutes, financeRoutes, setupRoutes } from "@/constants/routes";
-import "./sidebar.css";
-import { cn } from "@/libs/cn";
+import { useHasAnyPermission, useHasPermission } from "@/hooks/useHasPermission";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/react";
-import { Icon } from "@iconify/react";
-import { useGetAdminProfile } from "@/services/hooks/queries";
+import { useGetAdminProfile, useGetNotifications } from "@/services/hooks/queries";
 
 interface SidebarProps {
     showSidebar: boolean;
@@ -18,8 +19,13 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ showSidebar }) => {
     const admin = getAdminData()
     const { data } = useGetAdminProfile()
+    const { data: notificationsCount } = useGetNotifications<FetchedNotificationsCount>({ component: "count" })
 
-    const appPermissions = appRoutes.map(route => ({
+    const newAppRoutes = useMemo(() => {
+        return appRoutes.map((item) => item.name === "Notifications" ? ({ to: item.to, name: item.name, icon: item.icon, count: notificationsCount?.pending }) : item)
+    },[notificationsCount])
+
+    const appPermissions = newAppRoutes.map(route => ({
         route,
         // eslint-disable-next-line react-hooks/rules-of-hooks
         hasPermission: useHasPermission(route.name.toUpperCase().replace(/\s+/g, "_"),  "view")

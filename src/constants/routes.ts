@@ -6,7 +6,7 @@ export const appRoutes = [
     { to:"/vehicles", name:"Vehicles", icon:"lucide:car-taxi-front" },
     { to:"/customers", name:"Customers", icon:"lucide:building" },
     { to:"/service-request", name:"Service Request", icon:"lucide:wrench" },
-    { to:"/notifications", name:"Notifications", icon:"lucide:bell", count: 3 },
+    { to:"/notifications", name:"Notifications", icon:"lucide:bell", count: 0 },
 ]
 
 export const financeRoutes = [
