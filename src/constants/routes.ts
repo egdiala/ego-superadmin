@@ -21,6 +21,7 @@ export const setupRoutes = [
     { to:"/revenue-split", name:"Revenue Split", icon:"" },
     { to:"/fees", name:"Fees", icon:"" },
     { to:"/charge-stations", name:"Charge Stations", icon:"" },
+    { to:"/oem", name:"OEMs", icon:"" },
     { to:"/accounts", name:"Accounts", icon:"", subRoutes: ["ACCESS_ROLE", "ADMIN_ACCOUNT"] },
     { to:"/activity-log", name:"Activity Log", icon:"" },
 ]
