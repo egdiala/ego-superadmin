@@ -12,3 +12,16 @@ export const createOEMSchema = Yup.object().shape({
         .max(currentYear, "Year of Manufacture cannot be in the future"),
     file: Yup.string().required("Vehicle image is required"),
 })
+
+export const editOEMSchema = Yup.object().shape({
+    oem_name: Yup.string().required("OEM Name is required"),
+})
+
+export const updateModelSchema = Yup.object().shape({
+    model: Yup.string().required("Model is required"),
+    year: Yup.number()
+        .required("Year of Manufacture is required")
+        .min(minimumYear, "Year of Manufacture cannot be before 1990")
+        .max(currentYear, "Year of Manufacture cannot be in the future"),
+    file: Yup.string().required("Vehicle image is required"),
+})

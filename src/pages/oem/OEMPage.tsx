@@ -7,8 +7,9 @@ import { pageVariants } from "@/constants/animateVariants"
 import { useGetOEM } from "@/services/hooks/queries"
 import { Breadcrumb, Button, RenderIf } from "@/components/core"
 import { format } from "date-fns"
-import { DeleteOEMModal } from "@/components/pages/oem"
+import { CreateModelModal, DeleteModelModal, DeleteOEMModal, EditOEMModal } from "@/components/pages/oem"
 import vehicleImg from "@/assets/vehicle.svg";
+import { FetchedOEMType } from "@/types/oem"
 
 export const ViewOEM: React.FC = () => {
     const params = useParams()
@@ -16,7 +17,11 @@ export const ViewOEM: React.FC = () => {
 
     const [toggleModals, setToggleModals] = useState({
         openDeleteOemModal: false,
+        openDeleteModelModal: false,
         openEditOemModal: false,
+        openCreateModel: false,
+        modelId: "",
+        model: "" as unknown as FetchedOEMType["model_data"][0]
     })
   
     const toggleDeleteOem = useCallback(() => {
@@ -24,7 +29,15 @@ export const ViewOEM: React.FC = () => {
         ...prev,
         openDeleteOemModal: !toggleModals.openDeleteOemModal,
       }))
-    },[toggleModals.openDeleteOemModal])
+    }, [toggleModals.openDeleteOemModal])
+    
+    const toggleDeleteModel = useCallback((id: string) => {
+      setToggleModals((prev) => ({
+        ...prev,
+        modelId: id,
+        openDeleteModelModal: !toggleModals.openDeleteModelModal,
+      }))
+    }, [toggleModals.openDeleteModelModal])
   
     const toggleEditOem = useCallback(() => {
       setToggleModals((prev) => ({
@@ -32,6 +45,22 @@ export const ViewOEM: React.FC = () => {
         openEditOemModal: !toggleModals.openEditOemModal,
       }))
     }, [toggleModals.openEditOemModal])
+
+    const toggleCreateModel = useCallback((id: string) => {
+      setToggleModals((prev) => ({
+        ...prev,
+        modelId: id,
+        openCreateModel: !toggleModals.openCreateModel,
+      }))
+    }, [toggleModals.openCreateModel])
+
+    const toggleEditModel = useCallback((item: FetchedOEMType["model_data"][0]) => {
+      setToggleModals((prev) => ({
+        ...prev,
+        model: item,
+        openCreateModel: !toggleModals.openCreateModel,
+      }))
+    }, [toggleModals.openCreateModel])
 
     const details = useMemo(() => {
         return [
@@ -56,6 +85,10 @@ export const ViewOEM: React.FC = () => {
                                 <Button type="button" theme="tertiary" onClick={toggleEditOem}>
                                     <Icon icon="lucide:pencil" className="size-5" />
                                     Edit OEM Name
+                                </Button>
+                                <Button type="button" theme="primary" onClick={() => toggleCreateModel("")} block>
+                                    <Icon icon="ph:plus" className="size-4" />
+                                    Add Model
                                 </Button>
                             </div>
                         </div>
@@ -90,10 +123,10 @@ export const ViewOEM: React.FC = () => {
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-2">
-                                                <Button type="button" theme="danger">
+                                                <Button type="button" theme="danger" onClick={() => toggleDeleteModel(model?._id)}>
                                                     <Icon icon="lucide:trash-2" className="size-5" />
                                                 </Button>
-                                                <Button type="button" theme="tertiary">
+                                                <Button type="button" theme="tertiary" onClick={() => toggleEditModel(model)}>
                                                     <Icon icon="lucide:pencil" className="size-5" />
                                                 </Button>
                                             </div>
@@ -104,8 +137,10 @@ export const ViewOEM: React.FC = () => {
                         </div>
                     </div>
                 </motion.div>
+                <EditOEMModal isOpen={toggleModals.openEditOemModal} oem={oem!} close={toggleEditOem} />
+                <DeleteModelModal isOpen={toggleModals.openDeleteModelModal} oem={oem!} modelId={toggleModals.modelId} close={() => toggleDeleteModel("")} />
                 <DeleteOEMModal isOpen={toggleModals.openDeleteOemModal} oem={oem!} close={toggleDeleteOem} />
-                {/* <EditStationModal isOpen={toggleModals.openEditStationModal} station={station!} close={toggleEditStation} /> */}
+                <CreateModelModal isOpen={toggleModals.openCreateModel} close={() => toggleCreateModel("")} modelId={toggleModals.modelId} model={toggleModals.model} oemId={oem?.oem_id as string} />
             </RenderIf>
             <RenderIf condition={isFetching}>
                 <div className="flex w-full h-dvh items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>

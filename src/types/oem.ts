@@ -11,6 +11,15 @@ export type UpdateOEMType = {
     oem_name: string;
 }
 
+export type UpdateModelType = {
+    oem_id: string;
+    model_id?: string;
+    model_data: {
+        model: string;
+        year: string;
+    }
+}
+
 export type DeleteOEMType = {
     model_id?: string;
     oem_id: string
