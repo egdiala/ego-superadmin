@@ -71,7 +71,7 @@ export const ViewOEM: React.FC = () => {
                                 }
                             </div>
                         </div>
-                        <div className="grid">
+                        <div className="grid gap-4">
                             {
                                 oem?.model_data.map((model) =>
                                     <div key={model?._id} className="flex items-center gap-12 border border-input-filled py-4 px-5 rounded-lg">
