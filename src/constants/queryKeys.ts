@@ -28,6 +28,10 @@ export const GET_VEHICLE = "get-vehicle"
 // Notifications
 export const GET_NOTIFICATIONS = "get-notifications"
 
+// OEMs
+export const GET_OEMS = "get-oems"
+export const GET_OEM = "get-oem"
+
 // Service Requests
 export const GET_SERVICE_REQUESTS = "get-service-requests"
 export const GET_SERVICE_REQUEST = "get-service-request"

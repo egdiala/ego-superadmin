@@ -1,53 +1,86 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { format } from "date-fns";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { CreateOEMModal, DeleteOEMModal } from "@/components/pages/oem";
+import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
-import { Button, SearchInput, Table, TableAction } from "@/components/core";
+import { useGetOEMs } from "@/services/hooks/queries/useOEMs";
 import { getPaginationParams } from "@/hooks/usePaginationParams";
+import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import type { FetchedOEMType } from "@/types/oem";
 
 export const OEMsPage: React.FC = () => {
   const location = useLocation();
   const itemsPerPage = 10;
   const [page, setPage] = useState(1)
+  const { data: oems, isFetching } = useGetOEMs()
+  const [toggleModals, setToggleModals] = useState({
+    openCreateOemModal: false,
+    openDeleteOemModal: false,
+    activeOem: null as null | FetchedOEMType
+  })
+  
+  const toggleCreateOem = useCallback(() => {
+    setToggleModals((prev) => ({
+      ...prev,
+      openCreateOemModal: !toggleModals.openCreateOemModal,
+    }))
+  },[toggleModals.openCreateOemModal])
 
-    const columns = [
-      {
-        header: () => "Date Created",
-        accessorKey: "createdAt",
-      },
-      {
-        header: () => "Name",
-        accessorKey: "station_name",
-      },
-      {
-        header: () => "Models",
-        accessorKey: "full_address",
-      },
-      {
-        header: () => "Action",
-        accessorKey: "action",
-        cell: () => {
-          return (
-            <div className="flex items-center gap-6">
-              <button type="button" className="rounded bg-grey-dark-4 py-1 px-2 text-grey-dark-1 text-sm">View</button>
-              <button type="button" className="rounded bg-semantics-error/10 py-1 px-2 text-semantics-error text-sm">
-                Delete
-              </button>
-            </div>
-          )
-        }
+  const toggleDeleteOem = useCallback((item: FetchedOEMType | null = null) => {
+    setToggleModals((prev) => ({
+      ...prev,
+      activeOem: item,
+      openDeleteOemModal: !toggleModals.openDeleteOemModal,
+    }))
+  }, [toggleModals.openDeleteOemModal])
+
+  const columns = [
+    {
+      header: () => "Date Created",
+      accessorKey: "createdAt",
+      cell: ({ row }: { row: any; }) => {
+        const item = row?.original as FetchedOEMType
+        return (
+          <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{format(item?.createdAt, "dd MMM, yyyy")}</span> • {format(item?.createdAt, "p")}</div>
+        )
       }
-    ];
+    },
+    {
+      header: () => "Name",
+      accessorKey: "oem_name",
+    },
+    {
+      header: () => "Models",
+      accessorKey: "model_data.length",
+    },
+    {
+      header: () => "Action",
+      accessorKey: "action",
+      cell: ({ row }: { row: any; }) => {
+        const item = row?.original as FetchedOEMType
+        return (
+          <div className="flex items-center gap-6">
+            <Link to={`/oem/${item?.oem_id}`} className="rounded bg-grey-dark-4 py-1 px-2 text-grey-dark-1 text-sm">View</Link>
+            <button type="button" className="rounded bg-semantics-error/10 py-1 px-2 text-semantics-error text-sm" onClick={() => toggleDeleteOem(item)}>
+              Delete
+            </button>
+          </div>
+        )
+      }
+    }
+  ];
 
-    const handlePageChange = () => {
-      // in a real page, this function would paginate the data from the backend
+  const handlePageChange = () => {
+    // in a real page, this function would paginate the data from the backend
 
-    };
+  };
 
-    useEffect(() => {
-      getPaginationParams(location, setPage, () => {})
-    }, [location, setPage])
+  useEffect(() => {
+    getPaginationParams(location, setPage, () => {})
+  }, [location, setPage])
   
   return (
     <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">
@@ -66,15 +99,16 @@ export const OEMsPage: React.FC = () => {
               </TableAction>
             </div>
             <div className="w-full sm:w-auto">
-              <Button type="button" theme="primary" block>
+              <Button type="button" theme="primary" onClick={toggleCreateOem} block>
                 <Icon icon="ph:plus" className="size-4" />
                 Add New OEM
               </Button>
             </div>
           </div>
         </div>
+        <RenderIf condition={!isFetching}>
           <Table
-            data={[]}
+            data={oems ?? []}
             page={page}
             perPage={itemsPerPage}
             columns={columns}
@@ -82,7 +116,13 @@ export const OEMsPage: React.FC = () => {
             onPageChange={handlePageChange}
             emptyStateText="We couldn't find any OEM in the system."
           />
+        </RenderIf>
+        <RenderIf condition={isFetching}>
+          <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
+        </RenderIf>
       </div>
+      <CreateOEMModal isOpen={toggleModals.openCreateOemModal} close={toggleCreateOem} />
+      <DeleteOEMModal oem={toggleModals.activeOem!} isOpen={toggleModals.openDeleteOemModal} close={() => toggleDeleteOem(null)} />
     </motion.div>
   )
 }

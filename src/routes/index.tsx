@@ -39,7 +39,7 @@ const Router = () => {
                 <Route path="trips/*" element={<ProtectedLayout><LocationProvider><TripsRoutes /></LocationProvider></ProtectedLayout>} />
                 <Route path="wallet/*" element={<ProtectedLayout><LocationProvider><WalletRoutes /></LocationProvider></ProtectedLayout>} />
                 <Route path="notifications" element={<ProtectedLayout><LocationProvider><NotificationsPage /></LocationProvider></ProtectedLayout>} />
-                <Route path="oem" element={<ProtectedLayout><LocationProvider><OEMsRoutes /></LocationProvider></ProtectedLayout>} />
+                <Route path="oem/*" element={<ProtectedLayout><LocationProvider><OEMsRoutes /></LocationProvider></ProtectedLayout>} />
                 <Route path="payment-log/*" element={<ProtectedLayout><LocationProvider><PaymentLogRoutes /></LocationProvider></ProtectedLayout>} />
                 <Route path="receivables/*" element={<ProtectedLayout><LocationProvider><ReceivablesRoutes /></LocationProvider></ProtectedLayout>} />
                 <Route path="revenue/*" element={<ProtectedLayout><LocationProvider><ExpectedRevenueRoutes /></LocationProvider></ProtectedLayout>} />
