@@ -8,6 +8,7 @@ import ProtectedLayout from "@/layouts/ProtectedLayout";
 import { NotificationsPage } from "@/pages/notifications";
 import { AccountsLayout } from "@/pages/accounts/Accounts";
 import { AccountsPage, RolesPage } from "@/pages/accounts";
+import { ReconciliationPage } from "@/pages/reconciliation";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { AuthRoutes, ChargeStationsRoutes, CustomersRoutes, DashboardRoutes, DriversRoutes, ExpectedRevenueRoutes, FeesRoutes, OEMsRoutes, PaymentLogRoutes, ReceivablesRoutes, RevenueSplitRoutes, RidersRoutes, RolesRoutes, ServiceRequestsRoutes, TripsRoutes, VehiclesRoutes, WalletRoutes } from "./modules";
 
@@ -28,6 +29,7 @@ const Router = () => {
                     <Route index path="admins" element={<AccountsPage />} />
                     <Route path="roles" element={<RolesPage />} />
                 </Route>
+                <Route path="/reconciliation" element={<ProtectedLayout><LocationProvider><ReconciliationPage /></LocationProvider></ProtectedLayout>} />
                 <Route path="/accounts/roles/*" element={<ProtectedLayout><LocationProvider><RolesRoutes /></LocationProvider></ProtectedLayout>} />
                 <Route path="/profile" element={<ProtectedLayout><LocationProvider><ProfilePage /></LocationProvider></ProtectedLayout>} />
                 <Route path="customers/*" element={<ProtectedLayout><LocationProvider><CustomersRoutes /></LocationProvider></ProtectedLayout>} />

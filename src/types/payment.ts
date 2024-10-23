@@ -19,6 +19,46 @@ export interface FetchCommutePaymentsQuery {
     component?: "count" | "count-status"
 }
 
+export interface FetchReconciliationQuery {
+    start_date: string;
+    end_date: string;
+    component?: "count-status"
+}
+
+export interface FetchReconciliationTotals {
+    _id: null;
+    total_amount: number;
+    total_count: number;
+    total_lease_amount: number;
+    total_commute_amount: number;
+    total_lease_count: number;
+    total_commute_count: number;
+}
+
+export interface FetchedReconciliation {
+    rev_date: string;
+    asset_co: number;
+    created: Date | string;
+    createdAt: Date | string;
+    daily_tax: number;
+    data_mode: string;
+    rev_month: string;
+    rev_year: string;
+    split_stage: Record<string, any>
+    status: number;
+    tech_co: number;
+    toll_fee: number;
+    total_gross: number;
+    total_trip: number;
+    trials: number;
+    updatedAt: Date | string;
+    version: string;
+    rev_data: {
+        total_lease: number;
+        total_staffcom: number;
+    }
+}
+
 export interface PaymentCountStatus {
     _id: string | null;
     total_amount: number;

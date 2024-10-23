@@ -47,6 +47,7 @@ export const SUSPEND_ORGANIZATION_API = "admin/organizations/suspend-account"
 // Payments
 export const GET_LEASE_SERVICE_PAYMENT_API = "admin/payments/service-payment-lease"
 export const GET_COMMUTE_SERVICE_PAYMENT_API = "admin/payments/service-payment-staffcommute"
+export const GET_RECONCILIATION_API = "admin/payments/reconciliation-split"
 
 // Fees
 export const GET_FEES_API = "admin/operations/fees"
