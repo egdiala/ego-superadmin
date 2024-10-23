@@ -38,7 +38,7 @@ export const ReconciliationsFilter: React.FC<ReconciliationsFilterProps> = ({ is
     ]);
 
 
-    const [selected, setSelected] = useState(dateFilters[2]);
+    const [selected, setSelected] = useState(dateFilters[0]);
 
     const setCustomDate = (dates: { start: Date | string; end: Date | string }) => {
         const notCustom = dateFilters.filter((item) => item.name !== "custom") as any;
