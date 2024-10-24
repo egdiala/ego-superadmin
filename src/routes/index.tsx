@@ -10,7 +10,7 @@ import { AccountsLayout } from "@/pages/accounts/Accounts";
 import { AccountsPage, RolesPage } from "@/pages/accounts";
 import { ReconciliationPage } from "@/pages/reconciliation";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import { AuthRoutes, ChargeStationsRoutes, CustomersRoutes, DashboardRoutes, DriversRoutes, ExpectedRevenueRoutes, FeesRoutes, OEMsRoutes, PaymentLogRoutes, ReceivablesRoutes, RevenueSplitRoutes, RidersRoutes, RolesRoutes, ServiceRequestsRoutes, TripsRoutes, VehiclesRoutes, WalletRoutes } from "./modules";
+import { AuthRoutes, ChargeStationsRoutes, CustomersRoutes, DashboardRoutes, DisbursementRoutes, DriversRoutes, ExpectedRevenueRoutes, FeesRoutes, OEMsRoutes, PaymentLogRoutes, ReceivablesRoutes, RevenueSplitRoutes, RidersRoutes, RolesRoutes, ServiceRequestsRoutes, TripsRoutes, VehiclesRoutes, WalletRoutes } from "./modules";
 
 
 function LocationProvider({ children }: { children: ReactNode }) {
@@ -29,6 +29,7 @@ const Router = () => {
                     <Route index path="admins" element={<AccountsPage />} />
                     <Route path="roles" element={<RolesPage />} />
                 </Route>
+                <Route path="/disbursement/*" element={<ProtectedLayout><LocationProvider><DisbursementRoutes /></LocationProvider></ProtectedLayout>} />
                 <Route path="/reconciliation" element={<ProtectedLayout><LocationProvider><ReconciliationPage /></LocationProvider></ProtectedLayout>} />
                 <Route path="/accounts/roles/*" element={<ProtectedLayout><LocationProvider><RolesRoutes /></LocationProvider></ProtectedLayout>} />
                 <Route path="/profile" element={<ProtectedLayout><LocationProvider><ProfilePage /></LocationProvider></ProtectedLayout>} />
