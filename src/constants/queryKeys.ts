@@ -44,6 +44,7 @@ export const GET_ORGANIZATION = "get-organization"
 export const GET_LEASE_PAYMENTS = "get-lease-payments"
 export const GET_COMMUTE_PAYMENTS = "get-commute-payments"
 export const GET_RECONCILIATION = "get-reconciliation"
+export const GET_PAYOUTS = "get-payouts"
 
 // Fees
 export const GET_FEES = "get-fees"
