@@ -39,6 +39,45 @@ export type ApprovePayoutType = {
     payout_id: string;
 }
 
+export interface FetchedPayout {
+    auth_id: string;
+    stakeholder_name: string;
+    account_data: {
+        account_number: string;
+        bank_name: string;
+        bank_code: string;
+        account_name: string;
+        status: boolean;
+    };
+    start_date: Date | string;
+    end_date: Date | string;
+    amount: number;
+    actual_amount: number;
+    wallet_deduction: number;
+    user_type: string;
+    description: string;
+    created: string;
+    trials: number;
+    status: number;
+    approve_status: number;
+    source_bank: Record<string, any>
+    payment_summary: Record<string, any>
+    response_data: Record<string, any>
+    createdAt: Date | string;
+    updatedAt: Date | string;
+    payout_id: string;
+}
+
+export interface PayoutStats {
+    _id: null;
+    total_tax_paid: number;
+    total_tax_pending: number;
+    total_tech_paid: number;
+    total_tech_pending: number;
+    total_asset_co_paid: number;
+    total_asset_co_pending: number;
+}
+
 export interface FetchReconciliationTotals {
     _id: null;
     total_amount: number;
