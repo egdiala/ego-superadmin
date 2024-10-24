@@ -25,6 +25,20 @@ export interface FetchReconciliationQuery {
     component?: "count-status"
 }
 
+export interface FetchPayoutQuery {
+    status?: "0" | "1" | "2" | "3" // 0=Pending | 1=paid | 2=Failed | 3=Processing
+    start_date?: string;
+    end_date?: string;
+    page?: string;
+    item_per_page?: string;
+    component?: "count-status" | "count"
+}
+
+export type ApprovePayoutType = {
+    status?: "1" | "2" // 1=Approve | 2=Reprocess
+    payout_id: string;
+}
+
 export interface FetchReconciliationTotals {
     _id: null;
     total_amount: number;
