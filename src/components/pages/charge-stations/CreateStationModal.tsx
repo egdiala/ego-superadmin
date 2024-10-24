@@ -10,6 +10,7 @@ import type { AxiosProgressEvent } from "axios";
 import { createStationSchema } from "@/validations/charge-station";
 import { useBulkUploadStations, useCreateStation } from "@/services/hooks/mutations/useChargeStations";
 import DatePicker from "react-datepicker";
+import { format } from "date-fns";
 
 interface CreateStationModalProps {
     isOpen: boolean;
@@ -30,8 +31,9 @@ const SingleStation: React.FC<CreateStationModalProps> = ({ close }) => {
             close_time: "",
         },
         validationSchema: createStationSchema,
-        onSubmit(values) {
-            create(values)
+        onSubmit: () => {
+            const { open_time, close_time, ...rest } = values
+            create({ ...rest, open_time: format(open_time, "HH:mm"), close_time: format(close_time, "HH:mm") })
         },
     })
 
