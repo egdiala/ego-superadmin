@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
@@ -9,6 +9,7 @@ import { useGetNotifications } from "@/services/hooks/queries";
 import { setPaginationParams } from "@/hooks/usePaginationParams";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import type { FetchedNotification, FetchedNotificationsCount } from "@/types/notifications";
+import { useUpdateNotifications } from "@/services/hooks/mutations";
 
 export const NotificationsPage: React.FC = () => {  
   const itemsPerPage = 10;
@@ -16,6 +17,11 @@ export const NotificationsPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { data: notifications, isFetching } = useGetNotifications<FetchedNotification[]>({ page: page.toString(), item_per_page: itemsPerPage.toString() })
   const { data: notificationsCount, isFetching: fetchingCount } = useGetNotifications<FetchedNotificationsCount>({ component: "count" })
+  const { mutate: markAsRead } = useUpdateNotifications()
+
+  const isUnread = useMemo(() => {
+    return notifications?.some((item) => item.status === 0)
+  },[notifications])
 
   const columns = [
     {
@@ -51,6 +57,12 @@ export const NotificationsPage: React.FC = () => {
         setPage(page)
         setPaginationParams(page, itemsPerPage, searchParams, setSearchParams)
     };
+  
+    useEffect(() => {
+      if (!isFetching && isUnread) {
+        markAsRead()
+      }
+    },[isFetching, isUnread, markAsRead])
 
     return (
         <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">
