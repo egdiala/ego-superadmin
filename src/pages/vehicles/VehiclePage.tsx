@@ -18,6 +18,7 @@ export const VehiclePage: React.FC = () => {
     const subRoutes = [
         { name: "Profile", link: `/vehicles/${params?.id as string}/profile` },
         { name: "Vehicle Payment", link: `/vehicles/${params?.id as string}/vehicle-payment` },
+        { name: "Trips", link: `/vehicles/${params?.id as string}/trips` },
     ]
 
     const handlePrimaryAction = () => {
