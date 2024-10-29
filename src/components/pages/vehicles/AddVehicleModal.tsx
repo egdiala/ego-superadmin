@@ -48,7 +48,7 @@ const SingleVehicle: React.FC<AddVehicleModalProps> = ({ close }) => {
         <form className="grid gap-6" onSubmit={handleSubmit}>
             <div className="grid gap-6">
                 <div className="flex flex-col md:flex-row md:items-start gap-6">
-                    <Input type="text" label="Plate Number" {...register("plate_no")} />
+                    <Input type="text" label="OEM" {...register("vehicle_oem")} />
                     <Input type="text" label="Model" {...register("model")} />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -73,7 +73,7 @@ const SingleVehicle: React.FC<AddVehicleModalProps> = ({ close }) => {
                 </div>
                 <div className="flex flex-col md:flex-row md:items-start gap-6">
                     <Input type="text" label="Color" {...register("vehicle_color")} />
-                    <Input type="text" label="OEM" {...register("vehicle_oem")} />
+                    <Input type="text" label="Plate Number" {...register("plate_no")} />
                 </div>
                 <div className="flex flex-col md:flex-row md:items-start gap-6">
                     <Input type="text" label="Vehicle Identification Number (VIN)" {...register("vehicle_vin")} />
