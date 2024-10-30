@@ -7,7 +7,7 @@ import { useGetReconciliation } from "@/services/hooks/queries";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
-import { format, startOfToday } from "date-fns";
+import { endOfMonth, format, parse, startOfMonth, startOfToday } from "date-fns";
 import { FetchedReconciliation, FetchReconciliationTotals } from "@/types/payment";
 import { formattedNumber } from "@/utils/textFormatter";
 import { ReconciliationsFilter } from "@/components/pages/reconciliation/ReconciliationsFilter";
@@ -33,12 +33,13 @@ const PopoverInfo: React.FC<{ text: string; }> = ({ text }) => {
 }
 
 export const ReconciliationPage: React.FC = () => {
+    const today = startOfToday();
     const location = useLocation();
     const [page, setPage] = useState(1)
     const [searchParams, setSearchParams] = useSearchParams();
     const [filters, setFilters] = useState({
-        start_date: format(startOfToday(), "yyyy-MM-dd"),
-        end_date: format(startOfToday(), "yyyy-MM-dd")
+        start_date: format(startOfMonth(parse(format(today, "yyyy-MM-dd"), "yyyy-MM-dd", new Date())), "yyyy-MM-dd"),
+        end_date: format(endOfMonth(parse(format(today, "yyyy-MM-dd"), "yyyy-MM-dd", new Date())), "yyyy-MM-dd")
     })
     
     const { data: reconciliations, isFetching } = useGetReconciliation<FetchedReconciliation[]>({ ...filters })

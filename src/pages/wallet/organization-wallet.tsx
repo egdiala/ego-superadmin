@@ -76,7 +76,7 @@ export const OrganizationWalletPage: React.FC = () => {
                 const item = row?.original as FetchedWalletTransaction
                 return (
                     <div className="text-sm text-grey-dark-2 capitalize whitespace-nowrap">
-                        {item?.payment_method}
+                        {item?.payment_method === "others" ? "wallet" : item?.payment_method}
                     </div>
                 )
             }

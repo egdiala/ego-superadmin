@@ -38,8 +38,18 @@ export const TripsPage: React.FC = () => {
 
     const columns = useMemo(() => {
       return [
+        (chargeStatus && {
+          header: () => "Charge Date & Time",
+          accessorKey: "ride_data.charge_at",
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as FetchedTripType
+                return (
+                    <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{format(item?.charge_at, "dd MMM, yyyy")}</span> • {format(item?.charge_at, "p")}</div>
+                )
+            }
+        }),
         {
-          header: () => "Date & Time",
+          header: () => !chargeStatus ? "Date & Time" : "Trip Date & Time",
           accessorKey: "createdAt",
           cell: ({ row }: { row: any; }) => {
             const item = row?.original as FetchedTripType
