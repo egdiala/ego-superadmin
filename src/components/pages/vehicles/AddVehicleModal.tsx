@@ -1,14 +1,15 @@
-import React, { type ChangeEvent, DragEvent, Fragment, useState } from "react";
+import React, { type ChangeEvent, DragEvent, Fragment, useEffect, useMemo, useState } from "react";
 import { Icon } from "@iconify/react";
 import type { AxiosProgressEvent } from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import { Loader } from "@/components/core/Button/Loader";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
-import { Button, Input, RenderIf } from "@/components/core";
+import { Button, Input, RenderIf, SelectInput } from "@/components/core";
 import { bulkCreateVehicleSchema, createVehicleSchema } from "@/validations/vehicles";
 import { useBulkUploadVehicles, useCreateVehicle } from "@/services/hooks/mutations";
 import { Dialog, DialogPanel, DialogTitle, Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import DatePicker from "react-datepicker";
+import { useGetOEMs } from "@/services/hooks/queries";
 
 interface AddVehicleModalProps {
     isOpen: boolean;
@@ -17,6 +18,7 @@ interface AddVehicleModalProps {
 }
 
 const SingleVehicle: React.FC<AddVehicleModalProps> = ({ close }) => {
+    const { data } = useGetOEMs()
     const { mutate: create, isPending } = useCreateVehicle(() => onClose())
 
     const { errors, handleSubmit, isValid, register, resetForm, setFieldValue, values } = useFormikWrapper({
@@ -39,6 +41,27 @@ const SingleVehicle: React.FC<AddVehicleModalProps> = ({ close }) => {
         },
     })
 
+    const oems = useMemo(() => {
+        if (data === undefined) {
+            return []
+        }
+        return data?.map((item) => ({ label: item?.oem_name, value: item?.oem_id }))
+    },[data])
+
+    const models = useMemo(() => {
+        const selectedOem = data?.find((item) => item?.oem_id === values?.vehicle_oem)
+
+        return selectedOem?.model_data?.map((item) => ({ label: item?.model, value: item?._id }))
+    },[data, values?.vehicle_oem])
+
+    useEffect(() => {
+        if (values?.vehicle_oem && values?.model) {
+            const selectedOem = data?.find((item) => item?.oem_id === values?.vehicle_oem)
+            const year = selectedOem?.model_data?.find((item) => item?._id === values?.model)
+            setFieldValue("year_manufacture", year?.year)
+        }
+    },[values?.model, values?.vehicle_oem])
+
     const onClose = () => {
         resetForm();
         close(false);
@@ -48,8 +71,8 @@ const SingleVehicle: React.FC<AddVehicleModalProps> = ({ close }) => {
         <form className="grid gap-6" onSubmit={handleSubmit}>
             <div className="grid gap-6">
                 <div className="flex flex-col md:flex-row md:items-start gap-6">
-                    <Input type="text" label="OEM" {...register("vehicle_oem")} />
-                    <Input type="text" label="Model" {...register("model")} />
+                    <SelectInput options={oems} label="OEM" {...register("vehicle_oem")} />
+                    <SelectInput options={models ?? []} label="Model" {...register("model")} />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="grid grid-cols-1">
