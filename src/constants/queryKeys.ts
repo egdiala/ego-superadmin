@@ -9,6 +9,10 @@ export const GET_ADMIN = "get-admin"
 export const GET_ADMIN_PROFILE = "get-admin-profile"
 export const GET_ACTIVITY_LOGS = "get-activity-logs"
 
+// Banks
+export const GET_BANK_LIST = "get-bank-lists"
+export const GET_FEE_BANK_LOGS = "get-fee-bank-logs"
+
 // Charge Stations
 export const GET_CHARGE_STATIONS = "get-charge-stations"
 export const GET_CHARGE_STATION = "get-charge-station"

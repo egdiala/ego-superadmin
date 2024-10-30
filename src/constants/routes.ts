@@ -23,6 +23,7 @@ export const setupRoutes = [
     { to:"/fees", name:"Fees", icon:"" },
     { to:"/charge-stations", name:"Charge Stations", icon:"" },
     { to:"/oem", name:"OEMs", icon:"" },
-    { to:"/accounts", name:"Accounts", icon:"", subRoutes: ["ACCESS_ROLE", "ADMIN_ACCOUNT"] },
+    { to:"/bank-accounts", name:"Bank Accounts", icon:"" },
+    { to:"/accounts", name:"Admin Accounts", icon:"", subRoutes: ["ACCESS_ROLE", "ADMIN_ACCOUNT"] },
     { to:"/activity-log", name:"Activity Log", icon:"" },
 ]

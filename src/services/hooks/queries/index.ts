@@ -1,4 +1,5 @@
 export * from "./useAdmin"
+export * from "./useBanks"
 export * from "./useChargeStations"
 export * from "./useCountry"
 export * from "./useDrivers"

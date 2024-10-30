@@ -5,6 +5,10 @@ export const SEND_RESET_PASSWORD_EMAIL_API = "admin/auths/forgot-password"
 export const SEND_RESET_PASSWORD_OTP_API = "user/otps/send"
 export const CONFIRM_RESET_PASSWORD_OTP_API = "user/otps/confirm"
 
+// Banks
+export const GET_BANK_LIST_API = "admin/operations/bank-lists"
+export const GET_FEE_BANK_LOGS_API = "admin/operations/fee-banks"
+
 // Roles
 export const GET_ROLE_LISTS_API = "admin/operations/role-lists"
 export const CREATE_ROLE_API = "admin/operations/roles"

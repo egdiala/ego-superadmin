@@ -1,5 +1,6 @@
 export * from "./useAdmin"
 export * from "./useAuth"
+export * from "./useBanks"
 export * from "./useDrivers"
 export * from "./useFees"
 export * from "./useNotifications"

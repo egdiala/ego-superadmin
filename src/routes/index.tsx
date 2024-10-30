@@ -11,6 +11,7 @@ import { AccountsPage, RolesPage } from "@/pages/accounts";
 import { ReconciliationPage } from "@/pages/reconciliation";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { AuthRoutes, ChargeStationsRoutes, CustomersRoutes, DashboardRoutes, DisbursementRoutes, DriversRoutes, ExpectedRevenueRoutes, FeesRoutes, OEMsRoutes, PaymentLogRoutes, ReceivablesRoutes, RevenueSplitRoutes, RidersRoutes, RolesRoutes, ServiceRequestsRoutes, TripsRoutes, VehiclesRoutes, WalletRoutes } from "./modules";
+import { BanksPage } from "@/pages/banks";
 
 
 function LocationProvider({ children }: { children: ReactNode }) {
@@ -24,6 +25,7 @@ const Router = () => {
                 <Route path="/*" element={<ProtectedLayout><LocationProvider><DashboardRoutes /></LocationProvider></ProtectedLayout>} />
                 <Route path="auth/*" element={<AuthLayout><LocationProvider><AuthRoutes /></LocationProvider></AuthLayout>} />
                 <Route path="activity-log" element={<ProtectedLayout><LocationProvider><ActivityLogPage /></LocationProvider></ProtectedLayout>} />
+                <Route path="bank-accounts" element={<ProtectedLayout><LocationProvider><BanksPage /></LocationProvider></ProtectedLayout>} />
                 <Route path="/drivers/:id/*" element={<ProtectedLayout><LocationProvider><DriversRoutes /></LocationProvider></ProtectedLayout>} />
                 <Route path="/accounts/*" element={<ProtectedLayout><LocationProvider><AccountsLayout /></LocationProvider></ProtectedLayout>}>
                     <Route index path="admins" element={<AccountsPage />} />
