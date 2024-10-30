@@ -12,6 +12,7 @@ export const GET_ACTIVITY_LOGS = "get-activity-logs"
 // Banks
 export const GET_BANK_LIST = "get-bank-lists"
 export const GET_FEE_BANK_LOGS = "get-fee-bank-logs"
+export const VALIDATE_BANK_ACCOUNT = "validate-bank-account"
 
 // Charge Stations
 export const GET_CHARGE_STATIONS = "get-charge-stations"

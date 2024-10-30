@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FetchedBankList } from "@/types/banks";
 import { Button, Input } from "@/components/core";
 import { updateModelSchema } from "@/validations/oem";
 import { ComboBox } from "@/components/core/ComboBox";
-import { useGetBankList } from "@/services/hooks/queries";
+import { useGetBankList, useValidateBank } from "@/services/hooks/queries";
 import { useCreateBank } from "@/services/hooks/mutations";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
@@ -38,6 +38,20 @@ export const CreateBankModal: React.FC<CreateBankModalProps> = ({ isOpen, close 
             create(values)
         },
     })
+
+    const { data: bankDetails, refetch: validateBank, isSuccess } = useValidateBank({ account_number: values?.account_number, bank_code: values?.bank_code })
+
+    useEffect(() => {
+        if (isSuccess) {
+            console.log(bankDetails)
+        }
+    }, [isSuccess])
+
+    useEffect(() => {
+        if (values?.bank_code && (values?.account_number?.length === 10)) {
+            validateBank()
+        }
+    }, [values?.account_number?.length, values?.bank_code])
 
     const onClose = () => {
         resetForm();
