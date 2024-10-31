@@ -12,6 +12,7 @@ interface Filters {
     vehicle_id: string;
     ride_status?: string;
     charge_status: "1" | "2" | "5";
+    purchase_model: string;
 }
 
 interface TripsFilterProps {
@@ -71,6 +72,7 @@ export const TripsFilter: React.FC<TripsFilterProps> = ({ isLoading, setFilters,
             end_date: selected.value.end ? format(selected.value.end, "yyyy-MM-dd") : "",
             ride_status: statusFilters,
             vehicle_id: "",
+            purchase_model: "",
             charge_status: "" as "1" | "2" | "5" 
         });
         fn?.();

@@ -126,7 +126,7 @@ export const StaffCommutePaymentLogPage: React.FC = () => {
                     perPage={itemsPerPage}
                     totalCount={count?.total}
                     onPageChange={handlePageChange}
-                    onClick={({ original }: { original: FetchedCommutePayment }) => navigate(`/trips?vehicle_id=${original?.vehicle_id}&start_date=${original.created}&end_date=${original.created}&charge_status=1`)}
+                    onClick={({ original }: { original: FetchedCommutePayment }) => navigate(`/trips?vehicle_id=${original?.vehicle_id}&start_date=${original.created}&end_date=${original.created}&charge_status=1&purchase_model=2`)}
                 />
             </RenderIf>
             <RenderIf condition={fetchingPayments || fetchingPaymentsCount || fetchingPaymentsCountStatus}>

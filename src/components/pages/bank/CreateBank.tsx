@@ -3,7 +3,7 @@ import { FetchedBankList } from "@/types/banks";
 import { Button, Input } from "@/components/core";
 import { updateModelSchema } from "@/validations/oem";
 import { ComboBox } from "@/components/core/ComboBox";
-import { useGetBankList, useValidateBank } from "@/services/hooks/queries";
+import { useGetBankList, useGetFeeBanks, useValidateBank } from "@/services/hooks/queries";
 import { useCreateBank } from "@/services/hooks/mutations";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
@@ -17,6 +17,7 @@ interface CreateBankModalProps {
 export const CreateBankModal: React.FC<CreateBankModalProps> = ({ isOpen, close }) => {
     const [query, setQuery] = useState("")
     const { data: banks, isLoading } = useGetBankList()
+    useGetFeeBanks({ component: "fee_variables" })
     const { mutate: create, isPending } = useCreateBank(() => onClose())
 
     const filteredRoles =

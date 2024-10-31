@@ -24,13 +24,15 @@ export const TripsPage: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const vehicleId = searchParams.get("vehicle_id")
     const chargeStatus = searchParams.get("charge_status") as "1" | "2" | "5"
+    const purchaseModel = searchParams.get("purchase_model")
     
 
     const [filters, setFilters] = useState({
       start_date: searchParams.get("start_date") || "",
       end_date: searchParams.get("end_date") || "",
       vehicle_id: vehicleId || "",
-      charge_status: chargeStatus || ""
+      charge_status: chargeStatus || "",
+      purchase_model: purchaseModel || ""
     })
     const [component] = useState<"count" | "count-status" | "count-status-rider" | "count-status-driver" | "count-monthly">("count")
     const { data: count, isFetching: fetchingCount } = useGetTrips({ component, q: value, ...filters })
@@ -74,11 +76,11 @@ export const TripsPage: React.FC = () => {
         },
         {
           header: () => "Model",
-          accessorKey: "org_data.purchase_model",
+          accessorKey: "ride_data.purchase_model",
           cell: ({ row }: { row: any; }) => {
             const item = row?.original as FetchedTripType
             return (
-              <div className="text-sm text-grey-dark-2 whitespace-nowrap">{pascalCaseToWords(PurchaseModel[item?.org_data?.purchase_model] ?? "-") ?? "-"}</div>
+              <div className="text-sm text-grey-dark-2 whitespace-nowrap">{pascalCaseToWords(PurchaseModel[item?.ride_data?.purchase_model] ?? "-") ?? "-"}</div>
             )
           }
         },
