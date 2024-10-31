@@ -24,7 +24,7 @@ export const TripsPage: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const vehicleId = searchParams.get("vehicle_id")
     const chargeStatus = searchParams.get("charge_status") as "1" | "2" | "5"
-    const purchaseModel = searchParams.get("purchase_model")
+    const purchaseModel = searchParams.get("purchase_model") as string
     
 
     const [filters, setFilters] = useState({

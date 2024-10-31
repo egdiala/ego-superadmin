@@ -46,6 +46,7 @@ export interface FetchedTripType {
         name: string;
     }
     ride_data: {
+        purchase_model: number;
         rider_id: string;
         ride_type: string;
         name: string;
