@@ -14,7 +14,7 @@ export const BanksPage: React.FC = () => {
   const location = useLocation();
   const itemsPerPage = 10;
   const [page, setPage] = useState(1)
-  const { data: feeBanks, isFetching } = useGetFeeBanks({})
+  const { data: feeBanks, isFetching } = useGetFeeBanks<any[]>({})
   const [toggleModals, setToggleModals] = useState({
     openCreateBankModal: false,
     openDeleteOemModal: false,
