@@ -12,7 +12,7 @@ interface Filters {
     vehicle_id: string;
     ride_status?: string;
     charge_status: "1" | "2" | "5";
-    purchase_model: string;
+    purchase_model?: string;
 }
 
 interface TripsFilterProps {
