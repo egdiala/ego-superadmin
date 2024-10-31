@@ -1,4 +1,4 @@
-import React, { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
 import DatePicker from "react-datepicker";
@@ -6,18 +6,9 @@ import { endOfMonth, format, parse, startOfMonth, startOfToday } from "date-fns"
 import { Button, Checkbox, Input, RadioButton, RenderIf, TableAction } from "@/components/core";
 import { CloseButton, Popover, PopoverBackdrop, PopoverButton, PopoverPanel, Radio, RadioGroup } from "@headlessui/react";
 
-interface Filters {
-    start_date: string;
-    end_date: string;
-    vehicle_id: string;
-    ride_status?: string;
-    charge_status: "1" | "2" | "5";
-    purchase_model: string;
-}
-
 interface TripsFilterProps {
     // eslint-disable-next-line no-unused-vars
-    setFilters: Dispatch<SetStateAction<Filters>>;
+    setFilters: any;
     isLoading: boolean;
     theme?: string;
 }
