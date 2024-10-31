@@ -58,14 +58,6 @@ export const axiosCountryInstance: AxiosInstance = axios.create({
   },
 });
 
-export const axiosPaystackInstance: AxiosInstance = axios.create({
-  baseURL: "https://api.paystack.co",
-  headers: {
-    "Authorization": `Bearer ${import.meta.env.VITE_PAYSTACK_SECRET_KEY}`,
-    "Content-Type": "application/json",
-  },
-});
-
 const token = localStorage.getItem("token") as string;
 
 

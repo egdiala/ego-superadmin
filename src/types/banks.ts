@@ -13,3 +13,8 @@ export interface FetchedBankList {
     Bankname: string;
     Bankcode: string;
 }
+
+export interface FetchedFeeBankVariables {
+    name: string;
+    reference_name: string;
+}

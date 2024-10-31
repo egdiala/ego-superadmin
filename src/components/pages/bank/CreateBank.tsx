@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FetchedBankList } from "@/types/banks";
 import { Button, Input } from "@/components/core";
-import { updateModelSchema } from "@/validations/oem";
 import { ComboBox } from "@/components/core/ComboBox";
-import { useGetBankList, useGetFeeBanks, useValidateBank } from "@/services/hooks/queries";
+import { useGetBankList, useGetFeeBanks } from "@/services/hooks/queries";
 import { useCreateBank } from "@/services/hooks/mutations";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
+import type { FetchedFeeBankVariables } from "@/types/banks"
+import { createBankSchema } from "@/validations/banks";
 
 interface CreateBankModalProps {
     isOpen: boolean;
@@ -16,15 +17,23 @@ interface CreateBankModalProps {
 
 export const CreateBankModal: React.FC<CreateBankModalProps> = ({ isOpen, close }) => {
     const [query, setQuery] = useState("")
+    const [variableQuery, setVariableQuery] = useState("")
     const { data: banks, isLoading } = useGetBankList()
-    useGetFeeBanks({ component: "fee_variables" })
+    const { data: variables, isFetching } = useGetFeeBanks<FetchedFeeBankVariables[]>({ component: "fee_variables" })
     const { mutate: create, isPending } = useCreateBank(() => onClose())
 
-    const filteredRoles =
+    const filteredBanks =
         query === ""
         ? banks
         : banks?.filter((bank) => {
             return bank.Bankname.toLowerCase().includes(query.toLowerCase())
+            })
+
+    const filteredVariables =
+        variableQuery === ""
+        ? variables
+        : variables?.filter((item) => {
+            return item.name.toLowerCase().includes(variableQuery.toLowerCase())
             })
 
     const { handleSubmit, isValid, register, resetForm, setFieldValue, values } = useFormikWrapper({
@@ -34,25 +43,11 @@ export const CreateBankModal: React.FC<CreateBankModalProps> = ({ isOpen, close 
             bank_name: "",
             account_number: "",
         },
-        validationSchema: updateModelSchema,
+        validationSchema: createBankSchema,
         onSubmit: () => {
             create(values)
         },
     })
-
-    const { data: bankDetails, refetch: validateBank, isSuccess } = useValidateBank({ account_number: values?.account_number, bank_code: values?.bank_code })
-
-    useEffect(() => {
-        if (isSuccess) {
-            console.log(bankDetails)
-        }
-    }, [isSuccess])
-
-    useEffect(() => {
-        if (values?.bank_code && (values?.account_number?.length === 10)) {
-            validateBank()
-        }
-    }, [values?.account_number?.length, values?.bank_code])
 
     const onClose = () => {
         resetForm();
@@ -72,7 +67,7 @@ export const CreateBankModal: React.FC<CreateBankModalProps> = ({ isOpen, close 
                             label="Bank Name"
                             disabled={isLoading}
                             onClose={() => setQuery("")}
-                            options={filteredRoles ?? []} 
+                            options={filteredBanks ?? []} 
                             onChange={(value) => setQuery(value)} 
                             displayValue={(item: FetchedBankList) => item?.Bankname} 
                             optionLabel={(option: FetchedBankList) => option?.Bankname} 
@@ -82,7 +77,18 @@ export const CreateBankModal: React.FC<CreateBankModalProps> = ({ isOpen, close 
                             }} 
                         />
                         <Input label="Account Number" type="text" {...register("account_number")} />
-                        <Input label="Reference Name" type="text" readOnly {...register("reference_name")} />
+                        <ComboBox
+                            label="Reference Name"
+                            disabled={isFetching}
+                            onClose={() => setVariableQuery("")}
+                            options={filteredVariables ?? []} 
+                            onChange={(value) => setVariableQuery(value)} 
+                            displayValue={(item: FetchedFeeBankVariables) => item?.name} 
+                            optionLabel={(option: FetchedFeeBankVariables) => option?.name} 
+                            setSelected={async(value: FetchedFeeBankVariables) => {
+                                await setFieldValue("reference_name", value?.reference_name)
+                            }} 
+                        />
                     </div>
                     <div className="flex items-center justify-end w-full md:w-1/2 ml-auto pt-10 gap-2 md:gap-4">
                         <Button type="button" theme="tertiary" disabled={isPending} onClick={onClose} block>Cancel</Button>

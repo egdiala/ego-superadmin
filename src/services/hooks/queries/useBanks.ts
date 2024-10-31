@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { GET_BANK_LIST, GET_FEE_BANK_LOGS, VALIDATE_BANK_ACCOUNT } from "@/constants/queryKeys";
+import { GET_BANK_LIST, GET_FEE_BANK_LOGS } from "@/constants/queryKeys";
 import { errorToast } from "@/utils/createToast";
-import { getBankList, getFeeBankLogs, validateBank } from "@/services/apis/banks";
-import type { CreateFeeBankType, FetchedBankList, FetchFeeBankQuery } from "@/types/banks";
+import { getBankList, getFeeBankLogs } from "@/services/apis/banks";
+import type { FetchedBankList, FetchFeeBankQuery } from "@/types/banks";
 
 export const useGetBankList = () => {
   return useQuery({
@@ -18,11 +18,11 @@ export const useGetBankList = () => {
   });
 };
 
-export const useGetFeeBanks = (query: FetchFeeBankQuery) => {
+export const useGetFeeBanks = <T>(query: FetchFeeBankQuery) => {
   return useQuery({
-    queryKey: [GET_FEE_BANK_LOGS],
+    queryKey: [GET_FEE_BANK_LOGS, query],
     queryFn: () => getFeeBankLogs(query),
-    select: (res) => res?.data as any[],
+    select: (res) => res?.data as T,
     retry: false,
     refetchOnWindowFocus: false,
     throwOnError(error) {
@@ -30,19 +30,4 @@ export const useGetFeeBanks = (query: FetchFeeBankQuery) => {
       return false;
     },
   });
-};
-
-export const useValidateBank = (query: Partial<CreateFeeBankType>) => {
-  return useQuery({
-    queryKey: [VALIDATE_BANK_ACCOUNT],
-    queryFn: () => validateBank(query),
-    select: (res) => res?.data as any[],
-    retry: false,
-    enabled: false,
-    refetchOnWindowFocus: false,
-    throwOnError(error) {
-      errorToast(error)
-      return false;
-    },
-  });
-};
+}
