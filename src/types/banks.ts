@@ -18,3 +18,15 @@ export interface FetchedFeeBankVariables {
     name: string;
     reference_name: string;
 }
+
+export interface FetchedFeeBank {
+    reference_name: string;
+    bank_name: string;
+    bank_code: string;
+    account_number: string;
+    account_name: string;
+    createdAt: Date | string;
+    updatedAt: Date | string;
+    feebank_id: string;
+    stakeholder_name: string;
+}

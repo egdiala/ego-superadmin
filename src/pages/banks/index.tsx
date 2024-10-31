@@ -1,23 +1,24 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { getPaginationParams } from "@/hooks/usePaginationParams";
 import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
-import type { FetchedOEMType } from "@/types/oem";
 import { useGetFeeBanks } from "@/services/hooks/queries";
-import { CreateBankModal } from "@/components/pages/bank";
+import { CreateBankModal, DeleteBankModal } from "@/components/pages/bank";
+import type { FetchedFeeBank } from "@/types/banks";
 
 export const BanksPage: React.FC = () => {
   const location = useLocation();
   const itemsPerPage = 10;
   const [page, setPage] = useState(1)
-  const { data: feeBanks, isFetching } = useGetFeeBanks<any[]>({})
+  const { data: feeBanks, isFetching } = useGetFeeBanks<FetchedFeeBank[]>({})
   const [toggleModals, setToggleModals] = useState({
     openCreateBankModal: false,
-    openDeleteOemModal: false,
+    openDeleteBankModal: false,
+    activeBank: null as null | FetchedFeeBank
   })
   
   const toggleCreateBank = useCallback(() => {
@@ -27,32 +28,39 @@ export const BanksPage: React.FC = () => {
     }))
   },[toggleModals.openCreateBankModal])
 
-  const toggleDeleteOem = useCallback((item: FetchedOEMType | null = null) => {
+  const toggleDeleteBank = useCallback((item: FetchedFeeBank | null = null) => {
     setToggleModals((prev) => ({
       ...prev,
-      activeOem: item,
-      openDeleteOemModal: !toggleModals.openDeleteOemModal,
+      activeBank: item,
+      openDeleteBankModal: !toggleModals.openDeleteBankModal,
     }))
-  }, [toggleModals.openDeleteOemModal])
+  }, [toggleModals.openDeleteBankModal])
 
   const columns = [
     {
       header: () => "Stakeholder",
-      accessorKey: "oem_name",
+      accessorKey: "stakeholder_name",
     },
     {
       header: () => "Bank Details",
-      accessorKey: "model_data.length",
+      accessorKey: "bank_name",
+      cell: ({ row }: { row: any; }) => {
+        const item = row?.original as FetchedFeeBank
+        return (
+          <div className="flex items-center gap-6">
+            {item?.bank_name}, {item?.account_number}
+          </div>
+        )
+      }
     },
     {
       header: () => "Action",
       accessorKey: "action",
       cell: ({ row }: { row: any; }) => {
-        const item = row?.original as FetchedOEMType
+        const item = row?.original as FetchedFeeBank
         return (
           <div className="flex items-center gap-6">
-            <Link to={`/oem/${item?.oem_id}`} className="rounded bg-grey-dark-4 py-1 px-2 text-grey-dark-1 text-sm">View</Link>
-            <button type="button" className="rounded bg-semantics-error/10 py-1 px-2 text-semantics-error text-sm" onClick={() => toggleDeleteOem(item)}>
+            <button type="button" className="rounded bg-semantics-error/10 py-1 px-2 text-semantics-error text-sm" onClick={() => toggleDeleteBank(item)}>
               Delete
             </button>
           </div>
@@ -110,6 +118,7 @@ export const BanksPage: React.FC = () => {
         </RenderIf>
       </div>
       <CreateBankModal isOpen={toggleModals.openCreateBankModal} close={toggleCreateBank} />
+      <DeleteBankModal isOpen={toggleModals.openDeleteBankModal} close={toggleDeleteBank} bank={toggleModals.activeBank} />
     </motion.div>
   )
 }

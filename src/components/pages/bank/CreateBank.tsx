@@ -85,11 +85,11 @@ export const CreateBankModal: React.FC<CreateBankModalProps> = ({ isOpen, close 
                             onChange={(value) => setVariableQuery(value)} 
                             displayValue={(item: FetchedFeeBankVariables) => item?.name} 
                             optionLabel={(option: FetchedFeeBankVariables) => option?.name} 
-                            setSelected={async(value: FetchedFeeBankVariables) => {
-                                await setFieldValue("reference_name", value?.reference_name)
+                            setSelected={(value: FetchedFeeBankVariables) => {
+                                setFieldValue("reference_name", value?.reference_name)
                             }} 
                         />
-                    </div>
+                        </div>
                     <div className="flex items-center justify-end w-full md:w-1/2 ml-auto pt-10 gap-2 md:gap-4">
                         <Button type="button" theme="tertiary" disabled={isPending} onClick={onClose} block>Cancel</Button>
                         <Button type="submit" theme="primary" loading={isPending} disabled={isPending || !isValid} block>Add Bank Account</Button>
