@@ -58,6 +58,13 @@ export const axiosCountryInstance: AxiosInstance = axios.create({
   },
 });
 
+export const axiosMapInstance: AxiosInstance = axios.create({
+  baseURL: "https://api.mapbox.com/",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
 const token = localStorage.getItem("token") as string;
 
 

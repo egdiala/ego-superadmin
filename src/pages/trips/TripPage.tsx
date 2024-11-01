@@ -51,6 +51,7 @@ export const TripPage: React.FC = () => {
         ]
         return { timeline, size: `grid-cols-${timeline.length}`}
     },[trip?.ride_data?.end_address, trip?.ride_data?.start_address, trip?.ride_data?.status, trip?.ride_data?.stop_location])
+
     return (
         <Fragment>
             <RenderIf condition={!isFetching}>

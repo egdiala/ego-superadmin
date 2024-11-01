@@ -18,6 +18,11 @@ export interface FetchRanksQuery {
     user_type?: "top-vehicles" | "top-driver" | "top-rider"
 }
 
+export interface ReverseGeocodeQuery {
+    lon: number;
+    lat: number;
+}
+
 export interface FetchDistanceForOrgQuery {
     organization_id?: string;
     vehicle_id?: string;

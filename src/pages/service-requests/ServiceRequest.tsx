@@ -191,15 +191,15 @@ export const ServiceRequestPage: React.FC = () => {
                                         </div>
                                     </div>
                                 </RenderIf>
-                                <div className="flex flex-col gap-6 rounded-lg border border-input-filled py-4 px-5">
-                                    <h2 className="text-sm text-grey-dark-3">Request Description</h2>
-                                    <div className="test-sm text-grey-dark-2">
-                                        {serviceRequest?.description}
+                                <RenderIf condition={!!serviceRequest?.description}>
+                                    <div className="flex flex-col gap-6 rounded-lg border border-input-filled py-4 px-5">
+                                        <h2 className="text-sm text-grey-dark-3">Request Description</h2>
+                                        <div className="test-sm text-grey-dark-2">
+                                            {serviceRequest?.description}
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                            <RenderIf condition={serviceRequest !== undefined && serviceRequest?.comment?.length > 0}>
-                                <div className="grid grid-cols-2 gap-6">
+                                </RenderIf>
+                                <RenderIf condition={serviceRequest !== undefined && serviceRequest?.comment?.length > 0}>
                                     {
                                         serviceRequest?.comment?.map((item) => 
                                             <div key={item?._id} className="flex flex-col gap-2 rounded-lg border border-input-filled py-4 px-5">
@@ -211,8 +211,8 @@ export const ServiceRequestPage: React.FC = () => {
                                             </div>
                                         )
                                     }
-                                </div>
-                            </RenderIf>
+                                </RenderIf>
+                            </div>
                         </div>
                     </div>
                     <UpdateRequestModal isOpen={toggleModals.openUpdateRequestModal} close={toggleUpdateRequestStation} request={serviceRequest!} />

@@ -1,7 +1,7 @@
 import { GET_RANKS_API, GET_TRIP_DATA_STATS_API, GET_TRIPS_API } from "@/constants/api";
-import { axiosTripReportInstance } from "../axiosInstance";
+import { axiosMapInstance, axiosTripReportInstance } from "../axiosInstance";
 import { createQueryString } from "@/utils/createQuery";
-import type { FetchDistanceForOrgQuery, FetchRanksQuery, FetchTripsQuery } from "@/types/trips";
+import type { FetchDistanceForOrgQuery, FetchRanksQuery, FetchTripsQuery, ReverseGeocodeQuery } from "@/types/trips";
 
 export const getTrips = async (query: FetchTripsQuery) => {
   const res = await axiosTripReportInstance.get(`${GET_TRIPS_API}${createQueryString(query)}`);
@@ -20,5 +20,10 @@ export const getTripDataStats = async (query: FetchDistanceForOrgQuery) => {
 
 export const getRanks = async (query: FetchRanksQuery) => {
   const res = await axiosTripReportInstance.get(`${GET_RANKS_API}${createQueryString(query)}`);
+  return res.data;
+};
+
+export const reverseGeocode = async (query: ReverseGeocodeQuery) => {
+  const res = await axiosMapInstance.get(`geocoding/v5/mapbox.places/${query.lon},${query.lat}.json${createQueryString({ access_token: import.meta.env.VITE_MAPBOX_ACCESS_TOKEN })}`);
   return res.data;
 };

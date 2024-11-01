@@ -24,6 +24,6 @@ export const setupRoutes = [
     { to:"/charge-stations", name:"Charge Stations", icon:"" },
     { to:"/oem", name:"OEMs", icon:"" },
     { to:"/bank-accounts", name:"Bank Accounts", icon:"" },
-    { to:"/accounts", name:"Admin Accounts", icon:"", subRoutes: ["ACCESS_ROLE", "ADMIN_ACCOUNT"] },
+    { to:"/accounts", name:"Admin Accounts", icon:"" },
     { to:"/activity-log", name:"Activity Log", icon:"" },
 ]
