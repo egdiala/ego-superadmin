@@ -2,12 +2,16 @@ import React from "react";
 import { cn } from "@/libs/cn";
 import { ProgressCircle, TableAction } from "@/components/core";
 import { Icon } from "@iconify/react";
+import { useReverseGeocode } from "@/services/hooks/queries";
+import type { FetchedVehicleType } from "@/types/vehicles";
 
 interface DistanceStatsDashboardProps {
+    vehicle: FetchedVehicleType
     [key: PropertyKey]: any
 }
 
-export const DistanceStats: React.FC<DistanceStatsDashboardProps> = ({ className }) => {
+export const DistanceStats: React.FC<DistanceStatsDashboardProps> = ({ vehicle, className }) => {
+    const { data } = useReverseGeocode({ lat: vehicle?.location?.coordinates?.[1], lon: vehicle?.location?.coordinates?.[0] })
     const models1 = [
         { label: "Total trip duration", value: "0hrs : 0mins" },
         { label: "Av. trip distance", value: "0km" },
@@ -61,7 +65,7 @@ export const DistanceStats: React.FC<DistanceStatsDashboardProps> = ({ className
             </div>
             <div className="grid gap-1">
                 <span className="text-grey-dark-3 text-xs">Current vehicle location</span>
-                <p className="text-grey-dark-1 text-sm">-</p>
+                <p className="text-grey-dark-1 text-sm">{data?.features[0]?.place_name ?? "-"}</p>
             </div>
         </div>
     )

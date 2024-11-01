@@ -145,7 +145,7 @@ export const VehicleProfilePage: React.FC = () => {
                 </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <DistanceStats />
+                <DistanceStats vehicle={vehicle!} />
                 <VehicleBatteryHealth />
             </div>
         </motion.div>

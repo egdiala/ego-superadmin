@@ -57,13 +57,13 @@ export const useGetRanks = <T>(query: FetchRanksQuery) => {
   });
 };
 
-export const useReverseGeocode = <T>(query: ReverseGeocodeQuery) => {
+export const useReverseGeocode = (query: ReverseGeocodeQuery) => {
   return useQuery({
     queryKey: [GET_TRIPS, query],
     queryFn: () => reverseGeocode(query),
-    select: (res) => res?.data as T,
+    select: (res) => res?.data as any,
     retry: false,
-    enabled: false,
+    enabled: !!query?.lat,
     refetchOnWindowFocus: false,
     throwOnError(error) {
       errorToast(error)

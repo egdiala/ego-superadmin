@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
@@ -6,20 +6,24 @@ import { useGetVehicle } from "@/services/hooks/queries";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { Breadcrumb, Button, RenderIf } from "@/components/core";
-import { NavLink, Outlet, useNavigate, useParams } from "react-router-dom";
+import { NavLink, Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { RevokeDriverModal } from "@/components/pages/vehicles";
+import { PurchaseModel } from "@/types/organizations";
 
 export const VehiclePage: React.FC = () => {
     const params = useParams()
     const navigate = useNavigate()
+    const location = useLocation()
     const [revokeDriver, setRevokeDriver] = useState(false)
     const { data: vehicle, isFetching } = useGetVehicle(params?.id as string)
   
-    const subRoutes = [
-        { name: "Profile", link: `/vehicles/${params?.id as string}/profile` },
-        { name: "Vehicle Payment", link: `/vehicles/${params?.id as string}/vehicle-payment` },
-        { name: "Trips", link: `/vehicles/${params?.id as string}/trips` },
-    ]
+    const subRoutes = useMemo(() => {
+        return [
+            { name: "Profile", link: `/vehicles/${params?.id as string}/profile` },
+            ((PurchaseModel.Lease) === vehicle?.org_data?.purchase_model! && { name: "Vehicle Payment", link: `/vehicles/${params?.id as string}/vehicle-payment` }),
+            { name: "Trips", link: `/vehicles/${params?.id as string}/trips` },
+        ].filter((item) => item !== false)
+    },[params?.id, vehicle?.org_data?.purchase_model])
 
     const handlePrimaryAction = () => {
         if (!vehicle?.driver_assigned) {
@@ -28,6 +32,12 @@ export const VehiclePage: React.FC = () => {
             setRevokeDriver(true)
         }
     }
+
+    useEffect(() => {
+        if ((location?.pathname === `/vehicles/${params?.id as string}/vehicle-payment`) && ((PurchaseModel.Lease) !== vehicle?.org_data?.purchase_model!)) {
+            navigate(`/vehicles/${params?.id as string}/profile`)
+        }
+    },[location?.pathname, params?.id, vehicle?.org_data?.purchase_model])
     return (
         <Fragment>
             <RenderIf condition={!isFetching}>

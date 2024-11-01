@@ -44,6 +44,7 @@ export interface FetchedVehicleType {
         name: string;
         email: string;
         phone_number: string;
+        purchase_model: number;
     }
     payment_plan: {
         asset: number;
