@@ -50,6 +50,18 @@ export interface FetchedTripType {
         email: string;
         name: string;
     }
+    rating_data: {
+        _id: string;
+        trip_id: string;
+        receiver_auth_id: string;
+        sender_auth_id: string;
+        receiver_user_type: string;
+        comment: string;
+        rating: 5,
+        __v: 0,
+        createdAt: Date | string;
+        updatedAt: Date | string;
+    }
     ride_data: {
         purchase_model: number;
         rider_id: string;
@@ -214,6 +226,18 @@ export interface FetchedSingleTrip {
         email: string;
         name: string;
     };
+    rating_data: {
+        _id: string;
+        trip_id: string;
+        receiver_auth_id: string;
+        sender_auth_id: string;
+        receiver_user_type: string;
+        comment: string;
+        rating: 5,
+        __v: 0,
+        createdAt: Date | string;
+        updatedAt: Date | string;
+    }[]
     ride_data: {
         rider_id: string;
         ride_type: string;

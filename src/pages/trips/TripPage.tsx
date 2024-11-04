@@ -101,8 +101,8 @@ export const TripPage: React.FC = () => {
                                     <TripRequestInfo data={trip!} />
                                     <TripInfo data={trip!} />
                                     <TripPayment data={trip!} />
-                                    <TripDriverRating />
-                                    <TripRiderRating />
+                                    <TripDriverRating data={trip?.rating_data?.find((item) => item?.receiver_user_type === "driver")!} />
+                                    <TripRiderRating data={trip?.rating_data?.find((item) => item?.receiver_user_type === "rider")!} />
                                 </div>
                                 <div className="grid gap-6 content-start">
                                     <TripRider data={trip!} />
