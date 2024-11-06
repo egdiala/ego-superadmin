@@ -19,8 +19,7 @@ export interface FetchRanksQuery {
 }
 
 export interface ReverseGeocodeQuery {
-    lon: number;
-    lat: number;
+    latlng: string;
 }
 
 export interface FetchDistanceForOrgQuery {

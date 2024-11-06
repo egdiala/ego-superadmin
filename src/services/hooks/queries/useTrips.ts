@@ -63,7 +63,7 @@ export const useReverseGeocode = (query: ReverseGeocodeQuery) => {
     queryFn: () => reverseGeocode(query),
     select: (res) => res?.data as any,
     retry: false,
-    enabled: !!query?.lat,
+    enabled: !!query?.latlng,
     refetchOnWindowFocus: false,
     throwOnError(error) {
       errorToast(error)

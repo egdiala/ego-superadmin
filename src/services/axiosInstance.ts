@@ -59,7 +59,7 @@ export const axiosCountryInstance: AxiosInstance = axios.create({
 });
 
 export const axiosMapInstance: AxiosInstance = axios.create({
-  baseURL: "https://api.mapbox.com/",
+  baseURL: "https://maps.googleapis.com/maps/api/geocode",
   headers: {
     "Content-Type": "application/json",
   },

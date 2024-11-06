@@ -24,6 +24,6 @@ export const getRanks = async (query: FetchRanksQuery) => {
 };
 
 export const reverseGeocode = async (query: ReverseGeocodeQuery) => {
-  const res = await axiosMapInstance.get(`geocoding/v5/mapbox.places/${query.lon},${query.lat}.json${createQueryString({ access_token: import.meta.env.VITE_MAPBOX_ACCESS_TOKEN })}`);
+  const res = await axiosMapInstance.get(`json${createQueryString(query)}&key=${import.meta.env.VITE_GOOGLE_CLOUD_API_KEY}`);
   return res;
 };

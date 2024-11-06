@@ -3,6 +3,7 @@ import axios from "axios";
 import mapboxgl from "mapbox-gl";
 import type { FetchedSingleTrip } from "@/types/trips";
 import { errorToast } from "@/utils/createToast";
+import { useReverseGeocode } from "@/services/hooks/queries";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 
@@ -11,11 +12,19 @@ interface TripMapProps {
 }
 
 export const TripMap: React.FC<TripMapProps> = ({ data }) => {
+
     const mapContainer = useRef<any>(null);
     const map = useRef<any>(null);
 
     const pickupLocation = useMemo(() => { return data?.location?.origin?.coordinates }, [data?.location?.origin?.coordinates]); // Example coordinates for pickup
-    const destinationLocation = useMemo(() => { return data?.location?.destination?.coordinates }, [data?.location?.destination?.coordinates]); // Example coordinates for destination
+    const destinationLocation: any = useMemo(() => {
+        if ((data?.ride_data?.drop_off_data?.longitude === undefined) && (data?.ride_data?.drop_off_data?.latitude === undefined)) {
+            return data?.location?.destination?.coordinates
+        }
+        return [data?.ride_data?.drop_off_data?.longitude, data?.ride_data?.drop_off_data?.latitude]
+    }, [data?.location?.destination?.coordinates, data?.ride_data?.drop_off_data?.latitude, data?.ride_data?.drop_off_data?.longitude]); // Example coordinates for destination
+
+    const { data: fetchedAddress } = useReverseGeocode({ latlng: `${destinationLocation[1]},${destinationLocation[0]}` })
 
     useEffect(() => {
         if (map.current) { return; } // initialize map only once
@@ -67,7 +76,7 @@ export const TripMap: React.FC<TripMapProps> = ({ data }) => {
                 // Fit the map bounds to include both pickup and destination
                 const bounds = new mapboxgl.LngLatBounds();
                 bounds.extend(pickupLocation);
-                bounds.extend(destinationLocation);
+                bounds.extend(destinationLocation as [number, number]);
                 map.current.fitBounds(bounds, { padding: 50 }); // Adjust the padding as needed
 
                 // Add custom green marker for pickup location
@@ -95,10 +104,10 @@ export const TripMap: React.FC<TripMapProps> = ({ data }) => {
                 destinationMarker.style.borderColor = "white";
                 destinationMarker.style.borderRadius = "50%";
 
-                const destinationPopup = new mapboxgl.Popup({ offset: 25 }).setText(data?.ride_data?.end_address ?? "");
+                const destinationPopup = new mapboxgl.Popup({ offset: 25 }).setText(fetchedAddress?.results[0]?.formatted_address ?? "");
 
                 new mapboxgl.Marker(destinationMarker)
-                    .setLngLat(destinationLocation)
+                    .setLngLat(destinationLocation as [number, number])
                     .setPopup(destinationPopup) // Attach popup to the marker
                     .addTo(map.current);
             } catch (error) {
@@ -107,20 +116,20 @@ export const TripMap: React.FC<TripMapProps> = ({ data }) => {
         };
 
         map.current.on("load", getRoute);
-    },[data?.ride_data?.end_address, data?.ride_data?.start_address, destinationLocation, pickupLocation]);
+    },[data?.ride_data.end_address, data?.ride_data?.start_address, destinationLocation, fetchedAddress?.results, pickupLocation]);
 
     return (
         <div className="flex relative justify-center items-center overflow-hidden rounded-lg h-52 w-full">
             <div ref={mapContainer} id="tripMapBox" className="flex h-52 w-full">
             </div>
-            <div className="bg-white absolute grid gap-2 top-2 left-2 p-3 rounded-lg">
+            <div className="group bg-white absolute grid gap-2 top-2 left-2 p-3 rounded-lg">
                 <div className="flex items-center gap-2">
                     <span className="size-1.5 bg-[#55B648] rounded-full" />
-                    <span className="text-xs text-grey-dark-2 w-60 line-clamp-1">{data?.ride_data?.start_address}</span>
+                    <span className="text-xs text-grey-dark-2 group-hover:w-full transform transition-transform duration-200 ease-out w-60 line-clamp-1">{data?.ride_data?.start_address}</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <span className="size-1.5 bg-semantics-error rounded-full" />
-                    <span className="text-xs text-grey-dark-2 w-60 line-clamp-1">{data?.ride_data?.end_address}</span>
+                    <span className="text-xs text-grey-dark-2 group-hover:w-full transform transition-transform duration-200 ease-out w-60 line-clamp-1">{fetchedAddress?.results[0]?.formatted_address}</span>
                 </div>
             </div>
         </div>
