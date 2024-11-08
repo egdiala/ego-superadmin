@@ -30,6 +30,7 @@ export interface FetchedRider {
     }
     org_data: {
         name: string;
+        purchase_model: number;
     }
     ride_data?: {
         total: 1

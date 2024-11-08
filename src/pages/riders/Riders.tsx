@@ -50,6 +50,12 @@ export const RidersPage: React.FC = () => {
     {
       header: () => "Phone Number",
       accessorKey: "phone_number",
+      cell: ({ row }: { row: any; }) => {
+        const item = row?.original as FetchedRider
+        return (
+          <div className="text-sm text-grey-dark-2 whitespace-nowrap">{item?.phone_number ?? "-"}</div>
+        )
+      }
     },
     {
       header: () => "Trips Taken",

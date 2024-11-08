@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { RenderIf } from "@/components/core";
 import { getAdminData } from "@/utils/authUtil";
 import type { TopRidersType } from "@/types/riders";
-import type { FetchedMonthlyTrip } from "@/types/trips";
+import type { FetchedMonthlyTrip, FetchedTripDetails } from "@/types/trips";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import type { FetchedRatingCountOne } from "@/types/ratings";
@@ -12,7 +12,7 @@ import type { FetchedOrganizationCountStatus } from "@/types/organizations";
 import type { FetchedDriverCountStatus, TopDriversType } from "@/types/drivers";
 import type { FetchedServiceRequestsCountStatus } from "@/types/service-requests";
 import type { FetchedVehicleCountStatus, TopVehiclesType } from "@/types/vehicles";
-import { useGetDrivers, useGetLeasePayments, useGetOrganizations, useGetRanks, useGetRatings, useGetServiceRequests, useGetTrips, useGetVehicles } from "@/services/hooks/queries";
+import { useGetDrivers, useGetLeasePayments, useGetOrganizations, useGetRanks, useGetRatings, useGetServiceRequests, useGetTrips, useGetTripStats, useGetVehicles } from "@/services/hooks/queries";
 import { Customers, DistanceCovered, PaymentValue, Ratings, ServiceRequests, TopCommuters, TopDrivers, TopVehicles, TotalDrivers, TotalTrips, TripDetails, Vehicles } from "@/components/pages/dashboard";
 import { format } from "date-fns";
 
@@ -24,6 +24,7 @@ export const DashboardPage: React.FC = () => {
     const [topRidersFilter, setTopRidersFilter] = useState<{ request_type: "trip" | "revenue";  }>({ request_type: "trip" })
     const [topVehiclesFilter, setTopVehiclesFilter] = useState<{ request_type: "trip" | "revenue";  }>({ request_type: "trip" })
     const [tripStatsFilter, setTripStatsFilter] = useState<{ start_date: string; end_date: string;  }>({ start_date: `${new Date().getFullYear()}-01-01`, end_date: format(new Date(), "yyyy-MM-dd") })
+    const [tripDetailsFilter, setTripDetailsFilter] = useState<{ start_date: string; end_date: string;  }>({ start_date: `${new Date().getFullYear()}-01-01`, end_date: format(new Date(), "yyyy-MM-dd") })
     
     const { data: customerCount, isFetching: fetchingCustomers } = useGetOrganizations({ component: "count-status" })
     const { data: vehiclesCount, isFetching: fetchingVehicles } = useGetVehicles({ component: "count-status" })
@@ -36,12 +37,13 @@ export const DashboardPage: React.FC = () => {
     const { data: paymentCount, isFetching: fetchingPaymentCount } = useGetLeasePayments<FetchedDashboardPayments>({ component: "dashboard-count", request_type: "1", status: "1" })
     const { data: duesCount, isFetching: fetchingDuesCount } = useGetLeasePayments<FetchedDashboardPayments>({ component: "dashboard-count", request_type: "1", status: "0" })
     const { data: tripStats, isFetching: fetchingTripStats } = useGetTrips({ component: "count-monthly", ...tripStatsFilter })
+    const { data: tripDetails, isFetching: fetchingTripDetails } = useGetTripStats<FetchedTripDetails>({ component: "trip-stat", ...tripDetailsFilter })
 
     const isFetchingAll = useMemo(() => {
-        const loadingStates = [fetchingCustomers, fetchingDriverRank, fetchingDrivers, fetchingDuesCount, fetchingPaymentCount, fetchingRatings, fetchingRiderRank, fetchingServiceRequests, fetchingTripStats, fetchingVehicleRank, fetchingVehicles]
+        const loadingStates = [fetchingCustomers, fetchingDriverRank, fetchingDrivers, fetchingDuesCount, fetchingPaymentCount, fetchingRatings, fetchingRiderRank, fetchingServiceRequests, fetchingTripStats, fetchingVehicleRank, fetchingVehicles, fetchingTripDetails]
 
         return loadingStates.some((item) => item)
-    }, [fetchingCustomers, fetchingDriverRank, fetchingDrivers, fetchingDuesCount, fetchingPaymentCount, fetchingRatings, fetchingRiderRank, fetchingServiceRequests, fetchingTripStats, fetchingVehicleRank, fetchingVehicles])
+    }, [fetchingCustomers, fetchingDriverRank, fetchingDrivers, fetchingDuesCount, fetchingPaymentCount, fetchingRatings, fetchingRiderRank, fetchingServiceRequests, fetchingTripDetails, fetchingTripStats, fetchingVehicleRank, fetchingVehicles])
 
     useEffect(() => {
         if (!isFetchingAll) {
@@ -65,7 +67,7 @@ export const DashboardPage: React.FC = () => {
                     </div>
                     <div className="grid gap-6 grid-cols-1 xl:grid-cols-2">
                         <div className="grid gap-6 content-start">
-                            <TripDetails />
+                            <TripDetails data={tripDetails as FetchedTripDetails} setFilters={setTripDetailsFilter} isLoading={fetchingTripDetails} />
                             <TotalDrivers data={driversCount as FetchedDriverCountStatus} />
                             <TopDrivers filters={topDriversFilter} setFilters={setTopDriversFilter} data={topDrivers as TopDriversType[]} />
                             <TopVehicles filters={topVehiclesFilter} setFilters={setTopVehiclesFilter} data={topVehicles as TopVehiclesType[]} />

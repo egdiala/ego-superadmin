@@ -8,7 +8,7 @@ import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { FetchedRating, FetchedRatingCountStatus } from "@/types/ratings";
 import { useLocation, useParams, useSearchParams } from "react-router-dom";
-import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { RenderIf, Table, TableAction } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 
 export const DriverRatingsPage: React.FC = () => {
@@ -100,18 +100,11 @@ export const DriverRatingsPage: React.FC = () => {
                       )
                   }
               </div>
-              <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
-                  <div className="w-full md:w-1/3 xl:w-1/4">
-                      <SearchInput placeholder="Search name, ref etc" />
-                  </div>
+              <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-end">
                   <div className="flex items-center gap-2 w-full sm:w-auto">
                       <TableAction theme="ghost" block>
                           <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
                           Export
-                      </TableAction>
-                      <TableAction theme="secondary" block>
-                          <Icon icon="mdi:funnel" className="size-4" />
-                          Filter
                       </TableAction>
                   </div>
               </div>

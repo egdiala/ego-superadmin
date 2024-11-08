@@ -11,6 +11,7 @@ import { FetchedRatingCountStatus } from "@/types/ratings";
 import { useParams } from "react-router-dom";
 import { RenderIf } from "@/components/core";
 import { Loader } from "@/components/core/Button/Loader";
+import { PurchaseModel } from "@/types/organizations";
 
 export const RiderProfile: React.FC = () => {
     const params = useParams()
@@ -20,17 +21,17 @@ export const RiderProfile: React.FC = () => {
     const gridItems = useMemo(() => {
         return [
             { label: "Email", value: rider?.email },
-            { label: "Phone Number", value: rider?.phone_number },
+            { label: "Phone Number", value: rider?.phone_number ?? "-" },
             { label: "NIN", value: rider?.nin_id?.value === rider?.email ? "-" : rider?.nin_id?.value },
             { label: "Department", value: rider?.department_data?.name ?? "-" },
-            { label: "Average Rating", value: <div className="flex items-center gap-1"><Icon icon="ph:star-fill" className="text-semantics-amber size-3.5" />{(countStatus as FetchedRatingCountStatus)?.rating?.toFixed(1)}</div> },
+            { label: "Average Rating", value: <div className="flex items-center gap-1"><Icon icon="ph:star-fill" className="text-semantics-amber size-3.5" />{(countStatus as FetchedRatingCountStatus)?.rating?.toFixed(1) ?? 0}</div> },
             { label: "Supervisor", value: "-" },
         ]
     }, [countStatus, rider?.department_data?.name, rider?.email, rider?.nin_id?.value, rider?.phone_number])
 
     const tripData = useMemo(() => {
         return [
-            {
+            (rider?.org_data?.purchase_model === PurchaseModel.StaffCommute && {
                 label: "Trip Limit",
                 gauge: {
                     label: "Spend amount used",
@@ -41,8 +42,8 @@ export const RiderProfile: React.FC = () => {
                     { label: "Spend Limit", value: "₦0" },
                     { label: "Duration", value: "Weekly" }
                 ]
-            },
-            {
+            }),
+            (rider?.org_data?.purchase_model === PurchaseModel.Lease && {
                 label: "Free Trip",
                 gauge: {
                     label: "Trip limit used",
@@ -53,9 +54,9 @@ export const RiderProfile: React.FC = () => {
                     { label: "Free Trip Limit", value: "0" },
                     { label: "Duration", value: "Weekly" }
                 ]
-            }
-        ]
-    },[])
+            })
+        ].filter((item) => item !== false)
+    },[rider?.org_data?.purchase_model])
 
     useEffect(() => {
         if (rider === undefined) {
@@ -89,7 +90,7 @@ export const RiderProfile: React.FC = () => {
                             <h2 className="font-bold text-sm text-yellow-0 uppercase">{rider?.account_type}</h2>
                         </div>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 pb-6 gap-6">
+                    <div className="grid grid-cols-1 pb-6 gap-6">
                         {
                             tripData.map((item) =>
                             <div key={item?.label} className="flex flex-col p-4 gap-6 bg-grey-dark-4 rounded-lg">

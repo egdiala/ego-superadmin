@@ -209,6 +209,15 @@ export interface FetchedVehicleDistanceForOrganization {
     total_dst_avg: number;
 }
 
+export interface FetchedTripDetails {
+    total_dst: number;
+    total_time: number;
+    time_value: string;
+    distance_value: string;
+    total_inmotion: number;
+    total_idle: number;
+}
+
 export interface FetchedSingleTrip {
     trip_ref: string;
     vehicle_id: string;

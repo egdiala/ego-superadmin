@@ -65,16 +65,16 @@ export const SuspendDriverModal: React.FC<SuspendDriverModalProps> = ({ isOpen, 
                         </div>
                         <AnimatePresence>
                             {
-                                !suspendDriverValues.suspend_indefinite && (
+                                !suspendDriverValues.suspend_indefinite ? (
                                     <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} className="flex flex-col gap-4 justify-end items-end overflow-x-visible overflow-y-clip pb-1">
-                                    <Input label="Re-activation date & Time" type="date" min={new Date().toJSON().slice(0, 10)} {...register("unsuspend_date")} />
-                                    <div className="flex items-start gap-4">
-                                        <Input label="Hour" type="text" inputMode="numeric" placeholder="HH" {...register("hour")} />
-                                        <Input label="Mins" type="text" inputMode="numeric" placeholder="MM" {...register("mins")} />
-                                        <SelectInput label="Time of the day" options={[{ label: "AM", value: "AM" }, { label: "PM", value: "PM" }]} placeholder="PM" {...register("time_of_day")} />
-                                    </div>      
+                                        <Input label="Re-activation date & Time" type="date" min={new Date().toJSON().slice(0, 10)} {...register("unsuspend_date")} />
+                                        <div className="flex items-start gap-4">
+                                            <Input label="Hour" type="text" inputMode="numeric" placeholder="HH" {...register("hour")} />
+                                            <Input label="Mins" type="text" inputMode="numeric" placeholder="MM" {...register("mins")} />
+                                            <SelectInput label="Time of the day" options={[{ label: "AM", value: "AM" }, { label: "PM", value: "PM" }]} placeholder="PM" {...register("time_of_day")} />
+                                        </div>      
                                     </motion.div>
-                                )
+                                ) : null
                             }
                         </AnimatePresence>
                     </RenderIf>

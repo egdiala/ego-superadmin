@@ -21,7 +21,7 @@ export const RiderWalletPage: React.FC = () => {
     const [component] = useState<"count" | "count-status">("count")
     const { data, isFetching: fetchingStats } = useGetWalletStats({ user_type: "rider", auth_id: params?.id as string })
     const { data: count, isFetching: fetchingCount } = useGetWalletTransactions({ component, wallet_type: "user-wallet", auth_id: params?.id as string })
-    const { data: transactions, isFetching } = useGetWalletTransactions({ wallet_type: "user-wallet", auth_id: params?.id as string })
+    const { data: transactions, isFetching } = useGetWalletTransactions({ wallet_type: "user-wallet", auth_id: params?.id as string, page: page.toString(), item_per_page: itemsPerPage.toString() })
 
     const columns = [
       {

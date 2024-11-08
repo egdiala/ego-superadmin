@@ -29,11 +29,11 @@ export const useGetTrip = (id: string) => {
   });
 };
 
-export const useGetTripStats = (query: FetchDistanceForOrgQuery) => {
+export const useGetTripStats = <T>(query: FetchDistanceForOrgQuery) => {
   return useQuery({
     queryKey: [GET_VEHICLE_DISTANCE_FOR_ORG, query],
     queryFn: () => getTripDataStats(query),
-    select: (res) => res?.data as FetchedVehicleDistanceForOrganization,
+    select: (res) => res?.data as T | FetchedVehicleDistanceForOrganization,
     retry: false,
     refetchOnWindowFocus: false,
     throwOnError(error) {
