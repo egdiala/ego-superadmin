@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { cn } from "@/libs/cn";
 import { format } from "date-fns";
 import { Icon } from "@iconify/react";
@@ -11,6 +11,7 @@ import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { useGetWalletStats, useGetWalletTransactions } from "@/services/hooks/queries";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { WalletStatus, type FetchedWalletTransaction, type FetchedWalletTransactionCount } from "@/types/wallet";
+import { WalletFilter } from "@/components/pages/wallet";
 
 export const RiderWalletPage: React.FC = () => {
     const params = useParams();
@@ -18,10 +19,14 @@ export const RiderWalletPage: React.FC = () => {
     const itemsPerPage = 10;
     const [page, setPage] = useState(1)
     const [searchParams, setSearchParams] = useSearchParams();
+    const [filters, setFilters] = useState({
+      start_date: "",
+      end_date: "",
+    })
     const [component] = useState<"count" | "count-status">("count")
     const { data, isFetching: fetchingStats } = useGetWalletStats({ user_type: "rider", auth_id: params?.id as string })
     const { data: count, isFetching: fetchingCount } = useGetWalletTransactions({ component, wallet_type: "user-wallet", auth_id: params?.id as string })
-    const { data: transactions, isFetching } = useGetWalletTransactions({ wallet_type: "user-wallet", auth_id: params?.id as string, page: page.toString(), item_per_page: itemsPerPage.toString() })
+    const { data: transactions, isFetching } = useGetWalletTransactions({ wallet_type: "user-wallet", auth_id: params?.id as string, page: page.toString(), item_per_page: itemsPerPage.toString(), ...filters })
 
     const columns = [
       {
@@ -103,9 +108,8 @@ export const RiderWalletPage: React.FC = () => {
     },[data?.credit_amount, data?.debit_amount])
 
     return (
-      <Fragment>
-        <RenderIf condition={!isFetching && !fetchingCount && !fetchingStats}>
           <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-2 pt-2">
+            <RenderIf condition={!fetchingCount && !fetchingStats}>
               <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 py-4">
                   {
                       trips.map((item) =>
@@ -126,10 +130,7 @@ export const RiderWalletPage: React.FC = () => {
                           <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
                           Export
                       </TableAction>
-                      <TableAction theme="secondary" block>
-                          <Icon icon="mdi:funnel" className="size-4" />
-                          Filter
-                      </TableAction>
+                      <WalletFilter setFilters={setFilters} isLoading={isFetching} />
                   </div>
               </div>
               <Table
@@ -140,11 +141,10 @@ export const RiderWalletPage: React.FC = () => {
                   totalCount={(count as FetchedWalletTransactionCount)?.total}
                   onPageChange={handlePageChange}
               />
+            </RenderIf>
+              <RenderIf condition={isFetching || fetchingCount || fetchingStats}>
+                <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
+              </RenderIf>
           </motion.div>
-        </RenderIf>
-        <RenderIf condition={isFetching || fetchingCount || fetchingStats}>
-          <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
-        </RenderIf>
-      </Fragment>
     )
 }

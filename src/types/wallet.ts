@@ -11,7 +11,7 @@ export interface FetchWalletStatsQuery {
 }
 
 export interface FetchWalletTransactionQuery {
-    status?: "1" | "2"; // 1=successful, 2=failed
+    status?: "1" | "2" | "-1"; // 1=successful, 2=failed
     auth_id?: string;
     page?: string;
     item_per_page?: string;
