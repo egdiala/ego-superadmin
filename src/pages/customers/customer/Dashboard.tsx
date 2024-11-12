@@ -1,23 +1,28 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
+import { cn } from "@/libs/cn";
+import { format } from "date-fns";
 import { motion } from "framer-motion";
-import { pageVariants } from "@/constants/animateVariants";
 import { Icon } from "@iconify/react";
 import { RenderIf } from "@/components/core";
-import { CustomerBatteryDetails, CustomerServiceRequests, CustomerTotalPayments, CustomerTotalTrips, CustomerTripDetails } from "@/components/pages/customers";
-import { useGetOrganization, useGetServiceRequests, useGetTripStats } from "@/services/hooks/queries";
-import { PurchaseModel } from "@/types/organizations";
 import { useParams } from "react-router-dom";
-import { Loader } from "@/components/core/Button/Loader";
-import { cn } from "@/libs/cn";
-import { FetchedServiceRequestsCountStatus } from "@/types/service-requests";
+import { PurchaseModel } from "@/types/organizations";
 import { formattedNumber } from "@/utils/textFormatter";
-import type { FetchedVehicleDistanceForOrganization } from "@/types/trips";
+import { Loader } from "@/components/core/Button/Loader";
+import { pageVariants } from "@/constants/animateVariants";
+import type { FetchedMonthlyTrip, FetchedTripDetails, FetchedVehicleDistanceForOrganization } from "@/types/trips";
+import { FetchedServiceRequestsCountStatus } from "@/types/service-requests";
+import { useGetOrganization, useGetServiceRequests, useGetTrips, useGetTripStats } from "@/services/hooks/queries";
+import { CustomerBatteryDetails, CustomerServiceRequests, CustomerTotalPayments, CustomerTotalTrips, CustomerTripDetails } from "@/components/pages/customers";
 
 export const CustomerDashboardPage: React.FC = () => {
     const params = useParams()
+    const [tripStatsFilter, setTripStatsFilter] = useState<{ start_date: string; end_date: string;  }>({ start_date: `${new Date().getFullYear()}-01-01`, end_date: format(new Date(), "yyyy-MM-dd") })
+    const [tripDetailsFilter, setTripDetailsFilter] = useState<{ start_date: string; end_date: string;  }>({ start_date: `${new Date().getFullYear()}-01-01`, end_date: format(new Date(), "yyyy-MM-dd") })
     const { data: customer, refetch } = useGetOrganization("")
-    const { data: tripStat, isFetching: isFetchingDistance } = useGetTripStats<FetchedVehicleDistanceForOrganization>({ component: "org-dashboard-stat", organization_id: params?.id as string })
+    const { data: tripDetails, isFetching: fetchingTripDetails } = useGetTripStats<FetchedTripDetails>({ component: "trip-stat", ...tripDetailsFilter })
+    const { data: tripStats, isFetching: fetchingTripStats } = useGetTrips({ component: "count-monthly", organization_id: params?.id as string, ...tripStatsFilter })
     const { data: serviceRequestCount, isFetching: fetchingServiceRequests } = useGetServiceRequests({ component: "count-status", organization_id: params?.id as string })
+    const { data: tripStat, isFetching: isFetchingDistance } = useGetTripStats<FetchedVehicleDistanceForOrganization>({ component: "org-dashboard-stat", organization_id: params?.id as string })
     const firstRowItems = [
         (PurchaseModel.StaffCommute === customer?.purchase_model! && ({
             label: "Total Trip Payments",
@@ -114,11 +119,11 @@ export const CustomerDashboardPage: React.FC = () => {
                         <RenderIf condition={PurchaseModel.StaffCommute === customer?.purchase_model!}>
                             <CustomerTotalPayments />
                         </RenderIf>
-                        <CustomerTotalTrips />
+                        <CustomerTotalTrips tripData={tripStats as FetchedMonthlyTrip[]} filters={tripStatsFilter} setFilters={setTripStatsFilter} isLoading={fetchingTripStats} />
                     </div>
                     <RenderIf condition={PurchaseModel.Lease === customer?.purchase_model!}>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <CustomerTripDetails />
+                            <CustomerTripDetails data={tripDetails as FetchedTripDetails} setFilters={setTripDetailsFilter} isLoading={fetchingTripDetails} />
                             <CustomerBatteryDetails />
                         </div>
                     </RenderIf>

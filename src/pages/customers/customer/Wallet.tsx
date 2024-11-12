@@ -6,21 +6,26 @@ import { formattedNumber } from "@/utils/textFormatter";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useLocation, useParams, useSearchParams } from "react-router-dom";
-import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { RenderIf, Table, TableAction } from "@/components/core";
 import { useGetWalletStats, useGetWalletTransactions } from "@/services/hooks/queries";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { FetchedWalletTransaction, FetchedWalletTransactionCount } from "@/types/wallet";
+import { WalletFilter } from "@/components/pages/wallet";
 
 export const CustomerWalletPage: React.FC = () => {
     const params = useParams();
     const location = useLocation();
     const itemsPerPage = 10;
     const [page, setPage] = useState(1)
+    const [filters, setFilters] = useState({
+      start_date: "",
+      end_date: "",
+    })
     const [searchParams, setSearchParams] = useSearchParams();
     const [component] = useState<"count" | "count-status">("count")
     const { data, isFetching: fetchingStats } = useGetWalletStats({ user_type: "organization", auth_id: params?.id as string })
     const { data: count, isFetching: fetchingCount } = useGetWalletTransactions({ component, wallet_type: "organization-wallet", auth_id: params?.id as string })
-    const { data: transactions, isFetching } = useGetWalletTransactions({ wallet_type: "organization-wallet", auth_id: params?.id as string })
+    const { data: transactions, isFetching } = useGetWalletTransactions({ wallet_type: "organization-wallet", auth_id: params?.id as string, page: page.toString(), item_per_page: itemsPerPage.toString(), ...filters })
 
     const columns = [
       {
@@ -96,10 +101,7 @@ export const CustomerWalletPage: React.FC = () => {
                       )
                   }
               </div>
-              <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between pt-4">
-                  <div className="w-full md:w-1/3 xl:w-1/4">
-                      <SearchInput placeholder="Search description" />
-                  </div>
+              <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-end pt-4">
                   
                   <div className="flex items-center gap-2 flex-wrap">
                       <div className="flex items-center gap-2 w-full sm:w-auto">
@@ -107,10 +109,7 @@ export const CustomerWalletPage: React.FC = () => {
                               <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
                               Export
                           </TableAction>
-                          <TableAction theme="secondary" block>
-                              <Icon icon="mdi:funnel" className="size-4" />
-                              Filter
-                          </TableAction>
+                          <WalletFilter setFilters={setFilters} isLoading={isFetching} />
                       </div>
                   </div>
               </div>

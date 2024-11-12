@@ -5,6 +5,7 @@ export interface FetchTripsQuery {
     user_type?: "rider" | "driver" | "organization"
     charge_status?: "1" | "2" | "5" // 1=successful, 2=unsuccessful, 5=invalid
     auth_id?: string;
+    organization_id?: string;
     page?: string;
     item_per_page?: string;
     start_date?: string;

@@ -1,16 +1,21 @@
 import React from "react";
 import { cn } from "@/libs/cn";
-import { ProgressCircle, TableAction } from "@/components/core";
-import { Icon } from "@iconify/react";
+import type { FetchedTripDetails } from "@/types/trips";
+import { ProgressCircle } from "@/components/core";
+import { formatTime } from "@/utils/textFormatter";
+import { TripDetailsFilter } from "../dashboard/TripDetailsFilter";
 
 interface CustomerTripDetailsProps {
     [key: PropertyKey]: any
+    data: FetchedTripDetails
+    setFilters: any;
+    isLoading: boolean;
 }
 
-export const CustomerTripDetails: React.FC<CustomerTripDetailsProps> = ({ className }) => {
+export const CustomerTripDetails: React.FC<CustomerTripDetailsProps> = ({ className, data, isLoading, setFilters }) => {
     const models1 = [
-        { label: "Total trip duration", value: "0hrs : 0mins" },
-        { label: "Av. trip distance", value: "0km" },
+        { label: "Total trip duration", value: formatTime(data?.total_time || 0) },
+        { label: "Av. trip distance", value: `${data?.total_dst?.toFixed(2) || 0}km` },
         { label: "Av. daily mileage", value: "0mil" },
     ]
     const models2 = [
@@ -23,12 +28,9 @@ export const CustomerTripDetails: React.FC<CustomerTripDetailsProps> = ({ classN
             <div className="flex items-start justify-between">
                 <div className="p-2 grid gap-1 bg-portal-bg rounded-lg w-fit">
                     <h4 className="text-grey-dark-2 text-xs">Total milage</h4>
-                    <span className="text-grey-dark-1 text-xl">0m</span>
+                    <span className="text-grey-dark-1 text-xl">{data?.total_dst?.toFixed(2) || 0}km</span>
                 </div>
-                <TableAction theme="ghost">
-                    <Icon icon="mdi:funnel" className="size-4" />
-                    Filter
-                </TableAction>
+                <TripDetailsFilter setFilters={setFilters} isLoading={isLoading} />
             </div>
             <div className="grid gap-6 max-w-2xl w-full mx-auto">
                 <ProgressCircle radius={200} value={1} className="mx-auto">
@@ -58,10 +60,6 @@ export const CustomerTripDetails: React.FC<CustomerTripDetailsProps> = ({ classN
                 </div>
                 )
             }
-            </div>
-            <div className="grid gap-1">
-                <span className="text-grey-dark-3 text-xs">Current vehicle location</span>
-                <p className="text-grey-dark-1 text-sm">-</p>
             </div>
         </div>
     )

@@ -42,10 +42,6 @@ export const CustomerTripPaymentPage: React.FC = () => {
         accessorKey: "trip_ref",
       },
       {
-        header: () => "Payment Ref",
-        accessorKey: "first_name",
-      },
-      {
         header: () => "Payment Method",
         accessorKey: "org_data.purchase_model",
         cell: ({ row }: { row: any; }) => {

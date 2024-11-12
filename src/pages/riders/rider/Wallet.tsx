@@ -7,7 +7,7 @@ import { formattedNumber } from "@/utils/textFormatter";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useLocation, useParams, useSearchParams } from "react-router-dom";
-import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { RenderIf, Table, TableAction } from "@/components/core";
 import { useGetWalletStats, useGetWalletTransactions } from "@/services/hooks/queries";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { WalletStatus, type FetchedWalletTransaction, type FetchedWalletTransactionCount } from "@/types/wallet";
@@ -121,10 +121,7 @@ export const RiderWalletPage: React.FC = () => {
                       )
                   }
               </div>
-              <div className="flex flex-col md:flex-row gap-y-3 pt-6 pb-2 md:items-center justify-between">
-                  <div className="w-full md:w-1/3 xl:w-1/4">
-                      <SearchInput placeholder="Search name, ref etc" />
-                  </div>
+              <div className="flex flex-col md:flex-row gap-y-3 pt-6 pb-2 md:items-center justify-end">
                   <div className="flex items-center gap-2 w-full sm:w-auto">
                       <TableAction theme="ghost" block>
                           <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />

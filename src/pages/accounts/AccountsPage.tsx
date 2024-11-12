@@ -157,10 +157,6 @@ export const AccountsPage: React.FC = () => {
                   <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
                   Export
                 </TableAction>
-                <TableAction theme="grey" block>
-                  <Icon icon="mdi:funnel" className="size-4" />
-                  Filter
-                </TableAction>
               </div>
               <div className="w-full sm:w-auto">
                 <Button theme="primary" onClick={toggleCreateAdmin} block>
