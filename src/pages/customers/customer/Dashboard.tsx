@@ -11,11 +11,12 @@ import { Loader } from "@/components/core/Button/Loader";
 import { cn } from "@/libs/cn";
 import { FetchedServiceRequestsCountStatus } from "@/types/service-requests";
 import { formattedNumber } from "@/utils/textFormatter";
+import type { FetchedVehicleDistanceForOrganization } from "@/types/trips";
 
 export const CustomerDashboardPage: React.FC = () => {
     const params = useParams()
     const { data: customer, refetch } = useGetOrganization("")
-    const { data: tripStat, isFetching: isFetchingDistance } = useGetTripStats({ component: "org-dashboard-stat", organization_id: params?.id as string })
+    const { data: tripStat, isFetching: isFetchingDistance } = useGetTripStats<FetchedVehicleDistanceForOrganization>({ component: "org-dashboard-stat", organization_id: params?.id as string })
     const { data: serviceRequestCount, isFetching: fetchingServiceRequests } = useGetServiceRequests({ component: "count-status", organization_id: params?.id as string })
     const firstRowItems = [
         (PurchaseModel.StaffCommute === customer?.purchase_model! && ({
