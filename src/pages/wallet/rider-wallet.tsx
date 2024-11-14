@@ -11,15 +11,17 @@ import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { useGetWalletTransactions } from "@/services/hooks/queries";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { FetchedWalletTransaction, FetchedWalletTransactionCount, WalletStatus } from "@/types/wallet";
+import { WalletFilter } from "@/components/pages/wallet";
 
 export const RiderWalletPage: React.FC = () => {
     const location = useLocation();
     const itemsPerPage = 10;
     const [page, setPage] = useState(1)
+    const [filters, setFilters] = useState({})
     const [searchParams, setSearchParams] = useSearchParams();
     const [component] = useState<"count" | "count-status">("count")
-    const { data: count, isFetching: fetchingCount } = useGetWalletTransactions({ component, wallet_type: "user-wallet" })
-    const { data: transactions, isFetching } = useGetWalletTransactions({ page: page.toString(), item_per_page: itemsPerPage.toString(), wallet_type: "user-wallet" })
+    const { data: count, isFetching: fetchingCount } = useGetWalletTransactions({ component, wallet_type: "user-wallet", ...filters })
+    const { data: transactions, isFetching } = useGetWalletTransactions({ page: page.toString(), item_per_page: itemsPerPage.toString(), wallet_type: "user-wallet", ...filters })
 
     const columns = [
         {
@@ -144,10 +146,7 @@ export const RiderWalletPage: React.FC = () => {
                                 <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
                                 Export
                             </TableAction>
-                            <TableAction type="button" theme="secondary" block>
-                                <Icon icon="mdi:funnel" className="size-4" />
-                                Filter
-                            </TableAction>
+                            <WalletFilter setFilters={setFilters} isLoading={isFetching} />
                         </div>
                     </div>
                     <Table

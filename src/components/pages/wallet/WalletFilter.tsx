@@ -39,8 +39,9 @@ export const WalletFilter: React.FC<WalletFilterProps> = ({ isLoading, setFilter
     ]);
 
     const customerStatus = [
-        { label: "Successful", name: "successful", value: "1" },
-        { label: "Failed", name: "failed", value: "-1" },
+        { label: "Credit", name: "credit", value: "1" },
+        { label: "Debit", name: "debit", value: "-1" },
+        { label: "Failed", name: "failed", value: "2" },
     ];
 
     const [selected, setSelected] = useState(dateFilters[2])

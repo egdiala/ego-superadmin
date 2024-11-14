@@ -9,7 +9,7 @@ import { useGetCommutePayments } from "@/services/hooks/queries";
 import { useLocation, useParams, useSearchParams } from "react-router-dom";
 import { FetchedReceivableCount, SingleLeaseReceivable } from "@/types/payment";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
-import { Breadcrumb, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { Breadcrumb, RenderIf, Table, TableAction } from "@/components/core";
 
 
 export const ViewStaffCommuteReceivablesPage: React.FC = () => {
@@ -62,19 +62,12 @@ export const ViewStaffCommuteReceivablesPage: React.FC = () => {
         <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">
             <Breadcrumb items={[{ label: "Receivables", link: "/receivables" }, { label: "Staff Commute", link: "/receivables/staff-commute" }, { label: `${formatRelative(id as string, new Date()).split(" at ").at(0)} • 11:59 PM invoices`, link: `/receivables/staff-commute/${id}` }]} showBack />
             <div className="grid content-start gap-4 py-6 px-4 bg-white rounded-lg">
-                <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
-                    <div className="w-full md:w-1/3 xl:w-1/4">
-                        <SearchInput placeholder="Search reference" />
-                    </div>
+                <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-end">
                 
                     <div className="flex items-center gap-2 w-full sm:w-auto">
                         <TableAction type="button" theme="ghost" block>
                             <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
                             Export
-                        </TableAction>
-                        <TableAction type="button" theme="secondary" block>
-                            <Icon icon="mdi:funnel" className="size-4" />
-                            Filter
                         </TableAction>
                     </div>
                 </div>

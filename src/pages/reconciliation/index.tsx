@@ -5,7 +5,7 @@ import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useGetReconciliation } from "@/services/hooks/queries";
 import { useLocation, useSearchParams } from "react-router-dom";
-import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { RenderIf, Table, TableAction } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { endOfMonth, format, parse, startOfMonth, startOfToday } from "date-fns";
 import { FetchedReconciliation, FetchReconciliationTotals } from "@/types/payment";
@@ -141,10 +141,7 @@ export const ReconciliationPage: React.FC = () => {
             <h1 className="text-grey-dark-1 font-bold text-2xl md:text-[2rem]">Reconciliation</h1>
             <p className="text-sm text-grey-dark-2 pb-3.5">This is a log of all remitted revenue on the CabZero platform and available for distribution to the business stakeholders.</p>
             <div className="grid content-start gap-5 pt-4 pb-6 px-4 bg-white rounded-lg">
-                <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
-                    <div className="w-full md:w-1/3 xl:w-1/4">
-                        <SearchInput placeholder="Search ref" />
-                    </div>
+                <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-end">
                 
                     <div className="flex items-center gap-2 w-full sm:w-auto">
                       <TableAction theme="ghost" block>

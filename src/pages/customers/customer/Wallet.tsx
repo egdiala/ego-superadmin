@@ -9,7 +9,7 @@ import { useLocation, useParams, useSearchParams } from "react-router-dom";
 import { RenderIf, Table, TableAction } from "@/components/core";
 import { useGetWalletStats, useGetWalletTransactions } from "@/services/hooks/queries";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
-import { FetchedWalletTransaction, FetchedWalletTransactionCount } from "@/types/wallet";
+import { FetchedWalletTransaction, FetchedWalletTransactionCount, WalletStatus } from "@/types/wallet";
 import { WalletFilter } from "@/components/pages/wallet";
 
 export const CustomerWalletPage: React.FC = () => {
@@ -62,7 +62,7 @@ export const CustomerWalletPage: React.FC = () => {
         cell: ({ row }: { row: any; }) => {
           const item = row?.original as FetchedWalletTransaction
           return (
-            <div className={cn("text-sm font-medium capitalize whitespace-nowrap", item?.status === 1 ? "text-dark-green-1" : "text-semantics-error")}>{item?.status === 1 ? "Successful" : "Failed"}</div>
+            <div className={cn("text-sm font-medium capitalize whitespace-nowrap", item?.status === 1 ? "text-dark-green-1" : "text-semantics-error")}>{WalletStatus[item?.status]}</div>
           )
         }
       },
