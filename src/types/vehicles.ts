@@ -2,11 +2,11 @@ import type { AxiosProgressEvent } from "axios";
 
 export type CreateVehicleType = {
     plate_no: string;
-    model: string;
+    oem_vehicle: string;
     year_manufacture: string;
     year_purchase: string;
     vehicle_color: string;
-    vehicle_oem: string;
+    oem_id: string;
     vehicle_vin: string;
     chassis_no: string;
     engine_no: string;

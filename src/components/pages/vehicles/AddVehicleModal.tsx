@@ -24,11 +24,11 @@ const SingleVehicle: React.FC<AddVehicleModalProps> = ({ close }) => {
     const { errors, handleSubmit, isValid, register, resetForm, setFieldValue, values } = useFormikWrapper({
         initialValues: {
             plate_no: "",
-            model: "",
+            oem_vehicle: "",
             year_manufacture: "" as unknown as Date | any,
             year_purchase: "" as unknown as Date | any,
             vehicle_color: "",
-            vehicle_oem: "",
+            oem_id: "",
             vehicle_vin: "",
             chassis_no: "",
             engine_no: "",
@@ -49,18 +49,18 @@ const SingleVehicle: React.FC<AddVehicleModalProps> = ({ close }) => {
     },[data])
 
     const models = useMemo(() => {
-        const selectedOem = data?.find((item) => item?.oem_id === values?.vehicle_oem)
+        const selectedOem = data?.find((item) => item?.oem_id === values?.oem_id)
 
         return selectedOem?.model_data?.map((item) => ({ label: item?.model, value: item?._id }))
-    },[data, values?.vehicle_oem])
+    },[data, values?.oem_id])
 
     useEffect(() => {
-        if (values?.vehicle_oem && values?.model) {
-            const selectedOem = data?.find((item) => item?.oem_id === values?.vehicle_oem)
-            const year = selectedOem?.model_data?.find((item) => item?._id === values?.model)
+        if (values?.oem_id && values?.oem_vehicle) {
+            const selectedOem = data?.find((item) => item?.oem_id === values?.oem_id)
+            const year = selectedOem?.model_data?.find((item) => item?._id === values?.oem_vehicle)
             setFieldValue("year_manufacture", year?.year)
         }
-    },[values?.model, values?.vehicle_oem])
+    },[values?.oem_vehicle, values?.oem_id])
 
     const onClose = () => {
         resetForm();
@@ -71,8 +71,8 @@ const SingleVehicle: React.FC<AddVehicleModalProps> = ({ close }) => {
         <form className="grid gap-6" onSubmit={handleSubmit}>
             <div className="grid gap-6">
                 <div className="flex flex-col md:flex-row md:items-start gap-6">
-                    <SelectInput options={oems} label="OEM" {...register("vehicle_oem")} />
-                    <SelectInput options={models ?? []} label="Model" {...register("model")} />
+                    <SelectInput options={oems} label="OEM" {...register("oem_id")} />
+                    <SelectInput options={models ?? []} label="Model" {...register("oem_vehicle")} />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="grid grid-cols-1">
