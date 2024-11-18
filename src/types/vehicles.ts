@@ -36,6 +36,12 @@ export interface FetchedVehicleType {
         type: string;
         coordinates: Coordinate
     },
+    oem_vehdata: {
+        oem_name: string;
+        oem_id: string;
+        model_name: string;
+        model_id: string;
+    };
     online: boolean;
     on_trip: string;
     unsuspend_date: string;

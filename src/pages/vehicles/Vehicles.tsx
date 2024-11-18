@@ -52,8 +52,24 @@ export const VehiclesPage: React.FC = () => {
       accessorKey: "car_number",
     },
     {
+      header: () => "Vehicle OEM",
+      accessorKey: "oem_vehdata.oem_name",
+      cell: ({ row }: { row: any; }) => {
+        const item = row?.original as FetchedVehicleType
+        return (
+          <div className="text-sm text-grey-dark-2 capitalize whitespace-nowrap">{item?.oem_vehdata?.oem_name || "-"}</div>
+        )
+      }
+    },
+    {
       header: () => "Vehicle Model",
-      accessorKey: "car_model",
+      accessorKey: "oem_vehdata.model_name",
+      cell: ({ row }: { row: any; }) => {
+        const item = row?.original as FetchedVehicleType
+        return (
+          <div className="text-sm text-grey-dark-2 capitalize whitespace-nowrap">{item?.oem_vehdata?.model_name || "-"}</div>
+        )
+      }
     },
     {
       header: () => "Mileage",
