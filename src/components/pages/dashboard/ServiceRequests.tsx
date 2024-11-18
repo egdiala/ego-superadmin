@@ -11,10 +11,10 @@ interface ServiceRequestsHomeProps {
 export const ServiceRequests: React.FC<ServiceRequestsHomeProps> = ({ className, data }) => {
     const referrals = useMemo(() => {
         return [
-            { label: "Total Req.", amount: data?.total },
-            { label: "Pending", amount: data?.total_pending },
-            { label: "Cancelled", amount: data?.total_rejected },
-            { label: "Completed", amount: data?.total_complete },
+            { label: "Total Req.", amount: data?.total || 0 },
+            { label: "Pending", amount: data?.total_pending || 0 },
+            { label: "Cancelled", amount: data?.total_rejected || 0 },
+            { label: "Completed", amount: data?.total_complete || 0 },
         ]
     },[data?.total, data?.total_complete, data?.total_pending, data?.total_rejected])
     const items = [

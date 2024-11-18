@@ -19,6 +19,7 @@ export const ViewOEM: React.FC = () => {
         openDeleteOemModal: false,
         openDeleteModelModal: false,
         openEditOemModal: false,
+        openEditModelModal: false,
         openCreateModel: false,
         modelId: "",
         model: "" as unknown as FetchedOEMType["model_data"][0]
@@ -27,6 +28,7 @@ export const ViewOEM: React.FC = () => {
     const toggleDeleteOem = useCallback(() => {
       setToggleModals((prev) => ({
         ...prev,
+        model: "" as unknown as FetchedOEMType["model_data"][0],
         openDeleteOemModal: !toggleModals.openDeleteOemModal,
       }))
     }, [toggleModals.openDeleteOemModal])
@@ -35,6 +37,7 @@ export const ViewOEM: React.FC = () => {
       setToggleModals((prev) => ({
         ...prev,
         modelId: id,
+        model: "" as unknown as FetchedOEMType["model_data"][0],
         openDeleteModelModal: !toggleModals.openDeleteModelModal,
       }))
     }, [toggleModals.openDeleteModelModal])
@@ -42,6 +45,7 @@ export const ViewOEM: React.FC = () => {
     const toggleEditOem = useCallback(() => {
       setToggleModals((prev) => ({
         ...prev,
+        model: "" as unknown as FetchedOEMType["model_data"][0],
         openEditOemModal: !toggleModals.openEditOemModal,
       }))
     }, [toggleModals.openEditOemModal])
@@ -50,6 +54,7 @@ export const ViewOEM: React.FC = () => {
       setToggleModals((prev) => ({
         ...prev,
         modelId: id,
+        model: "" as unknown as FetchedOEMType["model_data"][0],
         openCreateModel: !toggleModals.openCreateModel,
       }))
     }, [toggleModals.openCreateModel])

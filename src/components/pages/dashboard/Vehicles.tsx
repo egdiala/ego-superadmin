@@ -11,27 +11,27 @@ interface VehiclesHomeProps {
 export const Vehicles: React.FC<VehiclesHomeProps> = ({ className, data }) => {
     const referrals = useMemo(() => {
         return [
-            { label: "total", amount: data?.total },
-            { label: "assigned", amount: data?.driver_assigned },
-            { label: "unassigned", amount: data?.total - data?.driver_assigned },
-            { label: "active", amount: data?.active_count },
+            { label: "total", amount: data?.total || 0 },
+            { label: "assigned", amount: data?.driver_assigned || 0 },
+            { label: "unassigned", amount: (data?.total || 0) - (data?.driver_assigned || 0) },
+            { label: "active", amount: data?.active_count || 0 },
         ]
     },[data?.active_count, data?.driver_assigned, data?.total])
     const items = useMemo(() => {
         return [
             {
                 "label": "Unassigned",
-                "unassigned": data?.total - data?.driver_assigned,
+                "unassigned": (data?.total || 0) - (data?.driver_assigned || 0),
                 "unassignedColor": "hsla(206, 10%, 55%, 1)",
             },
             {
                 "label": "Assigned",
-                "assigned": data?.driver_assigned,
+                "assigned": data?.driver_assigned || 0,
                 "assignedColor": "hsla(113, 43%, 50%, 1)",
             },
             {
                 "label": "Active",
-                "active": data?.active_count,
+                "active": data?.active_count || 0,
                 "activeColor": "hsla(206, 10%, 55%, 1)",
             },
         ]
