@@ -7,7 +7,7 @@ import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { Breadcrumb, Button, RenderIf } from "@/components/core";
 import { NavLink, Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
-import { RevokeDriverModal } from "@/components/pages/vehicles";
+import { DeleteVehicleModal, RevokeDriverModal } from "@/components/pages/vehicles";
 import { PurchaseModel } from "@/types/organizations";
 
 export const VehiclePage: React.FC = () => {
@@ -15,6 +15,7 @@ export const VehiclePage: React.FC = () => {
     const navigate = useNavigate()
     const location = useLocation()
     const [revokeDriver, setRevokeDriver] = useState(false)
+    const [deleteVehicle, setDeleteVehicle] = useState(false)
     const { data: vehicle, isFetching } = useGetVehicle(params?.id as string)
   
     const subRoutes = useMemo(() => {
@@ -33,6 +34,10 @@ export const VehiclePage: React.FC = () => {
         }
     }
 
+    const handleDeleteVehicle = () => {
+        setDeleteVehicle(!deleteVehicle)
+    }
+
     useEffect(() => {
         if ((location?.pathname === `/vehicles/${params?.id as string}/vehicle-payment`) && ((PurchaseModel.Lease) !== vehicle?.org_data?.purchase_model!)) {
             navigate(`/vehicles/${params?.id as string}/profile`)
@@ -47,6 +52,10 @@ export const VehiclePage: React.FC = () => {
                         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                             <h1 className="text-grey-dark-1 font-bold text-xl">{vehicle?.plate_number}</h1>
                             <div className="flex items-center gap-2 w-full sm:w-auto">
+                                <Button type="button" theme="danger" onClick={handleDeleteVehicle} block>
+                                    <Icon icon="tabler:trash" className="size-4" />
+                                    Delete Vehicle
+                                </Button>
                                 <Button type="button" theme="primary" onClick={handlePrimaryAction} block>
                                     <Icon icon="tabler:link" className="size-4" />
                                     {vehicle?.driver_assigned ? "Revoke Driver" : "Assign a Driver"}
@@ -71,6 +80,7 @@ export const VehiclePage: React.FC = () => {
                         </div>
                         <Outlet />
                     </div>
+                    <DeleteVehicleModal isOpen={deleteVehicle} vehicle={vehicle!} close={handleDeleteVehicle} />
                     <RevokeDriverModal vehicleId={vehicle?.vehicle_id!} isOpen={revokeDriver} driver={{ ...vehicle?.driver_data!, driver_id: vehicle?.driver_id! }} close={setRevokeDriver} />
                 </motion.div>
             </RenderIf>

@@ -34,6 +34,11 @@ export const getVehicle = async (id: string) => {
   return res.data;
 };
 
+export const deleteVehicle = async (id: string) => {
+  const res = await axiosVehicleInstance.delete(`${GET_VEHICLES_API}/${id}`);
+  return res.data;
+};
+
 export const revokeVehicle = async (data: AssignVehicleType) => {
   const res = await axiosVehicleInstance.post(REVOKE_VEHICLE_API, data);
   return res.data;

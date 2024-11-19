@@ -74,7 +74,7 @@ export const DriversPage: React.FC = () => {
       }
     },
     {
-      header: () => "Vehicle Assignment Status",
+      header: () => "Assignment Status",
       accessorKey: "vehicleStatus",
       cell: ({ row }: { row: any; }) => {
         const item = row?.original as FetchedDriverType

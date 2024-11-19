@@ -19,7 +19,7 @@ export const CustomerDashboardPage: React.FC = () => {
     const [tripStatsFilter, setTripStatsFilter] = useState<{ start_date: string; end_date: string;  }>({ start_date: `${new Date().getFullYear()}-01-01`, end_date: format(new Date(), "yyyy-MM-dd") })
     const [tripDetailsFilter, setTripDetailsFilter] = useState<{ start_date: string; end_date: string;  }>({ start_date: `${new Date().getFullYear()}-01-01`, end_date: format(new Date(), "yyyy-MM-dd") })
     const { data: customer, refetch } = useGetOrganization("")
-    const { data: tripDetails, isFetching: fetchingTripDetails } = useGetTripStats<FetchedTripDetails>({ component: "trip-stat", ...tripDetailsFilter })
+    const { data: tripDetails, isFetching: fetchingTripDetails } = useGetTripStats<FetchedTripDetails>({ component: "trip-stat", organization_id: params?.id as string, ...tripDetailsFilter })
     const { data: tripStats, isFetching: fetchingTripStats } = useGetTrips({ component: "count-monthly", organization_id: params?.id as string, ...tripStatsFilter })
     const { data: serviceRequestCount, isFetching: fetchingServiceRequests } = useGetServiceRequests({ component: "count-status", organization_id: params?.id as string })
     const { data: tripStat, isFetching: isFetchingDistance } = useGetTripStats<FetchedVehicleDistanceForOrganization>({ component: "org-dashboard-stat", organization_id: params?.id as string })

@@ -97,7 +97,7 @@ export const VehiclesPage: React.FC = () => {
       }
     },
     {
-      header: () => "Driver Assign. Status",
+      header: () => "Driver Status",
       accessorKey: "driver_assigned",
       cell: ({ row }: { row: any; }) => {
         const item = row?.original as FetchedVehicleType

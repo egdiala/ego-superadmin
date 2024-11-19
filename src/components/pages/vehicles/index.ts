@@ -1,4 +1,5 @@
 export * from "./AddVehicleModal"
+export * from "./DeleteVehicleModal"
 export * from "./DistanceStats"
 export * from "./RevokeDriver"
 export * from "./VehicleBatteryHealth"
