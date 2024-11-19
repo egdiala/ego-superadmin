@@ -96,10 +96,6 @@ export const TripsPage: React.FC = () => {
           header: () => "Vehicle",
           accessorKey: "driver_data.plate_number",
         },
-        (!vehicleId && {
-          header: () => "Pickup",
-          accessorKey: "ride_data.start_address",
-        }),
         (vehicleId && {
           header: () => "Amount",
           accessorKey: "ride_data.fare",
@@ -124,7 +120,7 @@ export const TripsPage: React.FC = () => {
             )
           }
         },
-      ].filter((item) => (item !== false) && (item !== null))
+      ].filter((item) => (item !== null))
     }, [vehicleId]);
 
     const handlePageChange = (page: number) => {

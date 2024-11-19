@@ -52,7 +52,7 @@ export const CreateModelModal: React.FC<CreateModelModalProps> = ({ isOpen, clos
             <div className="flex flex-col min-h-full items-center p-3 justify-end md:justify-center">
                 <DialogPanel as="form" onSubmit={handleSubmit} transition className="flex flex-col gap-6 justify-between w-full max-w-[39.375rem] rounded-lg bg-white p-4 md:p-6 backdrop-blur-2xl duration-300 ease-out transform data-[closed]:translate-y-full">
                     <DialogTitle as="h1" className="text-xl font-bold text-grey-dark-1">
-                        {model?._id ? "Edit Model" : "Add New OEM"}
+                        {model?._id ? "Edit Model" : "Add Model"}
                     </DialogTitle>
                     <div className="grid gap-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 content-start gap-6">
@@ -74,7 +74,7 @@ export const CreateModelModal: React.FC<CreateModelModalProps> = ({ isOpen, clos
                     </div>
                     <div className="flex items-center justify-end w-full md:w-1/2 ml-auto pt-10 gap-2 md:gap-4">
                         <Button type="button" theme="tertiary" onClick={onClose} block>Cancel</Button>
-                        <Button type="submit" theme="primary" loading={isPending} disabled={isPending || isUploading || !isValid} block>{model?._id ? "Edit Model" : "Add OEM"}</Button>
+                        <Button type="submit" theme="primary" loading={isPending} disabled={isPending || isUploading || !isValid} block>{model?._id ? "Edit Model" : "Add Model"}</Button>
                     </div>
                 </DialogPanel>
             </div>
