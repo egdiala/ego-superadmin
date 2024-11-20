@@ -192,6 +192,18 @@ export interface FetchedRiderTripCountStatus {
     total_rejected: number;
 }
 
+export interface FetchedOrgMonthlyTrip {
+    _id: {
+        month: number;
+    }
+    month: number;
+    createdAt: Date | string;
+    total: number;
+    total_amount: number;
+    total_completed: number;
+    total_approved?: number;
+    total_cancel: number;
+}
 export interface FetchedMonthlyTrip {
     month: number;
     createdAt: Date | string;

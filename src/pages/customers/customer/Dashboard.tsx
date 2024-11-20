@@ -9,7 +9,7 @@ import { PurchaseModel } from "@/types/organizations";
 import { formattedNumber } from "@/utils/textFormatter";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
-import type { FetchedMonthlyTrip, FetchedTripDetails, FetchedVehicleDistanceForOrganization } from "@/types/trips";
+import type { FetchedOrgMonthlyTrip, FetchedTripDetails, FetchedVehicleDistanceForOrganization } from "@/types/trips";
 import { FetchedServiceRequestsCountStatus } from "@/types/service-requests";
 import { useGetOrganization, useGetServiceRequests, useGetTrips, useGetTripStats } from "@/services/hooks/queries";
 import { CustomerBatteryDetails, CustomerServiceRequests, CustomerTotalPayments, CustomerTotalTrips, CustomerTripDetails } from "@/components/pages/customers";
@@ -20,7 +20,8 @@ export const CustomerDashboardPage: React.FC = () => {
     const [tripDetailsFilter, setTripDetailsFilter] = useState<{ start_date: string; end_date: string;  }>({ start_date: `${new Date().getFullYear()}-01-01`, end_date: format(new Date(), "yyyy-MM-dd") })
     const { data: customer, refetch } = useGetOrganization("")
     const { data: tripDetails, isFetching: fetchingTripDetails } = useGetTripStats<FetchedTripDetails>({ component: "trip-stat", organization_id: params?.id as string, ...tripDetailsFilter })
-    const { data: tripStats, isFetching: fetchingTripStats } = useGetTrips({ component: "count-monthly", organization_id: params?.id as string, ...tripStatsFilter })
+    const { data: tripStats, isFetching: fetchingTripStats } = useGetTrips({ component: "count-monthly", auth_id: params?.id as string, user_type: "organization", ...tripStatsFilter })
+    const { data: tripPayments, isFetching: fetchingTripPayments } = useGetTrips({ component: "count-monthly", charge_status: "1", auth_id: params?.id as string, user_type: "organization", ...tripStatsFilter })
     const { data: serviceRequestCount, isFetching: fetchingServiceRequests } = useGetServiceRequests({ component: "count-status", organization_id: params?.id as string })
     const { data: tripStat, isFetching: isFetchingDistance } = useGetTripStats<FetchedVehicleDistanceForOrganization>({ component: "org-dashboard-stat", organization_id: params?.id as string })
     const firstRowItems = [
@@ -72,7 +73,7 @@ export const CustomerDashboardPage: React.FC = () => {
     },[customer, refetch])
     return (
         <Fragment>
-            <RenderIf condition={!isFetchingDistance && !fetchingServiceRequests}>
+            <RenderIf condition={!isFetchingDistance && !fetchingServiceRequests && !fetchingTripPayments}>
                 <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-6">
                     <div className={cn("grid grid-cols-1 gap-4", PurchaseModel.StaffCommute !== customer?.purchase_model! ? "md:grid-cols-3" : "md:grid-cols-2")}>
                         {
@@ -117,9 +118,9 @@ export const CustomerDashboardPage: React.FC = () => {
                             <CustomerServiceRequests data={serviceRequestCount as FetchedServiceRequestsCountStatus} />
                         </RenderIf>
                         <RenderIf condition={PurchaseModel.StaffCommute === customer?.purchase_model!}>
-                            <CustomerTotalPayments />
+                            <CustomerTotalPayments tripPayment={tripPayments as FetchedOrgMonthlyTrip[]} />
                         </RenderIf>
-                        <CustomerTotalTrips tripData={tripStats as FetchedMonthlyTrip[]} filters={tripStatsFilter} setFilters={setTripStatsFilter} isLoading={fetchingTripStats} />
+                        <CustomerTotalTrips tripData={tripStats as FetchedOrgMonthlyTrip[]} filters={tripStatsFilter} setFilters={setTripStatsFilter} isLoading={fetchingTripStats} />
                     </div>
                     <RenderIf condition={PurchaseModel.Lease === customer?.purchase_model!}>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -129,7 +130,7 @@ export const CustomerDashboardPage: React.FC = () => {
                     </RenderIf>
                 </motion.div>
             </RenderIf>
-            <RenderIf condition={isFetchingDistance || fetchingServiceRequests}>
+            <RenderIf condition={isFetchingDistance || fetchingServiceRequests || fetchingTripPayments}>
                 <div className="flex w-full h-dvh items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
             </RenderIf>
         </Fragment>

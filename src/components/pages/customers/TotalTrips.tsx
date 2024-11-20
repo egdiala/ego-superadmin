@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { cn } from "@/libs/cn";
 import { LineChart } from "@/components/core";
-import { FetchedMonthlyTrip } from "@/types/trips";
+import { FetchedOrgMonthlyTrip } from "@/types/trips";
 import { TotalTripsFilter } from "../dashboard";
 
 interface Filters {
@@ -11,7 +11,7 @@ interface Filters {
 
 interface CustomerTotalTripsProps {
     [key: PropertyKey]: any
-    tripData: FetchedMonthlyTrip[];
+    tripData: FetchedOrgMonthlyTrip[];
     filters: Filters;
     // eslint-disable-next-line no-unused-vars
     setFilters: (v: Filters) => void;
@@ -64,7 +64,7 @@ export const CustomerTotalTrips: React.FC<CustomerTotalTripsProps> = ({ classNam
             formattedData?.approved?.push({
                 xFormatted: month?.xFormatted,
                 x: month?.x,
-                y: trip?.total_approved
+                y: trip?.total_approved || 0
             });
             formattedData?.cancelled?.push({
                 xFormatted: month?.xFormatted,
@@ -96,7 +96,7 @@ export const CustomerTotalTrips: React.FC<CustomerTotalTripsProps> = ({ classNam
             <div className="flex items-start justify-between">
                 <div className="p-2 grid gap-1 bg-portal-bg rounded-lg w-fit">
                     <h4 className="text-grey-dark-3 text-xs">Total Trip Request</h4>
-                    <span className="text-grey-dark-1 text-xl">{tripData?.reduce((acc, sum) => acc += sum?.total_count || 0, 0)}</span>
+                    <span className="text-grey-dark-1 text-xl">{tripData?.reduce((acc, sum) => acc += sum?.total || 0, 0)}</span>
                 </div>
                 <TotalTripsFilter theme="ghost" filters={filters} setFilters={setFilters} isLoading={isLoading} />
             </div>
