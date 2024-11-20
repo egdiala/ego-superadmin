@@ -17,8 +17,8 @@ export const createVehicleSchema = Yup.object().shape({
     vehicle_color: Yup.string().required("Vehicle color is required"),
     oem_id: Yup.string().required("OEM is required"),
     vehicle_vin: Yup.string().required("Vehicle Identification Number is required"),
-    chassis_no: Yup.string().required("Chassis Number is required"),
-    engine_no: Yup.string().required("Engine Number is required"),
+    // chassis_no: Yup.string().required("Chassis Number is required"),
+    // engine_no: Yup.string().required("Engine Number is required"),
     vehicle_imei: Yup.string().nullable(),
 })
 

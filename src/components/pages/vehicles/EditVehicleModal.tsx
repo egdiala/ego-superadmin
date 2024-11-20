@@ -106,10 +106,10 @@ export const EditVehicleModal: React.FC<AddVehicleModalProps> = ({ isOpen, close
                             </div>
                             <div className="flex flex-col md:flex-row md:items-start gap-6">
                                 <Input type="text" label="Vehicle Identification Number (VIN)" {...register("vehicle_vin")} />
-                                <Input type="text" label="Chassis Number" {...register("chassis_no")} />
+                                <Input type="text" label="Chassis Number" optional {...register("chassis_no")} />
                             </div>
                             <div className="flex flex-col md:flex-row md:items-start gap-6">
-                                <Input type="text" label="Engine Number" {...register("engine_no")} />
+                                <Input type="text" label="Engine/Battery Number" optional {...register("engine_no")} />
                                 <Input type="text" label="Dashcam IMEI (if available)" {...register("vehicle_imei")} />
                             </div>
                         </div>
