@@ -18,6 +18,12 @@ export const createDriver = async (data: CreateDriverType) => {
   return res.data;
 };
 
+export const editDriver = async (payload: CreateDriverType & { id: string }) => {
+  const { id, ...rest } = payload
+  const res = await axiosInstance.put(`${CREATE_DRIVER_API}/${id}`, rest);
+  return res.data;
+};
+
 export const bulkUploadDrivers = async (payload: BulkUploadDriversParams) => {
   const res = await axiosInstance.post(BULK_UPLOAD_DRIVERS_API, payload.files, {
     headers: {

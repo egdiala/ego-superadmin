@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { errorToast, successToast } from "@/utils/createToast";
 import { GET_DRIVER, GET_DRIVERS } from "@/constants/queryKeys";
-import { bulkUploadDrivers, createDriver, deleteDriver, updateUserStatus } from "@/services/apis/drivers";
+import { bulkUploadDrivers, createDriver, deleteDriver, editDriver, updateUserStatus } from "@/services/apis/drivers";
 import type { Dispatch, SetStateAction } from "react";
 
 // eslint-disable-next-line no-unused-vars
@@ -12,6 +12,22 @@ export const useCreateDriver = (fn?: (v: any) => void) => {
         onSuccess: (response: any) => {
             queryClient.invalidateQueries({ queryKey: [GET_DRIVERS] });
             successToast({ message: "Driver Added Successfully!" })
+            fn?.(response);
+        },
+        onError: (err: any) => {
+            errorToast(err)
+        },
+    });
+};
+
+// eslint-disable-next-line no-unused-vars
+export const useEditDriver = (fn?: (v: any) => void) => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: editDriver,
+        onSuccess: (response: any) => {
+            queryClient.invalidateQueries({ queryKey: [GET_DRIVER] });
+            successToast({ message: "Driver Edited Successfully!" })
             fn?.(response);
         },
         onError: (err: any) => {

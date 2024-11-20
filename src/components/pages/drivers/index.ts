@@ -1,5 +1,6 @@
 export * from "./CreateDriverModal"
 export * from "./DeleteDriverModal"
 export * from "./DriversFilter"
+export * from "./EditDriverModal"
 export * from "./FailedUploads"
 export * from "./SuspendDriverModal"
