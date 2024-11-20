@@ -96,7 +96,7 @@ export const CustomerTotalTrips: React.FC<CustomerTotalTripsProps> = ({ classNam
             <div className="flex items-start justify-between">
                 <div className="p-2 grid gap-1 bg-portal-bg rounded-lg w-fit">
                     <h4 className="text-grey-dark-3 text-xs">Total Trip Request</h4>
-                    <span className="text-grey-dark-1 text-xl">{tripData?.reduce((acc, sum) => acc += sum?.total_count, 0)}</span>
+                    <span className="text-grey-dark-1 text-xl">{tripData?.reduce((acc, sum) => acc += sum?.total_count || 0, 0)}</span>
                 </div>
                 <TotalTripsFilter theme="ghost" filters={filters} setFilters={setFilters} isLoading={isLoading} />
             </div>

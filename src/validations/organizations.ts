@@ -8,7 +8,11 @@ export const createOrganizationSchema = Yup.object().shape({
     business_id: Yup.string().required("CAC Registration Number is required"),
     industry: Yup.string().required("Select an industry"),
     company_type: Yup.string().required("Select a company type"),
-    vehicle_purchase: Yup.string().required("Number of Vehicles Purchased is required"),
+    vehicle_purchase: Yup.string().nullable()
+        .when("purchase_model", {
+            is: (val: string) => val !== "2",
+            then: () => Yup.string().required("Number of Vehicles Purchased is required"),
+        }),
     company_tin: Yup.string().required("Tax Identification Number is required"),
     authorize_rep_firstname: Yup.string().required("Authorized Rep First Name is required"),
     authorize_rep_lastname: Yup.string().required("Authorized Rep Last Name is required"),

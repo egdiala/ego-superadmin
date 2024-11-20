@@ -186,7 +186,7 @@ export const NewCustomersPage: React.FC = () => {
                           <motion.form onSubmit={handleSubmit} variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-4">
                               <div className="grid gap-6 pb-14">
                                   <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-8">
-                                      <SelectInput label="EV Purchase Model" options={models} {...register("purchase_model")} />
+                                      <SelectInput label="Business Model" options={models} {...register("purchase_model")} />
                                       <Input label="Registered Business Name" type="text" {...register("name")} />
                                   </div>
                                   <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-8">
@@ -199,7 +199,7 @@ export const NewCustomersPage: React.FC = () => {
                                   </div>
                                   <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-8">
                                       <Input label="Company Tax Identification Number" type="text" {...register("company_tin")} />
-                                      <Input label="Number of Vehicles Purchased" type="text" {...register("vehicle_purchase")} />
+                                      <Input label="Number of Vehicles Purchased" type="text" disabled={stepOneValues?.purchase_model === PurchaseModel.StaffCommute.toString()} {...register("vehicle_purchase")} />
                                   </div>
                                   <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-8">
                                       <Input label="Authorized Rep First Name" type="text" {...register("authorize_rep_firstname")} />
