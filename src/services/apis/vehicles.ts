@@ -13,6 +13,12 @@ export const createVehicle = async (data: CreateVehicleType) => {
   return res.data;
 };
 
+export const editVehicle = async (payload: CreateVehicleType & { id: string }) => {
+  const { id, ...rest } = payload
+  const res = await axiosVehicleInstance.put(`${GET_VEHICLES_API}/${id}`, rest);
+  return res.data;
+};
+
 export const bulkUploadVehicles = async (payload: BulkUploadVehiclesParams) => {
   const res = await axiosVehicleInstance.post(BULK_UPLOAD_VEHICLES_API, payload.files, {
     headers: {

@@ -9,11 +9,13 @@ import { Breadcrumb, Button, RenderIf } from "@/components/core";
 import { NavLink, Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { DeleteVehicleModal, RevokeDriverModal } from "@/components/pages/vehicles";
 import { PurchaseModel } from "@/types/organizations";
+import { EditVehicleModal } from "@/components/pages/vehicles/EditVehicleModal";
 
 export const VehiclePage: React.FC = () => {
     const params = useParams()
     const navigate = useNavigate()
     const location = useLocation()
+    const [editVehicle, setEditVehicle] = useState(false)
     const [revokeDriver, setRevokeDriver] = useState(false)
     const [deleteVehicle, setDeleteVehicle] = useState(false)
     const { data: vehicle, isFetching } = useGetVehicle(params?.id as string)
@@ -38,6 +40,10 @@ export const VehiclePage: React.FC = () => {
         setDeleteVehicle(!deleteVehicle)
     }
 
+    const toggleEditVehicle = () => {
+        setEditVehicle(!editVehicle)
+    }
+
     useEffect(() => {
         if ((location?.pathname === `/vehicles/${params?.id as string}/vehicle-payment`) && ((PurchaseModel.Lease) !== vehicle?.org_data?.purchase_model!)) {
             navigate(`/vehicles/${params?.id as string}/profile`)
@@ -52,6 +58,10 @@ export const VehiclePage: React.FC = () => {
                         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                             <h1 className="text-grey-dark-1 font-bold text-xl">{vehicle?.plate_number}</h1>
                             <div className="flex items-center gap-2 w-full sm:w-auto">
+                                <Button type="button" theme="secondary" onClick={toggleEditVehicle} block>
+                                    <Icon icon="ph:pencil-simple-line" className="size-4" />
+                                    Edit Vehicle
+                                </Button>
                                 <Button type="button" theme="danger" onClick={handleDeleteVehicle} block>
                                     <Icon icon="tabler:trash" className="size-4" />
                                     Delete Vehicle
@@ -80,6 +90,7 @@ export const VehiclePage: React.FC = () => {
                         </div>
                         <Outlet />
                     </div>
+                    <EditVehicleModal isOpen={editVehicle} vehicle={vehicle!} close={toggleEditVehicle} />
                     <DeleteVehicleModal isOpen={deleteVehicle} vehicle={vehicle!} close={handleDeleteVehicle} />
                     <RevokeDriverModal vehicleId={vehicle?.vehicle_id!} isOpen={revokeDriver} driver={{ ...vehicle?.driver_data!, driver_id: vehicle?.driver_id! }} close={setRevokeDriver} />
                 </motion.div>

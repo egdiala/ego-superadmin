@@ -19,14 +19,14 @@ export const VehicleProfilePage: React.FC = () => {
 
     const vehicleDetails = useMemo(() => {
         return [
-            { label: "OEM/Model", value: vehicle?.car_model },
+            { label: "OEM/Model", value: vehicle?.oem_vehdata?.model_name },
             { label: "Year of manufacture", value: vehicle?.year_manufacture },
             { label: "Online Status", value: <div className={cn(vehicle?.online ? "text-grey-dark-2 bg-green-3" : "text-grey-dark-1 bg-yellow-1", "w-fit rounded px-2 py-0.5 font-medium text-sm")}>{vehicle?.online ? "Online" : "Offline"}</div> },
             { label: "Mileage", value: vehicle?.mileage },
             { label: "Purchase Year", value: vehicle?.year_purchase },
             { label: "Vehicle Status", value: <div className={cn(vehicle?.status === 1 ? "text-grey-dark-2 bg-green-3" : "text-grey-dark-1 bg-yellow-1", "w-fit rounded px-2 py-0.5 font-medium text-sm")}>{vehicle?.status === 1 ? "Active" : "Inactive"}</div> },
         ]
-    }, [vehicle?.car_model, vehicle?.mileage, vehicle?.online, vehicle?.status, vehicle?.year_manufacture, vehicle?.year_purchase])
+    }, [vehicle?.mileage, vehicle?.oem_vehdata?.model_name, vehicle?.online, vehicle?.status, vehicle?.year_manufacture, vehicle?.year_purchase])
 
     const vehicleID = useMemo(() => {
         return [
@@ -62,7 +62,7 @@ export const VehicleProfilePage: React.FC = () => {
                             vehicleDetails?.map((item) => 
                                 <div key={item.label} className="grid gap-1">
                                     <h4 className="text-sm text-grey-dark-3">{item?.label}</h4>
-                                    <p className="text-sm text-grey-dark-1">{item?.value}</p>
+                                    <p className="text-sm text-grey-dark-1 capitalize">{item?.value}</p>
                                 </div>
                             )
                         }
