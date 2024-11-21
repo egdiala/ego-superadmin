@@ -138,7 +138,7 @@ export const CustomerTotalTrips: React.FC<CustomerTotalTripsProps> = ({ classNam
                     )
                 }}
                 yFormat=" >-.2f"
-                curve="natural"
+                curve="monotoneX"
                 axisTop={null}
                 axisRight={null}
                 axisBottom={{

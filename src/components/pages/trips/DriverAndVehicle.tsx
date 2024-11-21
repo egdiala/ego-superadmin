@@ -29,8 +29,8 @@ export const TripDriverAndVehicle: React.FC<TripDriverAndVehicleProps> = ({ data
         { label: "Phone Number", value: data?.phone_number },
     ]
     const information = [
-        { label: "Total Km covered by vehicle before the time of the trip", value: `${data?.pickup_distance}km` },
-        { label: "Total Km covered by vehicle as at the time of the trip", value: `${data?.total_distance}km` },
+        { label: "Total Km covered by vehicle before the time of the trip", value: `${data?.pickup_distance.toFixed(2)}km` },
+        { label: "Total Km covered by vehicle as at the time of the trip", value: `${data?.total_distance.toFixed(2)}km` },
     ]
     return (
         <div className="flex flex-col h-fit gap-6 py-4 px-5 rounded-lg border border-input-filled">
@@ -54,7 +54,7 @@ export const TripDriverAndVehicle: React.FC<TripDriverAndVehicleProps> = ({ data
                     infos.map((info) =>
                         <div key={info.label} className="grid gap-1 content-start">
                             <h3 className="text-grey-dark-3 text-sm">{info.label}</h3>
-                            <p className="text-grey-dark-1 font-medium text-sm">{info.value}</p>
+                            <p className="text-grey-dark-1 font-medium text-sm text-ellipsis whitespace-nowrap overflow-hidden">{info.value}</p>
                         </div>
                     )
                 }
@@ -74,7 +74,7 @@ export const TripDriverAndVehicle: React.FC<TripDriverAndVehicleProps> = ({ data
                     information.map((info) =>
                         <div key={info.label} className="grid gap-1">
                             <h3 className="text-grey-dark-3 text-sm">{info.label}</h3>
-                            <p className="text-grey-dark-1 font-medium text-sm">{info.value}</p>
+                            <p className="text-grey-dark-1 font-medium text-sm text-ellipsis whitespace-nowrap overflow-hidden">{info.value}</p>
                         </div>
                     )
                 }

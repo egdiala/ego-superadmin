@@ -31,7 +31,7 @@ export const ResponsiveLine: Story = {
                 reverse: false
             }}
             yFormat=" >-.2f"
-            curve="natural"
+            curve="monotoneX"
             axisTop={null}
             axisRight={null}
             axisBottom={{

@@ -1,13 +1,22 @@
 import React, { useMemo } from "react";
 import { cn } from "@/libs/cn";
-import { LineChart, TableAction } from "@/components/core";
-import { Icon } from "@iconify/react";
+import { LineChart } from "@/components/core";
 import type { FetchedOrgMonthlyTrip } from "@/types/trips";
 import { formattedNumber } from "@/utils/textFormatter";
+import { TotalTripsFilter } from "../dashboard";
+
+interface Filters {
+    start_date: string;
+    end_date: string;
+}
 
 interface CustomerTotalPaymentsProps {
     [key: PropertyKey]: any
     tripPayment: FetchedOrgMonthlyTrip[]
+    filters: Filters;
+    // eslint-disable-next-line no-unused-vars
+    setFilters: (v: Filters) => void;
+    isLoading: boolean
 }
 
 const months = [
@@ -25,7 +34,7 @@ const months = [
   { x: "Dec", xFormatted: "December" }
 ];
 
-export const CustomerTotalPayments: React.FC<CustomerTotalPaymentsProps> = ({ className, tripPayment }) => {
+export const CustomerTotalPayments: React.FC<CustomerTotalPaymentsProps> = ({ className, tripPayment, isLoading, filters, setFilters }) => {
     const data = useMemo(() => {
         // Initialize arrays for completed, approved, and canceled trips
         const formattedData = {
@@ -91,12 +100,9 @@ export const CustomerTotalPayments: React.FC<CustomerTotalPaymentsProps> = ({ cl
             <div className="flex items-start justify-between">
                 <div className="p-2 grid gap-1 bg-portal-bg rounded-lg w-fit">
                     <h4 className="text-grey-dark-3 text-xs">Total Trip Payments</h4>
-                    <span className="text-grey-dark-1 text-xl">0</span>
+                    <span className="text-grey-dark-1 text-xl">{formattedNumber(tripPayment?.reduce((acc, sum) => acc += sum?.total_amount || 0, 0))}</span>
                 </div>
-                <TableAction theme="ghost">
-                    <Icon icon="mdi:funnel" className="size-4" />
-                    Filter
-                </TableAction>
+                <TotalTripsFilter theme="ghost" filters={filters} setFilters={setFilters} isLoading={isLoading} />
             </div>
             <LineChart
                 data={data}
@@ -135,7 +141,7 @@ export const CustomerTotalPayments: React.FC<CustomerTotalPaymentsProps> = ({ cl
                     )
                 }}
                 yFormat=" >-.2f"
-                curve="natural"
+                curve="monotoneX"
                 axisTop={null}
                 axisRight={null}
                 axisBottom={{

@@ -17,11 +17,11 @@ export const TripInfo: React.FC<TripInfoProps> = ({ data }) => {
     const infos = [
         { label: "Trip Reference", value: data?.trip_ref },
         { label: "Est. Time", value: formatTime(data?.ride_data?.est_time) },
-        { label: "Est. Distance", value: `${data?.ride_data?.est_dst}km` },
+        { label: "Est. Distance", value: `${data?.ride_data?.est_dst.toFixed(2)}km` },
         { label: "Accepted Time", value: `${format(data?.ride_data?.accepted_at, "d/M/yy")} • ${format(data?.ride_data?.accepted_at, "p")}` },
         { label: "Trip Start Time", value: data?.ride_data?.start_trip_at ? `${format(data?.ride_data?.start_trip_at, "d/M/yy")} • ${format(data?.ride_data?.start_trip_at, "p")}` : "" },
         { label: "Trip End Time", value: data?.ride_data?.end_trip_at ? `${format(data?.ride_data?.end_trip_at, "d/M/yy")} • ${format(data?.ride_data?.end_trip_at, "p")}` : "" },
-        { label: "Total Trip Distance", value: `${data?.ride_data?.total_distance}km` },
+        { label: "Total Trip Distance", value: `${data?.ride_data?.total_distance.toFixed(2)}km` },
         { label: "Actual Time Spent", value: formatTime(differenceInSeconds(data?.ride_data?.end_trip_at as Date,  data?.ride_data?.start_trip_at as Date) || 0) },
         (data?.org_data?.purchase_model === PurchaseModel.StaffCommute && ({ label: "Waiting Time", value: formatTime(data?.ride_data?.waiting_time) })),
     ]

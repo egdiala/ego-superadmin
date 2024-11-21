@@ -16,12 +16,13 @@ import { CustomerBatteryDetails, CustomerServiceRequests, CustomerTotalPayments,
 
 export const CustomerDashboardPage: React.FC = () => {
     const params = useParams()
+    const [tripPaymentsFilter, setTripPaymentsFilter] = useState<{ start_date: string; end_date: string;  }>({ start_date: `${new Date().getFullYear()}-01-01`, end_date: format(new Date(), "yyyy-MM-dd") })
     const [tripStatsFilter, setTripStatsFilter] = useState<{ start_date: string; end_date: string;  }>({ start_date: `${new Date().getFullYear()}-01-01`, end_date: format(new Date(), "yyyy-MM-dd") })
     const [tripDetailsFilter, setTripDetailsFilter] = useState<{ start_date: string; end_date: string;  }>({ start_date: `${new Date().getFullYear()}-01-01`, end_date: format(new Date(), "yyyy-MM-dd") })
     const { data: customer, refetch } = useGetOrganization("")
     const { data: tripDetails, isFetching: fetchingTripDetails } = useGetTripStats<FetchedTripDetails>({ component: "trip-stat", organization_id: params?.id as string, ...tripDetailsFilter })
     const { data: tripStats, isFetching: fetchingTripStats } = useGetTrips({ component: "count-monthly", auth_id: params?.id as string, user_type: "organization", ...tripStatsFilter })
-    const { data: tripPayments, isFetching: fetchingTripPayments } = useGetTrips({ component: "count-monthly", charge_status: "1", auth_id: params?.id as string, user_type: "organization", ...tripStatsFilter })
+    const { data: tripPayments, isFetching: fetchingTripPayments } = useGetTrips({ component: "count-monthly", charge_status: "1", auth_id: params?.id as string, user_type: "organization", ...tripPaymentsFilter })
     const { data: serviceRequestCount, isFetching: fetchingServiceRequests } = useGetServiceRequests({ component: "count-status", organization_id: params?.id as string })
     const { data: tripStat, isFetching: isFetchingDistance } = useGetTripStats<FetchedVehicleDistanceForOrganization>({ component: "org-dashboard-stat", organization_id: params?.id as string })
     const firstRowItems = [
@@ -52,17 +53,17 @@ export const CustomerDashboardPage: React.FC = () => {
         },
         (PurchaseModel.StaffCommute !== customer?.purchase_model! && ({
             label: "Total Distance Covered by all Vehicles",
-            value: `${tripStat?.total_dst_cov}km`,
+            value: `${tripStat?.total_dst_cov.toFixed(2)}km`,
             icon: "ion:speedometer"
         })),
         (PurchaseModel.StaffCommute === customer?.purchase_model! && ({
             label: "Total Distance Covered on Trips",
-            value: `${tripStat?.total_dst_cov}km`,
+            value: `${tripStat?.total_dst_cov.toFixed(2)}km`,
             icon: "ion:speedometer"
         })),
         (PurchaseModel.StaffCommute !== customer?.purchase_model! && ({
             label: "Average kilometers covered by the vehicle",
-            value: `${tripStat?.total_dst_avg}km`,
+            value: `${tripStat?.total_dst_avg.toFixed(2)}km`,
             icon: "ion:speedometer"
         })),
     ]
@@ -118,7 +119,7 @@ export const CustomerDashboardPage: React.FC = () => {
                             <CustomerServiceRequests data={serviceRequestCount as FetchedServiceRequestsCountStatus} />
                         </RenderIf>
                         <RenderIf condition={PurchaseModel.StaffCommute === customer?.purchase_model!}>
-                            <CustomerTotalPayments tripPayment={tripPayments as FetchedOrgMonthlyTrip[]} />
+                            <CustomerTotalPayments tripPayment={tripPayments as FetchedOrgMonthlyTrip[]} filters={tripPaymentsFilter} setFilters={setTripPaymentsFilter} isLoading={fetchingTripPayments} />
                         </RenderIf>
                         <CustomerTotalTrips tripData={tripStats as FetchedOrgMonthlyTrip[]} filters={tripStatsFilter} setFilters={setTripStatsFilter} isLoading={fetchingTripStats} />
                     </div>

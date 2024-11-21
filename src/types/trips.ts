@@ -204,6 +204,7 @@ export interface FetchedOrgMonthlyTrip {
     total_approved?: number;
     total_cancel: number;
 }
+
 export interface FetchedMonthlyTrip {
     month: number;
     createdAt: Date | string;
@@ -211,6 +212,8 @@ export interface FetchedMonthlyTrip {
     total_cancel: number;
     total_approved: number;
     total_count: number;
+    total?: number;
+    total_amount?: number;
 }
 
 export interface FetchedVehicleDistanceForOrganization {

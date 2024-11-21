@@ -35,7 +35,7 @@ export const TripRider: React.FC<TripRiderProps> = ({ data }) => {
                     infos.map((info) =>
                         <div key={info.label} className="grid gap-1">
                             <h3 className="text-grey-dark-3 text-sm">{info.label}</h3>
-                            <p className="text-grey-dark-1 font-medium text-sm">{info.value || "-"}</p>
+                            <p className="text-grey-dark-1 font-medium text-sm text-ellipsis whitespace-nowrap overflow-hidden">{info.value || "-"}</p>
                         </div>
                     )
                 }
