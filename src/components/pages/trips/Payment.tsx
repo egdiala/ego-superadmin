@@ -21,7 +21,7 @@ export const TripPayment: React.FC<TripPaymentProps> = ({ data }) => {
     
     const infos = useMemo(() => {
         return [
-            { label: "Trip payment Model", value: pascalCaseToWords(PurchaseModel[data?.org_data?.purchase_model]) },
+            { label: "Trip payment Model", value: pascalCaseToWords(PurchaseModel[data?.ride_data?.purchase_model]) },
             (data?.org_data?.purchase_model === PurchaseModel.Lease && ({ label: "Trip Fare", value: <div className="flex items-center justify-center w-fit bg-green-3 text-dark-green-1 text-sm px-2 py-0.5 rounded">Covered by Plan</div> })),
             (data?.org_data?.purchase_model === PurchaseModel.Lease && ({ label: "Additional Km", value: `${data?.ride_data?.end_distance.toFixed(2)}km` })),
             (data?.org_data?.purchase_model === PurchaseModel.Lease && ({ label: "Additional fee", value: formattedNumber(parseInt(data?.ride_data?.fare_params?.charge_delay)) })),
@@ -31,7 +31,7 @@ export const TripPayment: React.FC<TripPaymentProps> = ({ data }) => {
             (data?.org_data?.purchase_model !== PurchaseModel.Lease && ({ label: "Discount", value: formattedNumber(parseInt(data?.ride_data?.fare_params?.discount_value || "0")) })),
             (data?.org_data?.purchase_model === PurchaseModel.EHailing && ({ label: "Additional Fee", value: formattedNumber(parseInt(data?.ride_data?.fare_params?.charge_delay)) })),
         ]
-    },[data?.org_data?.purchase_model, data?.ride_data?.end_distance, data?.ride_data?.fare, data?.ride_data?.fare_params?.charge_delay, data?.ride_data?.fare_params?.discount_value, data?.ride_data?.max_fare, data?.ride_data?.min_fare, toggleIsOpen])
+    },[data?.org_data?.purchase_model, data?.ride_data?.end_distance, data?.ride_data?.fare, data?.ride_data?.fare_params?.charge_delay, data?.ride_data?.fare_params?.discount_value, data?.ride_data?.max_fare, data?.ride_data?.min_fare, data?.ride_data?.purchase_model, toggleIsOpen])
 
     const fareBreakdown = useMemo(() => {
         return [

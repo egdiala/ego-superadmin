@@ -269,6 +269,7 @@ export interface FetchedSingleTrip {
         phone_number: string;
         rating: number;
         avatar: string;
+        purchase_model: number;
         start_coord: {
             longitude: number;
             latitude: number;

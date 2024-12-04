@@ -4,6 +4,7 @@ import vehicleSvg from "@/assets/vehicle.svg"
 import { PurchaseModel } from "@/types/organizations";
 import { RenderIf } from "@/components/core";
 import { cn } from "@/libs/cn";
+import { Link } from "react-router-dom";
 
 interface TripDriverAndVehicleProps {
     data: {
@@ -36,7 +37,7 @@ export const TripDriverAndVehicle: React.FC<TripDriverAndVehicleProps> = ({ data
         <div className="flex flex-col h-fit gap-6 py-4 px-5 rounded-lg border border-input-filled">
             <h1 className="text-grey-dark-1 text-base font-semibold">Driver & Vehicle</h1>
             <div className={cn("grid gap-6", data?.purchase_model === PurchaseModel.Lease ? "grid-cols-2 lg:grid-cols-3" : "grid-cols-1 lg:grid-cols-2")}>
-                <div className="flex items-center gap-2">
+                <Link to={`/drivers/${data?.driver_id}/profile`} className="flex items-center gap-2">
                     <img
                         alt={data?.name}
                         className="size-10 rounded-full object-cover object-center"
@@ -49,7 +50,7 @@ export const TripDriverAndVehicle: React.FC<TripDriverAndVehicleProps> = ({ data
                             <span className="text-sm text-grey-dark-3">{data?.rating?.toFixed(1)}</span>
                         </div>
                     </div>
-                </div>
+                </Link>
                 {
                     infos.map((info) =>
                         <div key={info.label} className="grid gap-1 content-start">

@@ -2,6 +2,7 @@ import React from "react";
 import { Icon } from "@iconify/react";
 import { FetchedSingleTrip } from "@/types/trips";
 import blankImg from "@/assets/blank.svg";
+import { Link } from "react-router-dom";
 
 interface TripRiderProps {
     data: FetchedSingleTrip
@@ -17,7 +18,7 @@ export const TripRider: React.FC<TripRiderProps> = ({ data }) => {
         <div className="flex flex-col h-fit gap-6 py-4 px-5 rounded-lg border border-input-filled">
             <h1 className="text-grey-dark-1 text-base font-semibold">Rider</h1>
             <div className="grid grid-cols-3 gap-6">
-                <div className="flex items-center gap-2">
+                <Link to={`/riders/${data?.rider_data?._id}/profile`} className="flex items-center gap-2">
                     <img
                         alt={data?.ride_data?.name}
                         className="size-10 rounded-full object-cover object-center"
@@ -30,7 +31,7 @@ export const TripRider: React.FC<TripRiderProps> = ({ data }) => {
                             <span className="text-sm text-grey-dark-3">{data?.ride_data?.rating?.toFixed(1)}</span>
                         </div>
                     </div>
-                </div>
+                </Link>
                 {
                     infos.map((info) =>
                         <div key={info.label} className="grid gap-1">
