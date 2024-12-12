@@ -70,7 +70,7 @@ export const RiderProfile: React.FC = () => {
                     <div className="flex flex-col md:flex-row items-center gap-6 pb-6">
                         <div className="flex flex-col md:flex-row md:items-center gap-10 bg-green-4 p-4 rounded-lg flex-1">
                             <img
-                                src={blankImg}
+                                src={rider?.avatar || blankImg}
                                 className="size-32 rounded-2xl object-cover"
                                 alt={`${rider?.first_name} ${rider?.last_name}`}
                             />

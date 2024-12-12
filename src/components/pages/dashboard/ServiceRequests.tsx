@@ -22,43 +22,43 @@ export const ServiceRequests: React.FC<ServiceRequestsHomeProps> = ({ className,
             "label": "Total",
             "total": data?.total,
             "totalColor": "hsla(205, 92%, 10%, 1)",
-            "completed": data?.total_complete,
-            "completedColor": "hsla(113, 43%, 50%, 1)",
-            "pending": data?.total_pending,
-            "pendingColor": "hsla(41, 100%, 44%, 1)",
-            "cancelled": data?.total_rejected,
-            "cancelledColor": "hsla(4, 80%, 48%, 1)",
+            // "completed": data?.total_complete,
+            // "completedColor": "hsla(113, 43%, 50%, 1)",
+            // "pending": data?.total_pending,
+            // "pendingColor": "hsla(41, 100%, 44%, 1)",
+            // "cancelled": data?.total_rejected,
+            // "cancelledColor": "hsla(4, 80%, 48%, 1)",
         },
         {
             "label": "Completed",
-            "total": data?.total,
-            "totalColor": "hsla(205, 92%, 10%, 1)",
+            // "total": data?.total,
+            // "totalColor": "hsla(205, 92%, 10%, 1)",
             "completed": data?.total_complete,
             "completedColor": "hsla(113, 43%, 50%, 1)",
-            "pending": data?.total_pending,
-            "pendingColor": "hsla(41, 100%, 44%, 1)",
-            "cancelled": data?.total_rejected,
-            "cancelledColor": "hsla(4, 80%, 48%, 1)",
+            // "pending": data?.total_pending,
+            // "pendingColor": "hsla(41, 100%, 44%, 1)",
+            // "cancelled": data?.total_rejected,
+            // "cancelledColor": "hsla(4, 80%, 48%, 1)",
         },
         {
             "label": "Pending",
-            "total": data?.total,
-            "totalColor": "hsla(205, 92%, 10%, 1)",
-            "completed": data?.total_complete,
-            "completedColor": "hsla(113, 43%, 50%, 1)",
+            // "total": data?.total,
+            // "totalColor": "hsla(205, 92%, 10%, 1)",
+            // "completed": data?.total_complete,
+            // "completedColor": "hsla(113, 43%, 50%, 1)",
             "pending": data?.total_pending,
             "pendingColor": "hsla(41, 100%, 44%, 1)",
-            "cancelled": data?.total_rejected,
-            "cancelledColor": "hsla(4, 80%, 48%, 1)",
+            // "cancelled": data?.total_rejected,
+            // "cancelledColor": "hsla(4, 80%, 48%, 1)",
         },
         {
             "label": "Cancelled",
-            "total": data?.total,
-            "totalColor": "hsla(205, 92%, 10%, 1)",
-            "completed": data?.total_complete,
-            "completedColor": "hsla(113, 43%, 50%, 1)",
-            "pending": data?.total_pending,
-            "pendingColor": "hsla(41, 100%, 44%, 1)",
+            // "total": data?.total,
+            // "totalColor": "hsla(205, 92%, 10%, 1)",
+            // "completed": data?.total_complete,
+            // "completedColor": "hsla(113, 43%, 50%, 1)",
+            // "pending": data?.total_pending,
+            // "pendingColor": "hsla(41, 100%, 44%, 1)",
             "cancelled": data?.total_rejected,
             "cancelledColor": "hsla(4, 80%, 48%, 1)",
         },
@@ -87,14 +87,12 @@ export const ServiceRequests: React.FC<ServiceRequestsHomeProps> = ({ className,
                         "pending",
                         "cancelled"
                     ]}
+                    colors={items.map((item) => item.totalColor ?? item?.completedColor ?? item?.pendingColor ?? item?.cancelledColor) as string[]}
                     indexBy="label"
-                    colors={["hsla(205, 92%, 10%, 1)", "hsla(113, 43%, 50%, 1)", "hsla(41, 100%, 44%, 1)", "hsla(4, 80%, 48%, 1)"]}
                     margin={{ top: 25, right: 20, bottom: 25, left: 20 }}
-                    padding={0.7}
-                    innerPadding={2}
+                    padding={0.85}
                     valueScale={{ type: "linear", min: 0 }}
                     indexScale={{ type: "band", round: true }}
-                    groupMode="grouped"
                     axisTop={null}
                     axisRight={null}
                     axisBottom={{
