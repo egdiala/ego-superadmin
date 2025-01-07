@@ -15,7 +15,7 @@ interface TripDetailsDashboardProps {
 export const TripDetails: React.FC<TripDetailsDashboardProps> = ({ className, data, isLoading, setFilters }) => {
     const models1 = [
         { label: "Total trip duration", value: formatTime(data?.total_time || 0) },
-        { label: "Av. trip distance", value: `${data?.total_dst?.toFixed(2) || 0}km` },
+        { label: "Av. trip distance", value: `${data?.avg_dist?.toFixed(2) || 0}km` },
         { label: "Av. daily mileage", value: "0mil" },
     ]
     const models2 = [

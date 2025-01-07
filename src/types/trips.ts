@@ -228,6 +228,7 @@ export interface FetchedVehicleDistanceForOrganization {
 export interface FetchedTripDetails {
     total_dst: number;
     total_time: number;
+    avg_dist: number;
     time_value: string;
     distance_value: string;
     total_inmotion: number;
