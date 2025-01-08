@@ -1,7 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { errorToast, successToast } from "@/utils/createToast";
 import { GET_FEE_BANK_LOGS } from "@/constants/queryKeys";
-import { createFeeBank, deleteFeeBank } from "@/services/apis/banks";
+import { confirmAccountInfo, createFeeBank, deleteFeeBank } from "@/services/apis/banks";
+import type { ConfirmedAccountInfo } from "@/types/banks";
 
 // eslint-disable-next-line no-unused-vars
 export const useCreateBank = (fn?: () => void) => {
@@ -12,6 +13,20 @@ export const useCreateBank = (fn?: () => void) => {
             successToast({ message: "Bank Account Added Successfully!" })
             queryClient.invalidateQueries({ queryKey: [GET_FEE_BANK_LOGS] });
             fn?.();
+        },
+        onError: (err: any) => {
+            errorToast(err)
+        },
+    });
+};
+
+// eslint-disable-next-line no-unused-vars
+export const useConfirmBankInfo = (fn?: (v: ConfirmedAccountInfo) => void) => {
+    return useMutation({
+        mutationFn: confirmAccountInfo,
+        onSuccess: (response) => {
+            fn?.(response?.data);
+            return response?.data
         },
         onError: (err: any) => {
             errorToast(err)

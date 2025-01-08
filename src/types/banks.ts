@@ -9,9 +9,21 @@ export type CreateFeeBankType = {
     account_number: string;
 }
 
+export type ConfirmAccountType = {
+    account_number: string;
+    bank_code: string;
+}
+
 export interface FetchedBankList {
-    Bankname: string;
-    Bankcode: string;
+    code: string;
+    name: string;
+    slug: string;
+}
+
+export interface ConfirmedAccountInfo {
+    account_number: string;
+    account_name: string;
+    bank_id: number;
 }
 
 export interface FetchedFeeBankVariables {

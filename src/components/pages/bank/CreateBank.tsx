@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FetchedBankList } from "@/types/banks";
 import { Button, Input } from "@/components/core";
 import { ComboBox } from "@/components/core/ComboBox";
 import { useGetBankList, useGetFeeBanks } from "@/services/hooks/queries";
-import { useCreateBank } from "@/services/hooks/mutations";
+import { useConfirmBankInfo, useCreateBank } from "@/services/hooks/mutations";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import type { FetchedFeeBankVariables } from "@/types/banks"
 import { createBankSchema } from "@/validations/banks";
+import { AnimatePresence, motion } from "framer-motion";
+import { Loader } from "@/components/core/Button/Loader";
 
 interface CreateBankModalProps {
     isOpen: boolean;
@@ -19,6 +21,9 @@ export const CreateBankModal: React.FC<CreateBankModalProps> = ({ isOpen, close 
     const [query, setQuery] = useState("")
     const [variableQuery, setVariableQuery] = useState("")
     const { data: banks, isLoading } = useGetBankList()
+    const { mutate: confirm, isPending: isConfirming } = useConfirmBankInfo((value) => {
+        setFieldValue("account_name", value?.account_name)
+    })
     const { data: variables, isFetching } = useGetFeeBanks<FetchedFeeBankVariables[]>({ component: "fee_variables" })
     const { mutate: create, isPending } = useCreateBank(() => onClose())
 
@@ -26,7 +31,7 @@ export const CreateBankModal: React.FC<CreateBankModalProps> = ({ isOpen, close 
         query === ""
         ? banks
         : banks?.filter((bank) => {
-            return bank.Bankname.toLowerCase().includes(query.toLowerCase())
+            return bank.name.toLowerCase().includes(query.toLowerCase())
             })
 
     const filteredVariables =
@@ -41,6 +46,7 @@ export const CreateBankModal: React.FC<CreateBankModalProps> = ({ isOpen, close 
             reference_name: "",
             bank_code: "",
             bank_name: "",
+            account_name: "",
             account_number: "",
         },
         validationSchema: createBankSchema,
@@ -48,6 +54,12 @@ export const CreateBankModal: React.FC<CreateBankModalProps> = ({ isOpen, close 
             create(values)
         },
     })
+
+    useEffect(() => {
+        if ((values?.account_number?.length === 10) && values?.bank_name) {
+            confirm({ bank_code: values?.bank_code, account_number: values?.account_number })
+        }
+    },[confirm, values?.account_number, values?.bank_code, values?.bank_name])
 
     const onClose = () => {
         resetForm();
@@ -69,14 +81,25 @@ export const CreateBankModal: React.FC<CreateBankModalProps> = ({ isOpen, close 
                             onClose={() => setQuery("")}
                             options={filteredBanks ?? []} 
                             onChange={(value) => setQuery(value)} 
-                            displayValue={(item: FetchedBankList) => item?.Bankname} 
-                            optionLabel={(option: FetchedBankList) => option?.Bankname} 
+                            displayValue={(item: FetchedBankList) => item?.name} 
+                            optionLabel={(option: FetchedBankList) => option?.name} 
                             setSelected={async(value: FetchedBankList) => {
-                                await setFieldValue("bank_name", value?.Bankname)
-                                await setFieldValue("bank_code", value?.Bankcode)
+                                await setFieldValue("bank_name", value?.name)
+                                await setFieldValue("bank_code", value?.code)
                             }} 
                         />
-                        <Input label="Account Number" type="text" {...register("account_number")} />
+                        <div className="space-y-1.5">
+                            <Input label="Account Number" type="text" {...register("account_number")} />
+                            <AnimatePresence>
+                                {
+                                    isConfirming ? (
+                                        <Loader className="block spinner size-4 text-green-1" />
+                                    ) : (
+                                        <motion.div>{values?.account_name}</motion.div>
+                                    )
+                                }
+                            </AnimatePresence>
+                        </div>
                         <ComboBox
                             label="Reference Name"
                             disabled={isFetching}
@@ -89,10 +112,10 @@ export const CreateBankModal: React.FC<CreateBankModalProps> = ({ isOpen, close 
                                 setFieldValue("reference_name", value?.reference_name)
                             }} 
                         />
-                        </div>
+                    </div>
                     <div className="flex items-center justify-end w-full md:w-1/2 ml-auto pt-10 gap-2 md:gap-4">
                         <Button type="button" theme="tertiary" disabled={isPending} onClick={onClose} block>Cancel</Button>
-                        <Button type="submit" theme="primary" loading={isPending} disabled={isPending || !isValid} block>Add Bank Account</Button>
+                        <Button type="submit" theme="primary" loading={isPending} disabled={isConfirming || isPending || !isValid} block>Add Bank Account</Button>
                     </div>
                 </DialogPanel>
             </div>
