@@ -1,3 +1,5 @@
+import { Actions } from "./roles";
+
 export type LoginType = {
     email: string;
     password: string;
@@ -39,11 +41,6 @@ export interface User {
   data_mode: string;
   createdAt: string;
   updatedAt: string;
-  role_list: {
-    create: string[];
-    view: string[];
-    update: string[];
-    delete: string[];
-  };
+  role_list: Record<Actions, string[]>;
   auth_id: string;
 }

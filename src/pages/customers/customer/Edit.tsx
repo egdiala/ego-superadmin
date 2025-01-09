@@ -2,17 +2,19 @@ import React, { Fragment, useMemo } from "react";
 import { motion } from "framer-motion";
 import { PurchaseModel } from "@/types/organizations";
 import { Loader } from "@/components/core/Button/Loader";
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { pageVariants } from "@/constants/animateVariants";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { useEditOrganization } from "@/services/hooks/mutations";
 import { createOrganizationSchema } from "@/validations/organizations";
 import { useGetIndustries, useGetOrganization } from "@/services/hooks/queries";
 import { Breadcrumb, Button, Input, RenderIf, SelectInput } from "@/components/core";
+import { hasPermission } from "@/hooks/usePermissions";
 
 export const EditCustomerPage: React.FC = () => {
     const params = useParams()
     const navigate = useNavigate()
+    const isPermitted = hasPermission("CUSTOMER_DATA", "update")
     const { data: customer, isFetching: isFetchingCustomer } = useGetOrganization(params?.id as string)
     const { data: fetchedIndustries, isFetching } = useGetIndustries()
     const { mutate: edit, isPending: isCreating } = useEditOrganization(() => navigate(-1))
@@ -55,6 +57,10 @@ export const EditCustomerPage: React.FC = () => {
             edit({ auth_id: customer?.organization_id as string, ...values })
         },
     })
+
+    if (!isPermitted) {
+        return <Navigate to="/customers" replace />;
+    }
 
     return (
         <Fragment>

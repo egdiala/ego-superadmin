@@ -39,3 +39,14 @@ export const splitAddress = (address: string) => {
 
   return [firstElement, middleElement, lastElement];
 }
+
+export const removeEmptyArrays = <T>(obj: Record<string, any>) => {
+  Object.keys(obj).forEach(key => {
+    if (Array.isArray(obj[key]) && obj[key].length === 0) {
+      delete obj[key];
+    } else if (typeof obj[key] === "object") {
+      removeEmptyArrays(obj[key]);
+    }
+  });
+  return obj as T;
+}

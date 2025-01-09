@@ -11,6 +11,7 @@ import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { createRoleSchema } from "@/validations/roles";
 import type { Permission } from "@/types/roles";
 import { useEditRole } from "@/services/hooks/mutations";
+import { removeEmptyArrays } from "@/utils/textFormatter";
 
 export const EditRolePage: React.FC = () => {
     const params = useParams()
@@ -24,7 +25,7 @@ export const EditRolePage: React.FC = () => {
             name: role?.name || "",
             role_list: {
                 create: role?.data?.create || [],
-                view: role?.data?.view || [],
+                read: role?.data?.read || [],
                 update: role?.data?.update || [],
                 delete: role?.data?.delete || [],
             },
@@ -32,7 +33,7 @@ export const EditRolePage: React.FC = () => {
         enableReinitialize: true,
         validationSchema: createRoleSchema,
         onSubmit: () => {
-            editRole({ ...values, id: params?.id as string })
+            editRole({ ...removeEmptyArrays(values), id: params?.id as string })
         },
     });
 
@@ -40,22 +41,22 @@ export const EditRolePage: React.FC = () => {
         return [
             {
                 label: "Create",
-                items: data?.create?.sort((a,b) => b?.key?.toLowerCase() < a?.key?.toLowerCase() ? 1 : -1) as Permission[]
+                items: data?.filter((item) => item?.action?.includes("create")).map((item) => ({ key: item?.key, tag: item?.tag })).sort((a,b) => b?.key?.toLowerCase() < a?.key?.toLowerCase() ? 1 : -1) || []
             },
             {
-                label: "View",
-                items: data?.view?.sort((a,b) => b?.key?.toLowerCase() < a?.key?.toLowerCase() ? 1 : -1) as Permission[]
+                label: "Read",
+                items: data?.filter((item) => item?.action?.includes("read")).map((item) => ({ key: item?.key, tag: item?.tag })).sort((a,b) => b?.key?.toLowerCase() < a?.key?.toLowerCase() ? 1 : -1) || []
             },
             {
                 label: "Update",
-                items: data?.update?.sort((a,b) => b?.key?.toLowerCase() < a?.key?.toLowerCase() ? 1 : -1) as Permission[]
+                items: data?.filter((item) => item?.action?.includes("update")).map((item) => ({ key: item?.key, tag: item?.tag })).sort((a,b) => b?.key?.toLowerCase() < a?.key?.toLowerCase() ? 1 : -1) || []
             },
             {
                 label: "Delete",
-                items: data?.delete?.sort((a,b) => b?.key?.toLowerCase() < a?.key?.toLowerCase() ? 1 : -1) as Permission[]
+                items: data?.filter((item) => item?.action?.includes("delete")).map((item) => ({ key: item?.key, tag: item?.tag })).sort((a,b) => b?.key?.toLowerCase() < a?.key?.toLowerCase() ? 1 : -1) || []
             },
         ]
-    }, [data?.create, data?.delete, data?.update, data?.view])
+    }, [data])
 
     const handleCheckboxChange = (action: string, value: Permission) => {
         const current = values.role_list[action as keyof typeof values.role_list] as string[];
@@ -66,10 +67,10 @@ export const EditRolePage: React.FC = () => {
 
             // Ensure any permission selected in create, update or delete is also selected in view
             if ((action === "create" || action === "update" || action === "delete") && !isChecked) {
-                const foundItems = permissions.filter((permission) => permission?.label?.toLowerCase() === "view")?.[0]?.items
+                const foundItems = permissions.filter((permission) => permission?.label?.toLowerCase() === "read")?.[0]?.items
                 const foundItem = foundItems.filter((item) => item?.key?.toLowerCase() === value?.key?.toLowerCase())?.[0]
-                const uniqueSet = new Set([...values.role_list.view, foundItem.tag]);
-                setFieldValue("role_list.view", Array.from(uniqueSet))
+                const uniqueSet = new Set([...values.role_list.read, foundItem.tag]);
+                setFieldValue("role_list.read", Array.from(uniqueSet))
             }
 
         })
@@ -83,11 +84,11 @@ export const EditRolePage: React.FC = () => {
 
             // Ensure any permission selected in create, update or delete is also selected in view
             if (action === "create" || action === "update" || action === "delete") {
-                const viewItems = permissions.filter((permission) => permission?.label?.toLowerCase() === "view")?.[0]?.items
+                const viewItems = permissions.filter((permission) => permission?.label?.toLowerCase() === "read")?.[0]?.items
                 const itemKeys = items.map((item) => item.key?.toLowerCase())
                 const foundViewItems = viewItems.filter((item) => itemKeys.includes(item?.key?.toLowerCase()))?.map((itm) => itm.tag)
-                const viewValues = new Set([...values.role_list.view, ...foundViewItems]);
-                setFieldValue("role_list.view", Array.from(viewValues));
+                const viewValues = new Set([...values.role_list.read, ...foundViewItems]);
+                setFieldValue("role_list.read", Array.from(viewValues));
             }
 
         })

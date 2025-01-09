@@ -3,11 +3,12 @@ export interface Permission {
     tag: string;
 }
 
+export type Actions = "create"|"read"|"update"|"delete"
+
 export type FetchedRoleLists = {
-    create: Permission[]
-    delete: Permission[]
-    update: Permission[]
-    view: Permission[]
+    key: string;
+    tag: string;
+    action: Actions[]
 }
 
 export type CreatePermissionType = {
@@ -16,13 +17,13 @@ export type CreatePermissionType = {
         create: string[]
         delete: string[]
         update: string[]
-        view: string[]
+        read: string[]
     }
 }
 
 export interface FetchedRolesType {
     name: string;
-    data: Record<keyof FetchedRoleLists, string[]>;
+    data: Record<Actions, string[]>;
     createdAt: string | Date;
     updatedAt: string | Date;
     role_id: string

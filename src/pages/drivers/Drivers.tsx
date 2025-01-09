@@ -12,6 +12,7 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import type { FetchedDriverCount, FetchedDriverType } from "@/types/drivers";
 import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
+import { RenderFeature } from "@/hooks/usePermissions";
 
 export const DriversPage: React.FC = () => {
   const navigate = useNavigate();
@@ -139,12 +140,14 @@ export const DriversPage: React.FC = () => {
               </TableAction>
               <DriversFilter setFilters={setFilters} isLoading={isFetching || fetchingCount} />
             </div>
-            <div className="w-full sm:w-auto">
-              <Button theme="primary" onClick={toggleCreateDriver} block>
-                <Icon icon="ph:plus" className="size-4" />
-                Add New Driver
-              </Button>
-            </div>
+            <RenderFeature module="DRIVER_DATA" permission="create">
+              <div className="w-full sm:w-auto">
+                <Button theme="primary" onClick={toggleCreateDriver} block>
+                  <Icon icon="ph:plus" className="size-4" />
+                  Add New Driver
+                </Button>
+              </div>
+            </RenderFeature>
           </div>
         </div>
         <RenderIf condition={!isFetching && !fetchingCount}>
@@ -162,14 +165,23 @@ export const DriversPage: React.FC = () => {
           <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
         </RenderIf>
       </div>
-      <FailedDriverUploadsModal isOpen={toggleModals.openFailedUploadsModal} data={failedUploads} close={toggleFailedUploads} />
-      <CreateDriverModal isOpen={toggleModals.openCreateDriverModal} close={(v) => {
-        toggleCreateDriver()
-        if (v?.length > 0) {
-          setFailedUploads(v)
-          toggleFailedUploads()
-        }
-      }} />
+      <RenderFeature module="DRIVER_DATA" permission="create">
+        <FailedDriverUploadsModal
+          isOpen={toggleModals.openFailedUploadsModal}
+          data={failedUploads}
+          close={toggleFailedUploads}
+        />
+        <CreateDriverModal
+          isOpen={toggleModals.openCreateDriverModal}
+          close={(v) => {
+            toggleCreateDriver()
+            if (v?.length > 0) {
+              setFailedUploads(v)
+              toggleFailedUploads()
+            }
+          }}
+        />
+      </RenderFeature>
     </motion.div>
   )
 }

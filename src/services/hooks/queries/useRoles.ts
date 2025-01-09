@@ -8,7 +8,7 @@ export const useGetRoleLists = () => {
   return useQuery({
     queryKey: [GET_ROLE_LISTS],
     queryFn: getRoleLists,
-    select: (res) => res?.data as FetchedRoleLists,
+    select: (res) => res?.data as FetchedRoleLists[],
     retry: false,
     refetchOnWindowFocus: false,
   });

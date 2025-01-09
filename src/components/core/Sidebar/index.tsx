@@ -5,7 +5,7 @@ import { Icon } from "@iconify/react";
 import { Link } from "react-router-dom";
 import blankImg from "@/assets/blank.svg";
 import { getAdminData } from "@/utils/authUtil";
-import { ModuleListItem } from "@/components/core";
+import { ModuleListItem, RenderIf } from "@/components/core";
 import type { FetchedNotificationsCount } from "@/types/notifications";
 import { appRoutes, financeRoutes, setupRoutes } from "@/constants/routes";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/react";
@@ -19,9 +19,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ showSidebar }) => {
     const admin = getAdminData()
     const { data } = useGetAdminProfile()
     const { data: notificationsCount } = useGetNotifications<FetchedNotificationsCount>({ component: "count" })
+    const isSuperAdmin = admin.user_type === "superadmin"
 
     const newAppRoutes = useMemo(() => {
-        return appRoutes.map((item) => item.name === "Notifications" ? ({ to: item.to, name: item.name, icon: item.icon, count: notificationsCount?.pending }) : item)
+        return appRoutes.map((item) => item.name === "Notifications" ? ({ to: item.to, name: item.name, icon: item.icon, count: notificationsCount?.pending, requiredPermissions: item.requiredPermissions }) : item)
     },[notificationsCount])
 
     return (
@@ -33,52 +34,65 @@ export const Sidebar: React.FC<SidebarProps> = ({ showSidebar }) => {
                     <div data-slot="section" className="grid gap-1">
                         {
                             newAppRoutes.map((route) => {
+                                const hasPermission = route.requiredPermissions.some((item) => admin?.role_list?.read.includes(item))
                                 return (
-                                    <ModuleListItem key={route.to} {...route} />
+                                    <RenderIf key={route.to} condition={isSuperAdmin || hasPermission}>
+                                        <ModuleListItem {...route} />
+                                    </RenderIf>
                                 )
                             })
                         }
                     </div>
-                    <Disclosure>
-                        <DisclosureButton className="flex items-center py-2.5 px-3 group">
-                            <div className="flex flex-1 items-center gap-2">
-                                <Icon icon="lucide:badge-dollar-sign" className="text-grey-dark-2 hover:text-grey-dark-1 group-data-[open]:text-grey-dark-1 size-4" />
-                                <span className="font-medium text-sm text-grey-dark-2 hover:text-grey-dark-1 group-data-[open]:text-grey-dark-1">Finance</span>
-                            </div>
-                            <Icon icon="lucide:chevron-right" className="size-4 transition transform ease-out duration-500 group-data-[open]:-rotate-90 text-grey-dark-3 hover:text-dark-green-1 group-data-[open]:text-dark-green-1" />
-                        </DisclosureButton>
-                        <DisclosurePanel transition className="origin-top transition duration-500 ease-out data-[closed]:-translate-y-6 data-[closed]:opacity-0 text-gray-500">
-                            <div data-slot="section" className="grid gap-1 pt-1">
-                                {
-                                    financeRoutes.map((route) => {
-                                        return (
-                                            <ModuleListItem key={route.to} {...route} />
-                                        )
-                                    })
-                                }
-                            </div>
-                        </DisclosurePanel>
-                    </Disclosure>
-                    <Disclosure>
-                        <DisclosureButton className="flex items-center py-2.5 px-3 group">
-                            <div className="flex flex-1 items-center gap-2">
-                                <Icon icon="lucide:bolt" className="text-grey-dark-2 hover:text-grey-dark-1 group-data-[open]:text-grey-dark-1 size-4" />
-                                <span className="font-medium text-sm text-grey-dark-2 hover:text-grey-dark-1 group-data-[open]:text-grey-dark-1">Setup</span>
-                            </div>
-                            <Icon icon="lucide:chevron-right" className="size-4 transition transform ease-out duration-500 group-data-[open]:-rotate-90 text-grey-dark-3 hover:text-dark-green-1 group-data-[open]:text-dark-green-1" />
-                        </DisclosureButton>
-                        <DisclosurePanel transition className="origin-top transition duration-500 ease-out data-[closed]:-translate-y-6 data-[closed]:opacity-0 text-gray-500">
-                            <div data-slot="section" className="grid gap-1 pt-1">
-                                {
-                                    setupRoutes.map((route) => {
-                                        return (
-                                            <ModuleListItem key={route.to} {...route} />
-                                        )
-                                    })
-                                }
-                            </div>
-                        </DisclosurePanel>
-                    </Disclosure>
+                    <RenderIf condition={isSuperAdmin || financeRoutes.map((item) => item.requiredPermissions).flat().some((item) => admin?.role_list?.read.includes(item))}>
+                        <Disclosure>
+                            <DisclosureButton className="flex items-center py-2.5 px-3 group">
+                                <div className="flex flex-1 items-center gap-2">
+                                    <Icon icon="lucide:badge-dollar-sign" className="text-grey-dark-2 hover:text-grey-dark-1 group-data-[open]:text-grey-dark-1 size-4" />
+                                    <span className="font-medium text-sm text-grey-dark-2 hover:text-grey-dark-1 group-data-[open]:text-grey-dark-1">Finance</span>
+                                </div>
+                                <Icon icon="lucide:chevron-right" className="size-4 transition transform ease-out duration-500 group-data-[open]:-rotate-90 text-grey-dark-3 hover:text-dark-green-1 group-data-[open]:text-dark-green-1" />
+                            </DisclosureButton>
+                            <DisclosurePanel transition className="origin-top transition duration-500 ease-out data-[closed]:-translate-y-6 data-[closed]:opacity-0 text-gray-500">
+                                <div data-slot="section" className="grid gap-1 pt-1">
+                                    {
+                                        financeRoutes.map((route) => {
+                                            const hasPermission = route.requiredPermissions.some((item) => admin?.role_list?.read.includes(item))
+                                            return (
+                                                <RenderIf key={route.to} condition={isSuperAdmin || hasPermission}>
+                                                    <ModuleListItem {...route} />
+                                                </RenderIf>
+                                            )
+                                        })
+                                    }
+                                </div>
+                            </DisclosurePanel>
+                        </Disclosure>
+                    </RenderIf>
+                    <RenderIf condition={isSuperAdmin || setupRoutes.map((item) => item.requiredPermissions).flat().some((item) => admin?.role_list?.read.includes(item))}>
+                        <Disclosure>
+                            <DisclosureButton className="flex items-center py-2.5 px-3 group">
+                                <div className="flex flex-1 items-center gap-2">
+                                    <Icon icon="lucide:bolt" className="text-grey-dark-2 hover:text-grey-dark-1 group-data-[open]:text-grey-dark-1 size-4" />
+                                    <span className="font-medium text-sm text-grey-dark-2 hover:text-grey-dark-1 group-data-[open]:text-grey-dark-1">Setup</span>
+                                </div>
+                                <Icon icon="lucide:chevron-right" className="size-4 transition transform ease-out duration-500 group-data-[open]:-rotate-90 text-grey-dark-3 hover:text-dark-green-1 group-data-[open]:text-dark-green-1" />
+                            </DisclosureButton>
+                            <DisclosurePanel transition className="origin-top transition duration-500 ease-out data-[closed]:-translate-y-6 data-[closed]:opacity-0 text-gray-500">
+                                <div data-slot="section" className="grid gap-1 pt-1">
+                                    {
+                                        setupRoutes.map((route) => {
+                                            const hasPermission = route.requiredPermissions.some((item) => admin?.role_list?.read.includes(item))
+                                            return (
+                                                <RenderIf key={route.to} condition={isSuperAdmin || hasPermission}>
+                                                    <ModuleListItem {...route} />
+                                                </RenderIf>
+                                            )
+                                        })
+                                    }
+                                </div>
+                            </DisclosurePanel>
+                        </Disclosure>
+                    </RenderIf>
                 </div>
                 <Link to="/profile" className="flex items-center gap-2">
                     <img src={(data?.avatar) || blankImg} className="size-10 rounded-full object-cover" alt="user" />

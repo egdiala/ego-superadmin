@@ -9,6 +9,7 @@ import { useGetOrganization } from "@/services/hooks/queries";
 import { Breadcrumb, Button, RenderIf, TableAction } from "@/components/core";
 import { NavLink, Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { SuspendCustomerModal } from "@/components/pages/customers";
+import { RenderFeature } from "@/hooks/usePermissions";
 
 export const CustomerPage: React.FC = () => {
   const params = useParams()
@@ -57,32 +58,36 @@ export const CustomerPage: React.FC = () => {
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <h1 className="text-grey-dark-1 font-bold text-xl">{customer?.name}</h1>
               <div className="flex flex-col md:flex-row md:items-center gap-2 pb-4 w-full sm:w-auto">
-                <div className="grid grid-cols-2 gap-2">
+                <div className="flex items-center gap-2">
                     <TableAction theme="ghost" block>
                         <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
                         Export
                     </TableAction>
-                    <TableAction type="button" theme="grey" onClick={() => navigate(`/customers/${params?.id as string}/edit`)} block>
-                        <Icon icon="lucide:pencil" className="size-4" />
-                        Edit
-                    </TableAction>
+                    <RenderFeature module="CUSTOMER_DATA" permission="update">
+                      <TableAction type="button" theme="grey" onClick={() => navigate(`/customers/${params?.id as string}/edit`)} block>
+                          <Icon icon="lucide:pencil" className="size-4" />
+                          Edit
+                      </TableAction>
+                    </RenderFeature>
                 </div>
-                <div className={cn("grid gap-2", (PurchaseModel.StaffCommute) !== customer?.purchase_model! ? "grid-cols-3" : "grid-cols-1")}>
-                    <TableAction type="button" theme="secondary" onClick={toggleSuspendCustomer} block>
-                        <Icon icon="ph:exclamation-mark-bold" className="size-4" />
-                        {customer?.status === 1 ? "Suspend Customer" : "Unsuspend Customer"}
-                    </TableAction>
-                    <RenderIf condition={(PurchaseModel.StaffCommute) !== customer?.purchase_model!}>
-                    <Button type="button" theme="danger" onClick={() => navigate(`/customers/${params?.id as string}/revoke`)} block>
-                      <Icon icon="ph:trash-bold" className="size-4" />
-                      Revoke Vehicle
-                    </Button>
-                    <TableAction type="button" theme="primary" onClick={() => navigate(`/customers/${params?.id as string}/assign`)} block>
-                        <Icon icon="lucide:plus" className="size-4" />
-                        Assign Vehicles
-                    </TableAction>
-                    </RenderIf>
-                </div>
+                <RenderFeature module="CUSTOMER_DATA" permission="update">
+                  <div className={cn("grid gap-2", (PurchaseModel.StaffCommute) !== customer?.purchase_model! ? "grid-cols-3" : "grid-cols-1")}>
+                      <TableAction type="button" theme="secondary" onClick={toggleSuspendCustomer} block>
+                          <Icon icon="ph:exclamation-mark-bold" className="size-4" />
+                          {customer?.status === 1 ? "Suspend Customer" : "Unsuspend Customer"}
+                      </TableAction>
+                      <RenderIf condition={(PurchaseModel.StaffCommute) !== customer?.purchase_model!}>
+                      <Button type="button" theme="danger" onClick={() => navigate(`/customers/${params?.id as string}/revoke`)} block>
+                        <Icon icon="ph:trash-bold" className="size-4" />
+                        Revoke Vehicle
+                      </Button>
+                      <TableAction type="button" theme="primary" onClick={() => navigate(`/customers/${params?.id as string}/assign`)} block>
+                          <Icon icon="lucide:plus" className="size-4" />
+                          Assign Vehicles
+                      </TableAction>
+                      </RenderIf>
+                  </div>
+                </RenderFeature>
               </div>
             </div>
             <div className="rounded border-2 border-grey-dark-4 p-1 flex items-center gap-2 w-full overflow-scroll scrollbar-hide">

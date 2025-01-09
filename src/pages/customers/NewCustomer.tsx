@@ -9,11 +9,12 @@ import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { useGetIndustries, useGetVehicles } from "@/services/hooks/queries";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { Navigate, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useAssignVehicle, useCreateOrganization } from "@/services/hooks/mutations";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { assignVehicleToOrganisationSchema, createOrganizationSchema } from "@/validations/organizations";
 import { Breadcrumb, Button, Checkbox, Input, RenderIf, SearchInput, SelectInput, Table } from "@/components/core";
+import { hasPermission } from "@/hooks/usePermissions";
 
 export const NewCustomersPage: React.FC = () => {
     const navigate = useNavigate()
@@ -22,6 +23,7 @@ export const NewCustomersPage: React.FC = () => {
     const itemsPerPage = 10;
     const [page, setPage] = useState(1)
     const [searchParams, setSearchParams] = useSearchParams();
+    const isPermitted = hasPermission("CUSTOMER_DATA", "create")
     const { mutate, isPending } = useAssignVehicle(() => navigate("/customers"))
     const { data: vehicles, isFetching: isFetchingVehicles } = useGetVehicles({ driver_assigned: "1", organization_assigned: "0" })
     const { data: fetchedIndustries, isFetching } = useGetIndustries()
@@ -165,6 +167,10 @@ export const NewCustomersPage: React.FC = () => {
     useEffect(() => {
       getPaginationParams(location, setPage, () => {})
     }, [location, setPage])
+    
+  if (!isPermitted) {
+      return <Navigate to="/customers" replace />;
+  }
 
   return (
       <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">

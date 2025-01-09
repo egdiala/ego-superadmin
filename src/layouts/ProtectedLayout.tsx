@@ -1,13 +1,26 @@
 import { Sidebar } from "@/components/core/Sidebar";
-import { isAuthenticated } from "@/utils/authUtil";
+import { getAdminData, isAuthenticated } from "@/utils/authUtil";
 import { Icon } from "@iconify/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState, type PropsWithChildren } from "react";
 import { Navigate } from "react-router-dom";
 
-const ProtectedLayout = ({ children }: PropsWithChildren) => {
+interface ProtectedLayoutProps extends PropsWithChildren {
+    requiredPermissions: string[]
+}
+
+const ProtectedLayout = ({ children, requiredPermissions }: ProtectedLayoutProps) => {
+    const admin = getAdminData()
     const isLoggedIn = isAuthenticated();
     const [showSidebar, setShowSidebar] = useState(false)
+    
+    // Check if user has required permissions
+    const hasPermission = () => {
+        if ((requiredPermissions[0] === "PROFILE") || (admin.user_type === "superadmin")) {
+            return true
+        }
+        return requiredPermissions?.some((item) => admin.role_list.read.includes(item))
+    };
     
     useEffect(() => {
         if (showSidebar) {
@@ -20,6 +33,11 @@ const ProtectedLayout = ({ children }: PropsWithChildren) => {
     if (!isLoggedIn) {
         localStorage.clear();
         return <Navigate to="/auth/login" replace />;
+    }
+
+    if (!hasPermission()) {
+        // Redirect to unauthorized page if user lacks permissions
+        return <Navigate to="/profile" replace />;
     }
 
   

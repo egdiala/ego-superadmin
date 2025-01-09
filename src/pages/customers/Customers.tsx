@@ -13,6 +13,7 @@ import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { FetchedOrganizationCount, PurchaseModel, type FetchedOrgaizationType } from "@/types/organizations";
 import { CustomersFilter } from "@/components/pages/customers";
+import { RenderFeature } from "@/hooks/usePermissions";
 
 export const CustomersPage: React.FC = () => {
   const navigate = useNavigate();
@@ -101,12 +102,14 @@ export const CustomersPage: React.FC = () => {
               </TableAction>
               <CustomersFilter setFilters={setFilters} isLoading={isFetching || fetchingCount} />
             </div>
-            <div className="w-full sm:w-auto">
-              <Button theme="primary" onClick={toggleCreateOrganization} block>
-                <Icon icon="ph:plus" className="size-4" />
-                Add New Customer
-              </Button>
-            </div>
+            <RenderFeature module="CUSTOMER_DATA" permission="create">
+              <div className="w-full sm:w-auto">
+                <Button theme="primary" onClick={toggleCreateOrganization} block>
+                  <Icon icon="ph:plus" className="size-4" />
+                  Add New Customer
+                </Button>
+              </div>
+            </RenderFeature>
           </div>
         </div>
         <RenderIf condition={!isFetching && !fetchingCount}>

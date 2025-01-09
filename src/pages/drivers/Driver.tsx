@@ -8,6 +8,7 @@ import { pageVariants } from "@/constants/animateVariants";
 import { NavLink, Outlet, useNavigate, useParams } from "react-router-dom";
 import { Breadcrumb, Button, RenderIf } from "@/components/core";
 import { DeleteDriverModal, EditDriverModal, SuspendDriverModal } from "@/components/pages/drivers";
+import { RenderFeature } from "@/hooks/usePermissions";
 
 export const DriverPage: React.FC = () => {
   const params = useParams()
@@ -61,18 +62,24 @@ export const DriverPage: React.FC = () => {
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <h1 className="text-grey-dark-1 font-bold text-xl">{driver?.first_name} {driver?.last_name}</h1>
               <div className="flex items-center gap-2 pb-4 w-full sm:w-auto">
-                <Button type="button" theme="secondary" onClick={toggleEditDriver} block>
-                  <Icon icon="ph:pencil-simple-line" className="size-4" />
-                  Edit Driver
-                </Button>
-                <Button type="button" theme="danger" onClick={toggleDeleteDriver} block>
-                  <Icon icon="ph:trash-bold" className="size-4" />
-                  Delete Driver
-                </Button>
-                <Button type="button" theme="primary" onClick={toggleSuspendDriver} block>
-                  <Icon icon="ph:exclamation-mark-bold" className="size-4" />
-                  {driver?.suspension_status === 0 ? "Suspend Driver" : "Unsuspend Driver"}
-                </Button>
+                <RenderFeature module="DRIVER_DATA" permission="update">
+                  <Button type="button" theme="secondary" onClick={toggleEditDriver} block>
+                    <Icon icon="ph:pencil-simple-line" className="size-4" />
+                    Edit Driver
+                  </Button>
+                </RenderFeature>
+                <RenderFeature module="DRIVER_DATA" permission="delete">
+                  <Button type="button" theme="danger" onClick={toggleDeleteDriver} block>
+                    <Icon icon="ph:trash-bold" className="size-4" />
+                    Delete Driver
+                  </Button>
+                </RenderFeature>
+                <RenderFeature module="DRIVER_DATA" permission="update">
+                  <Button type="button" theme="primary" onClick={toggleSuspendDriver} block>
+                    <Icon icon="ph:exclamation-mark-bold" className="size-4" />
+                    {driver?.suspension_status === 0 ? "Suspend Driver" : "Unsuspend Driver"}
+                  </Button>
+                </RenderFeature>
               </div>
             </div>
             <div className="rounded border-2 border-grey-dark-4 p-1 flex items-center gap-2 w-full overflow-scroll scrollbar-hide">
@@ -93,9 +100,13 @@ export const DriverPage: React.FC = () => {
             </div>
             <Outlet />
           </div>
-          <EditDriverModal isOpen={toggleModals.openEditDriverModal} close={toggleEditDriver} driver={driver!} />
-          <DeleteDriverModal driver={driver!} isOpen={toggleModals.openDeleteDriverModal} close={toggleDeleteDriver} />
-          <SuspendDriverModal driver={driver!} isOpen={toggleModals.openSuspendDriverModal} close={toggleSuspendDriver} />
+          <RenderFeature module="DRIVER_DATA" permission="delete">
+            <DeleteDriverModal driver={driver!} isOpen={toggleModals.openDeleteDriverModal} close={toggleDeleteDriver} />
+          </RenderFeature>
+          <RenderFeature module="DRIVER_DATA" permission="update">
+            <EditDriverModal isOpen={toggleModals.openEditDriverModal} close={toggleEditDriver} driver={driver!} />
+            <SuspendDriverModal driver={driver!} isOpen={toggleModals.openSuspendDriverModal} close={toggleSuspendDriver} />
+          </RenderFeature>
         </motion.div>
       </RenderIf>
       <RenderIf condition={isFetching}>
