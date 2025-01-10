@@ -12,6 +12,7 @@ import type { FetchedAdminsCount, FetchedAdminType } from "@/types/admin";
 import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { CreateAdminModal, DeactivateAdminModal, EditAdminModal } from "@/components/pages/accounts";
+import { hasPermission, RenderFeature } from "@/hooks/usePermissions";
 
 export const AccountsPage: React.FC = () => {
     const location = useLocation();
@@ -101,23 +102,23 @@ export const AccountsPage: React.FC = () => {
           )
         }
       },
-      {
+      hasPermission("SETUP_ADMIN_ACCOUNT", "update") && {
         header: () => "Actions",
         accessorKey: "actions",
         cell: ({ row }: { row: any; }) => {
           const item = row?.original as FetchedAdminType
           return (
             <div className="flex items-center gap-6">
-              <button
-                type="button"
-                className="rounded bg-grey-dark-4 py-1 px-2 text-grey-dark-1 text-sm"
-                onClick={() => {
-                  setActiveAdmin(item)
-                  toggleEditAdmin()
-                }}
-              >
-                Edit
-              </button>
+                <button
+                  type="button"
+                  className="rounded bg-grey-dark-4 py-1 px-2 text-grey-dark-1 text-sm"
+                  onClick={() => {
+                    setActiveAdmin(item)
+                    toggleEditAdmin()
+                  }}
+                >
+                  Edit
+                </button>
               <button
                 type="button"
                 className={cn(item?.status === 1 ? "text-semantics-error bg-semantics-error/10" : "text-green-1 bg-green-1/10", "rounded py-1 px-2  text-sm")}
@@ -158,18 +159,20 @@ export const AccountsPage: React.FC = () => {
                   Export
                 </TableAction>
               </div>
-              <div className="w-full sm:w-auto">
-                <Button theme="primary" onClick={toggleCreateAdmin} block>
-                  <Icon icon="ph:plus" className="size-4" />
-                  Add New Admin
-                </Button>
-              </div>
+              <RenderFeature module="SETUP_ADMIN_ACCOUNT" permission="create">
+                <div className="w-full sm:w-auto">
+                  <Button theme="primary" onClick={toggleCreateAdmin} block>
+                    <Icon icon="ph:plus" className="size-4" />
+                    Add New Admin
+                  </Button>
+                </div>
+              </RenderFeature>
             </div>
           </div>
           <RenderIf condition={!isFetching && !fetchingCount}>
           <Table
               page={page}
-              columns={columns}
+              columns={columns.filter((column) => column !== false)}
               perPage={itemsPerPage}
               onPageChange={handlePageChange}
               data={(admins as FetchedAdminType[])}
@@ -179,23 +182,27 @@ export const AccountsPage: React.FC = () => {
           <RenderIf condition={isFetching || fetchingCount}>
               <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
           </RenderIf>
-          <CreateAdminModal isOpen={toggleModals.openCreateAdminModal} close={toggleCreateAdmin} />
-          <EditAdminModal
-            isOpen={toggleModals.openEditAdminModal}
-            close={() => {
-              toggleEditAdmin()
-              setActiveAdmin(null)
-            }}
-            admin={activeAdmin!}
-          />
-          <DeactivateAdminModal 
-            admin={activeAdmin!} 
-            close={() => {
-              toggleDeactivateAdmin()
-              setActiveAdmin(null)
-            }}
-            isOpen={toggleModals.openDeactivateAdminModal} 
-          />
+          <RenderFeature module="SETUP_ADMIN_ACCOUNT" permission="create">
+            <CreateAdminModal isOpen={toggleModals.openCreateAdminModal} close={toggleCreateAdmin} />
+          </RenderFeature>
+          <RenderFeature module="SETUP_ADMIN_ACCOUNT" permission="update">
+            <EditAdminModal
+              isOpen={toggleModals.openEditAdminModal}
+              close={() => {
+                toggleEditAdmin()
+                setActiveAdmin(null)
+              }}
+              admin={activeAdmin!}
+            />
+            <DeactivateAdminModal 
+              admin={activeAdmin!} 
+              close={() => {
+                toggleDeactivateAdmin()
+                setActiveAdmin(null)
+              }}
+              isOpen={toggleModals.openDeactivateAdminModal} 
+            />
+          </RenderFeature>
         </motion.div>
     )
 }

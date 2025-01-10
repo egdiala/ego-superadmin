@@ -11,6 +11,7 @@ import type { FetchedRolesCount, FetchedRolesType } from "@/types/roles";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
+import { hasPermission, RenderFeature } from "@/hooks/usePermissions";
 
 export const RolesPage: React.FC = () => {
     const navigate = useNavigate()
@@ -74,20 +75,24 @@ export const RolesPage: React.FC = () => {
             )
         }
       },
-      {
+      (hasPermission("SETUP_ADMIN_ROLE", "update") || hasPermission("SETUP_ADMIN_ROLE", "update")) && {
         header: () => "Action",
         accessorKey: "action",
         cell: ({ row }: { row: any; }) => {
           const item = row?.original as FetchedRolesType
           return (
               <div className="flex items-center gap-6">
+                <RenderFeature module="SETUP_ADMIN_ROLE" permission="update">
                   <button type="button" className="rounded bg-grey-dark-4 py-1 px-2 text-grey-dark-1 text-sm" onClick={() => navigate(`/accounts/roles/edit/${item?.role_id}`)}>Edit</button>
+                </RenderFeature>
+                <RenderFeature module="SETUP_ADMIN_ROLE" permission="delete">
                   <button type="button" className="rounded bg-semantics-error/10 py-1 px-2 text-semantics-error text-sm" onClick={() => {
                     setActiveItem(item)
                     toggleDeleteRole()
                   }}>
                     Delete
                   </button>
+                </RenderFeature>
               </div>
           )
         }
@@ -115,16 +120,18 @@ export const RolesPage: React.FC = () => {
               <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
               Export
             </TableAction>
-            <Button theme="primary" onClick={() => navigate("/accounts/roles/create")} block>
-              <Icon icon="ph:plus" className="size-4" />
-              Add New Role
-            </Button>
+            <RenderFeature module="SETUP_ADMIN_ROLE" permission="create">
+              <Button theme="primary" onClick={() => navigate("/accounts/roles/create")} block>
+                <Icon icon="ph:plus" className="size-4" />
+                Add New Role
+              </Button>
+            </RenderFeature>
           </div>
         </div>
         <RenderIf condition={!isFetching && !fetchingCount}>
           <Table
             page={page}
-            columns={columns}
+            columns={columns.filter((column) => column !== false)}
             perPage={itemsPerPage}
             onPageChange={handlePageChange}
             data={roles as FetchedRolesType[]}
@@ -134,7 +141,9 @@ export const RolesPage: React.FC = () => {
         <RenderIf condition={isFetching || fetchingCount}>
             <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
         </RenderIf>
-        <DeleteRoleModal role={activeItem} isOpen={toggleModals.openDeleteRoleModal} close={toggleDeleteRole} />
+        <RenderFeature module="SETUP_ADMIN_ROLE" permission="delete">
+          <DeleteRoleModal role={activeItem} isOpen={toggleModals.openDeleteRoleModal} close={toggleDeleteRole} />
+        </RenderFeature>
       </motion.div>
     )
 }

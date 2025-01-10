@@ -10,6 +10,7 @@ import { format } from "date-fns"
 import { CreateModelModal, DeleteModelModal, DeleteOEMModal, EditOEMModal } from "@/components/pages/oem"
 import vehicleImg from "@/assets/vehicle.svg";
 import { FetchedOEMType } from "@/types/oem"
+import { hasPermission, RenderFeature } from "@/hooks/usePermissions"
 
 export const ViewOEM: React.FC = () => {
     const params = useParams()
@@ -82,20 +83,28 @@ export const ViewOEM: React.FC = () => {
                     <div className="grid content-start gap-4 p-4 bg-white rounded-lg">
                         <div className="flex items-center justify-between">
                             <h1 className="font-bold text-xl text-grey-dark-1 capitalize">{oem?.oem_name}</h1>
-                            <div className="flex items-center gap-2">
-                                <Button type="button" theme="danger" onClick={toggleDeleteOem}>
-                                    <Icon icon="lucide:trash-2" className="size-5" />
-                                    Delete OEM
-                                </Button>
-                                <Button type="button" theme="tertiary" onClick={toggleEditOem}>
-                                    <Icon icon="lucide:pencil" className="size-5" />
-                                    Edit OEM Name
-                                </Button>
-                                <Button type="button" theme="primary" onClick={() => toggleCreateModel("")} block>
-                                    <Icon icon="ph:plus" className="size-4" />
-                                    Add Model
-                                </Button>
-                            </div>
+                            <RenderIf condition={(hasPermission("SETUP_OEMS", "update") || hasPermission("SETUP_OEMS", "delete") || hasPermission("SETUP_OEMS", "create"))}>
+                                <div className="flex items-center gap-2">
+                                    <RenderFeature module="SETUP_OEMS" permission="delete">
+                                        <Button type="button" theme="danger" onClick={toggleDeleteOem}>
+                                            <Icon icon="lucide:trash-2" className="size-5" />
+                                            Delete OEM
+                                        </Button>
+                                    </RenderFeature>
+                                    <RenderFeature module="SETUP_OEMS" permission="update">
+                                        <Button type="button" theme="tertiary" onClick={toggleEditOem}>
+                                            <Icon icon="lucide:pencil" className="size-5" />
+                                            Edit OEM Name
+                                        </Button>
+                                    </RenderFeature>
+                                    <RenderFeature module="SETUP_OEMS" permission="create">
+                                        <Button type="button" theme="primary" onClick={() => toggleCreateModel("")} block>
+                                            <Icon icon="ph:plus" className="size-4" />
+                                            Add Model
+                                        </Button>
+                                    </RenderFeature>
+                                </div>
+                            </RenderIf>
                         </div>
                         <div className="flex items-center gap-10 py-4 px-5 bg-[#F6FBF5] rounded-lg">
                             <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8">
@@ -127,14 +136,20 @@ export const ViewOEM: React.FC = () => {
                                                     <p className="text-grey-dark-1 text-sm line-clamp-2 capitalize">{model?.year}</p>
                                                 </div>
                                             </div>
-                                            <div className="flex items-center gap-2">
-                                                <Button type="button" theme="danger" onClick={() => toggleDeleteModel(model?._id)}>
-                                                    <Icon icon="lucide:trash-2" className="size-5" />
-                                                </Button>
-                                                <Button type="button" theme="tertiary" onClick={() => toggleEditModel(model)}>
-                                                    <Icon icon="lucide:pencil" className="size-5" />
-                                                </Button>
-                                            </div>
+                                            <RenderIf condition={(hasPermission("SETUP_OEMS", "update") || hasPermission("SETUP_OEMS", "delete"))}>
+                                                <div className="flex items-center gap-2">
+                                                    <RenderFeature module="SETUP_OEMS" permission="delete">
+                                                        <Button type="button" theme="danger" onClick={() => toggleDeleteModel(model?._id)}>
+                                                            <Icon icon="lucide:trash-2" className="size-5" />
+                                                        </Button>
+                                                    </RenderFeature>
+                                                    <RenderFeature module="SETUP_OEMS" permission="update">
+                                                        <Button type="button" theme="tertiary" onClick={() => toggleEditModel(model)}>
+                                                            <Icon icon="lucide:pencil" className="size-5" />
+                                                        </Button>
+                                                    </RenderFeature>
+                                                </div>
+                                            </RenderIf>
                                         </div>
                                     </div>
                                 )
@@ -142,10 +157,16 @@ export const ViewOEM: React.FC = () => {
                         </div>
                     </div>
                 </motion.div>
-                <EditOEMModal isOpen={toggleModals.openEditOemModal} oem={oem!} close={toggleEditOem} />
-                <DeleteModelModal isOpen={toggleModals.openDeleteModelModal} oem={oem!} modelId={toggleModals.modelId} close={() => toggleDeleteModel("")} />
-                <DeleteOEMModal isOpen={toggleModals.openDeleteOemModal} oem={oem!} close={toggleDeleteOem} />
-                <CreateModelModal isOpen={toggleModals.openCreateModel} close={() => toggleCreateModel("")} modelId={toggleModals.modelId} model={toggleModals.model} oemId={oem?.oem_id as string} />
+                <RenderFeature module="SETUP_OEMS" permission="update">
+                    <EditOEMModal isOpen={toggleModals.openEditOemModal} oem={oem!} close={toggleEditOem} />
+                </RenderFeature>
+                <RenderFeature module="SETUP_OEMS" permission="delete">
+                    <DeleteOEMModal isOpen={toggleModals.openDeleteOemModal} oem={oem!} close={toggleDeleteOem} />
+                    <DeleteModelModal isOpen={toggleModals.openDeleteModelModal} oem={oem!} modelId={toggleModals.modelId} close={() => toggleDeleteModel("")} />
+                </RenderFeature>
+                <RenderFeature module="SETUP_OEMS" permission="create">
+                    <CreateModelModal isOpen={toggleModals.openCreateModel} close={() => toggleCreateModel("")} modelId={toggleModals.modelId} model={toggleModals.model} oemId={oem?.oem_id as string} />
+                </RenderFeature>
             </RenderIf>
             <RenderIf condition={isFetching}>
                 <div className="flex w-full h-dvh items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>

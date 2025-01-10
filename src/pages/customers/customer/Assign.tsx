@@ -5,7 +5,7 @@ import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { FetchedVehicleType } from "@/types/vehicles";
 import { Loader } from "@/components/core/Button/Loader";
-import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { Navigate, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { pageVariants } from "@/constants/animateVariants";
 import { useFormikWrapper } from "@/hooks/useFormikWrapper";
 import { useAssignVehicle } from "@/services/hooks/mutations";
@@ -13,6 +13,7 @@ import { useGetOrganization, useGetVehicles } from "@/services/hooks/queries";
 import { assignVehicleToOrganisationSchema } from "@/validations/organizations";
 import { Breadcrumb, Button, Checkbox, RenderIf, SearchInput, Table } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
+import { hasPermission } from "@/hooks/usePermissions";
 
 export const AssignOrganizationVehiclesPage: React.FC = () => {
     const params = useParams()
@@ -20,6 +21,7 @@ export const AssignOrganizationVehiclesPage: React.FC = () => {
     const navigate = useNavigate()
     const itemsPerPage = 10;
     const [page, setPage] = useState(1)
+    const isPermitted = hasPermission("CUSTOMER_DATA", "update")
     const [searchParams, setSearchParams] = useSearchParams();
     const { mutate, isPending } = useAssignVehicle(() => navigate("/customers"))
     const { data: customer, isFetching: isFetchingCustomer } = useGetOrganization(params?.id as string)
@@ -117,6 +119,10 @@ export const AssignOrganizationVehiclesPage: React.FC = () => {
     useEffect(() => {
       getPaginationParams(location, setPage, () => {})
     }, [location, setPage])
+    
+    if (!isPermitted) {
+        return <Navigate to="/customers" replace />;
+    }
   
     return (
         <Fragment>

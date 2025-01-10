@@ -8,6 +8,7 @@ import { pageVariants } from "@/constants/animateVariants"
 import { useGetChargeStation } from "@/services/hooks/queries"
 import { Breadcrumb, Button, RenderIf } from "@/components/core"
 import { DeleteStationModal, EditStationModal } from "@/components/pages/charge-stations"
+import { hasPermission, RenderFeature } from "@/hooks/usePermissions"
 
 export const ViewChargeStation: React.FC = () => {
     const params = useParams()
@@ -49,16 +50,22 @@ export const ViewChargeStation: React.FC = () => {
                     <div className="grid content-start gap-4 p-4 bg-white rounded-lg">
                         <div className="flex items-center justify-between">
                             <h1 className="font-bold text-xl text-grey-dark-1 capitalize">{station?.station_name}</h1>
-                            <div className="flex items-center gap-2">
-                                <Button type="button" theme="danger" onClick={toggleDeleteStation}>
-                                    <Icon icon="lucide:trash-2" className="size-5" />
-                                    Delete Station
-                                </Button>
-                                <Button type="button" theme="tertiary" onClick={toggleEditStation}>
-                                    <Icon icon="lucide:pencil" className="size-5" />
-                                    Edit Station
-                                </Button>
-                            </div>
+                            <RenderIf condition={(hasPermission("SETUP_CHARGE_STATION", "update") || hasPermission("SETUP_CHARGE_STATION", "delete"))}>
+                                <div className="flex items-center gap-2">
+                                    <RenderFeature module="SETUP_CHARGE_STATION" permission="delete">
+                                        <Button type="button" theme="danger" onClick={toggleDeleteStation}>
+                                            <Icon icon="lucide:trash-2" className="size-5" />
+                                            Delete Station
+                                        </Button>
+                                    </RenderFeature>
+                                    <RenderFeature module="SETUP_CHARGE_STATION" permission="update">
+                                        <Button type="button" theme="tertiary" onClick={toggleEditStation}>
+                                            <Icon icon="lucide:pencil" className="size-5" />
+                                            Edit Station
+                                        </Button>
+                                    </RenderFeature>
+                                </div>
+                            </RenderIf>
                         </div>
                         <div className="flex items-center gap-10 py-4 px-5 bg-[#F6FBF5] rounded-lg">
                             <img src={chargingCar} alt="charging_Car" className="w-auto" />
@@ -75,8 +82,12 @@ export const ViewChargeStation: React.FC = () => {
                         </div>
                     </div>
                 </motion.div>
-                <DeleteStationModal isOpen={toggleModals.openDeleteStationModal} station={station!} close={toggleDeleteStation} />
-                <EditStationModal isOpen={toggleModals.openEditStationModal} station={station!} close={toggleEditStation} />
+                <RenderFeature module="SETUP_CHARGE_STATION" permission="delete">
+                    <DeleteStationModal isOpen={toggleModals.openDeleteStationModal} station={station!} close={toggleDeleteStation} />
+                </RenderFeature>
+                <RenderFeature module="SETUP_CHARGE_STATION" permission="update">
+                    <EditStationModal isOpen={toggleModals.openEditStationModal} station={station!} close={toggleEditStation} />
+                </RenderFeature>
             </RenderIf>
             <RenderIf condition={isFetching}>
                 <div className="flex w-full h-dvh items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>

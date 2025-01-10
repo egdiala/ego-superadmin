@@ -8,6 +8,7 @@ import { Breadcrumb, Button, RenderIf } from "@/components/core";
 import { DeleteStaffModal, SuspendStaffModal } from "@/components/pages/riders";
 import { NavLink, Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Loader } from "@/components/core/Button/Loader";
+import { hasPermission, RenderFeature } from "@/hooks/usePermissions";
 
 export const RiderPage: React.FC = () => {
     const params = useParams()
@@ -53,16 +54,22 @@ export const RiderPage: React.FC = () => {
                     <div className="grid content-start gap-5 py-6 px-4 bg-white rounded-lg">
                         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                             <h1 className="text-grey-dark-1 font-bold text-xl">{rider?.first_name} {rider?.last_name} {!!rider?.gender && (<span className="capitalize font-normal">({rider?.gender})</span>)}</h1>
-                            <div className="flex items-center gap-2 pb-4 w-full sm:w-auto">
-                                <Button type="button" theme="danger" onClick={toggleDeleteStaff} block>
-                                    <Icon icon="ph:trash-bold" className="size-4" />
-                                    Delete Staff
-                                </Button>
-                                <Button type="button" theme="primary" onClick={toggleSuspendStaff} block>
-                                    <Icon icon="ph:exclamation-mark-bold" className="size-4" />
-                                    {rider?.status === 1 ? "Suspend Staff" : "Unsuspend Staff"}
-                                </Button>
-                            </div>
+                            <RenderIf condition={hasPermission("RIDER_DATA", "delete") || hasPermission("RIDER_DATA", "update")}>
+                                <div className="flex items-center gap-2 pb-4 w-full sm:w-auto">
+                                    <RenderFeature module="RIDER_DATA" permission="delete">
+                                        <Button type="button" theme="danger" onClick={toggleDeleteStaff} block>
+                                            <Icon icon="ph:trash-bold" className="size-4" />
+                                            Delete Staff
+                                        </Button>
+                                    </RenderFeature>
+                                    <RenderFeature module="RIDER_DATA" permission="update">
+                                        <Button type="button" theme="primary" onClick={toggleSuspendStaff} block>
+                                            <Icon icon="ph:exclamation-mark-bold" className="size-4" />
+                                            {rider?.status === 1 ? "Suspend Staff" : "Unsuspend Staff"}
+                                        </Button>
+                                    </RenderFeature>
+                                </div>
+                            </RenderIf>
                         </div>
                         <div className="rounded border-2 border-grey-dark-4 p-1 flex items-center gap-2 w-full overflow-scroll scrollbar-hide">
                             {
@@ -82,8 +89,12 @@ export const RiderPage: React.FC = () => {
                         </div>
                         <Outlet />
                     </div>
-                    <DeleteStaffModal isOpen={toggleModals.openDeleteStaffModal} staff={rider!} close={toggleDeleteStaff} />
-                    <SuspendStaffModal isOpen={toggleModals.openSuspendStaffModal} staff={rider!} close={toggleSuspendStaff} />
+                    <RenderFeature module="RIDER_DATA" permission="delete">
+                        <DeleteStaffModal isOpen={toggleModals.openDeleteStaffModal} staff={rider!} close={toggleDeleteStaff} />
+                    </RenderFeature>
+                    <RenderFeature module="RIDER_DATA" permission="update">
+                        <SuspendStaffModal isOpen={toggleModals.openSuspendStaffModal} staff={rider!} close={toggleSuspendStaff} />
+                    </RenderFeature>
                 </motion.div>
             </RenderIf>
 

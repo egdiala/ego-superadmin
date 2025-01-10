@@ -2,19 +2,21 @@ import React, { useCallback, useEffect, useState } from "react";
 import { format } from "date-fns";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { CreateOEMModal, DeleteOEMModal } from "@/components/pages/oem";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useGetOEMs } from "@/services/hooks/queries/useOEMs";
-import { getPaginationParams } from "@/hooks/usePaginationParams";
+import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import type { FetchedOEMType } from "@/types/oem";
+import { RenderFeature } from "@/hooks/usePermissions";
 
 export const OEMsPage: React.FC = () => {
   const location = useLocation();
   const itemsPerPage = 10;
   const [page, setPage] = useState(1)
+  const [searchParams, setSearchParams] = useSearchParams();
   const { data: oems, isFetching } = useGetOEMs()
   const [toggleModals, setToggleModals] = useState({
     openCreateOemModal: false,
@@ -64,9 +66,11 @@ export const OEMsPage: React.FC = () => {
         return (
           <div className="flex items-center gap-6">
             <Link to={`/oem/${item?.oem_id}`} className="rounded bg-grey-dark-4 py-1 px-2 text-grey-dark-1 text-sm">View</Link>
-            <button type="button" className="rounded bg-semantics-error/10 py-1 px-2 text-semantics-error text-sm" onClick={() => toggleDeleteOem(item)}>
-              Delete
-            </button>
+            <RenderFeature module="SETUP_OEMS" permission="delete">
+              <button type="button" className="rounded bg-semantics-error/10 py-1 px-2 text-semantics-error text-sm" onClick={() => toggleDeleteOem(item)}>
+                Delete
+              </button>
+            </RenderFeature>
           </div>
         )
       }
@@ -75,7 +79,8 @@ export const OEMsPage: React.FC = () => {
 
   const handlePageChange = () => {
     // in a real page, this function would paginate the data from the backend
-
+    setPage(page)
+    setPaginationParams(page, itemsPerPage, searchParams, setSearchParams)
   };
 
   useEffect(() => {
@@ -98,12 +103,14 @@ export const OEMsPage: React.FC = () => {
                 Export
               </TableAction>
             </div>
-            <div className="w-full sm:w-auto">
-              <Button type="button" theme="primary" onClick={toggleCreateOem} block>
-                <Icon icon="ph:plus" className="size-4" />
-                Add New OEM
-              </Button>
-            </div>
+            <RenderFeature module="SETUP_OEMS" permission="create">
+              <div className="w-full sm:w-auto">
+                <Button type="button" theme="primary" onClick={toggleCreateOem} block>
+                  <Icon icon="ph:plus" className="size-4" />
+                  Add New OEM
+                </Button>
+              </div>
+            </RenderFeature>
           </div>
         </div>
         <RenderIf condition={!isFetching}>
@@ -121,8 +128,12 @@ export const OEMsPage: React.FC = () => {
           <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
         </RenderIf>
       </div>
-      <CreateOEMModal isOpen={toggleModals.openCreateOemModal} close={toggleCreateOem} />
-      <DeleteOEMModal oem={toggleModals.activeOem!} isOpen={toggleModals.openDeleteOemModal} close={() => toggleDeleteOem(null)} />
+      <RenderFeature module="SETUP_OEMS" permission="create">
+        <CreateOEMModal isOpen={toggleModals.openCreateOemModal} close={toggleCreateOem} />
+      </RenderFeature>
+      <RenderFeature module="SETUP_OEMS" permission="delete">
+        <DeleteOEMModal oem={toggleModals.activeOem!} isOpen={toggleModals.openDeleteOemModal} close={() => toggleDeleteOem(null)} />
+      </RenderFeature>
     </motion.div>
   )
 }

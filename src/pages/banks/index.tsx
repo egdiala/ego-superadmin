@@ -9,6 +9,7 @@ import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/
 import { useGetFeeBanks } from "@/services/hooks/queries";
 import { CreateBankModal, DeleteBankModal } from "@/components/pages/bank";
 import type { FetchedFeeBank } from "@/types/banks";
+import { hasPermission, RenderFeature } from "@/hooks/usePermissions";
 
 export const BanksPage: React.FC = () => {
   const location = useLocation();
@@ -53,7 +54,7 @@ export const BanksPage: React.FC = () => {
         )
       }
     },
-    {
+    hasPermission("SETUP_BANK_INFO", "delete") && {
       header: () => "Action",
       accessorKey: "action",
       cell: ({ row }: { row: any; }) => {
@@ -94,12 +95,14 @@ export const BanksPage: React.FC = () => {
                 Export
               </TableAction>
             </div>
-            <div className="w-full sm:w-auto">
-              <Button type="button" theme="primary" onClick={toggleCreateBank} block>
-                <Icon icon="ph:plus" className="size-4" />
-                Add New Bank Account
-              </Button>
-            </div>
+            <RenderFeature module="SETUP_BANK_INFO" permission="create">
+              <div className="w-full sm:w-auto">
+                <Button type="button" theme="primary" onClick={toggleCreateBank} block>
+                  <Icon icon="ph:plus" className="size-4" />
+                  Add New Bank Account
+                </Button>
+              </div>
+            </RenderFeature>
           </div>
         </div>
         <RenderIf condition={!isFetching}>
@@ -107,7 +110,7 @@ export const BanksPage: React.FC = () => {
             data={feeBanks ?? []}
             page={page}
             perPage={itemsPerPage}
-            columns={columns}
+            columns={columns.filter((column) => column !== false)}
             totalCount={0}
             onPageChange={handlePageChange}
             emptyStateText="We couldn't find any bank account in the system."
@@ -117,8 +120,12 @@ export const BanksPage: React.FC = () => {
           <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
         </RenderIf>
       </div>
-      <CreateBankModal isOpen={toggleModals.openCreateBankModal} close={toggleCreateBank} />
-      <DeleteBankModal isOpen={toggleModals.openDeleteBankModal} close={toggleDeleteBank} bank={toggleModals.activeBank} />
+      <RenderFeature module="SETUP_BANK_INFO" permission="create">
+        <CreateBankModal isOpen={toggleModals.openCreateBankModal} close={toggleCreateBank} />
+      </RenderFeature>
+      <RenderFeature module="SETUP_BANK_INFO" permission="delete">
+        <DeleteBankModal isOpen={toggleModals.openDeleteBankModal} close={toggleDeleteBank} bank={toggleModals.activeBank} />
+      </RenderFeature>
     </motion.div>
   )
 }

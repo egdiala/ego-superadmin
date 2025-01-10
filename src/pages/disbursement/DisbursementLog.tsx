@@ -11,6 +11,7 @@ import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationP
 import { format } from "date-fns";
 import { formattedNumber } from "@/utils/textFormatter";
 import { useApprovePayout } from "@/services/hooks/mutations";
+import { hasPermission } from "@/hooks/usePermissions";
 
 export const DisbursementLogPage: React.FC = () => {
     const location = useLocation();
@@ -144,7 +145,7 @@ export const DisbursementLogPage: React.FC = () => {
           )
         }
       },
-      {
+      hasPermission("FINANCE_DISBURSEMENT", "update") && {
         header: () => "Actions",
         accessorKey: "actions",
         cell: ({ row }: { row: any; }) => {
@@ -185,7 +186,7 @@ export const DisbursementLogPage: React.FC = () => {
             </div>
             <RenderIf condition={!isFetching && !isFetchingCount}>
               <Table
-                  columns={columns}
+                  columns={columns.filter((column) => column !== false)}
                   data={payouts ?? []}
                   page={page}
                   perPage={itemsPerPage}

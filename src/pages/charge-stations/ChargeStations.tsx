@@ -11,6 +11,7 @@ import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import type { FetchedChargeStations, FetchedChargeStationsCount } from "@/types/charge-stations";
 import { CreateStationModal, DeleteStationModal, EditStationModal, FailedStationUploadsModal } from "@/components/pages/charge-stations";
+import { hasPermission, RenderFeature } from "@/hooks/usePermissions";
 
 export const ChargeStationsPage: React.FC = () => {
   const navigate = useNavigate();
@@ -104,17 +105,21 @@ export const ChargeStationsPage: React.FC = () => {
         header: () => "Closing Hours",
         accessorKey: "closing_time",
       },
-      {
+      (hasPermission("SETUP_CHARGE_STATION", "update") || hasPermission("SETUP_CHARGE_STATION", "delete")) && {
         header: () => "Action",
         accessorKey: "action",
         cell: ({ row }: { row: any; }) => {
           const item = row?.original as FetchedChargeStations
           return (
             <div className="flex items-center gap-6">
-              <button type="button" className="rounded bg-grey-dark-4 py-1 px-2 text-grey-dark-1 text-sm" onClick={() => toggleEditStation(item)}>Edit</button>
-              <button type="button" className="rounded bg-semantics-error/10 py-1 px-2 text-semantics-error text-sm" onClick={() => toggleDeleteStation(item)}>
-                Delete
-              </button>
+              <RenderFeature module="SETUP_CHARGE_STATION" permission="update">
+                <button type="button" className="rounded bg-grey-dark-4 py-1 px-2 text-grey-dark-1 text-sm" onClick={() => toggleEditStation(item)}>Edit</button>
+              </RenderFeature>
+              <RenderFeature module="SETUP_CHARGE_STATION" permission="delete">
+                <button type="button" className="rounded bg-semantics-error/10 py-1 px-2 text-semantics-error text-sm" onClick={() => toggleDeleteStation(item)}>
+                  Delete
+                </button>
+              </RenderFeature>
             </div>
           )
         }
@@ -147,12 +152,14 @@ export const ChargeStationsPage: React.FC = () => {
                 Export
               </TableAction>
             </div>
-            <div className="w-full sm:w-auto">
-              <Button type="button" theme="primary" onClick={toggleCreateStation} block>
-                <Icon icon="ph:plus" className="size-4" />
-                Add a New Charge Station
-              </Button>
-            </div>
+            <RenderFeature module="SETUP_CHARGE_STATION" permission="create">
+              <div className="w-full sm:w-auto">
+                <Button type="button" theme="primary" onClick={toggleCreateStation} block>
+                  <Icon icon="ph:plus" className="size-4" />
+                  Add a New Charge Station
+                </Button>
+              </div>
+            </RenderFeature>
           </div>
         </div>
         <RenderIf condition={!isFetching && !fetchingCount}>
@@ -160,7 +167,7 @@ export const ChargeStationsPage: React.FC = () => {
             data={chargeStations ?? []}
             page={page}
             perPage={itemsPerPage}
-            columns={columns}
+            columns={columns.filter((column) => column !== false)}
             totalCount={count?.total}
             onPageChange={handlePageChange}
             onClick={({ original }) => navigate(`/charge-stations/${original?.station_id}`)}
@@ -170,16 +177,27 @@ export const ChargeStationsPage: React.FC = () => {
           <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
         </RenderIf>
       </div>
-      <CreateStationModal isOpen={toggleModals.openCreateStationModal} close={(v) => {
-        toggleCreateStation()
-        if (v?.length > 0) {
-          setFailedUploads(v)
-          toggleFailedUploads()
-        }
-      }} />
-      <DeleteStationModal isOpen={toggleModals.openDeleteStationModal} station={toggleModals.activeStation} close={() => toggleDeleteStation(null)} />
-      <EditStationModal isOpen={toggleModals.openEditStationModal} station={toggleModals.activeStation} close={() => toggleEditStation(null)} />
-      <FailedStationUploadsModal isOpen={toggleModals.openFailedUploadsModal} data={failedUploads} close={toggleFailedUploads} />
+      <RenderFeature module="SETUP_CHARGE_STATION" permission="create">
+        <CreateStationModal
+          isOpen={toggleModals.openCreateStationModal}
+          close={(v) => {
+            toggleCreateStation()
+            if (v?.length > 0) {
+              setFailedUploads(v)
+              toggleFailedUploads()
+            }
+          }}
+        />
+      </RenderFeature>
+      <RenderFeature module="SETUP_CHARGE_STATION" permission="delete">
+        <DeleteStationModal isOpen={toggleModals.openDeleteStationModal} station={toggleModals.activeStation} close={() => toggleDeleteStation(null)} />
+      </RenderFeature>
+      <RenderFeature module="SETUP_CHARGE_STATION" permission="update">
+        <EditStationModal isOpen={toggleModals.openEditStationModal} station={toggleModals.activeStation} close={() => toggleEditStation(null)} />
+      </RenderFeature>
+      <RenderFeature module="SETUP_CHARGE_STATION" permission="create">
+        <FailedStationUploadsModal isOpen={toggleModals.openFailedUploadsModal} data={failedUploads} close={toggleFailedUploads} />
+      </RenderFeature>
     </motion.div>
   )
 }

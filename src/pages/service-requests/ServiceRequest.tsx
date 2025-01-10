@@ -14,6 +14,7 @@ import { Breadcrumb, RenderIf, TableAction } from "@/components/core";
 import { RequestStatus, RequestType } from "@/types/service-requests";
 import { UpdateRequestModal, ViewRequestImageModal } from "@/components/pages/service-request";
 import { useGetRatings, useGetServiceRequest } from "@/services/hooks/queries";
+import { RenderFeature } from "@/hooks/usePermissions";
 
 export const ServiceRequestPage: React.FC = () => {
     const params = useParams()
@@ -99,12 +100,14 @@ export const ServiceRequestPage: React.FC = () => {
                     <div className="grid content-start gap-5 p-4 bg-white rounded-lg">
                         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                             <h1 className="text-grey-dark-1 font-bold text-xl">ABC 123 DEF</h1>
-                            <div className="flex items-center gap-2 pb-4 w-full sm:w-auto">
-                                <TableAction type="button" theme="primary" block onClick={toggleUpdateRequestStation}>
-                                    <Icon icon="mdi:pencil" className="size-4" />
-                                    Update Request
-                                </TableAction>
-                            </div>
+                            <RenderFeature module="SERVICE_REQUEST" permission="update">
+                                <div className="flex items-center gap-2 pb-4 w-full sm:w-auto">
+                                    <TableAction type="button" theme="primary" block onClick={toggleUpdateRequestStation}>
+                                        <Icon icon="mdi:pencil" className="size-4" />
+                                        Update Request
+                                    </TableAction>
+                                </div>
+                            </RenderFeature>
                         </div>
                         <div className="flex flex-col gap-6">
                             <div className="grid grid-cols-4 py-4 px-5 bg-green-4 rounded-lg">

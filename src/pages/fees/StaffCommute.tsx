@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { Icon } from "@iconify/react"
 import { motion } from "framer-motion"
 import { useGetFees } from "@/services/hooks/queries"
@@ -8,10 +8,15 @@ import { Loader } from "@/components/core/Button/Loader"
 import { pageVariants } from "@/constants/animateVariants"
 import { RenderIf, Table, TableAction } from "@/components/core"
 import { AddNewParameter, DeleteParameter, EditParameter } from "@/components/pages/revenue-split"
+import { useLocation, useSearchParams } from "react-router-dom"
+import { hasPermission, RenderFeature } from "@/hooks/usePermissions"
+import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams"
 
 export const FeesStaffCommutePage: React.FC = () => {
     const itemsPerPage = 10;
-    const [page] = useState(1)
+    const location = useLocation();
+    const [page, setPage] = useState(1)
+    const [searchParams, setSearchParams] = useSearchParams();
     const { data: staffFees, isFetching } = useGetFees<FetchedRevenueSplit[]>({ screen_name: "staff_commute_fee" })
 
     const [toggleModals, setToggleModals] = useState({
@@ -61,37 +66,46 @@ export const FeesStaffCommutePage: React.FC = () => {
                 )
             }
         },
-        {
+        (hasPermission("SETUP_FEE_FEE", "update") || hasPermission("SETUP_FEE_FEE", "delete")) && {
             header: () => "Actions",
             accessorKey: "actions",
             cell: ({ row }: { row: any; }) => {
                 const item = row?.original as FetchedRevenueSplit
                 return (
                     <div className="flex items-center gap-6">
-                        <button
-                            type="button"
-                            className="rounded bg-grey-dark-4 py-1 px-2 text-grey-dark-1 text-sm"
-                            onClick={() => toggleEditParameter(item)}
-                        >
-                            Edit
-                        </button>
-                        <button
-                            type="button"
-                            className="text-semantics-error bg-semantics-error/10 rounded py-1 px-2  text-sm"
-                            onClick={() => toggleDeleteParameter(item)}
-                        >
-                            Delete
-                        </button>
+                        <RenderFeature module="SETUP_FEE_FEE" permission="update">
+                            <button
+                                type="button"
+                                className="rounded bg-grey-dark-4 py-1 px-2 text-grey-dark-1 text-sm"
+                                onClick={() => toggleEditParameter(item)}
+                            >
+                                Edit
+                            </button>
+                        </RenderFeature>
+                        <RenderFeature module="SETUP_FEE_FEE" permission="delete">
+                            <button
+                                type="button"
+                                className="text-semantics-error bg-semantics-error/10 rounded py-1 px-2  text-sm"
+                                onClick={() => toggleDeleteParameter(item)}
+                            >
+                                Delete
+                            </button>
+                        </RenderFeature>
                     </div>
                 )
             }
         },
     ];
-
+            
     const handlePageChange = () => {
-      // in a real page, this function would paginate the data from the backend
-      
+        // in a real page, this function would paginate the data from the backend
+        setPage(page)
+        setPaginationParams(page, itemsPerPage, searchParams, setSearchParams)
     };
+        
+    useEffect(() => {
+        getPaginationParams(location, setPage, () => {})
+    }, [location])
     return (
         <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-4">
             <div className="flex items-center justify-end gap-4 w-full sm:w-fit md:ml-auto">
@@ -99,16 +113,18 @@ export const FeesStaffCommutePage: React.FC = () => {
                     <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
                     Export
                 </TableAction>
-                <TableAction theme="primary" block onClick={toggleNewParameter}>
-                    <Icon icon="lucide:plus" className="size-4" />
-                    Add New Parameter
-                </TableAction>
+                <RenderFeature module="SETUP_FEE_FEE" permission="create">
+                    <TableAction theme="primary" block onClick={toggleNewParameter}>
+                        <Icon icon="lucide:plus" className="size-4" />
+                        Add New Parameter
+                    </TableAction>
+                </RenderFeature>
             </div>
             <RenderIf condition={!isFetching}>
                 <Table
                     data={staffFees ?? []}
                     page={page}
-                    columns={columns}
+                    columns={columns.filter((column) => column !== false)}
                     perPage={itemsPerPage}
                     totalCount={staffFees?.length}
                     onPageChange={handlePageChange}
@@ -117,9 +133,15 @@ export const FeesStaffCommutePage: React.FC = () => {
             <RenderIf condition={isFetching}>
                 <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
             </RenderIf>
-            <AddNewParameter isOpen={toggleModals.openAddNewParameterModal} close={toggleNewParameter} msg="Staff commute fee created successfully!" screenName="staff_commute_fee" />
-            <EditParameter isOpen={toggleModals.openEditParameterModal} close={() => toggleEditParameter(null)} parameter={toggleModals.activeItem as FetchedRevenueSplit} />
-            <DeleteParameter isOpen={toggleModals.openDeleteParameterModal} close={() => toggleDeleteParameter(null)} parameter={toggleModals.activeItem as FetchedRevenueSplit} />
+            <RenderFeature module="SETUP_FEE_FEE" permission="create">
+                <AddNewParameter isOpen={toggleModals.openAddNewParameterModal} close={toggleNewParameter} msg="Staff commute fee created successfully!" screenName="staff_commute_fee" />
+            </RenderFeature>
+            <RenderFeature module="SETUP_FEE_FEE" permission="update">
+                <EditParameter isOpen={toggleModals.openEditParameterModal} close={() => toggleEditParameter(null)} parameter={toggleModals.activeItem as FetchedRevenueSplit} />
+            </RenderFeature>
+            <RenderFeature module="SETUP_FEE_FEE" permission="delete">
+                <DeleteParameter isOpen={toggleModals.openDeleteParameterModal} close={() => toggleDeleteParameter(null)} parameter={toggleModals.activeItem as FetchedRevenueSplit} />
+            </RenderFeature>
         </motion.div>
     )
 }

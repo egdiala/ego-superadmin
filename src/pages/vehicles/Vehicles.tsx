@@ -12,6 +12,7 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import type { FetchedVehicleCount, FetchedVehicleType } from "@/types/vehicles";
 import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
+import { RenderFeature } from "@/hooks/usePermissions";
 
 export const VehiclesPage: React.FC = () => {
   const navigate = useNavigate()
@@ -152,12 +153,14 @@ export const VehiclesPage: React.FC = () => {
               </TableAction>
               <VehiclesFilter setFilters={setFilters} isLoading={isFetching || fetchingCount} />
             </div>
-            <div className="w-full sm:w-auto">
-              <Button theme="primary" onClick={toggleAddVehicle} block>
-                <Icon icon="ph:plus" className="size-4" />
-                Add New Vehicle
-              </Button>
-            </div>
+            <RenderFeature module="VEHICLE_DATA" permission="create">
+              <div className="w-full sm:w-auto">
+                <Button theme="primary" onClick={toggleAddVehicle} block>
+                  <Icon icon="ph:plus" className="size-4" />
+                  Add New Vehicle
+                </Button>
+              </div>
+            </RenderFeature>
           </div>
         </div>
         <RenderIf condition={!isFetching && !fetchingCount}>
@@ -175,7 +178,9 @@ export const VehiclesPage: React.FC = () => {
           <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
         </RenderIf>
       </div>
-      <AddVehicleModal isOpen={toggleModals.openAddVehicleModal} close={toggleAddVehicle} />
+      <RenderFeature module="VEHICLE_DATA" permission="create">
+        <AddVehicleModal isOpen={toggleModals.openAddVehicleModal} close={toggleAddVehicle} />
+      </RenderFeature>
     </motion.div>
   )
 }

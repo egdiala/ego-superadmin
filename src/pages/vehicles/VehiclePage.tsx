@@ -10,6 +10,7 @@ import { NavLink, Outlet, useLocation, useNavigate, useParams } from "react-rout
 import { DeleteVehicleModal, RevokeDriverModal } from "@/components/pages/vehicles";
 import { PurchaseModel } from "@/types/organizations";
 import { EditVehicleModal } from "@/components/pages/vehicles/EditVehicleModal";
+import { hasPermission, RenderFeature } from "@/hooks/usePermissions";
 
 export const VehiclePage: React.FC = () => {
     const params = useParams()
@@ -57,20 +58,28 @@ export const VehiclePage: React.FC = () => {
                     <div className="grid content-start gap-4 py-6 px-4 bg-white rounded-lg">
                         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                             <h1 className="text-grey-dark-1 font-bold text-xl">{vehicle?.plate_number}</h1>
-                            <div className="flex items-center gap-2 w-full sm:w-auto">
-                                <Button type="button" theme="secondary" onClick={toggleEditVehicle} block>
-                                    <Icon icon="ph:pencil-simple-line" className="size-4" />
-                                    Edit Vehicle
-                                </Button>
-                                <Button type="button" theme="danger" onClick={handleDeleteVehicle} block>
-                                    <Icon icon="tabler:trash" className="size-4" />
-                                    Delete Vehicle
-                                </Button>
-                                <Button type="button" theme="primary" onClick={handlePrimaryAction} block>
-                                    <Icon icon="tabler:link" className="size-4" />
-                                    {vehicle?.driver_assigned ? "Revoke Driver" : "Assign a Driver"}
-                                </Button>
-                            </div>
+                            <RenderIf condition={hasPermission("VEHICLE_DATA", "update") || hasPermission("VEHICLE_DATA", "delete")}>
+                                <div className="flex items-center gap-2 w-full sm:w-auto">
+                                    <RenderFeature module="VEHICLE_DATA" permission="update">
+                                        <Button type="button" theme="secondary" onClick={toggleEditVehicle} block>
+                                            <Icon icon="ph:pencil-simple-line" className="size-4" />
+                                            Edit Vehicle
+                                        </Button>
+                                    </RenderFeature>
+                                    <RenderFeature module="VEHICLE_DATA" permission="delete">
+                                        <Button type="button" theme="danger" onClick={handleDeleteVehicle} block>
+                                            <Icon icon="tabler:trash" className="size-4" />
+                                            Delete Vehicle
+                                        </Button>
+                                    </RenderFeature>
+                                    <RenderFeature module="VEHICLE_DATA" permission="update">
+                                        <Button type="button" theme="primary" onClick={handlePrimaryAction} block>
+                                            <Icon icon="tabler:link" className="size-4" />
+                                            {vehicle?.driver_assigned ? "Revoke Driver" : "Assign a Driver"}
+                                        </Button>
+                                    </RenderFeature>
+                                </div>
+                            </RenderIf>
                         </div>
                         <div className="rounded border-2 border-grey-dark-4 p-1 flex items-center gap-2 w-full md:w-1/2 overflow-scroll scrollbar-hide">
                         {
@@ -90,9 +99,13 @@ export const VehiclePage: React.FC = () => {
                         </div>
                         <Outlet />
                     </div>
-                    <EditVehicleModal isOpen={editVehicle} vehicle={vehicle!} close={toggleEditVehicle} />
-                    <DeleteVehicleModal isOpen={deleteVehicle} vehicle={vehicle!} close={handleDeleteVehicle} />
-                    <RevokeDriverModal vehicleId={vehicle?.vehicle_id!} isOpen={revokeDriver} driver={{ ...vehicle?.driver_data!, driver_id: vehicle?.driver_id! }} close={setRevokeDriver} />
+                    <RenderFeature module="VEHICLE_DATA" permission="update">
+                        <EditVehicleModal isOpen={editVehicle} vehicle={vehicle!} close={toggleEditVehicle} />
+                        <RevokeDriverModal vehicleId={vehicle?.vehicle_id!} isOpen={revokeDriver} driver={{ ...vehicle?.driver_data!, driver_id: vehicle?.driver_id! }} close={setRevokeDriver} />
+                    </RenderFeature>
+                    <RenderFeature module="VEHICLE_DATA" permission="delete">
+                        <DeleteVehicleModal isOpen={deleteVehicle} vehicle={vehicle!} close={handleDeleteVehicle} />
+                    </RenderFeature>
                 </motion.div>
             </RenderIf>
             <RenderIf condition={isFetching}>

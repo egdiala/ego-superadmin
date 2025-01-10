@@ -77,6 +77,16 @@ const Router = () => {
                     <Route path="roles" element={<RolesPage />} />
                 </Route>
                 <Route 
+                    path="/accounts/roles/*" 
+                    element={
+                        <ProtectedLayout requiredPermissions={["SETUP_ADMIN_ROLE"]}>
+                            <LocationProvider>
+                                <RolesRoutes />
+                            </LocationProvider>
+                        </ProtectedLayout>
+                    } 
+                />
+                <Route 
                     path="/disbursement/*" 
                     element={
                         <ProtectedLayout requiredPermissions={["FINANCE_DISBURSEMENT"]}>
@@ -92,16 +102,6 @@ const Router = () => {
                         <ProtectedLayout requiredPermissions={["FINANCE_RECONCILIATION"]}>
                             <LocationProvider>
                                 <ReconciliationPage />
-                            </LocationProvider>
-                        </ProtectedLayout>
-                    } 
-                />
-                <Route 
-                    path="/accounts/roles/*" 
-                    element={
-                        <ProtectedLayout requiredPermissions={["SETUP_ADMIN_ROLE"]}>
-                            <LocationProvider>
-                                <RolesRoutes />
                             </LocationProvider>
                         </ProtectedLayout>
                     } 

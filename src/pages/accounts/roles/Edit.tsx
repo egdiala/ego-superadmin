@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useGetRole, useGetRoleLists } from "@/services/hooks/queries";
 import { pageVariants } from "@/constants/animateVariants";
 import { Breadcrumb, Button, Checkbox, Input, RenderIf } from "@/components/core";
@@ -12,11 +12,13 @@ import { createRoleSchema } from "@/validations/roles";
 import type { Permission } from "@/types/roles";
 import { useEditRole } from "@/services/hooks/mutations";
 import { removeEmptyArrays } from "@/utils/textFormatter";
+import { hasPermission } from "@/hooks/usePermissions";
 
 export const EditRolePage: React.FC = () => {
     const params = useParams()
     const navigate = useNavigate()
     const { data, isFetching } = useGetRoleLists()
+    const isPermitted = hasPermission("SETUP_ADMIN_ROLE", "create")
     const { data: role, isFetching: fetchingRole } = useGetRole(params?.id as string)
     const { mutate: editRole, isPending } = useEditRole(() => navigate("/accounts/roles"))
 
@@ -57,6 +59,10 @@ export const EditRolePage: React.FC = () => {
             },
         ]
     }, [data])
+        
+    if (!isPermitted) {
+        return <Navigate to="/accounts/roles" replace />;
+    }
 
     const handleCheckboxChange = (action: string, value: Permission) => {
         const current = values.role_list[action as keyof typeof values.role_list] as string[];
@@ -167,7 +173,7 @@ export const EditRolePage: React.FC = () => {
                                     <div key={`${item?.key}-${idx}`} className="flex items-center gap-2 p-2">
                                         <Checkbox
                                             name="role_list.delete"
-                                            value={`role_list.delete.${(values.role_list["delete"] as string[]).includes(item.tag)}`}
+                                            value={`role_list.delete.${(values.role_list["delete"] as string[])?.includes(item.tag)}`}
                                             onChange={() => handleCheckboxChange("delete", item)}
                                             checked={(values.role_list["delete"] as string[])?.includes(item.tag)}
                                         />
