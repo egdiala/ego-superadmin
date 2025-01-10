@@ -3,13 +3,12 @@ import { GET_STATES_BY_COUNTRY } from "@/constants/queryKeys";
 import { getStatesByCountry } from "@/services/apis/country";
 import type { FetchedStatesByCounty } from "@/types/country";
 
-export const useGetStatesByCountry = (id: string) => {
+export const useGetStatesByCountry = () => {
     return useQuery({
-        enabled: !!id,
-        queryKey: [GET_STATES_BY_COUNTRY, id],
-        queryFn: () => getStatesByCountry(id),
+        queryKey: [GET_STATES_BY_COUNTRY],
+        queryFn: () => getStatesByCountry(),
         refetchOnWindowFocus: false,
-        select: (res) => res as FetchedStatesByCounty[],
+        select: (res) => res?.data as FetchedStatesByCounty[],
         retry: false,
     });
 };

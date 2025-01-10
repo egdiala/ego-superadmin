@@ -15,7 +15,7 @@ interface CreateDriverModalProps {
 
 export const EditDriverModal: React.FC<CreateDriverModalProps> = ({ isOpen, close, driver }) => {
     const { mutate: edit, isPending } = useEditDriver(() => onClose())
-    const { data: states, isFetching: fetchingStates } = useGetStatesByCountry("NG")
+    const { data: states, isFetching: fetchingStates } = useGetStatesByCountry()
     const fetchedStates = useMemo(() => {
         return states?.map((state) => ({ label: state.name, value: state.name }))?.sort((a,b) => a?.label > b?.label ? 1 : -1)
     }, [states])

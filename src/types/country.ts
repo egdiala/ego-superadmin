@@ -1,5 +1,7 @@
 export interface FetchedStatesByCounty {
-    id: number;
     name: string;
-    iso2: string;
+    state_code: string;
+    latitude: string;
+    longitude: string;
+    type: string;
 }
