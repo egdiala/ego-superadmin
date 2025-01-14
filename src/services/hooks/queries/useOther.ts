@@ -7,7 +7,7 @@ export const useGetIndustries = () => {
     queryKey: [GET_INDUSTRIES],
     queryFn: getIndustries,
     refetchOnWindowFocus: false,
-    select: (res) => res?.content as { id: string; label: string; }[],
+    select: (res) => res?.data as { id: string; label: string; }[],
     retry: false,
   });
 };

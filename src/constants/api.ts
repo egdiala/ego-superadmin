@@ -74,7 +74,7 @@ export const GET_WALLET_STATS_API = "admin/wallets/wallet-stats"
 export const GET_WALLET_TRANSACTION_API = "admin/wallets/wallet-transaction"
 
 // Other
-export const GET_INDUSTRIES_API = "industries"
+export const GET_INDUSTRIES_API = "admin/operations/industry-lists"
 
 // Country
 export const COUNTRY_API = "admin/operations/state-lists"
