@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { axiosInit } from "./axiosInit";
+import { axiosInit, setBaseURL } from "./axiosInit";
 
 export const axiosInstance: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_EGO_BASE_URL,
@@ -43,21 +43,6 @@ export const axiosWalletInstance: AxiosInstance = axios.create({
   },
 });
 
-export const otherInstance: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_EGO_OTHER_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-export const axiosCountryInstance: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_COUNTRY_BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-    "X-CSCAPI-KEY": import.meta.env.VITE_COUNTRY_API_KEY
-  },
-});
-
 export const axiosMapInstance: AxiosInstance = axios.create({
   baseURL: "https://maps.googleapis.com/maps/api/geocode",
   headers: {
@@ -66,8 +51,13 @@ export const axiosMapInstance: AxiosInstance = axios.create({
 });
 
 const token = localStorage.getItem("token") as string;
+const userData = localStorage.getItem("user") as string
 
 
 if (token) {
+  if (userData) {
+    const userObj = JSON.parse(userData)
+    setBaseURL(userObj?.data_mode)
+  }
   axiosInit(token)
 }
