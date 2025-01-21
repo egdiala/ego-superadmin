@@ -11,7 +11,7 @@ export function axiosInit(token: string) {
 
 export function setBaseURL(mode: string) {
     const leadingUrl = "https://stagingapp.zeno.ng/ego-"
-    axiosInstance.defaults.baseURL = mode === "test" ? import.meta.env.VITE_EGO_BASE_URL : `https://${(import.meta.env.VITE_EGO_BASE_URL).toString().replace(leadingUrl, "")}-api.apps.cabzero.ng`;
+    axiosInstance.defaults.baseURL = mode === "test" ? "https://stagingapp.zeno.ng/ego-user-service" : import.meta.env.VITE_EGO_BASE_URL;
     axiosMessagingInstance.defaults.baseURL = mode === "test" ? import.meta.env.VITE_EGO_MESSAGING_URL : `https://${(import.meta.env.VITE_EGO_MESSAGING_URL).toString().replace(leadingUrl, "")}-api.apps.cabzero.ng`;
     axiosSettingsInstance.defaults.baseURL = mode === "test" ? import.meta.env.VITE_EGO_SETTINGS_URL : `https://${(import.meta.env.VITE_EGO_SETTINGS_URL).toString().replace(leadingUrl, "")}-api.apps.cabzero.ng`;
     axiosVehicleInstance.defaults.baseURL = mode === "test" ? import.meta.env.VITE_EGO_VEHICLE_URL : `https://${(import.meta.env.VITE_EGO_VEHICLE_URL).toString().replace(leadingUrl, "")}-api.apps.cabzero.ng`;
