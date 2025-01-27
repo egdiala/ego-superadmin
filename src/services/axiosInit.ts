@@ -10,11 +10,19 @@ export function axiosInit(token: string) {
 }
 
 export function setBaseURL(mode: string) {
-    const leadingUrl = "https://stagingapp.zeno.ng/ego-"
-    axiosInstance.defaults.baseURL = mode === "test" ? "https://stagingapp.zeno.ng/ego-user-service" : import.meta.env.VITE_EGO_BASE_URL;
-    axiosMessagingInstance.defaults.baseURL = mode === "test" ? import.meta.env.VITE_EGO_MESSAGING_URL : `https://${(import.meta.env.VITE_EGO_MESSAGING_URL).toString().replace(leadingUrl, "")}-api.apps.cabzero.ng`;
-    axiosSettingsInstance.defaults.baseURL = mode === "test" ? import.meta.env.VITE_EGO_SETTINGS_URL : `https://${(import.meta.env.VITE_EGO_SETTINGS_URL).toString().replace(leadingUrl, "")}-api.apps.cabzero.ng`;
-    axiosVehicleInstance.defaults.baseURL = mode === "test" ? import.meta.env.VITE_EGO_VEHICLE_URL : `https://${(import.meta.env.VITE_EGO_VEHICLE_URL).toString().replace(leadingUrl, "")}-api.apps.cabzero.ng`;
-    axiosTripReportInstance.defaults.baseURL = mode === "test" ? import.meta.env.VITE_EGO_TRIP_REPORTING_URL : `https://${(import.meta.env.VITE_EGO_TRIP_REPORTING_URL).toString().replace(leadingUrl, "")}-api.apps.cabzero.ng`;
-    axiosWalletInstance.defaults.baseURL = mode === "test" ? import.meta.env.VITE_EGO_WALLET_URL : `https://${(import.meta.env.VITE_EGO_WALLET_URL).toString().replace(leadingUrl, "")}-api.apps.cabzero.ng`;
+    if (mode === "test") {
+        axiosInstance.defaults.baseURL = "https://stagingapp.zeno.ng/ego-user-service"
+        axiosMessagingInstance.defaults.baseURL = import.meta.env.VITE_EGO_MESSAGING_URL;
+        axiosSettingsInstance.defaults.baseURL = import.meta.env.VITE_EGO_SETTINGS_URL;
+        axiosVehicleInstance.defaults.baseURL = import.meta.env.VITE_EGO_VEHICLE_URL;
+        axiosTripReportInstance.defaults.baseURL = import.meta.env.VITE_EGO_TRIP_REPORTING_URL;
+        axiosWalletInstance.defaults.baseURL = import.meta.env.VITE_EGO_WALLET_URL;
+    } else {
+        axiosInstance.defaults.baseURL = "https://user-service-api.apps.cabzero.ng";
+        axiosMessagingInstance.defaults.baseURL = "https://message-service-api.apps.cabzero.ng";
+        axiosSettingsInstance.defaults.baseURL = "https://setting-service-api.apps.cabzero.ng";
+        axiosVehicleInstance.defaults.baseURL = "https://vehicle-service-api.apps.cabzero.ng";
+        axiosTripReportInstance.defaults.baseURL = "https://trip-reporting-api.apps.cabzero.ng";
+        axiosWalletInstance.defaults.baseURL = "https://wallet-service-api.apps.cabzero.ng";
+    }
 }

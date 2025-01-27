@@ -9,9 +9,9 @@ import { confirmResetPasswordOTP, login, sendResetPasswordEmail, sendResetPasswo
 
 function onLoginSuccess(responseData: any) {
   const { token, ...userData } = responseData;
+  setBaseURL(userData?.data_mode)
   setItem(APP_TOKEN_STORAGE_KEY, token);
   setItem(APP_USERDATA_STORAGE_KEY, JSON.stringify(userData));
-  setBaseURL(userData?.data_mode)
   axiosInit(token)
 }
 
