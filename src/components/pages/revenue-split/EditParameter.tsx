@@ -22,7 +22,7 @@ export const EditParameter: React.FC<EditParameterProps> = ({ isOpen, close, par
     const { handleSubmit, isValid, register, resetForm, values } = useFormikWrapper({
         initialValues: {
             tag: parameter?.tag || "",
-            amount_type: parameter?.amount_type || "" as "fixed" | "percent",
+            amount_type: parameter?.amount_type || "" as "fixed" | "percent" | "distance",
             amount: parameter?.amount || ""
         },
         enableReinitialize: true,
@@ -82,6 +82,13 @@ export const EditParameter: React.FC<EditParameterProps> = ({ isOpen, close, par
                                 {
                                     values?.amount_type === "percent" && (
                                         <Input type="number" className="hide-number-input-arrows" label="Percentage (%)" {...register("amount")} />
+                                    )
+                                }
+                            </AnimatePresence>
+                            <AnimatePresence>
+                                {
+                                    values?.amount_type === "distance" && (
+                                        <Input type="number" className="hide-number-input-arrows" label="Value (Km)" {...register("amount")} />
                                     )
                                 }
                             </AnimatePresence>

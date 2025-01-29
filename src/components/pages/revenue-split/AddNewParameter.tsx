@@ -23,7 +23,7 @@ export const AddNewParameter: React.FC<AddNewParameterProps> = ({ isOpen, close,
     const { handleSubmit, isValid, register, resetForm, values } = useFormikWrapper({
         initialValues: {
             tag: "",
-            amount_type: "" as "fixed" | "percent",
+            amount_type: "" as "fixed" | "percent" | "distance",
             amount: "",
         },
         validationSchema: addNewParameterSchema,
@@ -81,6 +81,13 @@ export const AddNewParameter: React.FC<AddNewParameterProps> = ({ isOpen, close,
                                 {
                                     values?.amount_type === "percent" && (
                                         <Input type="number" className="hide-number-input-arrows" label="Percentage (%)" {...register("amount")} />
+                                    )
+                                }
+                            </AnimatePresence>
+                            <AnimatePresence>
+                                {
+                                    values?.amount_type === "distance" && (
+                                        <Input type="number" className="hide-number-input-arrows" label="Value (Km)" {...register("amount")} />
                                     )
                                 }
                             </AnimatePresence>
