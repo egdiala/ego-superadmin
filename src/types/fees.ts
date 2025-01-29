@@ -7,6 +7,7 @@ export interface FetchFeesQuery {
 export type CreateFeeType = {
     amount: string;
     amount_type: "fixed" | "percent" | "distance";
+    amount_unit?: string;
     tag: string;
 }
 
@@ -20,6 +21,7 @@ export interface FetchedFeeVariable {
 export interface FetchedRevenueSplit extends FetchedFeeVariable {
     amount: number;
     amount_type: "fixed" | "percent" | "distance";
+    amount_unit: string;
     system_generated: boolean;
     data: any[];
     createdAt: Date | string;

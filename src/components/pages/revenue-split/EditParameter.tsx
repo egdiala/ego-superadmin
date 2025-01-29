@@ -22,16 +22,18 @@ export const EditParameter: React.FC<EditParameterProps> = ({ isOpen, close, par
     const { handleSubmit, isValid, register, resetForm, values } = useFormikWrapper({
         initialValues: {
             tag: parameter?.tag || "",
-            amount_type: parameter?.amount_type || "" as "fixed" | "percent" | "distance",
+            amount_type: parameter?.amount_unit ? "distance" : parameter?.amount_type || "" as "fixed" | "percent" | "distance",
             amount: parameter?.amount || ""
         },
         enableReinitialize: true,
         validationSchema: addNewParameterSchema,
         onSubmit: () => {
-            const { amount, ...rest } = values
+            const { amount, amount_type, ...rest } = values
             const payload = {
                 ...rest,
                 amount: amount.toString(),
+                amount_type: amount_type === "percent" ? "percent" : "fixed" as "fixed" | "percent" | "distance",
+                amount_unit: amount_type === "distance" ? parameter?.amount_unit : "",
                 screen_name: parameter?.screen_name,
                 fee_id: parameter?.fee_id
             }

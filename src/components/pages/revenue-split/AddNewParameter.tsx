@@ -28,9 +28,11 @@ export const AddNewParameter: React.FC<AddNewParameterProps> = ({ isOpen, close,
         },
         validationSchema: addNewParameterSchema,
         onSubmit: () => {
-            const { amount, ...rest } = values
+            const { amount, amount_type, ...rest } = values
             const payload = {
                 ...rest,
+                amount_type: amount_type === "percent" ? "percent" : "fixed" as "fixed" | "percent" | "distance",
+                amount_unit: amount_type === "distance" ? "km" : "",
                 amount: amount.toString(),
                 screen_name: screenName
             }

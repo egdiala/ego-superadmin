@@ -61,7 +61,7 @@ export const FeesLeasePage: React.FC = () => {
                 const item = row?.original as FetchedRevenueSplit
                 return (
                     <div className="flex items-center gap-6">
-                        { item?.amount_type === "fixed" ? formattedNumber(item?.amount) : `${item?.amount}%` }
+                        { item?.amount_type === "fixed" ? item?.amount_unit ? `${item?.amount} ${item?.amount_unit}` : formattedNumber(item?.amount) : `${item?.amount}%` }
                     </div>
                 )
             }
