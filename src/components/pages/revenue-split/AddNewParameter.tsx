@@ -53,6 +53,7 @@ export const AddNewParameter: React.FC<AddNewParameterProps> = ({ isOpen, close,
     const selectValue = [
         { label: "Amount (₦)", value: "fixed" },
         { label: "Percentage (%)", value: "percent" },
+        { label: "Value (Km)", value: "distance" },
     ]
 
     return (
