@@ -49,7 +49,7 @@ export const RiderWalletPage: React.FC = () => {
         cell: ({ row }: { row: any; }) => {
           const item = row?.original as FetchedWalletTransaction
           return (
-            <div className={cn("text-sm whitespace-nowrap", item?.status === 1 ? "text-dark-green-1" : "text-semantics-error")}>{item?.status === 1 ? "Credit" : "Debit"}</div>
+            <div className={cn("text-sm whitespace-nowrap", item?.status === -1 ? "text-semantics-error" : "text-semantics-success")}>{ item?.status === -1 ? "Debit" : "Credit" }</div>
           )
         }
       },
