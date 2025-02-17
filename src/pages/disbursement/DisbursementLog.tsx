@@ -12,16 +12,23 @@ import { format } from "date-fns";
 import { formattedNumber } from "@/utils/textFormatter";
 import { useApprovePayout } from "@/services/hooks/mutations";
 import { hasPermission } from "@/hooks/usePermissions";
+import { ConfirmationModal } from "@/components/pages/disbursement/ConfirmationModal";
 
 export const DisbursementLogPage: React.FC = () => {
     const location = useLocation();
     const itemsPerPage = 10;
     const [page, setPage] = useState(1)
     const [msg, setMsg] = useState("")
+    const [isOpen, setIsOpen] = useState(false);
+    const [payoutId, setPayoutId] = useState<FetchedPayout | null>(null);
     const [searchParams, setSearchParams] = useSearchParams();
     const { data: payouts, isFetching } = useGetPayouts<FetchedPayout[]>({ page: page.toString(), item_per_page: itemsPerPage.toString() })
     const { data: payoutCount, isFetching: isFetchingCount } = useGetPayouts<any>({ component: "count", page: page.toString(), item_per_page: itemsPerPage.toString() })
-    const { mutate, isPending } = useApprovePayout(msg, () => setMsg(""))
+    const { mutate, isPending } = useApprovePayout(msg, () => {
+      setIsOpen(false)
+      setMsg("")
+      setPayoutId(null)
+    })
     
     const approvePayout = (payout_id: string, status?: "1" | "2") => {
       setMsg("Approved Successfully!")
@@ -153,10 +160,30 @@ export const DisbursementLogPage: React.FC = () => {
           return (
             <Fragment>
               <RenderIf condition={item?.approve_status === 0}>
-                <button type="button" disabled={isPending} onClick={() => approvePayout(item?.payout_id, "1")} className="flex items-center py-1 px-2 justify-center text-sm text-grey-dark-1 bg-grey-dark-4 rounded-md whitespace-nowrap">Approve</button>
+                <button
+                  type="button"
+                  disabled={isPending}
+                  onClick={() => {
+                    setPayoutId(item)
+                    setIsOpen(true)
+                  }}
+                  className="flex items-center py-1 px-2 justify-center text-sm text-grey-dark-1 bg-grey-dark-4 rounded-md whitespace-nowrap"
+                >
+                  Approve
+                </button>
               </RenderIf>
               <RenderIf condition={item?.status === 2}>
-                <button type="button" disabled={isPending} onClick={() => processPayout(item?.payout_id, "2")} className="flex items-center py-1 px-2 justify-center text-sm text-grey-dark-1 bg-grey-dark-4 rounded-md whitespace-nowrap">Reinitiate</button>
+                <button
+                  type="button"
+                  disabled={isPending}
+                  onClick={() => {
+                    setPayoutId(item)
+                    setIsOpen(true)
+                  }}
+                  className="flex items-center py-1 px-2 justify-center text-sm text-grey-dark-1 bg-grey-dark-4 rounded-md whitespace-nowrap"
+                >
+                  Reinitiate
+                </button>
               </RenderIf>
             </Fragment>
           )
@@ -198,6 +225,7 @@ export const DisbursementLogPage: React.FC = () => {
             <RenderIf condition={isFetching || isFetchingCount}>
               <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
             </RenderIf>
+            <ConfirmationModal isOpen={isOpen} close={() => setIsOpen(false)} payoutId={payoutId} approve={approvePayout} process={processPayout} />
         </motion.div>
     )
 }
