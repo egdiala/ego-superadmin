@@ -20,7 +20,7 @@ export const RiderWalletPage: React.FC = () => {
     const [filters, setFilters] = useState({})
     const [searchParams, setSearchParams] = useSearchParams();
     const [component] = useState<"count" | "count-status">("count")
-    const { data: balance, isFetching: fetchingBalance } = useGetWalletTransactions({ component: "balance", wallet_type: "organization-wallet", ...filters })
+    const { data: balance, isFetching: fetchingBalance } = useGetWalletTransactions({ component: "balance", wallet_type: "user-wallet", ...filters })
     const { data: count, isFetching: fetchingCount } = useGetWalletTransactions({ component, wallet_type: "user-wallet", ...filters })
     const { data: transactions, isFetching } = useGetWalletTransactions({ page: page.toString(), item_per_page: itemsPerPage.toString(), wallet_type: "user-wallet", ...filters })
 
