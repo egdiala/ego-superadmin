@@ -21,6 +21,7 @@ export const OrganizationWalletPage: React.FC = () => {
     const [filters, setFilters] = useState({})
     const [searchParams, setSearchParams] = useSearchParams();
     const [component] = useState<"count" | "count-status">("count")
+    const { data: balance, isFetching: fetchingBalance } = useGetWalletTransactions({ component: "balance", wallet_type: "organization-wallet", ...filters })
     const { data: count, isFetching: fetchingCount } = useGetWalletTransactions({ component, wallet_type: "organization-wallet", ...filters })
     const { data: transactions, isFetching } = useGetWalletTransactions({ page: page.toString(), item_per_page: itemsPerPage.toString(), wallet_type: "organization-wallet", ...filters })
 
@@ -123,12 +124,13 @@ export const OrganizationWalletPage: React.FC = () => {
         return [
             { label: "Value", value: formattedNumber((count as FetchedWalletTransactionCount)?.total_amount || 0), color: "bg-[#F8F9FB]" },
             { label: "Count", value: (count as FetchedWalletTransactionCount)?.total ?? 0, color: "bg-green-4" },
+            { label: "Balance", value: formattedNumber((balance as FetchedWalletTransactionCount)?.balance ?? 0), color: "bg-green-4" },
         ]
-    },[count])
+    },[balance, count])
   
     return (
         <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">
-            <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
+            <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4 py-4">
                 {
                     trips.map((item) =>
                         <div key={item.label} className={cn("relative grid overflow-hidden content-center justify-items-center gap-2 h-24 py-4 rounded-lg", item.color)}>
@@ -152,7 +154,7 @@ export const OrganizationWalletPage: React.FC = () => {
                     <WalletFilter setFilters={setFilters} isLoading={isFetching} />
                 </div>
             </div>
-            <RenderIf condition={!isFetching && !fetchingCount}>
+            <RenderIf condition={!isFetching && !fetchingCount && !fetchingBalance}>
                 <Table
                     columns={columns}
                     data={(transactions as FetchedWalletTransaction[]) ?? []}
@@ -163,7 +165,7 @@ export const OrganizationWalletPage: React.FC = () => {
                     emptyStateText="No wallet transaction found."
                 />
             </RenderIf>
-            <RenderIf condition={isFetching || fetchingCount}>
+            <RenderIf condition={isFetching || fetchingCount || fetchingBalance}>
                 <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
             </RenderIf>
         </motion.div>
