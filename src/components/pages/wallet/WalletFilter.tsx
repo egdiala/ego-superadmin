@@ -42,6 +42,7 @@ export const WalletFilter: React.FC<WalletFilterProps> = ({ isLoading, setFilter
         { label: "Credit", name: "credit", value: "1" },
         { label: "Debit", name: "debit", value: "-1" },
         { label: "Failed", name: "failed", value: "2" },
+        { label: "Abandoned", name: "abandoned", value: "3" },
     ];
 
     const [selected, setSelected] = useState(dateFilters[2])

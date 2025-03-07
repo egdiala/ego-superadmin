@@ -122,9 +122,9 @@ export const OrganizationWalletPage: React.FC = () => {
 
     const trips = useMemo(() => {
         return [
-            { label: "Value", value: formattedNumber((count as FetchedWalletTransactionCount)?.total_amount || 0), color: "bg-[#F8F9FB]" },
-            { label: "Count", value: (count as FetchedWalletTransactionCount)?.total ?? 0, color: "bg-green-4" },
-            { label: "Balance", value: formattedNumber((balance as FetchedWalletTransactionCount)?.balance ?? 0), color: "bg-green-4" },
+            { label: "Transaction Value", value: formattedNumber((count as FetchedWalletTransactionCount)?.total_amount || 0), color: "bg-[#F8F9FB]" },
+            { label: "Transaction Count", value: (count as FetchedWalletTransactionCount)?.total ?? 0, color: "bg-green-4" },
+            { label: "Wallet Balance", value: formattedNumber((balance as FetchedWalletTransactionCount)?.balance ?? 0), color: "bg-green-4" },
         ]
     },[balance, count])
   
