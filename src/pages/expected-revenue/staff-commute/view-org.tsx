@@ -66,6 +66,16 @@ export const StaffCommuteExpectedRevenueOrgPage: React.FC = () => {
             }
         },
         {
+            header: () => "Paid By",
+            accessorKey: "ride_data.payment_type",
+            cell: ({ row }: { row: any; }) => {
+            const item = row?.original as FetchedTripType
+            return (
+                <div className="text-sm text-grey-dark-2 whitespace-nowrap">{item?.ride_data?.payment_type === 1 ? "Business" : "Rider"}</div>
+            )
+            }
+        },
+        {
             header: () => "Mode",
             accessorKey: "ride_data.charge_data.method",
             cell: ({ row }: { row: any; }) => {

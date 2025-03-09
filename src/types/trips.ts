@@ -70,6 +70,7 @@ export interface FetchedTripType {
         phone_number: string;
         rating: number;
         avatar: string;
+        payment_type: number;
         start_coord: {
             longitude: number;
             latitude: number;

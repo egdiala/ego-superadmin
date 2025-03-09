@@ -85,6 +85,33 @@ export const TripsPage: React.FC = () => {
           }
         },
         {
+          header: () => "Paid By",
+          accessorKey: "ride_data.payment_type",
+          cell: ({ row }: { row: any; }) => {
+            const item = row?.original as FetchedTripType
+            return (
+              <div className="text-sm text-grey-dark-2 whitespace-nowrap">{item?.ride_data?.payment_type === 1 ? item?.org_data?.name : item?.ride_data?.name}</div>
+            )
+          }
+        },
+        {
+          header: () => "Payment Status",
+          accessorKey: "ride_data.name",
+          cell: ({ row }: { row: any; }) => {
+            const item = row?.original as FetchedTripType
+            return (
+              <div className={cn("text-sm text-grey-dark-2 capitalize whitespace-nowrap px-2 py-0.5 rounded w-fit", item?.ride_data?.charge_data?.status === "pending" && "text-semantics-amber bg-semantics-amber/10", item?.ride_data?.charge_data?.status === "yes" && "text-semantics-success bg-semantics-success/10")}>
+                  <RenderIf condition={item?.ride_data?.charge_data?.status === "pending"}>
+                      {item?.ride_data?.charge_data?.status}
+                  </RenderIf>
+                  <RenderIf condition={item?.ride_data?.charge_data?.status === "yes"}>
+                      Successful
+                  </RenderIf>
+              </div>
+            )
+          }
+        },
+        {
           header: () => "Rider",
           accessorKey: "ride_data.name",
         },
@@ -107,7 +134,7 @@ export const TripsPage: React.FC = () => {
           }
         }),
         {
-          header: () => "Status",
+          header: () => "Trip Status",
           accessorKey: "ride_status",
           cell: ({ row }: { row: any; }) => {
             const item = row?.original as FetchedTripType
