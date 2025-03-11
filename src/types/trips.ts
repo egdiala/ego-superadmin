@@ -11,7 +11,7 @@ export interface FetchTripsQuery {
     start_date?: string;
     end_date?: string;
     vehicle_id?: string;
-    component?: "count" | "count-status" | "count-status-rider" | "count-status-driver" | "count-monthly";
+    component?: "count" | "count-status" | "count-status-rider" | "count-status-driver" | "count-monthly" | "export";
 }
 
 export interface FetchRanksQuery {

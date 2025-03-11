@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { pageVariants } from "@/constants/animateVariants";
-import { RenderIf, Table, TableAction } from "@/components/core";
+import { RenderIf, Table } from "@/components/core";
 import { cn } from "@/libs/cn";
 import { useLocation, useParams, useSearchParams } from "react-router-dom";
 import { useGetRatings } from "@/services/hooks/queries";
@@ -10,6 +10,7 @@ import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationP
 import { Loader } from "@/components/core/Button/Loader";
 import { FetchedRating, FetchedRatingCountStatus } from "@/types/ratings";
 import { format } from "date-fns";
+import { ExportButton } from "@/components/shared/export-button";
 
 export const RiderRatingsPage: React.FC = () => {
     const params = useParams();
@@ -17,7 +18,7 @@ export const RiderRatingsPage: React.FC = () => {
     const itemsPerPage = 10;
     const [page, setPage] = useState(1)
     const [searchParams, setSearchParams] = useSearchParams();
-    const [component] = useState<"count" | "dashboard-stat">("count")
+    const [component, setComponent] = useState<"count" | "dashboard-stat" | "export">("count")
     const { data: countStatus, isFetching: fetchingCountStatus } = useGetRatings({ component, user_type: "rider", auth_id: params?.id as string })
     const { data: count, isFetching: fetchingCount } = useGetRatings({ component, user_type: "rider", auth_id: params?.id as string, page: page.toString(), item_per_page: itemsPerPage.toString() })
     const { data: ratings, isFetching } = useGetRatings({ user_type: "rider", auth_id: params?.id as string, page: page.toString(), item_per_page: itemsPerPage.toString() })
@@ -103,10 +104,15 @@ export const RiderRatingsPage: React.FC = () => {
               </div>
               <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-end">
                   <div className="flex items-center gap-2 w-full sm:w-auto">
-                      <TableAction theme="ghost" block>
-                          <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-                          Export
-                      </TableAction>
+                    <ExportButton 
+                      onExport={() => setComponent("export")} 
+                      onExported={() => {
+                        if (!fetchingCount && component === "export") {
+                          setComponent("count")
+                        }
+                      }} 
+                      isLoading={fetchingCount} 
+                    />
                   </div>
               </div>
               <Table

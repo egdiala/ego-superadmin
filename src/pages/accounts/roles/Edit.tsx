@@ -121,7 +121,7 @@ export const EditRolePage: React.FC = () => {
                                         <Checkbox 
                                             name="selectAll"
                                             onChange={() => handleAllCheckboxChange(permission.label.toLowerCase(), permission?.items)}
-                                            checked={permission?.items?.every(item => (values.role_list[permission.label.toLowerCase() as keyof typeof values.role_list] as string[]).includes(item.tag))}
+                                            checked={permission?.items?.every(item => (values?.role_list[permission.label.toLowerCase() as keyof typeof values.role_list] as string[])?.includes(item.tag))}
                                         />
                                         <span className="text-sm text-grey-dark-1">Select all</span>
                                     </div>

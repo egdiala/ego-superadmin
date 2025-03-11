@@ -18,7 +18,7 @@ export interface FetchWalletTransactionQuery {
     start_date?: string;
     end_date?: string;
     wallet_type?: "user-wallet" | "organization-wallet"
-    component?: "count" | "balance" | "count-status";
+    component?: "count" | "balance" | "count-status" | "export";
 }
 
 export interface FetchedWalletTransaction {

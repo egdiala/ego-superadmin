@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { cn } from "@/libs/cn";
 import { format } from "date-fns";
-import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { useDebounce } from "@/hooks/useDebounce";
 import type { FetchedTripType } from "@/types/trips";
@@ -11,9 +10,10 @@ import { Loader } from "@/components/core/Button/Loader";
 import { formattedNumber, pascalCaseToWords } from "@/utils/textFormatter";
 import { pageVariants } from "@/constants/animateVariants";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { EmptyState, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { EmptyState, RenderIf, SearchInput, Table } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { TripsFilter } from "@/components/pages/trips";
+import { ExportButton } from "@/components/shared/export-button";
 
 export const TripsPage: React.FC = () => {
     const navigate = useNavigate();
@@ -34,7 +34,7 @@ export const TripsPage: React.FC = () => {
       charge_status: chargeStatus || "",
       purchase_model: purchaseModel || ""
     })
-    const [component] = useState<"count" | "count-status" | "count-status-rider" | "count-status-driver" | "count-monthly">("count")
+    const [component, setComponent] = useState<"count" | "count-status" | "count-status-rider" | "count-status-driver" | "count-monthly" | "export">("count")
     const { data: count, isFetching: fetchingCount } = useGetTrips({ component, q: value, ...filters })
     const { data: trips, isFetching } = useGetTrips({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value, ...filters })
 
@@ -175,10 +175,15 @@ export const TripsPage: React.FC = () => {
                     </div>
                 
                     <div className="flex items-center gap-2 w-full sm:w-auto">
-                      <TableAction theme="ghost" block>
-                          <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-                          Export
-                      </TableAction>
+                      <ExportButton 
+                        onExport={() => setComponent("export")} 
+                        onExported={() => {
+                          if (!fetchingCount && component === "export") {
+                            setComponent("count")
+                          }
+                        }} 
+                        isLoading={fetchingCount} 
+                      />
                       <TripsFilter setFilters={setFilters} isLoading={isFetching || fetchingCount} />
                     </div>
                 </div>

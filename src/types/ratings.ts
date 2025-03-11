@@ -5,7 +5,7 @@ export interface FetchRatingsQuery {
     item_per_page?: string;
     start_date?: string;
     end_date?: string;
-    component?: "count" | "dashboard-stat";
+    component?: "count" | "dashboard-stat" | "export";
 }
 
 export interface FetchedRating {

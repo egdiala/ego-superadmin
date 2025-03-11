@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
-import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useGetRiders } from "@/services/hooks/queries";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { RenderIf, SearchInput, Table } from "@/components/core";
 import type { FetchedRider, FetchedRiderCount, FetchedRiders } from "@/types/riders";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
+import { ExportButton } from "@/components/shared/export-button";
 
 export const RidersPage: React.FC = () => {
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ export const RidersPage: React.FC = () => {
   const { value, onChangeHandler } = useDebounce(500)
   const [searchParams, setSearchParams] = useSearchParams();
   const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
-  const { data: count, isFetching: fetchingCount, refetch } = useGetRiders({ component, q: value })
+  const { data: count, isFetching: fetchingCount } = useGetRiders({ component, q: value })
   const { data: riders, isLoading } = useGetRiders({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value })
 
   const columns = [
@@ -92,10 +92,15 @@ export const RidersPage: React.FC = () => {
             <SearchInput placeholder="Search name, ref etc" onChange={onChangeHandler} disabled={isLoading || fetchingCount} />
           </div>
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <TableAction type="button" theme="grey" block disabled={isLoading || fetchingCount} onClick={() => component === "export" ? refetch() : setComponent("export")}>
-              <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-              Export
-            </TableAction>
+            <ExportButton 
+              onExport={() => setComponent("export")} 
+              onExported={() => {
+                if (!fetchingCount && component === "export") {
+                  setComponent("count")
+                }
+              }} 
+              isLoading={fetchingCount} 
+            />
           </div>
         </div>
         <RenderIf condition={!isLoading && !fetchingCount}>

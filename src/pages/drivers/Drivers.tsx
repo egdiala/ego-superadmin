@@ -10,9 +10,10 @@ import { pageVariants } from "@/constants/animateVariants";
 import { CreateDriverModal, DriversFilter, FailedDriverUploadsModal } from "@/components/pages/drivers";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import type { FetchedDriverCount, FetchedDriverType } from "@/types/drivers";
-import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { Button, RenderIf, SearchInput, Table } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { RenderFeature } from "@/hooks/usePermissions";
+import { ExportButton } from "@/components/shared/export-button";
 
 export const DriversPage: React.FC = () => {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ export const DriversPage: React.FC = () => {
     end_date: "",
   })
   const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
-  const { data: count, isFetching: fetchingCount, refetch } = useGetDrivers({ component, q: value, ...filters })
+  const { data: count, isFetching: fetchingCount } = useGetDrivers({ component, q: value, ...filters })
   const { data: drivers, isFetching } = useGetDrivers({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value, ...filters })
   const [toggleModals, setToggleModals] = useState({
     openFilterModal: false,
@@ -134,10 +135,15 @@ export const DriversPage: React.FC = () => {
           
           <div className="flex items-center gap-2 flex-wrap">
             <div className="flex items-center gap-2 w-full sm:w-auto">
-              <TableAction theme="ghost" block onClick={() => component === "export" ? refetch() : setComponent("export")}>
-                <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-                Export
-              </TableAction>
+              <ExportButton 
+                onExport={() => setComponent("export")} 
+                onExported={() => {
+                  if (!fetchingCount && component === "export") {
+                    setComponent("count")
+                  }
+                }} 
+                isLoading={fetchingCount} 
+              />
               <DriversFilter setFilters={setFilters} isLoading={isFetching || fetchingCount} />
             </div>
             <RenderFeature module="DRIVER_DATA" permission="create">

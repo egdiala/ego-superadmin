@@ -8,8 +8,9 @@ import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { FetchedRating, FetchedRatingCountStatus } from "@/types/ratings";
 import { useLocation, useParams, useSearchParams } from "react-router-dom";
-import { RenderIf, Table, TableAction } from "@/components/core";
+import { RenderIf, Table } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
+import { ExportButton } from "@/components/shared/export-button";
 
 export const DriverRatingsPage: React.FC = () => {
     const params = useParams();
@@ -17,7 +18,7 @@ export const DriverRatingsPage: React.FC = () => {
     const itemsPerPage = 10;
     const [page, setPage] = useState(1)
     const [searchParams, setSearchParams] = useSearchParams();
-    const [component] = useState<"count" | "dashboard-stat">("count")
+    const [component, setComponent] = useState<"count" | "dashboard-stat" | "export">("count")
     const { data: count, isFetching: fetchingCount } = useGetRatings({ component, user_type: "driver", auth_id: params?.id as string, page: page.toString(), item_per_page: itemsPerPage.toString() })
     const { data: ratings, isFetching } = useGetRatings({ user_type: "driver", auth_id: params?.id as string, page: page.toString(), item_per_page: itemsPerPage.toString() })
 
@@ -102,10 +103,15 @@ export const DriverRatingsPage: React.FC = () => {
               </div>
               <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-end">
                   <div className="flex items-center gap-2 w-full sm:w-auto">
-                      <TableAction theme="ghost" block>
-                          <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-                          Export
-                      </TableAction>
+                    <ExportButton 
+                      onExport={() => setComponent("export")} 
+                      onExported={() => {
+                        if (!fetchingCount && component === "export") {
+                          setComponent("count")
+                        }
+                      }} 
+                      isLoading={fetchingCount} 
+                    />
                   </div>
               </div>
               <Table
