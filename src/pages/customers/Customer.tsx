@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/libs/cn";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
@@ -10,11 +10,14 @@ import { Breadcrumb, Button, RenderIf, TableAction } from "@/components/core";
 import { NavLink, Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { SuspendCustomerModal } from "@/components/pages/customers";
 import { RenderFeature } from "@/hooks/usePermissions";
+import { useReactToPrint } from "react-to-print";
 
 export const CustomerPage: React.FC = () => {
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
+  const contentRef = useRef<HTMLDivElement>(null);
+  const handlePrint = useReactToPrint({ content: () => contentRef.current });
   const { data: customer, isFetching } = useGetOrganization(params?.id as string)
   const [toggleModals, setToggleModals] = useState({
     openDeleteCustomerModal: false,
@@ -59,10 +62,12 @@ export const CustomerPage: React.FC = () => {
               <h1 className="text-grey-dark-1 font-bold text-xl">{customer?.name}</h1>
               <div className="flex flex-col md:flex-row md:items-center gap-2 pb-4 w-full sm:w-auto">
                 <div className="flex items-center gap-2">
-                    <TableAction theme="ghost" block>
+                  <RenderIf condition={subRoutes[0].link === location.pathname}>
+                    <TableAction theme="ghost" onClick={handlePrint} block>
                         <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
                         Export
                     </TableAction>
+                  </RenderIf>
                     <RenderFeature module="CUSTOMER_DATA" permission="update">
                       <TableAction type="button" theme="grey" onClick={() => navigate(`/customers/${params?.id as string}/edit`)} block>
                           <Icon icon="lucide:pencil" className="size-4" />
@@ -106,7 +111,9 @@ export const CustomerPage: React.FC = () => {
                 )
               }
             </div>
-            <Outlet />
+            <div ref={contentRef}>
+              <Outlet />
+            </div>
           </div>
           <SuspendCustomerModal isOpen={toggleModals.openSuspendCustomerModal} customer={customer!} close={toggleSuspendCustomer} />
         </motion.div>

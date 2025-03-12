@@ -13,6 +13,7 @@ import { formattedNumber, pascalCaseToWords } from "@/utils/textFormatter";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { ExportButton } from "@/components/shared/export-button";
 
 export const CustomerTripPaymentPage: React.FC = () => {
     const params = useParams();
@@ -22,7 +23,7 @@ export const CustomerTripPaymentPage: React.FC = () => {
     const [page, setPage] = useState(1)
     const { value, onChangeHandler } = useDebounce(500)
     const [searchParams, setSearchParams] = useSearchParams();
-    const [component] = useState<"count" | "count-status" | "count-status-rider" | "count-status-driver" | "count-monthly">("count")
+    const [component, setComponent] = useState<"count" | "count-status" | "count-status-rider" | "count-status-driver" | "count-monthly" | "export">("count")
     const { data: count, isFetching: fetchingCount } = useGetTrips({ component, user_type: "organization", auth_id: params?.id as string })
     const { data: driverTrips, isFetching } = useGetTrips({ user_type: "organization", auth_id: params?.id as string, page: page.toString(), item_per_page: itemsPerPage.toString(), q: value })
 
@@ -102,10 +103,15 @@ export const CustomerTripPaymentPage: React.FC = () => {
                 
                 <div className="flex items-center gap-2 flex-wrap">
                     <div className="flex items-center gap-2 w-full sm:w-auto">
-                        <TableAction type="button" theme="ghost" block>
-                            <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-                            Export
-                        </TableAction>
+                        <ExportButton
+                          onExport={() => setComponent("export")} 
+                          onExported={() => {
+                            if (!fetchingCount && component === "export") {
+                              setComponent("count")
+                            }
+                          }} 
+                          isLoading={fetchingCount}
+                        />
                         <TableAction theme="secondary" block>
                             <Icon icon="mdi:funnel" className="size-4" />
                             Filter

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
-import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { useDebounce } from "@/hooks/useDebounce";
 import type { FetchedTripType } from "@/types/trips";
@@ -8,11 +7,12 @@ import { PurchaseModel } from "@/types/organizations";
 import { useGetTrips } from "@/services/hooks/queries";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
-import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { RenderIf, SearchInput, Table } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { cn } from "@/libs/cn";
 import { TripsFilter } from "@/components/pages/trips";
+import { ExportButton } from "@/components/shared/export-button";
 
 export const CustomerTripHistoryPage: React.FC = () => {
     const params = useParams();
@@ -28,7 +28,7 @@ export const CustomerTripHistoryPage: React.FC = () => {
       vehicle_id: "",
       charge_status: "" as any
     })
-    const [component] = useState<"count" | "count-status" | "count-status-rider" | "count-status-driver" | "count-monthly">("count")
+    const [component, setComponent] = useState<"count" | "count-status" | "count-status-rider" | "count-status-driver" | "count-monthly" | "export">("count")
     const { data: count, isFetching: fetchingCount } = useGetTrips({ component, user_type: "organization", auth_id: params?.id as string, ...filters })
     const { data: driverTrips, isFetching } = useGetTrips({ user_type: "organization", auth_id: params?.id as string, page: page.toString(), item_per_page: itemsPerPage.toString(), q: value, ...filters })
 
@@ -124,10 +124,15 @@ export const CustomerTripHistoryPage: React.FC = () => {
           
           <div className="flex items-center gap-2 flex-wrap">
             <div className="flex items-center gap-2 w-full sm:w-auto">
-                <TableAction type="button" theme="ghost" block>
-                    <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-                    Export
-                </TableAction>
+                <ExportButton
+                  onExport={() => setComponent("export")} 
+                  onExported={() => {
+                    if (!fetchingCount && component === "export") {
+                      setComponent("count")
+                    }
+                  }} 
+                  isLoading={fetchingCount}
+                />
                 <TripsFilter setFilters={setFilters} isLoading={isFetching || fetchingCount} theme="secondary" />
             </div>
           </div>

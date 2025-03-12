@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { cn } from "@/libs/cn";
 import { format } from "date-fns";
-import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { useDebounce } from "@/hooks/useDebounce";
 import type { FetchedTripType } from "@/types/trips";
@@ -11,9 +10,10 @@ import { Loader } from "@/components/core/Button/Loader";
 import { pascalCaseToWords } from "@/utils/textFormatter";
 import { pageVariants } from "@/constants/animateVariants";
 import { PurchaseModel } from "@/types/organizations";
-import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { RenderIf, SearchInput, Table } from "@/components/core";
 import { setPaginationParams, getPaginationParams } from "@/hooks/usePaginationParams";
 import { useParams, useNavigate, useLocation, useSearchParams } from "react-router-dom";
+import { ExportButton } from "@/components/shared/export-button";
 
 export const VehicleTripsPage: React.FC = () => {
     const params = useParams();
@@ -29,7 +29,8 @@ export const VehicleTripsPage: React.FC = () => {
       vehicle_id: params?.id as string,
       charge_status: "" as any
     })
-    const { data: count, isFetching: fetchingCount } = useGetTrips({ component: "count", ...filters })
+    const [component, setComponent] = useState<"count" | "export">("count")
+    const { data: count, isFetching: fetchingCount } = useGetTrips({ component, ...filters })
     const { data: vehicleTrips, isFetching } = useGetTrips({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value, ...filters })
 
     const columns = [
@@ -123,10 +124,15 @@ export const VehicleTripsPage: React.FC = () => {
                 </div>
                 
                 <div className="flex items-center gap-4 w-full sm:w-auto">
-                    <TableAction theme="ghost" block>
-                        <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-                        Export
-                    </TableAction>
+                    <ExportButton
+                      onExport={() => setComponent("export")} 
+                      onExported={() => {
+                        if (!fetchingCount && component === "export") {
+                          setComponent("count")
+                        }
+                      }} 
+                      isLoading={fetchingCount}
+                    />
                     <TripsFilter setFilters={setFilters} isLoading={isFetching || fetchingCount} theme="secondary" />
                 </div>
             </div>

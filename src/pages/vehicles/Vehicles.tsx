@@ -10,9 +10,10 @@ import { pageVariants } from "@/constants/animateVariants";
 import { AddVehicleModal, VehiclesFilter } from "@/components/pages/vehicles";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import type { FetchedVehicleCount, FetchedVehicleType } from "@/types/vehicles";
-import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { Button, RenderIf, SearchInput, Table } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { RenderFeature } from "@/hooks/usePermissions";
+import { ExportButton } from "@/components/shared/export-button";
 
 export const VehiclesPage: React.FC = () => {
   const navigate = useNavigate()
@@ -26,7 +27,7 @@ export const VehiclesPage: React.FC = () => {
     end_date: "",
   })
   const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
-  const { data: count, isFetching: fetchingCount, refetch } = useGetVehicles({ component, q: value, ...filters })
+  const { data: count, isFetching: fetchingCount } = useGetVehicles({ component, q: value, ...filters })
   const { data: vehicles, isFetching } = useGetVehicles({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value, ...filters })
   const [toggleModals, setToggleModals] = useState({
     openFilterModal: false,
@@ -147,10 +148,15 @@ export const VehiclesPage: React.FC = () => {
           
           <div className="flex items-center gap-2 flex-wrap">
             <div className="flex items-center gap-2 w-full sm:w-auto">
-              <TableAction type="button" theme="ghost" block onClick={() => component === "export" ? refetch() : setComponent("export")}>
-                <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-                Export
-              </TableAction>
+              <ExportButton
+                onExport={() => setComponent("export")} 
+                onExported={() => {
+                  if (!fetchingCount && component === "export") {
+                    setComponent("count")
+                  }
+                }} 
+                isLoading={fetchingCount}
+              />
               <VehiclesFilter setFilters={setFilters} isLoading={isFetching || fetchingCount} />
             </div>
             <RenderFeature module="VEHICLE_DATA" permission="create">

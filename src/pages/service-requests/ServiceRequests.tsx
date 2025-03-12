@@ -7,11 +7,12 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useGetServiceRequests } from "@/services/hooks/queries";
-import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { RenderIf, SearchInput, Table } from "@/components/core";
 import { RequestStatus, RequestType, type FetchedServiceRequest, type FetchedServiceRequestsCount, type FetchedServiceRequestsCountStatus } from "@/types/service-requests";
 import { pascalCaseToWords } from "@/utils/textFormatter";
 import { useNavigate } from "react-router-dom";
 import { ServiceRequestsFilter } from "@/components/pages/service-request";
+import { ExportButton } from "@/components/shared/export-button";
 
 export const ServiceRequestsPage: React.FC = () => {
     const navigate = useNavigate()
@@ -23,8 +24,9 @@ export const ServiceRequestsPage: React.FC = () => {
       end_date: "",
       status: ""
     })
+    const [component, setComponent] = useState<"count" | "count-status" | "export">("count")
     const { data: serviceRequestCountStatus, isFetching: fetchingServiceRequestStatus } = useGetServiceRequests<FetchedServiceRequestsCountStatus>({ component: "count-status" })
-    const { data: serviceRequestCount, isFetching: fetchingServiceRequestCount } = useGetServiceRequests<FetchedServiceRequestsCount>({ component: "count", q: value, ...filters })
+    const { data: serviceRequestCount, isFetching: fetchingServiceRequestCount } = useGetServiceRequests<FetchedServiceRequestsCount>({ component, q: value, ...filters })
     const { data: serviceRequests, isFetching: fetchingServiceRequests } = useGetServiceRequests<FetchedServiceRequest[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value, ...filters })
 
     const columns = [
@@ -93,10 +95,10 @@ export const ServiceRequestsPage: React.FC = () => {
     };
 
     const requests = [
-        { label: "Total Request", value: serviceRequestCountStatus?.total, className: "bg-[#F8F9FB]" },
-        { label: "Completed Requests", value: serviceRequestCountStatus?.total_complete, className: "bg-green-4" },
-        { label: "Pending Requests", value: serviceRequestCountStatus?.total_pending, className: "bg-yellow-4" },
-        { label: "Rejected Requests", value: serviceRequestCountStatus?.total_rejected, className: "bg-light-red" },
+        { label: "Total Request", value: serviceRequestCountStatus?.total || 0, className: "bg-[#F8F9FB]" },
+        { label: "Completed Requests", value: serviceRequestCountStatus?.total_complete || 0, className: "bg-green-4" },
+        { label: "Pending Requests", value: serviceRequestCountStatus?.total_pending || 0, className: "bg-yellow-4" },
+        { label: "Rejected Requests", value: serviceRequestCountStatus?.total_rejected || 0, className: "bg-light-red" },
     ]
     
     return (
@@ -111,10 +113,15 @@ export const ServiceRequestsPage: React.FC = () => {
                       </div>
                   
                       <div className="flex items-center gap-2 w-full sm:w-auto">
-                        <TableAction theme="ghost" block>
-                            <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-                            Export
-                        </TableAction>
+                        <ExportButton
+                          onExport={() => setComponent("export")} 
+                          onExported={() => {
+                            if (!fetchingServiceRequestCount && component === "export") {
+                              setComponent("count")
+                            }
+                          }} 
+                          isLoading={fetchingServiceRequestCount}
+                        />
                         <ServiceRequestsFilter setFilters={setFilters} isLoading={fetchingServiceRequestCount || fetchingServiceRequests}  />
                       </div>
                   </div>

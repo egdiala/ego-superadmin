@@ -123,7 +123,7 @@ export const RevenueSplitLeasePage: React.FC = () => {
                 <Table
                     data={leaseRevenue ?? []}
                     page={page}
-                    columns={columns.filter((column) => column !== false)}
+                    columns={columns.filter((column) => !!column)}
                     perPage={itemsPerPage}
                     totalCount={leaseRevenue?.length}
                     onPageChange={handlePageChange}

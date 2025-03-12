@@ -6,11 +6,12 @@ import { formattedNumber } from "@/utils/textFormatter";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useLocation, useParams, useSearchParams } from "react-router-dom";
-import { RenderIf, Table, TableAction } from "@/components/core";
+import { RenderIf, Table } from "@/components/core";
 import { useGetWalletStats, useGetWalletTransactions } from "@/services/hooks/queries";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { FetchedWalletTransaction, FetchedWalletTransactionCount, WalletStatus } from "@/types/wallet";
 import { WalletFilter } from "@/components/pages/wallet";
+import { ExportButton } from "@/components/shared/export-button";
 
 export const CustomerWalletPage: React.FC = () => {
     const params = useParams();
@@ -22,7 +23,7 @@ export const CustomerWalletPage: React.FC = () => {
       end_date: "",
     })
     const [searchParams, setSearchParams] = useSearchParams();
-    const [component] = useState<"count" | "count-status">("count")
+    const [component, setComponent] = useState<"count" | "count-status" | "export">("count")
     const { data, isFetching: fetchingStats } = useGetWalletStats({ user_type: "organization", auth_id: params?.id as string })
     const { data: count, isFetching: fetchingCount } = useGetWalletTransactions({ component, wallet_type: "organization-wallet", auth_id: params?.id as string })
     const { data: transactions, isFetching } = useGetWalletTransactions({ wallet_type: "organization-wallet", auth_id: params?.id as string, page: page.toString(), item_per_page: itemsPerPage.toString(), ...filters })
@@ -105,10 +106,15 @@ export const CustomerWalletPage: React.FC = () => {
                   
                   <div className="flex items-center gap-2 flex-wrap">
                       <div className="flex items-center gap-2 w-full sm:w-auto">
-                          <TableAction theme="ghost" block>
-                              <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-                              Export
-                          </TableAction>
+                          <ExportButton
+                            onExport={() => setComponent("export")} 
+                            onExported={() => {
+                              if (!fetchingCount && component === "export") {
+                                setComponent("count")
+                              }
+                            }} 
+                            isLoading={fetchingCount}
+                          />
                           <WalletFilter setFilters={setFilters} isLoading={isFetching} />
                       </div>
                   </div>

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
-import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useGetRiders } from "@/services/hooks/queries";
 import { pageVariants } from "@/constants/animateVariants";
-import { SearchInput, Table, TableAction } from "@/components/core";
+import { SearchInput, Table } from "@/components/core";
 import { FetchedRider, FetchedRiderCount, FetchedRiders } from "@/types/riders";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { ExportButton } from "@/components/shared/export-button";
 
 export const CustomerStaffsPage: React.FC = () => {
     const params = useParams();
@@ -19,8 +19,8 @@ export const CustomerStaffsPage: React.FC = () => {
     const { value, onChangeHandler } = useDebounce(500)
     const [searchParams, setSearchParams] = useSearchParams();
     const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
-    const { data: count, isFetching: fetchingCount, refetch } = useGetRiders({ component, q: value, organization_id: params?.id as string })
-    const { data: riders, isLoading } = useGetRiders({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value, organization_id: params?.id as string })
+    const { data: count, isFetching: fetchingCount } = useGetRiders({ component, q: value, organization_id: params?.id as string })
+    const { data: riders } = useGetRiders({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value, organization_id: params?.id as string })
 
     const columns = [
       {
@@ -86,10 +86,15 @@ export const CustomerStaffsPage: React.FC = () => {
                 
                 <div className="flex items-center gap-2 flex-wrap">
                     <div className="flex items-center gap-2 w-full sm:w-auto">
-                        <TableAction theme="ghost" block disabled={isLoading || fetchingCount} onClick={() => component === "export" ? refetch() : setComponent("export")}>
-                            <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-                            Export
-                        </TableAction>
+                      <ExportButton
+                        onExport={() => setComponent("export")} 
+                        onExported={() => {
+                          if (!fetchingCount && component === "export") {
+                            setComponent("count")
+                          }
+                        }} 
+                        isLoading={fetchingCount}
+                      />
                     </div>
                 </div>
             </div>

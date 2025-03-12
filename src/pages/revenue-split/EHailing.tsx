@@ -124,7 +124,7 @@ export const RevenueSplitEHailingPage: React.FC = () => {
                 <Table
                     data={eHailingRevenue ?? []}
                     page={page}
-                    columns={columns.filter((column) => column !== false)}
+                    columns={columns.filter((column) => !!column)}
                     perPage={itemsPerPage}
                     totalCount={eHailingRevenue?.length}
                     onPageChange={handlePageChange}

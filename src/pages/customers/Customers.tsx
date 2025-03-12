@@ -9,11 +9,12 @@ import { pascalCaseToWords } from "@/utils/textFormatter";
 import { pageVariants } from "@/constants/animateVariants";
 import { useGetOrganizations } from "@/services/hooks/queries";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { Button, RenderIf, SearchInput, Table } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { FetchedOrganizationCount, PurchaseModel, type FetchedOrgaizationType } from "@/types/organizations";
 import { CustomersFilter } from "@/components/pages/customers";
 import { RenderFeature } from "@/hooks/usePermissions";
+import { ExportButton } from "@/components/shared/export-button";
 
 export const CustomersPage: React.FC = () => {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ export const CustomersPage: React.FC = () => {
     end_date: "",
   })
   const [component, setComponent] = useState<"count" | "export" | "count-status">("count")
-  const { data: count, isFetching: fetchingCount, refetch } = useGetOrganizations({ component, q: value, ...filters })
+  const { data: count, isFetching: fetchingCount } = useGetOrganizations({ component, q: value, ...filters })
   const { data: drivers, isFetching } = useGetOrganizations({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value, ...filters })
 
   const columns = [
@@ -96,10 +97,15 @@ export const CustomersPage: React.FC = () => {
           
           <div className="flex items-center gap-2 flex-wrap">
             <div className="flex items-center gap-2 w-full sm:w-auto">
-              <TableAction type="button" theme="grey" block onClick={() => component === "export" ? refetch() : setComponent("export")}>
-                <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-                Export
-              </TableAction>
+              <ExportButton
+                onExport={() => setComponent("export")} 
+                onExported={() => {
+                  if (!fetchingCount && component === "export") {
+                    setComponent("count")
+                  }
+                }} 
+                isLoading={fetchingCount}
+              />
               <CustomersFilter setFilters={setFilters} isLoading={isFetching || fetchingCount} />
             </div>
             <RenderFeature module="CUSTOMER_DATA" permission="create">

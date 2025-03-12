@@ -124,7 +124,7 @@ export const RevenueSplitStaffCommutePage: React.FC = () => {
                 <Table
                     data={staffCommuteRevenue ?? []}
                     page={page}
-                    columns={columns.filter((column) => column !== false)}
+                    columns={columns.filter((column) => !!column)}
                     perPage={itemsPerPage}
                     totalCount={staffCommuteRevenue?.length}
                     onPageChange={handlePageChange}
