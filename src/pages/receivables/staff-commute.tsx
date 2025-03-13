@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { formattedNumber } from "@/utils/textFormatter";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useGetCommutePayments } from "@/services/hooks/queries";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
-import { RenderIf, Table, TableAction } from "@/components/core";
+import { RenderIf, Table } from "@/components/core";
 import type { FetchedReceivableCount, FetchedLeaseReceivable } from "@/types/payment";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
+import { ExportButton } from "@/components/shared/export-button";
 
 export const StaffCommuteReceivablesPage: React.FC = () => {
     const location = useLocation();
     const itemsPerPage = 10;
     const [page, setPage] = useState(1);
     const [searchParams, setSearchParams] = useSearchParams();
-    const { data: count, isFetching: fetchingReceivablesCount } = useGetCommutePayments<FetchedReceivableCount>({ request_type: "1", status: "0", component: "count" })
+    const [component, setComponent] = useState<"count" | "export">("count")
+    const { data: count, isFetching: fetchingReceivablesCount } = useGetCommutePayments<FetchedReceivableCount>({ request_type: "1", status: "0", component })
     const { data: receivables, isFetching: fetchingReceivables } = useGetCommutePayments<FetchedLeaseReceivable[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), request_type: "1", status: "0" })
 
     const columns = [
@@ -64,10 +65,15 @@ export const StaffCommuteReceivablesPage: React.FC = () => {
             <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-end">
             
                 <div className="flex items-center gap-2 w-full sm:w-auto">
-                    <TableAction type="button" theme="ghost" block>
-                        <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-                        Export
-                    </TableAction>
+                    <ExportButton
+                        onExport={() => setComponent("export")} 
+                        onExported={() => {
+                            if (!fetchingReceivablesCount && component === "export") {
+                            setComponent("count")
+                            }
+                        }} 
+                        isLoading={fetchingReceivablesCount}
+                    />
                 </div>
             </div>
             <RenderIf condition={!fetchingReceivables && !fetchingReceivablesCount}>

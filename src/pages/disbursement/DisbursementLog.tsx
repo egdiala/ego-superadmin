@@ -1,18 +1,18 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { FetchedPayout } from "@/types/payment";
 import { Loader } from "@/components/core/Button/Loader";
 import { useGetPayouts } from "@/services/hooks/queries";
 import { pageVariants } from "@/constants/animateVariants";
 import { useLocation, useSearchParams } from "react-router-dom";
-import { RenderIf, Table, TableAction } from "@/components/core";
+import { RenderIf, Table } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { format } from "date-fns";
 import { formattedNumber } from "@/utils/textFormatter";
 import { useApprovePayout } from "@/services/hooks/mutations";
 import { hasPermission } from "@/hooks/usePermissions";
 import { ConfirmationModal } from "@/components/pages/disbursement/ConfirmationModal";
+import { ExportButton } from "@/components/shared/export-button";
 
 export const DisbursementLogPage: React.FC = () => {
     const location = useLocation();
@@ -22,8 +22,9 @@ export const DisbursementLogPage: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [payoutId, setPayoutId] = useState<FetchedPayout | null>(null);
     const [searchParams, setSearchParams] = useSearchParams();
+    const [component, setComponent] = useState<"count" | "export">("count")
     const { data: payouts, isFetching } = useGetPayouts<FetchedPayout[]>({ page: page.toString(), item_per_page: itemsPerPage.toString() })
-    const { data: payoutCount, isFetching: isFetchingCount } = useGetPayouts<any>({ component: "count", page: page.toString(), item_per_page: itemsPerPage.toString() })
+    const { data: payoutCount, isFetching: isFetchingCount } = useGetPayouts<any>({ component, page: page.toString(), item_per_page: itemsPerPage.toString() })
     const { mutate, isPending } = useApprovePayout(msg, () => {
       setIsOpen(false)
       setMsg("")
@@ -205,15 +206,20 @@ export const DisbursementLogPage: React.FC = () => {
         <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-6">
             <div className="flex items-center justify-end gap-2 flex-wrap">
                 <div className="flex items-center gap-2 w-full sm:w-auto">
-                    <TableAction type="button" theme="ghost" block>
-                        <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-                        Export
-                    </TableAction>
+                  <ExportButton
+                      onExport={() => setComponent("export")} 
+                      onExported={() => {
+                          if (!isFetchingCount && component === "export") {
+                          setComponent("count")
+                          }
+                      }} 
+                      isLoading={isFetchingCount}
+                  />
                 </div>
             </div>
             <RenderIf condition={!isFetching && !isFetchingCount}>
               <Table
-                  columns={columns.filter((column) => column !== false)}
+                  columns={columns.filter((column) => !!column)}
                   data={payouts ?? []}
                   page={page}
                   perPage={itemsPerPage}

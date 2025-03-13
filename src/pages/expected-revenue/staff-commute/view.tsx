@@ -10,6 +10,7 @@ import { Link, useLocation, useParams, useSearchParams } from "react-router-dom"
 import { FetchedReceivableCount, SingleCommuteReceivable } from "@/types/payment";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { Breadcrumb, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { ExportButton } from "@/components/shared/export-button";
 
 
 export const ViewStaffCommuteExpectedRevenuePage: React.FC = () => {
@@ -18,7 +19,8 @@ export const ViewStaffCommuteExpectedRevenuePage: React.FC = () => {
     const itemsPerPage = 10;
     const [page, setPage] = useState(1)
     const [searchParams, setSearchParams] = useSearchParams();
-    const { data: count, isFetching: fetchingReceivablesCount } = useGetCommutePayments<FetchedReceivableCount>({ request_type: "2", start_date: id, end_date: id, component: "count" })
+    const [component, setComponent] = useState<"count" | "export">("count")
+    const { data: count, isFetching: fetchingReceivablesCount } = useGetCommutePayments<FetchedReceivableCount>({ request_type: "2", start_date: id, end_date: id, component })
     const { data: receivables, isFetching: fetchingReceivables } = useGetCommutePayments<SingleCommuteReceivable[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), request_type: "2", start_date: id, end_date: id })
 
     const columns = [
@@ -92,10 +94,15 @@ export const ViewStaffCommuteExpectedRevenuePage: React.FC = () => {
                     </div>
                 
                     <div className="flex items-center gap-2 w-full sm:w-auto">
-                        <TableAction type="button" theme="ghost" block>
-                            <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-                            Export
-                        </TableAction>
+                                                                                                  <ExportButton
+                                                                                                    onExport={() => setComponent("export")} 
+                                                                                                    onExported={() => {
+                                                                                                      if (!fetchingReceivablesCount && component === "export") {
+                                                                                                        setComponent("count")
+                                                                                                      }
+                                                                                                    }} 
+                                                                                                    isLoading={fetchingReceivablesCount}
+                                                                                                  />
                         <TableAction type="button" theme="secondary" block>
                             <Icon icon="mdi:funnel" className="size-4" />
                             Filter

@@ -7,7 +7,7 @@ export interface FetchLeasePaymentsQuery {
     end_date?: string;
     page?: string;
     item_per_page?: string;
-    component?: "count" | "count-status" | "dashboard-count"
+    component?: "count" | "count-status" | "dashboard-count" | "export"
 }
 
 export interface FetchCommutePaymentsQuery {
@@ -17,13 +17,13 @@ export interface FetchCommutePaymentsQuery {
     end_date?: string;
     page?: string;
     item_per_page?: string;
-    component?: "count" | "count-status"
+    component?: "count" | "count-status" | "export"
 }
 
 export interface FetchReconciliationQuery {
     start_date: string;
     end_date: string;
-    component?: "count-status"
+    component?: "count-status" | "export"
 }
 
 export interface FetchPayoutQuery {
@@ -32,7 +32,7 @@ export interface FetchPayoutQuery {
     end_date?: string;
     page?: string;
     item_per_page?: string;
-    component?: "count-status" | "count"
+    component?: "count-status" | "count" | "export"
 }
 
 export type ApprovePayoutType = {

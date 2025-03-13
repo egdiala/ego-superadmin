@@ -5,13 +5,14 @@ import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useGetReconciliation } from "@/services/hooks/queries";
 import { useLocation, useSearchParams } from "react-router-dom";
-import { RenderIf, Table, TableAction } from "@/components/core";
+import { RenderIf, Table } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { endOfMonth, format, parse, startOfMonth, startOfToday } from "date-fns";
 import { FetchedReconciliation, FetchReconciliationTotals } from "@/types/payment";
 import { formattedNumber } from "@/utils/textFormatter";
 import { ReconciliationsFilter } from "@/components/pages/reconciliation/ReconciliationsFilter";
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
+import { ExportButton } from "@/components/shared/export-button";
 
 const PopoverInfo: React.FC<{ text: string; }> = ({ text }) => {
     return (
@@ -42,8 +43,9 @@ export const ReconciliationPage: React.FC = () => {
         end_date: format(endOfMonth(parse(format(today, "yyyy-MM-dd"), "yyyy-MM-dd", new Date())), "yyyy-MM-dd")
     })
     
+    const [component, setComponent] = useState<"count-status" | "export">("count-status")
     const { data: reconciliations, isFetching } = useGetReconciliation<FetchedReconciliation[]>({ ...filters })
-    const { data: count, isFetching: fetchingCount } = useGetReconciliation<FetchReconciliationTotals>({ component: "count-status", ...filters })
+    const { data: count, isFetching: fetchingCount } = useGetReconciliation<FetchReconciliationTotals>({ component, ...filters })
 
     const totals = useMemo(() => {
         return [
@@ -144,10 +146,15 @@ export const ReconciliationPage: React.FC = () => {
                 <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-end">
                 
                     <div className="flex items-center gap-2 w-full sm:w-auto">
-                      <TableAction theme="ghost" block>
-                          <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-                          Export
-                      </TableAction>
+                      <ExportButton
+                          onExport={() => setComponent("export")} 
+                          onExported={() => {
+                              if (!fetchingCount && component === "export") {
+                              setComponent("count-status")
+                              }
+                          }} 
+                          isLoading={fetchingCount}
+                      />
                       <ReconciliationsFilter setFilters={setFilters} isLoading={isFetching || fetchingCount} theme="secondary" />
                     </div>
                 </div>
