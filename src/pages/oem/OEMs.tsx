@@ -8,16 +8,18 @@ import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useGetOEMs } from "@/services/hooks/queries/useOEMs";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
-import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { Button, RenderIf, SearchInput, Table } from "@/components/core";
 import type { FetchedOEMType } from "@/types/oem";
 import { RenderFeature } from "@/hooks/usePermissions";
+import { ExportButton } from "@/components/shared/export-button";
 
 export const OEMsPage: React.FC = () => {
   const location = useLocation();
   const itemsPerPage = 10;
   const [page, setPage] = useState(1)
   const [searchParams, setSearchParams] = useSearchParams();
-  const { data: oems, isFetching } = useGetOEMs()
+  const [component, setComponent] = useState<"export" | "">("")
+  const { data: oems, isFetching } = useGetOEMs({ component })
   const [toggleModals, setToggleModals] = useState({
     openCreateOemModal: false,
     openDeleteOemModal: false,
@@ -98,10 +100,15 @@ export const OEMsPage: React.FC = () => {
           
           <div className="flex items-center gap-2 flex-wrap">
             <div className="flex items-center gap-2 w-full sm:w-auto">
-              <TableAction type="button" theme="grey" block>
-                <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-                Export
-              </TableAction>
+              <ExportButton 
+                onExport={() => setComponent("export")} 
+                onExported={() => {
+                  if (!isFetching && component === "export") {
+                    setComponent("")
+                  }
+                }} 
+                isLoading={isFetching} 
+              />
             </div>
             <RenderFeature module="SETUP_OEMS" permission="create">
               <div className="w-full sm:w-auto">

@@ -131,10 +131,10 @@ export const RolesPage: React.FC = () => {
         <RenderIf condition={!isFetching && !fetchingCount}>
           <Table
             page={page}
-            columns={columns.filter((column) => column !== false)}
+            columns={columns.filter((column) => !!column)}
             perPage={itemsPerPage}
             onPageChange={handlePageChange}
-            data={roles as FetchedRolesType[]}
+            data={roles as FetchedRolesType[] ?? []}
             totalCount={(count as FetchedRolesCount)?.total}
           />
         </RenderIf>

@@ -11,13 +11,15 @@ import { formattedNumber } from "@/utils/textFormatter"
 import { hasPermission, RenderFeature } from "@/hooks/usePermissions"
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams"
 import { useLocation, useSearchParams } from "react-router-dom"
+import { ExportButton } from "@/components/shared/export-button"
 
 export const RevenueSplitLeasePage: React.FC = () => {
     const itemsPerPage = 10;
     const location = useLocation();
     const [page, setPage] = useState(1)
     const [searchParams, setSearchParams] = useSearchParams();
-    const { data: leaseRevenue, isFetching } = useGetFees<FetchedRevenueSplit[]>({ screen_name: "lease_revenue_split" })
+    const [component, setComponent] = useState<"fee_variables" | "export">("" as any)
+    const { data: leaseRevenue, isFetching } = useGetFees<FetchedRevenueSplit[]>({ screen_name: "lease_revenue_split", component })
     const [toggleModals, setToggleModals] = useState({
         openAddNewParameterModal: false,
         openDeleteParameterModal: false,
@@ -108,10 +110,15 @@ export const RevenueSplitLeasePage: React.FC = () => {
     return (
         <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-4">
             <div className="flex items-center justify-end gap-4 w-full sm:w-fit md:ml-auto">
-                <TableAction theme="ghost" block>
-                    <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-                    Export
-                </TableAction>
+                <ExportButton 
+                    onExport={() => setComponent("export")} 
+                    onExported={() => {
+                    if (!isFetching && component === "export") {
+                        setComponent("" as any)
+                    }
+                    }} 
+                    isLoading={isFetching} 
+                />
                 <RenderFeature module="SETUP_REV_SPLIT" permission="create">
                     <TableAction theme="primary" block onClick={toggleNewParameter}>
                         <Icon icon="lucide:plus" className="size-4" />

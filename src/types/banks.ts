@@ -1,5 +1,5 @@
 export interface FetchFeeBankQuery {
-    component?: "fee_variables"
+    component?: "fee_variables" | "export"
 }
 
 export type CreateFeeBankType = {

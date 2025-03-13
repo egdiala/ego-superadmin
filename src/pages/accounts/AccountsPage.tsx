@@ -172,10 +172,10 @@ export const AccountsPage: React.FC = () => {
           <RenderIf condition={!isFetching && !fetchingCount}>
           <Table
               page={page}
-              columns={columns.filter((column) => column !== false)}
+              columns={columns.filter((column) => !!column)}
               perPage={itemsPerPage}
               onPageChange={handlePageChange}
-              data={(admins as FetchedAdminType[])}
+              data={(admins as FetchedAdminType[]) || []}
               totalCount={(count as FetchedAdminsCount)?.total}
           />
           </RenderIf>

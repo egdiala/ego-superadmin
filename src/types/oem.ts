@@ -51,3 +51,7 @@ export interface FetchedOEMType {
     updatedAt: Date | string;
     oem_id: string;
 }
+
+export interface FetchOemQuery {
+    component?: "" | "export";
+}

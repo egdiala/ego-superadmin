@@ -11,13 +11,15 @@ import { AddNewParameter, DeleteParameter, EditParameter } from "@/components/pa
 import { useLocation, useSearchParams } from "react-router-dom"
 import { hasPermission, RenderFeature } from "@/hooks/usePermissions"
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams"
+import { ExportButton } from "@/components/shared/export-button"
 
 export const FeesStaffCommutePage: React.FC = () => {
     const itemsPerPage = 10;
     const location = useLocation();
     const [page, setPage] = useState(1)
     const [searchParams, setSearchParams] = useSearchParams();
-    const { data: staffFees, isFetching } = useGetFees<FetchedRevenueSplit[]>({ screen_name: "staff_commute_fee" })
+    const [component, setComponent] = useState<"fee_variables" | "export">("" as any)
+    const { data: staffFees, isFetching } = useGetFees<FetchedRevenueSplit[]>({ screen_name: "staff_commute_fee", component })
 
     const [toggleModals, setToggleModals] = useState({
         openAddNewParameterModal: false,
@@ -109,10 +111,15 @@ export const FeesStaffCommutePage: React.FC = () => {
     return (
         <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-4">
             <div className="flex items-center justify-end gap-4 w-full sm:w-fit md:ml-auto">
-                <TableAction theme="ghost" block>
-                    <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-                    Export
-                </TableAction>
+                <ExportButton 
+                    onExport={() => setComponent("export")} 
+                    onExported={() => {
+                        if (!isFetching && component === "export") {
+                            setComponent("" as any)
+                        }
+                    }} 
+                    isLoading={isFetching} 
+                />
                 <RenderFeature module="SETUP_FEE_FEE" permission="create">
                     <TableAction theme="primary" block onClick={toggleNewParameter}>
                         <Icon icon="lucide:plus" className="size-4" />
@@ -124,7 +131,7 @@ export const FeesStaffCommutePage: React.FC = () => {
                 <Table
                     data={staffFees ?? []}
                     page={page}
-                    columns={columns.filter((column) => column !== false)}
+                    columns={columns.filter((column) => !!column)}
                     perPage={itemsPerPage}
                     totalCount={staffFees?.length}
                     onPageChange={handlePageChange}

@@ -2,12 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import { GET_OEM, GET_OEMS } from "@/constants/queryKeys";
 import { errorToast } from "@/utils/createToast";
 import { getOEM, getOEMs } from "@/services/apis/oem";
-import type { FetchedOEMType } from "@/types/oem";
+import type { FetchedOEMType, FetchOemQuery } from "@/types/oem";
 
-export const useGetOEMs = () => {
+export const useGetOEMs = (query?: FetchOemQuery) => {
   return useQuery({
-    queryKey: [GET_OEMS],
-    queryFn: () => getOEMs(),
+    queryKey: [GET_OEMS, query],
+    queryFn: () => getOEMs(query),
     select: (res) => res?.data as FetchedOEMType[],
     retry: false,
     refetchOnWindowFocus: false,

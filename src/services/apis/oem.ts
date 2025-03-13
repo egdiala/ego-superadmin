@@ -1,10 +1,10 @@
 import { GET_OEM_API, UPLOAD_OEM_VEHICLE_PHOTO_API } from "@/constants/api";
 import { axiosSettingsInstance, axiosVehicleInstance } from "../axiosInstance";
-import type { CreateOEMType, DeleteOEMType, UpdateModelType, UpdateOEMType, UploadEOMPictureType } from "@/types/oem";
+import type { CreateOEMType, DeleteOEMType, FetchOemQuery, UpdateModelType, UpdateOEMType, UploadEOMPictureType } from "@/types/oem";
 import { createQueryString } from "@/utils/createQuery";
 
-export const getOEMs = async () => {
-  const res = await axiosVehicleInstance.get(GET_OEM_API);
+export const getOEMs = async (query?: FetchOemQuery) => {
+  const res = await axiosVehicleInstance.get(`${GET_OEM_API}${createQueryString(query || {})}`);
   return res.data;
 };
 

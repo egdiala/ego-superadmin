@@ -16,7 +16,7 @@ export interface FetchChargeStationsQuery {
     item_per_page?: string;
     start_date?: string;
     end_date?: string;
-    component?: "count";
+    component?: "count" | "export";
 }
 
 export interface BulkUploadChargeStationsParams {

@@ -7,11 +7,12 @@ import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useGetChargeStations } from "@/services/hooks/queries";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { Button, RenderIf, SearchInput, Table } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import type { FetchedChargeStations, FetchedChargeStationsCount } from "@/types/charge-stations";
 import { CreateStationModal, DeleteStationModal, EditStationModal, FailedStationUploadsModal } from "@/components/pages/charge-stations";
 import { hasPermission, RenderFeature } from "@/hooks/usePermissions";
+import { ExportButton } from "@/components/shared/export-button";
 
 export const ChargeStationsPage: React.FC = () => {
   const navigate = useNavigate();
@@ -25,8 +26,8 @@ export const ChargeStationsPage: React.FC = () => {
     start_date: "",
     end_date: "",
   })
-  
-  const { data: count, isFetching: fetchingCount } = useGetChargeStations<FetchedChargeStationsCount>({ component: "count", q: value, ...filters })
+  const [component, setComponent] = useState<"export" | "count">("count")
+  const { data: count, isFetching: fetchingCount } = useGetChargeStations<FetchedChargeStationsCount>({ component, q: value, ...filters })
   const { data: chargeStations, isFetching } = useGetChargeStations<FetchedChargeStations[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), q: value, ...filters })
 
     const [toggleModals, setToggleModals] = useState({
@@ -147,10 +148,15 @@ export const ChargeStationsPage: React.FC = () => {
           
           <div className="flex items-center gap-2 flex-wrap">
             <div className="flex items-center gap-2 w-full sm:w-auto">
-              <TableAction type="button" theme="grey" block>
-                <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-                Export
-              </TableAction>
+                <ExportButton 
+                  onExport={() => setComponent("export")} 
+                  onExported={() => {
+                    if (!fetchingCount && component === "export") {
+                      setComponent("count")
+                    }
+                  }} 
+                  isLoading={fetchingCount} 
+                />
             </div>
             <RenderFeature module="SETUP_CHARGE_STATION" permission="create">
               <div className="w-full sm:w-auto">
@@ -167,7 +173,7 @@ export const ChargeStationsPage: React.FC = () => {
             data={chargeStations ?? []}
             page={page}
             perPage={itemsPerPage}
-            columns={columns.filter((column) => column !== false)}
+            columns={columns.filter((column) => !!column)}
             totalCount={count?.total}
             onPageChange={handlePageChange}
             onClick={({ original }) => navigate(`/charge-stations/${original?.station_id}`)}

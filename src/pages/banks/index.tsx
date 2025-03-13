@@ -5,17 +5,19 @@ import { useLocation } from "react-router-dom";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { getPaginationParams } from "@/hooks/usePaginationParams";
-import { Button, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
+import { Button, RenderIf, SearchInput, Table } from "@/components/core";
 import { useGetFeeBanks } from "@/services/hooks/queries";
 import { CreateBankModal, DeleteBankModal } from "@/components/pages/bank";
 import type { FetchedFeeBank } from "@/types/banks";
 import { hasPermission, RenderFeature } from "@/hooks/usePermissions";
+import { ExportButton } from "@/components/shared/export-button";
 
 export const BanksPage: React.FC = () => {
   const location = useLocation();
   const itemsPerPage = 10;
   const [page, setPage] = useState(1)
-  const { data: feeBanks, isFetching } = useGetFeeBanks<FetchedFeeBank[]>({})
+  const [component, setComponent] = useState<"fee_variables" | "export">("" as any)
+  const { data: feeBanks, isFetching } = useGetFeeBanks<FetchedFeeBank[]>({ component })
   const [toggleModals, setToggleModals] = useState({
     openCreateBankModal: false,
     openDeleteBankModal: false,
@@ -90,10 +92,15 @@ export const BanksPage: React.FC = () => {
           
           <div className="flex items-center gap-2 flex-wrap">
             <div className="flex items-center gap-2 w-full sm:w-auto">
-              <TableAction type="button" theme="grey" block>
-                <Icon icon="mdi:arrow-top-right-bold-box" className="size-4" />
-                Export
-              </TableAction>
+              <ExportButton 
+                  onExport={() => setComponent("export")} 
+                  onExported={() => {
+                      if (!isFetching && component === "export") {
+                          setComponent("" as any)
+                      }
+                  }} 
+                  isLoading={isFetching} 
+              />
             </div>
             <RenderFeature module="SETUP_BANK_INFO" permission="create">
               <div className="w-full sm:w-auto">
@@ -110,7 +117,7 @@ export const BanksPage: React.FC = () => {
             data={feeBanks ?? []}
             page={page}
             perPage={itemsPerPage}
-            columns={columns.filter((column) => column !== false)}
+            columns={columns.filter((column) => !!column)}
             totalCount={0}
             onPageChange={handlePageChange}
             emptyStateText="We couldn't find any bank account in the system."
