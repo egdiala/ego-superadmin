@@ -19,8 +19,8 @@ export const ViewStaffCommuteReceivablesPage: React.FC = () => {
     const [page, setPage] = useState(1)
     const [searchParams, setSearchParams] = useSearchParams();
     const [component, setComponent] = useState<"count" | "export">("count")
-    const { data: count, isFetching: fetchingReceivablesCount } = useGetCommutePayments<FetchedReceivableCount>({ request_type: "2", status: "0", start_date: id, end_date: id, component })
-    const { data: receivables, isFetching: fetchingReceivables } = useGetCommutePayments<SingleLeaseReceivable[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), request_type: "2", status: "0", start_date: id, end_date: id })
+    const { data: count, isFetching: fetchingReceivablesCount } = useGetCommutePayments<FetchedReceivableCount>({ request_type: "2", status: "2", start_date: id, end_date: id, component })
+    const { data: receivables, isFetching: fetchingReceivables } = useGetCommutePayments<SingleLeaseReceivable[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), request_type: "2", status: "2", start_date: id, end_date: id })
 
     const columns = [
         {
@@ -29,21 +29,21 @@ export const ViewStaffCommuteReceivablesPage: React.FC = () => {
             cell: ({ row }: { row: any; }) => {
                 const item = row?.original as SingleLeaseReceivable
                 return (
-                    <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{format(item?.created, "dd MMM, yyyy")}</span> • 11:59 pm</div>
+                    <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{format(item?.createdAt, "dd MMM, yyyy")}</span> • 11:59 pm</div>
                 )
             }
         },
         {
             header: () => "Business / Staff name",
-            accessorKey: "user_orgs.name",
+            accessorKey: "organization_name",
         },
         {
             header: () => "Total amount being owed",
-            accessorKey: "total_expected",
+            accessorKey: "total_amount",
             cell: ({ row }: { row: any; }) => {
                 const item = row?.original as SingleLeaseReceivable
                 return (
-                    <div className="text-sm text-grey-dark-2 whitespace-nowrap">{formattedNumber(item?.total_expected)}</div>
+                    <div className="text-sm text-grey-dark-2 whitespace-nowrap">{formattedNumber(item?.total_amount)}</div>
                 )
             }
         },

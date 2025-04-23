@@ -26,17 +26,17 @@ export const ViewStaffCommuteExpectedRevenuePage: React.FC = () => {
     const columns = [
         {
             header: () => "Date & Time",
-            accessorKey: "created",
+            accessorKey: "createdAt",
             cell: ({ row }: { row: any; }) => {
                 const item = row?.original as SingleCommuteReceivable
                 return (
-                    <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{format(item?.created, "dd MMM, yyyy")}</span> • 11:59 pm</div>
+                    <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{format(item?.createdAt, "dd MMM, yyyy")}</span> • 11:59 pm</div>
                 )
             }
         },
         {
-            header: () => "Plate Number",
-            accessorKey: "vehicle_data.plate_number",
+            header: () => "Organization",
+            accessorKey: "organization_name",
         },
         {
             header: () => "Total Trips",
@@ -44,11 +44,11 @@ export const ViewStaffCommuteExpectedRevenuePage: React.FC = () => {
         },
         {
             header: () => "Expected Revenue",
-            accessorKey: "total_expected",
+            accessorKey: "total_amount",
             cell: ({ row }: { row: any; }) => {
                 const item = row?.original as SingleCommuteReceivable
                 return (
-                    <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap">{formattedNumber(item?.total_expected)}</div>
+                    <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap">{formattedNumber(item?.total_amount)}</div>
                 )
             }
         },
@@ -68,7 +68,7 @@ export const ViewStaffCommuteExpectedRevenuePage: React.FC = () => {
             cell: ({ row }: { row: any; }) => {
                 const item = row?.original as SingleCommuteReceivable
                 return (
-                    <Link className="text-dark-green-1 font-medium text-sm underline underline-offset-2" to={`/revenue/staff-commute/${item?.created}/${item?.vehicle_data?._id}`}>View</Link>
+                    <Link className="text-dark-green-1 font-medium text-sm underline underline-offset-2" to={`/revenue/staff-commute/${item?.createdAt}/${item?.organization_id}`}>View</Link>
                 )
             }
         },
@@ -94,15 +94,15 @@ export const ViewStaffCommuteExpectedRevenuePage: React.FC = () => {
                     </div>
                 
                     <div className="flex items-center gap-2 w-full sm:w-auto">
-                                                                                                  <ExportButton
-                                                                                                    onExport={() => setComponent("export")} 
-                                                                                                    onExported={() => {
-                                                                                                      if (!fetchingReceivablesCount && component === "export") {
-                                                                                                        setComponent("count")
-                                                                                                      }
-                                                                                                    }} 
-                                                                                                    isLoading={fetchingReceivablesCount}
-                                                                                                  />
+                        <ExportButton
+                            onExport={() => setComponent("export")} 
+                            onExported={() => {
+                                if (!fetchingReceivablesCount && component === "export") {
+                                    setComponent("count")
+                                }
+                            }} 
+                            isLoading={fetchingReceivablesCount}
+                        />
                         <TableAction type="button" theme="secondary" block>
                             <Icon icon="mdi:funnel" className="size-4" />
                             Filter

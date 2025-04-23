@@ -16,17 +16,17 @@ export const StaffCommuteReceivablesPage: React.FC = () => {
     const [page, setPage] = useState(1);
     const [searchParams, setSearchParams] = useSearchParams();
     const [component, setComponent] = useState<"count" | "export">("count")
-    const { data: count, isFetching: fetchingReceivablesCount } = useGetCommutePayments<FetchedReceivableCount>({ request_type: "1", status: "0", component })
-    const { data: receivables, isFetching: fetchingReceivables } = useGetCommutePayments<FetchedLeaseReceivable[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), request_type: "1", status: "0" })
+    const { data: count, isFetching: fetchingReceivablesCount } = useGetCommutePayments<FetchedReceivableCount>({ request_type: "1", status: "2", component })
+    const { data: receivables, isFetching: fetchingReceivables } = useGetCommutePayments<FetchedLeaseReceivable[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), request_type: "1", status: "2" })
 
     const columns = [
         {
             header: () => "Date & Time",
-            accessorKey: "created",
+            accessorKey: "createdAt",
         },
         {
-            header: () => "Total Number of business owing",
-            accessorKey: "total_org",
+            header: () => "Total Trip",
+            accessorKey: "total_trip",
         },
         {
             header: () => "Total amount being owed",
@@ -34,7 +34,17 @@ export const StaffCommuteReceivablesPage: React.FC = () => {
             cell: ({ row }: { row: any; }) => {
                 const item = row?.original as FetchedLeaseReceivable
                 return (
-                    <div className="text-sm text-grey-dark-2 whitespace-nowrap">{formattedNumber(item?.total_expected)}</div>
+                    <div className="text-sm text-grey-dark-2 whitespace-nowrap">{formattedNumber(item?.total_amount)}</div>
+                )
+            }
+        },
+        {
+            header: () => "Total amount paid",
+            accessorKey: "total_remitted",
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as FetchedLeaseReceivable
+                return (
+                    <div className="text-sm text-grey-dark-2 whitespace-nowrap">{formattedNumber(item?.total_remitted)}</div>
                 )
             }
         },
@@ -44,7 +54,7 @@ export const StaffCommuteReceivablesPage: React.FC = () => {
             cell: ({ row }: { row: any; }) => {
                 const item = row?.original as FetchedLeaseReceivable
                 return (
-                    <Link className="text-dark-green-1 font-medium text-sm underline underline-offset-2" to={`/receivables/staff-commute/${item?.created}`}>View</Link>
+                    <Link className="text-dark-green-1 font-medium text-sm underline underline-offset-2" to={`/receivables/staff-commute/${item?.createdAt}`}>View</Link>
                 )
             }
         },

@@ -28,21 +28,21 @@ export const StaffCommuteExpectedRevenuePage: React.FC = () => {
             cell: ({ row }: { row: any; }) => {
                 const item = row?.original as FetchedCommuteRevenue
                 return (
-                    <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{format(item?.created, "dd MMM, yyyy")}</span> • 11:59 pm</div>
+                    <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{format(item?.createdAt, "dd MMM, yyyy")}</span> • 11:59 pm</div>
                 )
             }
         },
         {
-            header: () => "Total No. of Vehicles",
+            header: () => "Total Trips",
             accessorKey: "total_trip",
         },
         {
             header: () => "Expected Revenue",
-            accessorKey: "total_expected",
+            accessorKey: "total_amount",
             cell: ({ row }: { row: any; }) => {
                 const item = row?.original as FetchedCommuteRevenue
                 return (
-                    <div className="text-sm text-grey-dark-2 whitespace-nowrap">{formattedNumber(item?.total_expected)}</div>
+                    <div className="text-sm text-grey-dark-2 whitespace-nowrap">{formattedNumber(item?.total_amount)}</div>
                 )
             }
         },
@@ -62,7 +62,7 @@ export const StaffCommuteExpectedRevenuePage: React.FC = () => {
             cell: ({ row }: { row: any; }) => {
                 const item = row?.original as FetchedCommuteRevenue
                 return (
-                    <Link className="text-dark-green-1 font-medium text-sm underline underline-offset-2" to={`/revenue/staff-commute/${item.created}`}>View</Link>
+                    <Link className="text-dark-green-1 font-medium text-sm underline underline-offset-2" to={`/revenue/staff-commute/${item.createdAt}`}>View</Link>
                 )
             }
         },
@@ -86,15 +86,15 @@ export const StaffCommuteExpectedRevenuePage: React.FC = () => {
                 </div>
             
                 <div className="flex items-center gap-2 w-full sm:w-auto">
-                                                          <ExportButton
-                                                            onExport={() => setComponent("export")} 
-                                                            onExported={() => {
-                                                              if (!fetchingRevenuesCount && component === "export") {
-                                                                setComponent("count")
-                                                              }
-                                                            }} 
-                                                            isLoading={fetchingRevenuesCount}
-                                                          />
+                    <ExportButton
+                        onExport={() => setComponent("export")} 
+                        onExported={() => {
+                            if (!fetchingRevenuesCount && component === "export") {
+                            setComponent("count")
+                            }
+                        }} 
+                        isLoading={fetchingRevenuesCount}
+                    />
                     <TableAction type="button" theme="secondary" block>
                         <Icon icon="mdi:funnel" className="size-4" />
                         Filter

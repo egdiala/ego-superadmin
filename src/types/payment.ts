@@ -11,13 +11,15 @@ export interface FetchLeasePaymentsQuery {
 }
 
 export interface FetchCommutePaymentsQuery {
-    request_type: "1" | "2" // 1=Daily Group | 2=Vehicle Group
-    status?: "0" | "1" // 0=receiveable | 1=paid
+    request_type: "1" | "2" | "3" // 1=Daily Group | 2=Vehicle Group | 3=Organization Group
+    status?: "0" | "1" | "2" // 0=receiveable | 1=paid
+    charge_status?: "0" | "1" // 0=unpaid | 1=paid
     start_date?: string;
+    organization_id?: string;
     end_date?: string;
     page?: string;
     item_per_page?: string;
-    component?: "count" | "count-status" | "export"
+    component?: "count" | "count-status" | "export" | "dashboard-count"
 }
 
 export interface FetchReconciliationQuery {
@@ -120,34 +122,51 @@ export interface PaymentCountStatus {
 }
 
 export interface FetchedLeaseReceivable {
-    total_invoice: number;
-    total_expected: number;
+    createdAt: string;
+    total_trip: number;
+    total_amount: number;
     total_remitted: number;
-    created: string;
-    total_org: number;
 }
 
 export interface FetchedCommuteRevenue {
     total_trip: number;
-    total_expected: number;
+    total_amount: number;
     total_remitted: number;
-    created: string;
+    createdAt: string;
 }
 
-export interface SingleLeaseReceivable extends Omit<FetchedLeaseReceivable, "total_org"> {
-    excess_km: number;
-    total_km: number;
-    user_orgs: {
-        name: string;
-        auth_id: string;
-    }
-}
-
-export interface SingleCommuteReceivable extends Omit<SingleLeaseReceivable, "user_orgs"> {
-    vehicle_data: {
-        _id: string;
+export interface FetchedCommuteRevenueOrg {
+    trip_ref: string;
+    driver_data: {
         plate_number: string;
-    }
+        name: string;
+    },
+    organization_id: string;
+    createdAt: Date | string;
+    purchase_model: number;
+    payment_type: number;
+    charge_status: number;
+    rider_name: string;
+    total_amount: number;
+    organization_name: string;
+}
+
+export interface SingleLeaseReceivable {
+    createdAt: string;
+    total_trip: number;
+    total_amount: number;
+    total_remitted: number;
+    organization_id: string;
+    organization_name: string;
+}
+
+export interface SingleCommuteReceivable {
+    createdAt: string;
+    total_trip: number;
+    total_amount: number;
+    total_remitted: number;
+    organization_id: string;
+    organization_name: string;
 }
 
 export interface SingleLeaseOrg {
@@ -211,12 +230,18 @@ export interface FetchedReceivableCount {
     total: number;
 }
 
-export interface FetchedDashboardPayments {
+export interface FetchedLeaseDashboardPayments {
     _id: null;
-    total_amount: number;
-    total_count: number;
-    total_lease_amount: number;
-    total_commute_amount: number;
-    total_lease_count: number;
-    total_commute_count: number;
+    total_lease_paid_amount: number;
+    total_lease_paid_count: number;
+    total_lease_pending_amount: number;
+    total_lease_pending_count: number;
+}
+
+export interface FetchedCommuteDashboardPayments {
+    _id: null;
+    total_sc_paid_amount: number;
+    total_sc_paid_count: number;
+    total_sc_pending_amount: number;
+    total_sc_pending_count: number;
 }
