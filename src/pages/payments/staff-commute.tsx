@@ -7,7 +7,7 @@ import { formattedNumber } from "@/utils/textFormatter";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useGetCommutePayments } from "@/services/hooks/queries";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { RenderIf, SearchInput, Table, TableAction } from "@/components/core";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import type { FetchedCommutePayment, FetchedReceivableCount, PaymentCountStatus } from "@/types/payment";
@@ -20,9 +20,9 @@ export const StaffCommutePaymentLogPage: React.FC = () => {
     const [page, setPage] = useState(1);
     const [searchParams, setSearchParams] = useSearchParams();
     const [component, setComponent] = useState<"count" | "export">("count")
-    const { data: count, isFetching: fetchingPaymentsCount } = useGetCommutePayments<FetchedReceivableCount>({ request_type: "2", status: "1", component })
-    const { data: countStatus, isFetching: fetchingPaymentsCountStatus } = useGetCommutePayments<PaymentCountStatus>({ request_type: "2", status: "1", component: "count-status" })
-    const { data: payments, isFetching: fetchingPayments } = useGetCommutePayments<FetchedCommutePayment[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), request_type: "2", status: "1" })
+    const { data: count, isFetching: fetchingPaymentsCount } = useGetCommutePayments<FetchedReceivableCount>({ request_type: "1", status: "1", component })
+    const { data: countStatus, isFetching: fetchingPaymentsCountStatus } = useGetCommutePayments<PaymentCountStatus>({ request_type: "1", status: "1", component: "count-status" })
+    const { data: payments, isFetching: fetchingPayments } = useGetCommutePayments<FetchedCommutePayment[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), request_type: "1", status: "1" })
 
     const columns = [
         {
@@ -31,24 +31,24 @@ export const StaffCommutePaymentLogPage: React.FC = () => {
             cell: ({ row }: { row: any; }) => {
                 const item = row?.original as FetchedCommutePayment
                 return (
-                    <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{format(item?.created, "dd MMM, yyyy")}</span> • 11:59 pm</div>
+                    <div className="text-sm text-grey-dark-2 lowercase whitespace-nowrap"><span className="capitalize">{format(item?.createdAt, "dd MMM, yyyy")}</span> • 11:59 pm</div>
                 )
             }
         },
-        {
-            header: () => "Driver Name",
-            accessorKey: "driver_data._id",
-            cell: ({ row }: { row: any; }) => {
-                const item = row?.original as FetchedCommutePayment
-                return (
-                    <div className="text-sm text-grey-dark-2 capitalize whitespace-nowrap">{item?.driver_data?.first_name} {item?.driver_data?.last_name}</div>
-                )
-            }
-        },
-        {
-            header: () => "Plate Number",
-            accessorKey: "vehicle_data.plate_number",
-        },
+        // {
+        //     header: () => "Driver Name",
+        //     accessorKey: "driver_data._id",
+        //     cell: ({ row }: { row: any; }) => {
+        //         const item = row?.original as FetchedCommutePayment
+        //         return (
+        //             <div className="text-sm text-grey-dark-2 capitalize whitespace-nowrap">{item?.driver_data?.first_name} {item?.driver_data?.last_name}</div>
+        //         )
+        //     }
+        // },
+        // {
+        //     header: () => "Plate Number",
+        //     accessorKey: "vehicle_data.plate_number",
+        // },
         {
             header: () => "Total Trips",
             accessorKey: "total_trip",
@@ -69,6 +69,16 @@ export const StaffCommutePaymentLogPage: React.FC = () => {
             cell: () => {
                 return (
                     <div className="text-sm text-semantics-success whitespace-nowrap">Successful</div>
+                )
+            }
+        },
+        {
+            header: () => "Action",
+            accessorKey: "action",
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as FetchedCommutePayment
+                return (
+                    <Link className="text-dark-green-1 font-medium text-sm underline underline-offset-2" to={`/payment-log/staff-commute/${item?.createdAt}`}>View</Link>
                 )
             }
         },

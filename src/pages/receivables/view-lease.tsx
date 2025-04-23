@@ -23,7 +23,7 @@ export const ViewLeaseReceivablesPage: React.FC = () => {
     const { data: count, isFetching: fetchingReceivablesCount } = useGetLeasePayments<FetchedReceivableCount>({ request_type: "2", status: "0", start_date: id, end_date: id, component })
     const { data: receivables, isFetching: fetchingReceivables } = useGetLeasePayments<FetchedLeasePayment[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), request_type: "2", status: "0", start_date: id, end_date: id })
 
-        const columns = [
+    const columns = [
         {
             header: () => "Date & Time",
             accessorKey: "created",

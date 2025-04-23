@@ -5,7 +5,7 @@ import { formattedNumber } from "@/utils/textFormatter";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
 import { useGetCommutePayments } from "@/services/hooks/queries";
-import { useLocation, useParams, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useParams, useSearchParams } from "react-router-dom";
 import { FetchedReceivableCount, SingleLeaseReceivable } from "@/types/payment";
 import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 import { Breadcrumb, RenderIf, Table } from "@/components/core";
@@ -44,6 +44,16 @@ export const ViewStaffCommuteReceivablesPage: React.FC = () => {
                 const item = row?.original as SingleLeaseReceivable
                 return (
                     <div className="text-sm text-grey-dark-2 whitespace-nowrap">{formattedNumber(item?.total_amount)}</div>
+                )
+            }
+        },
+        {
+            header: () => "Action",
+            accessorKey: "action",
+            cell: ({ row }: { row: any; }) => {
+                const item = row?.original as SingleLeaseReceivable
+                return (
+                    <Link className="text-dark-green-1 font-medium text-sm underline underline-offset-2" to={`/receivables/staff-commute/${item?.createdAt}/${item?.organization_id}`}>View</Link>
                 )
             }
         },

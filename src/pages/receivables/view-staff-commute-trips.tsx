@@ -1,28 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { cn } from "@/libs/cn";
-import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { format, formatRelative } from "date-fns";
-import { useGetCommutePayments } from "@/services/hooks/queries";
+import { formattedNumber } from "@/utils/textFormatter";
 import { Loader } from "@/components/core/Button/Loader";
 import { pageVariants } from "@/constants/animateVariants";
-import { useLocation, useParams, useSearchParams } from "react-router-dom";
-import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
-import { Breadcrumb, RenderIf, SearchInput, Table, TableAction } from "@/components/core";
-import { formattedNumber } from "@/utils/textFormatter";
-import { ExportButton } from "@/components/shared/export-button";
+import { Breadcrumb, RenderIf, Table } from "@/components/core";
 import { FetchedCommuteRevenueOrg, FetchedReceivableCount } from "@/types/payment";
+import { useLocation, useParams, useSearchParams } from "react-router-dom";
+import { useGetCommutePayments, useGetOrganization } from "@/services/hooks/queries";
+import { getPaginationParams, setPaginationParams } from "@/hooks/usePaginationParams";
 
 
-export const StaffCommuteExpectedRevenueOrgPage: React.FC = () => {
+export const ViewStaffCommuteReceivablesTripsPage: React.FC = () => {
     const location = useLocation();
     const { id, orgId } = useParams()
     const itemsPerPage = 10;
     const [page, setPage] = useState(1)
     const [searchParams, setSearchParams] = useSearchParams();
-    const [component, setComponent] = useState<"count" | "export">("count")
-    const { data: count, isFetching: fetchingReceivablesCount } = useGetCommutePayments<FetchedReceivableCount>({ organization_id: orgId, start_date: id, end_date: id, charge_status: "1", component, request_type: "3" })
-    const { data: receivables, isFetching: fetchingReceivables } = useGetCommutePayments<FetchedCommuteRevenueOrg[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), organization_id: orgId, start_date: id, end_date: id, charge_status: "1", request_type: "3" })
+    const { data: organization, isFetching: fetchingOrg } = useGetOrganization(orgId as string)
+    const { data: count, isFetching: fetchingReceivablesCount } = useGetCommutePayments<FetchedReceivableCount>({ organization_id: orgId, start_date: id, end_date: id, status: "2", component: "count", request_type: "3" })
+    const { data: receivables, isFetching: fetchingReceivables } = useGetCommutePayments<FetchedCommuteRevenueOrg[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), organization_id: orgId, start_date: id, end_date: id, status: "2", request_type: "3" })
 
     const columns = [
         // {
@@ -87,23 +84,23 @@ export const StaffCommuteExpectedRevenueOrgPage: React.FC = () => {
         //         )
         //     }
         // },
-        {
-            header: () => "Status",
-            accessorKey: "ride_data.charge_data.status",
-            cell: ({ row }: { row: any; }) => {
-                const item = row?.original as FetchedCommuteRevenueOrg
-                return (
-                    <div className={cn("text-sm text-grey-dark-2 capitalize whitespace-nowrap", item?.charge_status === 0 && "text-semantics-amber", item?.charge_status === 1 && "text-semantics-success")}>
-                        <RenderIf condition={item?.charge_status === 0}>
-                            Pending
-                        </RenderIf>
-                        <RenderIf condition={item?.charge_status === 1}>
-                            Paid
-                        </RenderIf>
-                    </div>
-                )
-            }
-        }
+        // {
+        //     header: () => "Status",
+        //     accessorKey: "ride_data.charge_data.status",
+        //     cell: ({ row }: { row: any; }) => {
+        //         const item = row?.original as FetchedCommuteRevenueOrg
+        //         return (
+        //             <div className={cn("text-sm text-grey-dark-2 capitalize whitespace-nowrap", item?.charge_status === 0 && "text-semantics-amber", item?.charge_status === 1 && "text-semantics-success")}>
+        //                 <RenderIf condition={item?.charge_status === 0}>
+        //                     Pending
+        //                 </RenderIf>
+        //                 <RenderIf condition={item?.charge_status === 1}>
+        //                     Paid
+        //                 </RenderIf>
+        //             </div>
+        //         )
+        //     }
+        // }
     ];
 
     const handlePageChange = (page: number) => {
@@ -118,41 +115,20 @@ export const StaffCommuteExpectedRevenueOrgPage: React.FC = () => {
 
     return (
         <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">
-            <Breadcrumb items={[{ label: "Expected Revenue", link: "/revenue/staff-commute" }, { label: "Staff Commute", link: "/revenue/staff-commute" }, { label: `${formatRelative(id as string, new Date()).split(" at ").at(0)} • 11:59 PM invoices`, link: `/revenue/staff-commute/${id}` }, { label: (receivables as unknown as FetchedCommuteRevenueOrg[])?.at(0)?.organization_name!, link: `/revenue/staff-commute/${id}/${orgId}` }]} showBack />
+            <Breadcrumb items={[{ label: "Expected Revenue", link: "/revenue/lease" }, { label: "Lease", link: "/revenue/lease" }, { label: `${formatRelative(id as string, new Date()).split(" at ").at(0)} • 11:59 PM invoices`, link: `/revenue/lease/${id}` }, { label: organization?.name!, link: `/revenue/lease/${id}/${orgId}` }]} showBack />
             <div className="grid content-start gap-4 py-6 px-4 bg-white rounded-lg">
-                <h1 className="font-bold text-xl text-grey-dark-1">{(receivables as unknown as FetchedCommuteRevenueOrg[])?.at(0)?.organization_name!}</h1>
-                <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
-                    <div className="w-full md:w-1/3 xl:w-1/4">
-                        <SearchInput placeholder="Search reference" />
-                    </div>
-                
-                    <div className="flex items-center gap-2 w-full sm:w-auto">
-                        <ExportButton
-                            onExport={() => setComponent("export")} 
-                            onExported={() => {
-                                if (!fetchingReceivablesCount && component === "export") {
-                                    setComponent("count")
-                                }
-                            }} 
-                            isLoading={fetchingReceivablesCount}
-                        />
-                        <TableAction type="button" theme="secondary" block>
-                            <Icon icon="mdi:funnel" className="size-4" />
-                            Filter
-                        </TableAction>
-                    </div>
-                </div>
-                <RenderIf condition={!fetchingReceivables && !fetchingReceivablesCount}>
+                <h1 className="font-bold text-xl text-grey-dark-1">{organization?.name}</h1>
+                <RenderIf condition={!fetchingReceivables && !fetchingReceivablesCount && !fetchingOrg}>
                     <Table
-                        data={(receivables as unknown as FetchedCommuteRevenueOrg[]) ?? []}
+                        data={receivables ?? []}
                         page={page}
                         columns={columns}
                         perPage={itemsPerPage}
-                        totalCount={(count as any)?.total}
+                        totalCount={count?.total}
                         onPageChange={handlePageChange}
                     />
                 </RenderIf>
-                <RenderIf condition={fetchingReceivables || fetchingReceivablesCount}>
+                <RenderIf condition={fetchingReceivables || fetchingReceivablesCount || fetchingOrg}>
                     <div className="flex w-full h-96 items-center justify-center"><Loader className="spinner size-6 text-green-1" /></div>
                 </RenderIf>
             </div>

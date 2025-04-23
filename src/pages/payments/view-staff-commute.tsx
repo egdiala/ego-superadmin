@@ -14,15 +14,15 @@ import { ExportButton } from "@/components/shared/export-button";
 import { FetchedCommuteRevenueOrg, FetchedReceivableCount } from "@/types/payment";
 
 
-export const StaffCommuteExpectedRevenueOrgPage: React.FC = () => {
+export const ViewStaffCommutePaymentsPage: React.FC = () => {
     const location = useLocation();
     const { id, orgId } = useParams()
     const itemsPerPage = 10;
     const [page, setPage] = useState(1)
     const [searchParams, setSearchParams] = useSearchParams();
     const [component, setComponent] = useState<"count" | "export">("count")
-    const { data: count, isFetching: fetchingReceivablesCount } = useGetCommutePayments<FetchedReceivableCount>({ organization_id: orgId, start_date: id, end_date: id, charge_status: "1", component, request_type: "3" })
-    const { data: receivables, isFetching: fetchingReceivables } = useGetCommutePayments<FetchedCommuteRevenueOrg[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), organization_id: orgId, start_date: id, end_date: id, charge_status: "1", request_type: "3" })
+    const { data: count, isFetching: fetchingReceivablesCount } = useGetCommutePayments<FetchedReceivableCount>({ organization_id: orgId, start_date: id, end_date: id, status: "1", component, request_type: "3" })
+    const { data: receivables, isFetching: fetchingReceivables } = useGetCommutePayments<FetchedCommuteRevenueOrg[]>({ page: page.toString(), item_per_page: itemsPerPage.toString(), organization_id: orgId, start_date: id, end_date: id, status: "1", request_type: "3" })
 
     const columns = [
         // {
@@ -118,9 +118,9 @@ export const StaffCommuteExpectedRevenueOrgPage: React.FC = () => {
 
     return (
         <motion.div variants={pageVariants} initial='initial' animate='final' exit={pageVariants.initial} className="flex flex-col gap-3.5">
-            <Breadcrumb items={[{ label: "Expected Revenue", link: "/revenue/staff-commute" }, { label: "Staff Commute", link: "/revenue/staff-commute" }, { label: `${formatRelative(id as string, new Date()).split(" at ").at(0)} • 11:59 PM invoices`, link: `/revenue/staff-commute/${id}` }, { label: (receivables as unknown as FetchedCommuteRevenueOrg[])?.at(0)?.organization_name!, link: `/revenue/staff-commute/${id}/${orgId}` }]} showBack />
+            <Breadcrumb items={[{ label: "Expected Revenue", link: "/revenue/staff-commute" }, { label: "Staff Commute", link: "/revenue/staff-commute" }, { label: `${formatRelative(id as string, new Date()).split(" at ").at(0)} • 11:59 PM invoices`, link: `/revenue/staff-commute/${id}` }]} showBack />
             <div className="grid content-start gap-4 py-6 px-4 bg-white rounded-lg">
-                <h1 className="font-bold text-xl text-grey-dark-1">{(receivables as unknown as FetchedCommuteRevenueOrg[])?.at(0)?.organization_name!}</h1>
+                {/* <h1 className="font-bold text-xl text-grey-dark-1">{(receivables as unknown as FetchedCommuteRevenueOrg[])?.at(0)?.organization_name!}</h1> */}
                 <div className="flex flex-col md:flex-row gap-y-3 md:items-center justify-between">
                     <div className="w-full md:w-1/3 xl:w-1/4">
                         <SearchInput placeholder="Search reference" />

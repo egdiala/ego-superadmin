@@ -222,8 +222,10 @@ export interface FetchedLeaseVehiclePayment {
 export interface FetchedCommutePayment {
     vehicle_id: string;
     total_trip: number;
+    total_amount: number;
     total_expected: number;
     created: string;
+    createdAt: string;
     total_remitted: number;
     vehicle_data: {
         _id: string;
