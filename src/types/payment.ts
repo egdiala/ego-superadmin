@@ -122,10 +122,12 @@ export interface PaymentCountStatus {
 }
 
 export interface FetchedLeaseReceivable {
+    created: string;
     createdAt: string;
     total_trip: number;
     total_amount: number;
     total_remitted: number;
+    total_expected: number;
 }
 
 export interface FetchedCommuteRevenue {
@@ -152,6 +154,14 @@ export interface FetchedCommuteRevenueOrg {
 }
 
 export interface SingleLeaseReceivable {
+    created: string;
+    total_km: number;
+    excess_km: number;
+    total_expected: number;
+    user_orgs: {
+        name: string;
+        auth_id: string;
+    }
     createdAt: string;
     total_trip: number;
     total_amount: number;
